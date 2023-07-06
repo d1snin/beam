@@ -1,0 +1,55 @@
+/*
+ * Copyright 2023 Mikhail Titov
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package dev.d1s.beam.commons
+
+import kotlinx.serialization.Serializable
+
+public typealias SpaceId = String
+public typealias SpaceSlug = String
+public typealias SpaceToken = String
+
+public sealed interface AbstractSpace {
+
+    public val slug: SpaceSlug
+}
+
+public sealed interface IdentifiedSpace : AbstractSpace {
+
+    public val id: SpaceId
+
+    public val role: Role
+}
+
+@Serializable
+public data class Space(
+    override val id: SpaceId,
+    override val slug: SpaceSlug,
+    override val role: Role
+) : IdentifiedSpace
+
+@Serializable
+public data class SpaceModification(
+    override val slug: SpaceSlug
+) : AbstractSpace
+
+@Serializable
+public data class SpaceWithToken(
+    override val id: SpaceId,
+    override val slug: SpaceSlug,
+    override val role: Role,
+    public val token: SpaceToken
+) : IdentifiedSpace

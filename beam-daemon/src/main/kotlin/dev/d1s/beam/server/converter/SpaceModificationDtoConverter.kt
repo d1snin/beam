@@ -14,23 +14,17 @@
  * limitations under the License.
  */
 
-plugins {
-    kotlin("multiplatform") apply false
-    kotlin("jvm") apply false
-    kotlin("js") apply false
-    id("com.github.ben-manes.versions")
-}
+package dev.d1s.beam.server.converter
 
-allprojects {
-    val projectGroup: String by project
-    val projectVersion: String by project
+import dev.d1s.beam.commons.SpaceModification
+import dev.d1s.beam.server.entity.SpaceEntity
+import dev.d1s.exkt.dto.DtoConverter
+import org.koin.core.component.KoinComponent
 
-    group = projectGroup
-    version = projectVersion
+internal class SpaceModificationDtoConverter : DtoConverter<SpaceEntity, SpaceModification>, KoinComponent {
 
-    repositories {
-        mavenCentral()
-        maven(url = "https://maven.d1s.dev/releases")
-        maven(url = "https://maven.d1s.dev/snapshots")
-    }
+    override suspend fun convertToEntity(dto: SpaceModification) =
+        SpaceEntity {
+            slug = dto.slug
+        }
 }

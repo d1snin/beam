@@ -14,23 +14,11 @@
  * limitations under the License.
  */
 
-plugins {
-    kotlin("multiplatform") apply false
-    kotlin("jvm") apply false
-    kotlin("js") apply false
-    id("com.github.ben-manes.versions")
-}
+package dev.d1s.beam.server.exception
 
-allprojects {
-    val projectGroup: String by project
-    val projectVersion: String by project
+import dev.d1s.exkt.ktor.server.statuspages.HttpStatusException
+import io.ktor.http.*
 
-    group = projectGroup
-    version = projectVersion
+internal class UnprocessableEntityException : HttpStatusException(HttpStatusCode.UnprocessableEntity)
 
-    repositories {
-        mavenCentral()
-        maven(url = "https://maven.d1s.dev/releases")
-        maven(url = "https://maven.d1s.dev/snapshots")
-    }
-}
+internal class ForbiddenException : HttpStatusException(HttpStatusCode.Forbidden)

@@ -14,23 +14,21 @@
  * limitations under the License.
  */
 
-plugins {
-    kotlin("multiplatform") apply false
-    kotlin("jvm") apply false
-    kotlin("js") apply false
-    id("com.github.ben-manes.versions")
-}
+package dev.d1s.beam.server.util
 
-allprojects {
-    val projectGroup: String by project
-    val projectVersion: String by project
+import dev.d1s.beam.commons.Paths
+import io.ktor.server.application.*
+import io.ktor.server.plugins.*
+import java.util.*
 
-    group = projectGroup
-    version = projectVersion
+internal val ApplicationCall.requiredIdParameter: UUID
+    get() {
+        val rawId = parameters[Paths.ID_PARAMETER]
+            ?: throw BadRequestException("Parameter ${Paths.ID_PARAMETER} not found")
 
-    repositories {
-        mavenCentral()
-        maven(url = "https://maven.d1s.dev/releases")
-        maven(url = "https://maven.d1s.dev/snapshots")
+        return try {
+            UUID.fromString(rawId)
+        } catch (_: Throwable) {
+            throw BadRequestException("Invalid ${Paths.ID_PARAMETER} parameter")
+        }
     }
-}

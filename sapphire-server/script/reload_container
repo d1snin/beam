@@ -1,6 +1,0 @@
-#!/bin/bash
-
-docker-compose -f ./sapphire-server/docker/docker-compose.yml down
-docker volume rm docker_sapphire-server-db-data-postgres docker_sapphire-server-db-data-postgres-config
-./gradlew sapphire-server:publishImageToLocalRegistry
-docker-compose -f ./sapphire-server/docker/docker-compose.yml up

@@ -14,23 +14,14 @@
  * limitations under the License.
  */
 
-plugins {
-    kotlin("multiplatform") apply false
-    kotlin("jvm") apply false
-    kotlin("js") apply false
-    id("com.github.ben-manes.versions")
-}
+package dev.d1s.beam.commons.validation
 
-allprojects {
-    val projectGroup: String by project
-    val projectVersion: String by project
+import dev.d1s.beam.commons.AbstractSpace
+import dev.d1s.exkt.konform.matches
+import io.konform.validation.Validation
 
-    group = projectGroup
-    version = projectVersion
-
-    repositories {
-        mavenCentral()
-        maven(url = "https://maven.d1s.dev/releases")
-        maven(url = "https://maven.d1s.dev/snapshots")
+public val validateSpace: Validation<AbstractSpace> = Validation {
+    AbstractSpace::slug {
+        matches(Regex.Slug)
     }
 }

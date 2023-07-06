@@ -14,23 +14,22 @@
  * limitations under the License.
  */
 
-plugins {
-    kotlin("multiplatform") apply false
-    kotlin("jvm") apply false
-    kotlin("js") apply false
-    id("com.github.ben-manes.versions")
-}
+package dev.d1s.beam.server.configuration
 
-allprojects {
-    val projectGroup: String by project
-    val projectVersion: String by project
+import dev.d1s.exkt.ktor.server.koin.configuration.ApplicationConfigurer
+import io.ktor.server.application.*
+import io.ktor.server.config.*
+import io.ktor.server.plugins.ratelimit.RateLimit
+import org.koin.core.module.Module
+import kotlin.time.Duration.Companion.seconds
 
-    group = projectGroup
-    version = projectVersion
+internal object RateLimit : ApplicationConfigurer {
 
-    repositories {
-        mavenCentral()
-        maven(url = "https://maven.d1s.dev/releases")
-        maven(url = "https://maven.d1s.dev/snapshots")
+    override fun Application.configure(module: Module, config: ApplicationConfig) {
+        install(RateLimit) {
+            register {
+                rateLimiter(limit = 7, refillPeriod = 10.seconds)
+            }
+        }
     }
 }

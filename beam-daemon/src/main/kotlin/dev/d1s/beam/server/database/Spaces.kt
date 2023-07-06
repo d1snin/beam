@@ -14,23 +14,21 @@
  * limitations under the License.
  */
 
-plugins {
-    kotlin("multiplatform") apply false
-    kotlin("jvm") apply false
-    kotlin("js") apply false
-    id("com.github.ben-manes.versions")
-}
+package dev.d1s.beam.server.database
 
-allprojects {
-    val projectGroup: String by project
-    val projectVersion: String by project
+import dev.d1s.beam.commons.Role
+import dev.d1s.beam.server.entity.SpaceEntity
+import dev.d1s.exkt.ktorm.UuidIdentifiedAndModificationTimestampAwareEntities
+import org.ktorm.schema.enum
+import org.ktorm.schema.text
 
-    group = projectGroup
-    version = projectVersion
+internal object Spaces : UuidIdentifiedAndModificationTimestampAwareEntities<SpaceEntity>(tableName = "space") {
 
-    repositories {
-        mavenCentral()
-        maven(url = "https://maven.d1s.dev/releases")
-        maven(url = "https://maven.d1s.dev/snapshots")
+    val slug = text("slug").bindTo {
+        it.slug
+    }
+
+    val role = enum<Role>("role").bindTo {
+        it.role
     }
 }

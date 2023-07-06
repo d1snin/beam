@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-rootProject.name = "sapphire"
+rootProject.name = "beam"
 
 pluginManagement {
     plugins {
@@ -40,8 +40,9 @@ pluginManagement {
 }
 
 include(
-    "sapphire-client-sdk",
-    "sapphire-commons",
-    "sapphire-server",
-    "sapphire-ui"
+    "beam-bundle",
+    "beam-client-sdk",
+    "beam-common",
+    "beam-daemon",
+    "beam-ui"
 )

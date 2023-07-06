@@ -1,0 +1,133 @@
+{
+  "databaseChangeLog": [
+    {
+      "changeSet": {
+        "id": "0",
+        "author": "d1snin (me@d1s.dev)",
+        "changes": [
+          {
+            "createSequence": {
+              "sequenceName": "system-uuid",
+              "startValue": 1,
+              "incrementBy": 1
+            }
+          },
+          {
+            "createTable": {
+              "tableName": "block",
+              "columns": [
+                {
+                  "column": {
+                    "name": "id",
+                    "type": "text",
+                    "constraints": {
+                      "nullable": false,
+                      "notNullConstraintName": "nn_block_id",
+                      "primaryKey": true,
+                      "primaryKeyName": "pk_block_id"
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "slug",
+                    "type": "text",
+                    "constraints": {
+                      "nullable": false,
+                      "notNullConstraintName": "nn_block_slug",
+                      "unique": true,
+                      "uniqueConstraintName": "u_block_slug"
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "index",
+                    "type": "integer",
+                    "constraints": {
+                      "nullable": false,
+                      "notNullConstraintName": "nn_block_position",
+                      "unique": true,
+                      "uniqueConstraintName": "u_block_position"
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "size",
+                    "type": "text",
+                    "constraints": {
+                      "nullable": false,
+                      "notNullConstraintName": "nn_block_size"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "createTable": {
+              "tableName": "space",
+              "columns": [
+                {
+                  "column": {
+                    "name": "id",
+                    "type": "text",
+                    "constraints": {
+                      "nullable": false,
+                      "notNullConstraintName": "nn_space_id",
+                      "primaryKey": true,
+                      "primaryKeyName": "pk_space_id"
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "created_at",
+                    "type": "timestamp",
+                    "constraints": {
+                      "nullable": false,
+                      "notNullConstraintName": "nn_space_created_at"
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "updated_at",
+                    "type": "timestamp",
+                    "constraints": {
+                      "nullable": false,
+                      "notNullConstraintName": "nn_space_updated_at"
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "slug",
+                    "type": "text",
+                    "constraints": {
+                      "nullable": false,
+                      "notNullConstraintName": "nn_space_slug",
+                      "unique": true,
+                      "uniqueConstraintName": "u_space_slug"
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "role",
+                    "type": "text",
+                    "constraints": {
+                      "nullable": false,
+                      "notNullConstraintName": "nn_space_role"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

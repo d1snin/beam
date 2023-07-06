@@ -14,23 +14,13 @@
  * limitations under the License.
  */
 
-plugins {
-    kotlin("multiplatform") apply false
-    kotlin("jvm") apply false
-    kotlin("js") apply false
-    id("com.github.ben-manes.versions")
-}
+package dev.d1s.beam.server.validation
 
-allprojects {
-    val projectGroup: String by project
-    val projectVersion: String by project
+import io.konform.validation.ValidationResult
+import io.ktor.server.plugins.*
 
-    group = projectGroup
-    version = projectVersion
-
-    repositories {
-        mavenCentral()
-        maven(url = "https://maven.d1s.dev/releases")
-        maven(url = "https://maven.d1s.dev/snapshots")
+internal fun ValidationResult<*>.orThrow() {
+    if (errors.isNotEmpty()) {
+        throw BadRequestException("Invalid body.")
     }
 }

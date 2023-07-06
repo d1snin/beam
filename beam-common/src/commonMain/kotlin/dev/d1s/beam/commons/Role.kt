@@ -14,23 +14,13 @@
  * limitations under the License.
  */
 
-plugins {
-    kotlin("multiplatform") apply false
-    kotlin("jvm") apply false
-    kotlin("js") apply false
-    id("com.github.ben-manes.versions")
+package dev.d1s.beam.commons
+
+public enum class Role(public val permissions: List<Permission>) {
+    DEFAULT(listOf(Permission.MODIFY_SELF)),
+    ROOT(listOf(Permission.MODIFY_SELF, Permission.MODIFY_ALL))
 }
 
-allprojects {
-    val projectGroup: String by project
-    val projectVersion: String by project
-
-    group = projectGroup
-    version = projectVersion
-
-    repositories {
-        mavenCentral()
-        maven(url = "https://maven.d1s.dev/releases")
-        maven(url = "https://maven.d1s.dev/snapshots")
-    }
+public enum class Permission {
+    MODIFY_SELF, MODIFY_ALL
 }

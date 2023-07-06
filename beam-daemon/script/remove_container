@@ -1,0 +1,4 @@
+#!/bin/bash
+
+docker-compose -f ./beam-daemon/docker/docker-compose.yml down
+docker volume rm docker_beam-daemon-db-data-postgres docker_beam-daemon-db-data-postgres-config

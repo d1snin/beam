@@ -14,23 +14,11 @@
  * limitations under the License.
  */
 
-plugins {
-    kotlin("multiplatform") apply false
-    kotlin("jvm") apply false
-    kotlin("js") apply false
-    id("com.github.ben-manes.versions")
-}
+package dev.d1s.beam.server.database
 
-allprojects {
-    val projectGroup: String by project
-    val projectVersion: String by project
+import org.ktorm.database.Database
+import org.ktorm.entity.sequenceOf
 
-    group = projectGroup
-    version = projectVersion
+internal val Database.spaces get() = sequenceOf(Spaces)
 
-    repositories {
-        mavenCentral()
-        maven(url = "https://maven.d1s.dev/releases")
-        maven(url = "https://maven.d1s.dev/snapshots")
-    }
-}
+internal val Database.blocks get() = sequenceOf(Blocks)

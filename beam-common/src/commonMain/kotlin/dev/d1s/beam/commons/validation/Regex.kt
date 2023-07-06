@@ -14,23 +14,9 @@
  * limitations under the License.
  */
 
-plugins {
-    kotlin("multiplatform") apply false
-    kotlin("jvm") apply false
-    kotlin("js") apply false
-    id("com.github.ben-manes.versions")
-}
+package dev.d1s.beam.commons.validation
 
-allprojects {
-    val projectGroup: String by project
-    val projectVersion: String by project
+internal object Regex {
 
-    group = projectGroup
-    version = projectVersion
-
-    repositories {
-        mavenCentral()
-        maven(url = "https://maven.d1s.dev/releases")
-        maven(url = "https://maven.d1s.dev/snapshots")
-    }
+    val Slug = Regex("([a-z]+)(-[a-z]+)*")
 }

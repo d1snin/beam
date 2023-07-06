@@ -14,23 +14,18 @@
  * limitations under the License.
  */
 
-plugins {
-    kotlin("multiplatform") apply false
-    kotlin("jvm") apply false
-    kotlin("js") apply false
-    id("com.github.ben-manes.versions")
-}
+package dev.d1s.beam.commons.contententity
 
-allprojects {
-    val projectGroup: String by project
-    val projectVersion: String by project
+import kotlinx.serialization.Serializable
 
-    group = projectGroup
-    version = projectVersion
+public typealias ContentEntities = List<ContentEntity>
 
-    repositories {
-        mavenCentral()
-        maven(url = "https://maven.d1s.dev/releases")
-        maven(url = "https://maven.d1s.dev/snapshots")
-    }
-}
+public typealias ContentEntityType = String
+
+public typealias ContentEntityParameters = Map<String, String>
+
+@Serializable
+public data class ContentEntity(
+    val type: ContentEntityType,
+    val parameters: ContentEntityParameters
+)

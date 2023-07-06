@@ -14,23 +14,20 @@
  * limitations under the License.
  */
 
-plugins {
-    kotlin("multiplatform") apply false
-    kotlin("jvm") apply false
-    kotlin("js") apply false
-    id("com.github.ben-manes.versions")
-}
+package dev.d1s.beam.server.configuration
 
-allprojects {
-    val projectGroup: String by project
-    val projectVersion: String by project
+import dev.d1s.exkt.ktor.server.koin.configuration.ApplicationConfigurer
+import dev.d1s.exkt.ktor.server.statuspages.httpStatusException
+import io.ktor.server.application.*
+import io.ktor.server.config.*
+import io.ktor.server.plugins.statuspages.StatusPages
+import org.koin.core.module.Module
 
-    group = projectGroup
-    version = projectVersion
+internal object StatusPages : ApplicationConfigurer {
 
-    repositories {
-        mavenCentral()
-        maven(url = "https://maven.d1s.dev/releases")
-        maven(url = "https://maven.d1s.dev/snapshots")
+    override fun Application.configure(module: Module, config: ApplicationConfig) {
+        install(StatusPages) {
+            httpStatusException()
+        }
     }
 }
