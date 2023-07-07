@@ -39,4 +39,4 @@ internal interface SpaceEntity : UuidIdentifiedAndModificationTimestampAware<Spa
 internal val SpaceEntity.asString
     get() = "SpaceEntity{slug = $slug, role = $role}"
 
-internal val SpaceEntity.isRoot get() = role == Role.ROOT
+internal val SpaceEntity.isRoot get() = slug == SpaceEntity.ROOT_SPACE_SLUG

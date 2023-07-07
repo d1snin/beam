@@ -98,7 +98,9 @@ internal class DefaultSpaceService : SpaceService, KoinComponent {
                 throw ForbiddenException("Unable to create root space")
             }
 
-            getSpace(SpaceEntity.ROOT_SPACE_SLUG).getOrNull() ?: throw UnprocessableEntityException("Root space is not created")
+            if (!space.isRoot) {
+                getSpace(SpaceEntity.ROOT_SPACE_SLUG).getOrNull() ?: throw UnprocessableEntityException("Root space is not created")
+            }
 
             val addedSpace = handlePsqlUniqueViolationThrowingConflictStatusException {
                 spaceRepository.addSpace(space).getOrThrow()

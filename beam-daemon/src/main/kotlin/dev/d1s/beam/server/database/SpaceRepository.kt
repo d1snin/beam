@@ -54,6 +54,8 @@ internal class DefaultSpaceRepository : SpaceRepository, KoinComponent {
             runCatching {
                 space.apply {
                     setId()
+                    setCreatedAt()
+                    setUpdatedAt()
                     database.spaces.add(space)
                 }
             }
@@ -88,6 +90,7 @@ internal class DefaultSpaceRepository : SpaceRepository, KoinComponent {
         withIO {
             runCatching {
                 space.apply {
+                    setUpdatedAt()
                     flushChanges()
                 }
             }
