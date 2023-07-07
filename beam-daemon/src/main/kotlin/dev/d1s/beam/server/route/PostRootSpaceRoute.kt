@@ -22,7 +22,6 @@ import dev.d1s.exkt.dto.requiredDto
 import dev.d1s.exkt.ktor.server.koin.configuration.Route
 import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.core.component.KoinComponent
@@ -36,12 +35,10 @@ internal class PostRootSpaceRoute : Route, KoinComponent {
     private val spaceService by inject<SpaceService>()
 
     override fun Routing.apply() {
-        authenticate {
-            post(Paths.POST_ROOT_SPACE) {
-                val createdRootSpace = spaceService.createRootSpace().getOrThrow()
+        post(Paths.POST_ROOT_SPACE) {
+            val createdRootSpace = spaceService.createRootSpace().getOrThrow()
 
-                call.respond(HttpStatusCode.Created, createdRootSpace.requiredDto)
-            }
+            call.respond(HttpStatusCode.Created, createdRootSpace.requiredDto)
         }
     }
 }
