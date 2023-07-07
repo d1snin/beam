@@ -43,7 +43,7 @@ internal object StatusPages : ApplicationConfigurer {
                 call.respond(status, message)
             }
 
-            status(HttpStatusCode.BadRequest, HttpStatusCode.NotFound) { call, status ->
+            status(HttpStatusCode.BadRequest, HttpStatusCode.NotFound, HttpStatusCode.Unauthorized) { call, status ->
                 val message = Message(status.description)
                 call.respond(message)
             }
