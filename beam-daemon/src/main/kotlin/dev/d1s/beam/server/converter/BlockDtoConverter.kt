@@ -27,9 +27,9 @@ internal class BlockDtoConverter : DtoConverter<BlockEntity, Block>, KoinCompone
         with(entity) {
             Block(
                 id.toString(),
-                slug,
                 index,
                 size,
+                entities,
                 space.id.toString()
             )
         }

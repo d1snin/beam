@@ -18,18 +18,23 @@ package dev.d1s.beam.server.configuration
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
+import dev.d1s.beam.server.service.SpaceService
 import dev.d1s.exkt.ktor.server.koin.configuration.ApplicationConfigurer
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.config.*
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import org.koin.core.module.Module
 
-internal object Security : ApplicationConfigurer {
+internal object Security : ApplicationConfigurer, KoinComponent {
 
     val jwtAlgorithm get() = _jwtAlgorithm ?: error("Algorithm is not available")
 
     private var _jwtAlgorithm: Algorithm? = null
+
+    private val spaceService by inject<SpaceService>()
 
     override fun Application.configure(module: Module, config: ApplicationConfig) {
         _jwtAlgorithm = Algorithm.HMAC256(config.jwtSecret)
@@ -49,7 +54,11 @@ internal object Security : ApplicationConfigurer {
                     val payload = credential.payload
                     val subject = payload.subject
 
-                    if (subject != null && subject.isNotBlank()) {
+                    if (
+                        subject != null
+                        && subject.isNotBlank()
+                        && spaceService.spaceExists(subject).getOrThrow()
+                    ) {
                         JWTPrincipal(payload)
                     } else {
                         null
@@ -73,4 +82,6 @@ internal val ApplicationConfig.jwtIssuer
     get() = property("jwt.issuer").getString()
 
 internal val ApplicationCall.jwtSubject
-    get() = (principal<JWTPrincipal>() ?: error("No JWT principal")).payload.subject
+    get() = (principal<JWTPrincipal>()
+        ?: error("No JWT principal")).payload.subject
+        ?: error("No JWT subject")

@@ -17,21 +17,20 @@
 package dev.d1s.beam.commons.validation
 
 import dev.d1s.beam.commons.AbstractBlock
-import dev.d1s.exkt.konform.matches
 import io.konform.validation.Validation
 import io.konform.validation.jsonschema.minItems
 import io.konform.validation.jsonschema.minimum
 
 public val validateBlock: Validation<AbstractBlock> = Validation {
-    AbstractBlock::slug {
-        matches(Regex.Slug)
-    }
-
     AbstractBlock::index {
         minimum(0)
     }
 
     AbstractBlock::entities {
         minItems(1)
+    }
+
+    AbstractBlock::entities onEach {
+        run(validateContentEntity)
     }
 }

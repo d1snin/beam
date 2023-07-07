@@ -16,10 +16,7 @@
 
 package dev.d1s.beam.server.service
 
-import dev.d1s.beam.commons.Role
-import dev.d1s.beam.commons.Space
-import dev.d1s.beam.commons.SpaceToken
-import dev.d1s.beam.commons.SpaceWithToken
+import dev.d1s.beam.commons.*
 import dev.d1s.beam.commons.event.EntityUpdate
 import dev.d1s.beam.commons.event.EventReferences
 import dev.d1s.beam.server.configuration.DtoConverters
@@ -53,9 +50,11 @@ internal interface SpaceService {
     suspend fun createRootSpace(): ResultingEntityWithOptionalDto<SpaceEntity, SpaceWithToken>
 
     suspend fun getSpace(
-        uniqueIdentifier: String,
+        uniqueIdentifier: SpaceIdentifier,
         requireDto: Boolean = false
     ): ResultingEntityWithOptionalDto<SpaceEntity, Space>
+
+    suspend fun spaceExists(uniqueIdentifier: String): Result<Boolean>
 
     suspend fun getSpaces(
         limit: Int,
@@ -64,11 +63,11 @@ internal interface SpaceService {
     ): ResultingExportedSequenceWithOptionalDto<SpaceEntity, Space>
 
     suspend fun updateSpace(
-        uniqueIdentifier: String,
+        uniqueIdentifier: SpaceIdentifier,
         modification: SpaceEntity
     ): ResultingEntityWithOptionalDto<SpaceEntity, Space>
 
-    suspend fun removeSpace(uniqueIdentifier: String): Result<Unit>
+    suspend fun removeSpace(uniqueIdentifier: SpaceIdentifier): Result<Unit>
 }
 
 internal class DefaultSpaceService : SpaceService, KoinComponent {
@@ -96,7 +95,7 @@ internal class DefaultSpaceService : SpaceService, KoinComponent {
                     "Root creation is not allowed"
                 }
 
-                throw ForbiddenException()
+                throw ForbiddenException("Unable to create root space")
             }
 
             val addedSpace = handlePsqlUniqueViolationThrowingConflictStatusException {
@@ -122,11 +121,11 @@ internal class DefaultSpaceService : SpaceService, KoinComponent {
                 role = Role.ROOT
             }
 
-            createSpace(rootSpace).getOrThrow()
+            createSpace(rootSpace, allowRootCreation = true).getOrThrow()
         }
 
     override suspend fun getSpace(
-        uniqueIdentifier: String,
+        uniqueIdentifier: SpaceIdentifier,
         requireDto: Boolean
     ): ResultingEntityWithOptionalDto<SpaceEntity, Space> =
         runCatching {
@@ -141,12 +140,25 @@ internal class DefaultSpaceService : SpaceService, KoinComponent {
             val space = uuid?.let {
                 spaceRepository.findSpaceById(it).getOrNull()
             } ?: spaceRepository.findSpaceBySlug(uniqueIdentifier).getOrElse {
-                throw NotFoundException(it.message)
+                throw NotFoundException("Space not found")
             }
 
             space to spaceDtoConverter.convertToDtoIf(space) {
                 requireDto
             }
+        }
+
+    override suspend fun spaceExists(uniqueIdentifier: SpaceIdentifier): Result<Boolean> =
+        runCatching {
+            val error = getSpace(uniqueIdentifier).exceptionOrNull()
+
+            error?.let {
+                if (it is NotFoundException) {
+                    false
+                } else {
+                    throw it
+                }
+            } ?: true
         }
 
     override suspend fun getSpaces(
@@ -167,7 +179,7 @@ internal class DefaultSpaceService : SpaceService, KoinComponent {
         }
 
     override suspend fun updateSpace(
-        uniqueIdentifier: String,
+        uniqueIdentifier: SpaceIdentifier,
         modification: SpaceEntity
     ): ResultingEntityWithOptionalDto<SpaceEntity, Space> =
         runCatching {
@@ -180,10 +192,10 @@ internal class DefaultSpaceService : SpaceService, KoinComponent {
 
             if (originalSpace.isRoot) {
                 logger.d {
-                    "Space ${originalSpace.id} is root. Unable to remove it."
+                    "Space ${originalSpace.id} is root. Unable to update it."
                 }
 
-                throw UnprocessableEntityException()
+                throw UnprocessableEntityException("Unable to update root space")
             }
 
             originalSpace.apply {
@@ -201,7 +213,7 @@ internal class DefaultSpaceService : SpaceService, KoinComponent {
             updatedSpace to updatedSpaceDto
         }
 
-    override suspend fun removeSpace(uniqueIdentifier: String): Result<Unit> =
+    override suspend fun removeSpace(uniqueIdentifier: SpaceIdentifier): Result<Unit> =
         runCatching {
             logger.d {
                 "Removing space with unique identifier $uniqueIdentifier..."
@@ -215,7 +227,7 @@ internal class DefaultSpaceService : SpaceService, KoinComponent {
                     "Space ${space.id} is root. Unable to remove it."
                 }
 
-                throw UnprocessableEntityException()
+                throw UnprocessableEntityException("Unable to remove root space")
             }
 
             spaceRepository.removeSpace(space).getOrThrow()

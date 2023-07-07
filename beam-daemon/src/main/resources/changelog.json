@@ -30,18 +30,6 @@
                 },
                 {
                   "column": {
-                    "name": "slug",
-                    "type": "text",
-                    "constraints": {
-                      "nullable": false,
-                      "notNullConstraintName": "nn_block_slug",
-                      "unique": true,
-                      "uniqueConstraintName": "u_block_slug"
-                    }
-                  }
-                },
-                {
-                  "column": {
                     "name": "index",
                     "type": "integer",
                     "constraints": {

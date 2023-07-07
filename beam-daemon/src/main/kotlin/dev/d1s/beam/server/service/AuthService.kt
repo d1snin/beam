@@ -17,11 +17,18 @@
 package dev.d1s.beam.server.service
 
 import com.auth0.jwt.JWT
+import dev.d1s.beam.commons.BlockId
+import dev.d1s.beam.commons.SpaceId
+import dev.d1s.beam.commons.SpaceIdentifier
 import dev.d1s.beam.commons.SpaceToken
 import dev.d1s.beam.server.configuration.Security
 import dev.d1s.beam.server.configuration.jwtAudience
 import dev.d1s.beam.server.configuration.jwtIssuer
+import dev.d1s.beam.server.configuration.jwtSubject
 import dev.d1s.beam.server.entity.SpaceEntity
+import dev.d1s.beam.server.entity.isRoot
+import dev.d1s.beam.server.util.requiredIdParameter
+import io.ktor.server.application.*
 import io.ktor.server.config.*
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -29,6 +36,14 @@ import org.koin.core.component.inject
 internal interface AuthService {
 
     fun createToken(space: SpaceEntity): SpaceToken
+
+    suspend fun isSpaceModificationAllowed(call: ApplicationCall): Boolean
+
+    suspend fun isSpaceModificationAllowed(subject: SpaceId, space: SpaceIdentifier): Result<Boolean>
+
+    suspend fun isBlockModificationAllowed(call: ApplicationCall): Boolean
+
+    suspend fun isBlockModificationAllowed(subject: SpaceId, block: BlockId): Result<Boolean>
 }
 
 internal class DefaultAuthService : AuthService, KoinComponent {
@@ -43,6 +58,10 @@ internal class DefaultAuthService : AuthService, KoinComponent {
         config.jwtIssuer
     }
 
+    private val spaceService by inject<SpaceService>()
+
+    private val blockService by inject<BlockService>()
+
     override fun createToken(space: SpaceEntity): SpaceToken {
         val spaceId = space.id.toString()
 
@@ -52,4 +71,26 @@ internal class DefaultAuthService : AuthService, KoinComponent {
             .withSubject(spaceId)
             .sign(Security.jwtAlgorithm)
     }
+
+    override suspend fun isSpaceModificationAllowed(call: ApplicationCall): Boolean =
+        isSpaceModificationAllowed(call.jwtSubject, call.requiredIdParameter).getOrThrow()
+
+    override suspend fun isSpaceModificationAllowed(subject: SpaceId, space: SpaceIdentifier): Result<Boolean> =
+        runCatching {
+            val (subjectSpace, _) = spaceService.getSpace(subject).getOrThrow()
+            val (spaceToModify, _) = spaceService.getSpace(space).getOrThrow()
+
+            subjectSpace.isRoot || subjectSpace.id == spaceToModify.id
+        }
+
+    override suspend fun isBlockModificationAllowed(call: ApplicationCall): Boolean =
+        isBlockModificationAllowed(call.jwtSubject, call.requiredIdParameter).getOrThrow()
+
+    override suspend fun isBlockModificationAllowed(subject: SpaceId, block: BlockId): Result<Boolean> =
+        runCatching {
+            val (subjectSpace, _) = spaceService.getSpace(subject).getOrThrow()
+            val (blockToModify, _) = blockService.getBlock(block).getOrThrow()
+
+            subjectSpace.isRoot || blockToModify.space.id == subjectSpace.id
+        }
 }

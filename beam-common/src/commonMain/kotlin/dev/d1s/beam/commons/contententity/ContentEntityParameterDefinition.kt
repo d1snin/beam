@@ -16,18 +16,18 @@
 
 package dev.d1s.beam.commons.contententity
 
-import kotlinx.serialization.Serializable
+public typealias ContentEntityParameterDefinitions = List<ContentEntityParameterDefinition>
 
-public typealias ContentEntities = List<ContentEntity>
-
-public typealias ContentEntityTypeName = String
-
-public typealias ContentEntityParameterName = String
-public typealias ContentEntityParameterValue = String
-public typealias ContentEntityParameters = Map<ContentEntityParameterName, ContentEntityParameterValue>
-
-@Serializable
-public data class ContentEntity(
-    val type: ContentEntityTypeName,
-    val parameters: ContentEntityParameters
+public class ContentEntityParameterDefinition(
+    public val name: ContentEntityParameterName,
+    public val required: Boolean
 )
+
+internal const val required = true
+internal const val notRequired = false
+
+internal infix fun ContentEntityParameterName.whichIs(required: Boolean): ContentEntityParameterDefinition =
+    ContentEntityParameterDefinition(this, required)
+
+internal fun parameters(vararg parameters: ContentEntityParameterDefinition): List<ContentEntityParameterDefinition> =
+    parameters.toList()

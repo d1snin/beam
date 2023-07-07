@@ -14,17 +14,10 @@
  * limitations under the License.
  */
 
-package dev.d1s.beam.server.validation
+package dev.d1s.beam.server.util
 
-import io.konform.validation.ValidationResult
-import io.ktor.server.plugins.*
+import io.ktor.http.*
+import io.ktor.server.application.*
+import io.ktor.server.response.*
 
-internal fun ValidationResult<*>.orThrow() {
-    if (errors.isNotEmpty()) {
-        val messages = errors.joinToString("; ") {
-            it.message
-        }
-
-        throw BadRequestException("Invalid body. $messages")
-    }
-}
+internal suspend fun ApplicationCall.respondForbidden() = respond(HttpStatusCode.Forbidden)

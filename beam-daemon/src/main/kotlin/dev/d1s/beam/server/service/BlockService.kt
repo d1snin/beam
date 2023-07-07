@@ -17,12 +17,16 @@
 package dev.d1s.beam.server.service
 
 import dev.d1s.beam.commons.Block
+import dev.d1s.beam.commons.BlockId
+import dev.d1s.beam.commons.SpaceIdentifier
 import dev.d1s.beam.commons.event.EntityUpdate
 import dev.d1s.beam.commons.event.EventReferences
 import dev.d1s.beam.server.configuration.DtoConverters
 import dev.d1s.beam.server.database.BlockRepository
 import dev.d1s.beam.server.entity.BlockEntity
+import dev.d1s.beam.server.entity.SpaceEntity
 import dev.d1s.beam.server.entity.asString
+import dev.d1s.beam.server.exception.UnprocessableEntityException
 import dev.d1s.exkt.dto.*
 import dev.d1s.ktor.events.commons.event
 import dev.d1s.ktor.events.server.WebSocketEventChannel
@@ -37,18 +41,21 @@ internal interface BlockService {
     suspend fun createBlock(block: BlockEntity): ResultingEntityWithOptionalDto<BlockEntity, Block>
 
     suspend fun getBlock(
-        uniqueIdentifier: String,
+        id: BlockId,
         requireDto: Boolean = false
     ): ResultingEntityWithOptionalDto<BlockEntity, Block>
 
-    suspend fun getBlocks(requireDto: Boolean = false): ResultingEntityWithOptionalDtoList<BlockEntity, Block>
+    suspend fun getBlocks(
+        spaceIdentifier: SpaceIdentifier,
+        requireDto: Boolean = false
+    ): ResultingEntityWithOptionalDtoList<BlockEntity, Block>
 
     suspend fun updateBlock(
-        uniqueIdentifier: String,
+        id: BlockId,
         modification: BlockEntity
     ): ResultingEntityWithOptionalDto<BlockEntity, Block>
 
-    suspend fun removeBlock(uniqueIdentifier: String): Result<Unit>
+    suspend fun removeBlock(id: BlockId): Result<Unit>
 }
 
 internal class DefaultBlockService : BlockService, KoinComponent {
@@ -59,12 +66,25 @@ internal class DefaultBlockService : BlockService, KoinComponent {
 
     private val eventChannel by inject<WebSocketEventChannel>()
 
+    private val spaceService by inject<SpaceService>()
+
     private val logger = logging()
 
     override suspend fun createBlock(block: BlockEntity): ResultingEntityWithOptionalDto<BlockEntity, Block> =
         runCatching {
             logger.d {
                 "Creating block ${block.asString}..."
+            }
+
+            val space = block.space
+            val count = blockRepository.countBlocksInSpace(space).getOrThrow()
+
+            if (count >= SpaceEntity.SPACE_CAPACITY) {
+                logger.w {
+                    "Space ${space.id} reached it's capacity. Unable to process block creation"
+                }
+
+                throw UnprocessableEntityException("Space capacity reached")
             }
 
             val addedBlock = blockRepository.addBlock(block).getOrThrow()
@@ -76,36 +96,39 @@ internal class DefaultBlockService : BlockService, KoinComponent {
         }
 
     override suspend fun getBlock(
-        uniqueIdentifier: String,
+        id: BlockId,
         requireDto: Boolean
     ): ResultingEntityWithOptionalDto<BlockEntity, Block> =
         runCatching {
             logger.d {
-                "Obtaining block with unique identifier $uniqueIdentifier..."
+                "Obtaining block with ID $id..."
             }
 
             val uuid = runCatching {
-                UUID.fromString(uniqueIdentifier)
+                UUID.fromString(id)
             }.getOrNull()
 
-            val block = uuid?.let {
-                blockRepository.findBlockById(it).getOrNull()
-            } ?: blockRepository.findBlockBySlug(uniqueIdentifier).getOrElse {
-                throw NotFoundException(it.message)
-            }
+            val block = uuid?.let { id ->
+                blockRepository.findBlockById(id).getOrNull()
+            } ?: throw NotFoundException("Block not found")
 
             block to blockDtoConverter.convertToDtoIf(block) {
                 requireDto
             }
         }
 
-    override suspend fun getBlocks(requireDto: Boolean): ResultingEntityWithOptionalDtoList<BlockEntity, Block> =
+    override suspend fun getBlocks(
+        spaceIdentifier: SpaceIdentifier,
+        requireDto: Boolean
+    ): ResultingEntityWithOptionalDtoList<BlockEntity, Block> =
         runCatching {
             logger.d {
-                "Obtaining blocks..."
+                "Obtaining blocks for space with unique identifier $spaceIdentifier..."
             }
 
-            val blocks = blockRepository.findAllBlocks().getOrThrow()
+            val (space, _) = spaceService.getSpace(spaceIdentifier).getOrThrow()
+
+            val blocks = blockRepository.findBlocksInSpace(space).getOrThrow()
 
             blocks to blockDtoConverter.convertToDtoListIf(blocks) {
                 requireDto
@@ -113,19 +136,18 @@ internal class DefaultBlockService : BlockService, KoinComponent {
         }
 
     override suspend fun updateBlock(
-        uniqueIdentifier: String,
+        id: BlockId,
         modification: BlockEntity
     ): ResultingEntityWithOptionalDto<BlockEntity, Block> =
         runCatching {
             logger.d {
-                "Updating block with unique identifier $uniqueIdentifier with data ${modification.asString}..."
+                "Updating block with ID $id with data ${modification.asString}..."
             }
 
-            val (originalBlock, originalBlockDto) = getBlock(uniqueIdentifier, requireDto = true).getOrThrow()
+            val (originalBlock, originalBlockDto) = getBlock(id, requireDto = true).getOrThrow()
             requireNotNull(originalBlockDto)
 
             originalBlock.apply {
-                this.slug = modification.slug
                 this.index = modification.index
                 this.size = modification.size
                 this.entities = modification.entities
@@ -139,13 +161,13 @@ internal class DefaultBlockService : BlockService, KoinComponent {
             updatedBlock to updatedBlockDto
         }
 
-    override suspend fun removeBlock(uniqueIdentifier: String): Result<Unit> =
+    override suspend fun removeBlock(id: BlockId): Result<Unit> =
         runCatching {
             logger.d {
-                "Removing block with unique identifier $uniqueIdentifier..."
+                "Removing block with ID $id..."
             }
 
-            val (block, blockDto) = getBlock(uniqueIdentifier, requireDto = true).getOrThrow()
+            val (block, blockDto) = getBlock(id, requireDto = true).getOrThrow()
             requireNotNull(blockDto)
 
             blockRepository.removeBlock(block).getOrThrow()

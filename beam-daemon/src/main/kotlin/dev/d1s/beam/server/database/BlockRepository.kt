@@ -16,17 +16,15 @@
 
 package dev.d1s.beam.server.database
 
-import dev.d1s.beam.commons.BlockSlug
+import dev.d1s.beam.server.entity.BlockEntities
 import dev.d1s.beam.server.entity.BlockEntity
+import dev.d1s.beam.server.entity.SpaceEntity
 import dispatch.core.withIO
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.ktorm.database.Database
 import org.ktorm.dsl.eq
-import org.ktorm.entity.add
-import org.ktorm.entity.find
-import org.ktorm.entity.sortedBy
-import org.ktorm.entity.toList
+import org.ktorm.entity.*
 import java.util.*
 
 internal interface BlockRepository {
@@ -35,9 +33,9 @@ internal interface BlockRepository {
 
     suspend fun findBlockById(id: UUID): Result<BlockEntity>
 
-    suspend fun findBlockBySlug(slug: BlockSlug): Result<BlockEntity>
+    suspend fun countBlocksInSpace(space: SpaceEntity): Result<Int>
 
-    suspend fun findAllBlocks(): Result<List<BlockEntity>>
+    suspend fun findBlocksInSpace(space: SpaceEntity): Result<BlockEntities>
 
     suspend fun updateBlock(block: BlockEntity): Result<BlockEntity>
 
@@ -67,23 +65,17 @@ internal class DefaultBlockRepository : BlockRepository, KoinComponent {
             }
         }
 
-    override suspend fun findBlockBySlug(slug: BlockSlug): Result<BlockEntity> =
+    override suspend fun countBlocksInSpace(space: SpaceEntity): Result<Int> =
         withIO {
             runCatching {
-                database.blocks.find {
-                    it.slug eq slug
-                } ?: error("Block not found by slug $slug")
+                findBlocksInSpaceAsSequence(space).count()
             }
         }
 
-    override suspend fun findAllBlocks(): Result<List<BlockEntity>> =
+    override suspend fun findBlocksInSpace(space: SpaceEntity): Result<BlockEntities> =
         withIO {
             runCatching {
-                val sortedBlocks = database.blocks.sortedBy {
-                    it.index
-                }
-
-                sortedBlocks.toList()
+                findBlocksInSpaceAsSequence(space).toList()
             }
         }
 
@@ -102,5 +94,10 @@ internal class DefaultBlockRepository : BlockRepository, KoinComponent {
                 block.delete()
                 Unit
             }
+        }
+
+    private fun findBlocksInSpaceAsSequence(space: SpaceEntity) =
+        database.blocks.filter {
+            it.id eq space.id
         }
 }

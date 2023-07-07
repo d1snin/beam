@@ -18,8 +18,10 @@ package dev.d1s.beam.commons
 
 import kotlinx.serialization.Serializable
 
-public typealias SpaceId = String
-public typealias SpaceSlug = String
+public typealias SpaceIdentifier = String
+public typealias SpaceId = SpaceIdentifier
+public typealias SpaceSlug = SpaceIdentifier
+
 public typealias SpaceToken = String
 
 public sealed interface AbstractSpace {
@@ -38,7 +40,7 @@ public sealed interface IdentifiedSpace : AbstractSpace {
 public data class Space(
     override val id: SpaceId,
     override val slug: SpaceSlug,
-    override val role: Role
+    override val role: Role,
 ) : IdentifiedSpace
 
 @Serializable

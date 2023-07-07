@@ -17,17 +17,39 @@
 package dev.d1s.beam.server.configuration
 
 import dev.d1s.exkt.ktor.server.koin.configuration.ApplicationConfigurer
-import dev.d1s.exkt.ktor.server.statuspages.httpStatusException
+import dev.d1s.exkt.ktor.server.statuspages.HttpStatusException
+import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.config.*
-import io.ktor.server.plugins.statuspages.StatusPages
+import io.ktor.server.plugins.*
+import io.ktor.server.response.*
+import kotlinx.serialization.Serializable
 import org.koin.core.module.Module
+import io.ktor.server.plugins.statuspages.StatusPages as StatusPagesPlugin
 
 internal object StatusPages : ApplicationConfigurer {
 
     override fun Application.configure(module: Module, config: ApplicationConfig) {
-        install(StatusPages) {
-            httpStatusException()
+        install(StatusPagesPlugin) {
+            exception<Throwable> { call, throwable ->
+                val status = when (throwable) {
+                    is BadRequestException -> HttpStatusCode.BadRequest
+                    is NotFoundException -> HttpStatusCode.NotFound
+                    is HttpStatusException -> throwable.status
+                    else -> HttpStatusCode.InternalServerError
+                }
+
+                val message = throwable.toMessage()
+
+                call.respond(status, message)
+            }
         }
     }
+
+    private fun Throwable.toMessage() = Message(message ?: "No message")
+
+    @Serializable
+    private data class Message(
+        val message: String
+    )
 }

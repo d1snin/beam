@@ -30,9 +30,9 @@ internal class BlockModificationDtoConverter : DtoConverter<BlockEntity, BlockMo
 
     override suspend fun convertToEntity(dto: BlockModification) =
         BlockEntity {
-            slug = dto.slug
             index = dto.index
             size = dto.size
+            entities = dto.entities
             space = spaceService.getSpace(dto.spaceId).getOrThrow().entity
         }
 }

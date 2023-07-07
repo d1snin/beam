@@ -28,11 +28,9 @@ public object Paths {
     public const val GET_SPACE: String = "/spaces/{$ID_PARAMETER}"
     public const val GET_SPACES: String = "/spaces"
     public const val PUT_SPACE: String = "/spaces/{$ID_PARAMETER}"
-    public const val PUT_SPACE_TOKEN: String = "/spaces/{$ID_PARAMETER}/token"
     public const val DELETE_SPACE: String = "/spaces/{$ID_PARAMETER}"
 
     public const val POST_BLOCK: String = "/blocks"
-    public const val GET_BLOCK: String = "/blocks/{$ID_PARAMETER}"
     public const val GET_BLOCKS: String = "/blocks"
     public const val PUT_BLOCK: String = "/blocks/{$ID_PARAMETER}"
     public const val DELETE_BLOCK: String = "/blocks/{$ID_PARAMETER}"

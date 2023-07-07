@@ -18,15 +18,9 @@ package dev.d1s.beam.server.entity
 
 import dev.d1s.beam.commons.Role
 import dev.d1s.beam.commons.SpaceSlug
-import dev.d1s.beam.server.database.blocks
 import dev.d1s.exkt.ktorm.UuidIdentifiedAndModificationTimestampAware
-import dev.d1s.exkt.ktorm.lazyFetch
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
-import org.ktorm.database.Database
-import org.ktorm.dsl.eq
 import org.ktorm.entity.Entity
-import org.ktorm.entity.find
 
 internal interface SpaceEntity : UuidIdentifiedAndModificationTimestampAware<SpaceEntity>, KoinComponent {
 
@@ -34,20 +28,15 @@ internal interface SpaceEntity : UuidIdentifiedAndModificationTimestampAware<Spa
 
     var role: Role
 
-    val blocks
-        get() = lazyFetch("blocks") {
-            get<Database>().blocks.find {
-                it.spaceId eq id.toString()
-            }
-        }
-
     companion object : Entity.Factory<SpaceEntity>() {
 
         const val ROOT_SPACE_SLUG = "root"
+
+        const val SPACE_CAPACITY = 300
     }
 }
 
 internal val SpaceEntity.asString
     get() = "SpaceEntity{slug = $slug, role = $role}"
 
-internal val SpaceEntity.isRoot get() = slug == SpaceEntity.ROOT_SPACE_SLUG
+internal val SpaceEntity.isRoot get() = role == Role.ROOT

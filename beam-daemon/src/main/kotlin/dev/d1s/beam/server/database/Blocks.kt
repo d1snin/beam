@@ -25,11 +25,8 @@ import org.ktorm.schema.enum
 import org.ktorm.schema.int
 import org.ktorm.schema.text
 
+@Suppress("unused")
 internal object Blocks : UuidIdentifiedEntities<BlockEntity>(tableName = "block") {
-
-    val slug = text("slug").bindTo {
-        it.slug
-    }
 
     val index = int("index").bindTo {
         it.index

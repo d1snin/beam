@@ -7,4 +7,5 @@
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
     </root>
+    <logger name="dev.d1s.beam.server" level="WARN"/>
 </configuration>

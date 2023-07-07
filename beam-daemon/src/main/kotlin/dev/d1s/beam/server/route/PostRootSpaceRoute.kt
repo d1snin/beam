@@ -17,42 +17,31 @@
 package dev.d1s.beam.server.route
 
 import dev.d1s.beam.commons.Paths
-import dev.d1s.beam.commons.SpaceModification
-import dev.d1s.beam.commons.validation.validateSpace
-import dev.d1s.beam.server.configuration.DtoConverters
-import dev.d1s.beam.server.entity.SpaceEntity
 import dev.d1s.beam.server.service.SpaceService
-import dev.d1s.beam.server.validation.orThrow
-import dev.d1s.exkt.dto.DtoConverter
 import dev.d1s.exkt.dto.requiredDto
 import dev.d1s.exkt.ktor.server.koin.configuration.Route
 import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.request.*
+import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 
-internal class PostSpaceRoute : Route, KoinComponent {
+internal class PostRootSpaceRoute : Route, KoinComponent {
 
-    override val qualifier = named("post-space-route")
+    override val qualifier = named("post-root-space-route")
 
     private val spaceService by inject<SpaceService>()
 
-    private val spaceModificationDtoConverter by inject<DtoConverter<SpaceEntity, SpaceModification>>(DtoConverters.SpaceModificationDtoConverterQualifier)
-
     override fun Routing.apply() {
-        post(Paths.POST_SPACE) {
-            val body = call.receive<SpaceModification>()
-            validateSpace(body).orThrow()
+        authenticate {
+            post(Paths.POST_ROOT_SPACE) {
+                val createdRootSpace = spaceService.createRootSpace().getOrThrow()
 
-            val space = spaceModificationDtoConverter.convertToEntity(body)
-
-            val createdSpace = spaceService.createSpace(space).getOrThrow()
-
-            call.respond(HttpStatusCode.Created, createdSpace.requiredDto)
+                call.respond(HttpStatusCode.Created, createdRootSpace.requiredDto)
+            }
         }
     }
 }

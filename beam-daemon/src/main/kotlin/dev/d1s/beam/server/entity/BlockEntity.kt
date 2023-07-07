@@ -18,14 +18,13 @@ package dev.d1s.beam.server.entity
 
 import dev.d1s.beam.commons.BlockIndex
 import dev.d1s.beam.commons.BlockSize
-import dev.d1s.beam.commons.BlockSlug
 import dev.d1s.beam.commons.contententity.ContentEntities
 import dev.d1s.exkt.ktorm.UuidIdentified
 import org.ktorm.entity.Entity
 
-internal interface BlockEntity : UuidIdentified<BlockEntity> {
+internal typealias BlockEntities = List<BlockEntity>
 
-    var slug: BlockSlug
+internal interface BlockEntity : UuidIdentified<BlockEntity> {
 
     var index: BlockIndex
 
@@ -39,4 +38,4 @@ internal interface BlockEntity : UuidIdentified<BlockEntity> {
 }
 
 internal val BlockEntity.asString
-    get() = "BlockEntity{slug = $slug, index = $index, size = $size, entities = $entities}"
+    get() = "BlockEntity{index = $index, size = $size, entities = $entities}"

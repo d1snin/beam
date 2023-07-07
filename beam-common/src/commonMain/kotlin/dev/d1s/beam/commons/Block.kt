@@ -19,13 +19,13 @@ package dev.d1s.beam.commons
 import dev.d1s.beam.commons.contententity.ContentEntities
 import kotlinx.serialization.Serializable
 
-public typealias BlockId = String
-public typealias BlockSlug = String
+public typealias BlockId = SpaceIdentifier
+
 public typealias BlockIndex = Int
 
-public sealed interface AbstractBlock {
+public typealias Blocks = List<Block>
 
-    public val slug: BlockSlug
+public sealed interface AbstractBlock {
 
     public val index: BlockIndex
 
@@ -39,7 +39,6 @@ public sealed interface AbstractBlock {
 @Serializable
 public data class Block(
     val id: BlockId,
-    override val slug: BlockSlug,
     override val index: BlockIndex,
     override val size: BlockSize,
     override val entities: ContentEntities,
@@ -48,7 +47,6 @@ public data class Block(
 
 @Serializable
 public data class BlockModification(
-    override val slug: BlockSlug,
     override val index: BlockIndex,
     override val size: BlockSize,
     override val entities: ContentEntities,

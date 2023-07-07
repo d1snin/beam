@@ -16,7 +16,7 @@
 
 package dev.d1s.beam.server.configuration
 
-import dev.d1s.beam.server.route.PostSpaceRoute
+import dev.d1s.beam.server.route.*
 import dev.d1s.exkt.ktor.server.koin.configuration.ApplicationConfigurer
 import dev.d1s.exkt.ktor.server.koin.configuration.builtin.configureRoutes
 import io.ktor.server.application.*
@@ -28,6 +28,16 @@ internal object Routing : ApplicationConfigurer {
     override fun Application.configure(module: Module, config: ApplicationConfig) {
         module.configureRoutes {
             +PostSpaceRoute()
+            +PostRootSpaceRoute()
+            +GetSpaceRoute()
+            +GetSpacesRoute()
+            +PutSpaceRoute()
+            +DeleteSpaceRoute()
+
+            +PostBlockRoute()
+            +GetBlocksRoute()
+            +PutBlockRoute()
+            +DeleteBlockRoute()
         }
     }
 }

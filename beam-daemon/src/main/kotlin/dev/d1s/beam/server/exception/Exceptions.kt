@@ -19,6 +19,6 @@ package dev.d1s.beam.server.exception
 import dev.d1s.exkt.ktor.server.statuspages.HttpStatusException
 import io.ktor.http.*
 
-internal class UnprocessableEntityException : HttpStatusException(HttpStatusCode.UnprocessableEntity)
+internal class UnprocessableEntityException(message: String) : HttpStatusException(HttpStatusCode.UnprocessableEntity, message)
 
-internal class ForbiddenException : HttpStatusException(HttpStatusCode.Forbidden)
+internal class ForbiddenException(message: String) : HttpStatusException(HttpStatusCode.Forbidden, message)

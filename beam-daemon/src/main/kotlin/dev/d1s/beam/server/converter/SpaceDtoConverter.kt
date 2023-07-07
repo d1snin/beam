@@ -28,7 +28,7 @@ internal class SpaceDtoConverter : DtoConverter<SpaceEntity, Space>, KoinCompone
             Space(
                 id.toString(),
                 slug,
-                role
+                role,
             )
         }
 }
