@@ -44,7 +44,6 @@ internal object Security : ApplicationConfigurer, KoinComponent {
                 realm = config.jwtRealm
 
                 val verifier = JWT.require(jwtAlgorithm)
-                    .withAudience(config.jwtAudience)
                     .withIssuer(config.jwtIssuer)
                     .build()
 
@@ -75,8 +74,6 @@ internal val ApplicationConfig.jwtRealm
 internal val ApplicationConfig.jwtSecret
     get() = property("jwt.secret").getString()
 
-internal val ApplicationConfig.jwtAudience
-    get() = property("jwt.audience").getString()
 
 internal val ApplicationConfig.jwtIssuer
     get() = property("jwt.issuer").getString()

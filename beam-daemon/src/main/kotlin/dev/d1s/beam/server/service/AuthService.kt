@@ -22,7 +22,6 @@ import dev.d1s.beam.commons.SpaceId
 import dev.d1s.beam.commons.SpaceIdentifier
 import dev.d1s.beam.commons.SpaceToken
 import dev.d1s.beam.server.configuration.Security
-import dev.d1s.beam.server.configuration.jwtAudience
 import dev.d1s.beam.server.configuration.jwtIssuer
 import dev.d1s.beam.server.configuration.jwtSubject
 import dev.d1s.beam.server.entity.SpaceEntity
@@ -50,10 +49,6 @@ internal class DefaultAuthService : AuthService, KoinComponent {
 
     private val config by inject<ApplicationConfig>()
 
-    private val jwtAudience by lazy {
-        config.jwtAudience
-    }
-
     private val jwtIssuer by lazy {
         config.jwtIssuer
     }
@@ -66,7 +61,6 @@ internal class DefaultAuthService : AuthService, KoinComponent {
         val spaceId = space.id.toString()
 
         return JWT.create()
-            .withAudience(jwtAudience)
             .withIssuer(jwtIssuer)
             .withSubject(spaceId)
             .sign(Security.jwtAlgorithm)
