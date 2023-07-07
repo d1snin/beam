@@ -19,7 +19,7 @@
                 {
                   "column": {
                     "name": "id",
-                    "type": "text",
+                    "type": "uuid",
                     "constraints": {
                       "nullable": false,
                       "notNullConstraintName": "nn_block_id",
@@ -49,6 +49,26 @@
                       "notNullConstraintName": "nn_block_size"
                     }
                   }
+                },
+                {
+                  "column": {
+                    "name": "entities",
+                    "type": "json",
+                    "constraints": {
+                      "nullable": false,
+                      "notNullConstraintName": "nn_block_entities"
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "space_id",
+                    "type": "uuid",
+                    "constraints": {
+                      "nullable": false,
+                      "notNullConstraintName": "nn_block_space_id"
+                    }
+                  }
                 }
               ]
             }
@@ -60,7 +80,7 @@
                 {
                   "column": {
                     "name": "id",
-                    "type": "text",
+                    "type": "uuid",
                     "constraints": {
                       "nullable": false,
                       "notNullConstraintName": "nn_space_id",
