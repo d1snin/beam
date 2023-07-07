@@ -41,7 +41,7 @@ pluginManagement {
 
 include(
     "beam-bundle",
-    "beam-client-sdk",
+    "beam-client",
     "beam-common",
     "beam-daemon",
     "beam-ui"

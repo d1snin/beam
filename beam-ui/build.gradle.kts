@@ -34,7 +34,7 @@ dependencies {
 
     val kotlinxCoroutinesVersion: String by project
 
-    implementation(project(":beam-client-sdk"))
+    implementation(project(":beam-client"))
 
     implementation("dev.d1s.exkt:exkt-kvision:$exktVersion")
     implementation("dev.d1s.exkt:exkt-common:$exktVersion")
