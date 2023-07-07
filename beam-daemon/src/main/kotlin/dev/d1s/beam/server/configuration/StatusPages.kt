@@ -40,8 +40,12 @@ internal object StatusPages : ApplicationConfigurer {
                 }
 
                 val message = throwable.toMessage()
-
                 call.respond(status, message)
+            }
+
+            status(HttpStatusCode.BadRequest, HttpStatusCode.NotFound) { call, status ->
+                val message = Message(status.description)
+                call.respond(message)
             }
         }
     }

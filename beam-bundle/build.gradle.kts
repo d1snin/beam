@@ -36,7 +36,6 @@ dependencies {
     val koinVersion: String by project
 
     implementation(project(":beam-daemon"))
-    implementation(project(":beam-ui"))
 
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
     implementation("io.ktor:ktor-server-status-pages:$ktorVersion")

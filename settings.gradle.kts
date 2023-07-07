@@ -22,18 +22,13 @@ pluginManagement {
 
         val ktorVersion: String by settings
 
-        val kvisionVersion: String by settings
-
         val versionsPluginVersion: String by settings
 
         kotlin("multiplatform") version kotlinVersion
         kotlin("jvm") version kotlinVersion
-        kotlin("js") version kotlinVersion
         kotlin("plugin.serialization") version kotlinVersion
 
         id("io.ktor.plugin") version ktorVersion
-
-        id("io.kvision") version kvisionVersion
 
         id("com.github.ben-manes.versions") version versionsPluginVersion
     }
