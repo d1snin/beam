@@ -35,6 +35,7 @@ import dev.d1s.exkt.ktorm.dto.convertExportedSequenceToDtoIf
 import dev.d1s.ktor.events.commons.event
 import dev.d1s.ktor.events.server.WebSocketEventChannel
 import io.ktor.server.plugins.*
+import kotlinx.datetime.toKotlinInstant
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.lighthousegames.logging.logging
@@ -100,6 +101,8 @@ internal class DefaultSpaceService : SpaceService, KoinComponent {
 
             if (!space.isRoot) {
                 getSpace(SpaceEntity.ROOT_SPACE_SLUG).getOrNull() ?: throw UnprocessableEntityException("Root space is not created")
+
+                space.role = Role.DEFAULT
             }
 
             val addedSpace = handlePsqlUniqueViolationThrowingConflictStatusException {
@@ -260,6 +263,8 @@ internal class DefaultSpaceService : SpaceService, KoinComponent {
     private fun SpaceEntity.toSpaceWithToken(token: SpaceToken) =
         SpaceWithToken(
             id.toString(),
+            createdAt.toKotlinInstant(),
+            updatedAt.toKotlinInstant(),
             slug,
             role,
             token

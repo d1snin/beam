@@ -19,6 +19,7 @@ package dev.d1s.beam.server.converter
 import dev.d1s.beam.commons.Space
 import dev.d1s.beam.server.entity.SpaceEntity
 import dev.d1s.exkt.dto.DtoConverter
+import kotlinx.datetime.toKotlinInstant
 import org.koin.core.component.KoinComponent
 
 internal class SpaceDtoConverter : DtoConverter<SpaceEntity, Space>, KoinComponent {
@@ -27,6 +28,8 @@ internal class SpaceDtoConverter : DtoConverter<SpaceEntity, Space>, KoinCompone
         with(entity) {
             Space(
                 id.toString(),
+                createdAt.toKotlinInstant(),
+                updatedAt.toKotlinInstant(),
                 slug,
                 role,
             )

@@ -16,6 +16,7 @@
 
 package dev.d1s.beam.commons
 
+import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
 
 public typealias SpaceIdentifier = String
@@ -33,12 +34,18 @@ public sealed interface IdentifiedSpace : AbstractSpace {
 
     public val id: SpaceId
 
+    public val createdAt: Instant
+
+    public val updatedAt: Instant
+
     public val role: Role
 }
 
 @Serializable
 public data class Space(
     override val id: SpaceId,
+    override val createdAt: Instant,
+    override val updatedAt: Instant,
     override val slug: SpaceSlug,
     override val role: Role,
 ) : IdentifiedSpace
@@ -51,6 +58,8 @@ public data class SpaceModification(
 @Serializable
 public data class SpaceWithToken(
     override val id: SpaceId,
+    override val createdAt: Instant,
+    override val updatedAt: Instant,
     override val slug: SpaceSlug,
     override val role: Role,
     public val token: SpaceToken

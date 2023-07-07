@@ -45,11 +45,15 @@ kotlin {
             dependencies {
                 val kotlinxSerializationVersion: String by project
 
+                val kotlinxDatetimeVersion: String by project
+
                 val ktorWsEventsVersion: String by project
 
                 val exktVersion: String by project
 
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinxSerializationVersion")
+
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:$kotlinxDatetimeVersion")
 
                 implementation("dev.d1s.ktor-ws-events:ktor-ws-events-commons:$ktorWsEventsVersion")
 
