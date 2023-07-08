@@ -33,6 +33,7 @@ internal class BlockModificationDtoConverter : DtoConverter<BlockEntity, BlockMo
             index = dto.index
             size = dto.size
             entities = dto.entities
+            metadata = dto.metadata
             space = spaceService.getSpace(dto.spaceId).getOrThrow().entity
         }
 }

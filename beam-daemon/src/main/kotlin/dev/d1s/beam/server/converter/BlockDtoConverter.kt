@@ -30,6 +30,7 @@ internal class BlockDtoConverter : DtoConverter<BlockEntity, Block>, KoinCompone
                 index,
                 size,
                 entities,
+                metadata,
                 space.id.toString()
             )
         }

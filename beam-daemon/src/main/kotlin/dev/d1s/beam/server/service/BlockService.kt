@@ -76,6 +76,9 @@ internal class DefaultBlockService : BlockService, KoinComponent {
                 "Creating block ${block.asString}..."
             }
 
+            // TODO:
+            // Handle block index
+
             val space = block.space
             val count = blockRepository.countBlocksInSpace(space).getOrThrow()
 
@@ -151,6 +154,7 @@ internal class DefaultBlockService : BlockService, KoinComponent {
                 this.index = modification.index
                 this.size = modification.size
                 this.entities = modification.entities
+                this.metadata = modification.metadata
             }
 
             val updatedBlock = blockRepository.updateBlock(originalBlock).getOrThrow()

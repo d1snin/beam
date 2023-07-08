@@ -14,18 +14,9 @@
  * limitations under the License.
  */
 
-package dev.d1s.beam.server.converter
+package dev.d1s.beam.commons
 
-import dev.d1s.beam.commons.SpaceModification
-import dev.d1s.beam.server.entity.SpaceEntity
-import dev.d1s.exkt.dto.DtoConverter
-import org.koin.core.component.KoinComponent
-
-internal class SpaceModificationDtoConverter : DtoConverter<SpaceEntity, SpaceModification>, KoinComponent {
-
-    override suspend fun convertToEntity(dto: SpaceModification) =
-        SpaceEntity {
-            slug = dto.slug
-            metadata = dto.metadata
-        }
-}
+public typealias Metadata = Map<MetadataKey, MetadataValue>
+public typealias MetadataEntry = Map.Entry<MetadataKey, MetadataValue>
+public typealias MetadataKey = String
+public typealias MetadataValue = String

@@ -16,6 +16,7 @@
 
 package dev.d1s.beam.server.entity
 
+import dev.d1s.beam.commons.Metadata
 import dev.d1s.beam.commons.Role
 import dev.d1s.beam.commons.SpaceSlug
 import dev.d1s.exkt.ktorm.UuidIdentifiedAndModificationTimestampAware
@@ -25,6 +26,8 @@ import org.ktorm.entity.Entity
 internal interface SpaceEntity : UuidIdentifiedAndModificationTimestampAware<SpaceEntity>, KoinComponent {
 
     var slug: SpaceSlug
+
+    var metadata: Metadata
 
     var role: Role
 
@@ -37,6 +40,6 @@ internal interface SpaceEntity : UuidIdentifiedAndModificationTimestampAware<Spa
 }
 
 internal val SpaceEntity.asString
-    get() = "SpaceEntity{slug = $slug, role = $role}"
+    get() = "SpaceEntity{slug = $slug, metadata = $metadata, role = $role}"
 
 internal val SpaceEntity.isRoot get() = slug == SpaceEntity.ROOT_SPACE_SLUG

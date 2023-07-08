@@ -62,6 +62,16 @@
                 },
                 {
                   "column": {
+                    "name": "metadata",
+                    "type": "json",
+                    "constraints": {
+                      "nullable": false,
+                      "notNullConstraintName": "nn_block_metadata"
+                    }
+                  }
+                },
+                {
+                  "column": {
                     "name": "space_id",
                     "type": "uuid",
                     "constraints": {
@@ -118,6 +128,16 @@
                       "notNullConstraintName": "nn_space_slug",
                       "unique": true,
                       "uniqueConstraintName": "u_space_slug"
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "metadata",
+                    "type": "json",
+                    "constraints": {
+                      "nullable": false,
+                      "notNullConstraintName": "nn_space_metadata"
                     }
                   }
                 },

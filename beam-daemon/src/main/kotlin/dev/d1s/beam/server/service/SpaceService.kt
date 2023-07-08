@@ -207,6 +207,7 @@ internal class DefaultSpaceService : SpaceService, KoinComponent {
 
             originalSpace.apply {
                 this.slug = modification.slug
+                this.metadata = modification.metadata
             }
 
             val updatedSpace = handlePsqlUniqueViolationThrowingConflictStatusException {
@@ -266,6 +267,7 @@ internal class DefaultSpaceService : SpaceService, KoinComponent {
             createdAt.toKotlinInstant(),
             updatedAt.toKotlinInstant(),
             slug,
+            metadata,
             role,
             token
         )

@@ -17,6 +17,7 @@
 package dev.d1s.beam.server.database
 
 import dev.d1s.beam.commons.BlockSize
+import dev.d1s.beam.commons.Metadata
 import dev.d1s.beam.commons.contententity.ContentEntities
 import dev.d1s.beam.server.entity.BlockEntity
 import dev.d1s.exkt.ktorm.UuidIdentifiedEntities
@@ -38,6 +39,10 @@ internal object Blocks : UuidIdentifiedEntities<BlockEntity>(tableName = "block"
 
     val entities = json<ContentEntities>("entities").bindTo {
         it.entities
+    }
+
+    val metadata = json<Metadata>("metadata").bindTo {
+        it.metadata
     }
 
     val spaceId = text("space_id").references(Spaces) {

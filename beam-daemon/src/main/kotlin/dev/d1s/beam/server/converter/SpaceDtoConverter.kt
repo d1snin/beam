@@ -31,6 +31,7 @@ internal class SpaceDtoConverter : DtoConverter<SpaceEntity, Space>, KoinCompone
                 createdAt.toKotlinInstant(),
                 updatedAt.toKotlinInstant(),
                 slug,
+                metadata,
                 role,
             )
         }

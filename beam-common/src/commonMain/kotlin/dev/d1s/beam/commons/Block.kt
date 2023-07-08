@@ -33,6 +33,8 @@ public sealed interface AbstractBlock {
 
     public val entities: ContentEntities
 
+    public val metadata: Metadata
+
     public val spaceId: SpaceId
 }
 
@@ -42,6 +44,7 @@ public data class Block(
     override val index: BlockIndex,
     override val size: BlockSize,
     override val entities: ContentEntities,
+    override val metadata: Metadata,
     override val spaceId: SpaceId
 ) : AbstractBlock
 
@@ -50,6 +53,7 @@ public data class BlockModification(
     override val index: BlockIndex,
     override val size: BlockSize,
     override val entities: ContentEntities,
+    override val metadata: Metadata,
     override val spaceId: SpaceId
 ) : AbstractBlock
 

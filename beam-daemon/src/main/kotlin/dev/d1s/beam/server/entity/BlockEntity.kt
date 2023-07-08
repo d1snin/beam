@@ -18,6 +18,7 @@ package dev.d1s.beam.server.entity
 
 import dev.d1s.beam.commons.BlockIndex
 import dev.d1s.beam.commons.BlockSize
+import dev.d1s.beam.commons.Metadata
 import dev.d1s.beam.commons.contententity.ContentEntities
 import dev.d1s.exkt.ktorm.UuidIdentified
 import org.ktorm.entity.Entity
@@ -32,10 +33,12 @@ internal interface BlockEntity : UuidIdentified<BlockEntity> {
 
     var entities: ContentEntities
 
+    var metadata: Metadata
+
     var space: SpaceEntity
 
     companion object : Entity.Factory<BlockEntity>()
 }
 
 internal val BlockEntity.asString
-    get() = "BlockEntity{index = $index, size = $size, entities = $entities}"
+    get() = "BlockEntity{index = $index, size = $size, entities = $entities, metadata = $metadata}"
