@@ -24,6 +24,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.ktorm.database.Database
 import org.ktorm.dsl.eq
+import org.ktorm.dsl.greaterEq
 import org.ktorm.entity.*
 import java.util.*
 
@@ -35,9 +36,15 @@ internal interface BlockRepository {
 
     suspend fun countBlocksInSpace(space: SpaceEntity): Result<Int>
 
+    suspend fun findLatestBlockIndexInSpace(space: SpaceEntity): Result<Int>
+
+    suspend fun findBlocksInSpaceWhichIndexIsGreaterOrEqualTo(space: SpaceEntity, index: Int): Result<BlockEntities>
+
     suspend fun findBlocksInSpace(space: SpaceEntity): Result<BlockEntities>
 
     suspend fun updateBlock(block: BlockEntity): Result<BlockEntity>
+
+    suspend fun updateBlocks(blocks: BlockEntities): Result<BlockEntities>
 
     suspend fun removeBlock(block: BlockEntity): Result<Unit>
 }
@@ -72,6 +79,27 @@ internal class DefaultBlockRepository : BlockRepository, KoinComponent {
             }
         }
 
+    override suspend fun findLatestBlockIndexInSpace(space: SpaceEntity): Result<Int> =
+        withIO {
+            runCatching {
+                findBlocksInSpaceAsSequence(space).sortedByDescending {
+                    it.index
+                }.first().index
+            }
+        }
+
+    override suspend fun findBlocksInSpaceWhichIndexIsGreaterOrEqualTo(
+        space: SpaceEntity,
+        index: Int
+    ): Result<BlockEntities> =
+        withIO {
+            runCatching {
+                findBlocksInSpaceAsSequence(space).filter {
+                    it.index greaterEq index
+                }.toList()
+            }
+        }
+
     override suspend fun findBlocksInSpace(space: SpaceEntity): Result<BlockEntities> =
         withIO {
             runCatching {
@@ -84,6 +112,16 @@ internal class DefaultBlockRepository : BlockRepository, KoinComponent {
             runCatching {
                 block.apply {
                     flushChanges()
+                }
+            }
+        }
+
+    override suspend fun updateBlocks(blocks: BlockEntities): Result<BlockEntities> =
+        withIO {
+            runCatching {
+                blocks.map {
+                    it.flushChanges()
+                    it
                 }
             }
         }

@@ -76,19 +76,9 @@ internal class DefaultBlockService : BlockService, KoinComponent {
                 "Creating block ${block.asString}..."
             }
 
-            // TODO:
-            // Handle block index
+            checkBlockLimit(block)
 
-            val space = block.space
-            val count = blockRepository.countBlocksInSpace(space).getOrThrow()
-
-            if (count >= SpaceEntity.SPACE_CAPACITY) {
-                logger.w {
-                    "Space ${space.id} reached it's capacity. Unable to process block creation"
-                }
-
-                throw UnprocessableEntityException("Space capacity reached")
-            }
+            processBlockIndex(block)
 
             val addedBlock = blockRepository.addBlock(block).getOrThrow()
             val addedBlockDto = blockDtoConverter.convertToDto(addedBlock)
@@ -178,6 +168,42 @@ internal class DefaultBlockService : BlockService, KoinComponent {
 
             sendBlockRemovedEvent(blockDto)
         }
+
+    private suspend fun checkBlockLimit(block: BlockEntity) {
+        val space = block.space
+        val count = blockRepository.countBlocksInSpace(space).getOrThrow()
+
+        if (count >= SpaceEntity.SPACE_CAPACITY) {
+            logger.w {
+                "Space ${space.id} reached its capacity. Unable to process block creation"
+            }
+
+            throw UnprocessableEntityException("Space capacity reached")
+        }
+    }
+
+    private suspend fun processBlockIndex(block: BlockEntity) {
+        val space = block.space
+        val latestIndex = blockRepository.findLatestBlockIndexInSpace(space).getOrDefault(0)
+        val index = block.index
+        when {
+            index == latestIndex + 1 -> {}
+            index <= latestIndex -> {
+                val blocksToUpdate =
+                    blockRepository.findBlocksInSpaceWhichIndexIsGreaterOrEqualTo(space, latestIndex).getOrThrow()
+
+                blocksToUpdate.forEach {
+                    it.index++
+                }
+
+                blockRepository.updateBlocks(blocksToUpdate)
+            }
+
+            else -> {
+                throw BadRequestException("Block index is out of bounds")
+            }
+        }
+    }
 
     private suspend fun sendBlockCreatedEvent(blockDto: Block) {
         val event = event(EventReferences.blockCreated, blockDto)
