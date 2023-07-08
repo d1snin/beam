@@ -18,5 +18,5 @@ package dev.d1s.beam.commons.validation
 
 internal object Regex {
 
-    val Slug = Regex("([a-z0-9]+)(-[a-z0-9]+)*")
+    val Slug = Regex("([a-z0-9]{1,20})(-[a-z0-9]{0,20}){0,10}")
 }
