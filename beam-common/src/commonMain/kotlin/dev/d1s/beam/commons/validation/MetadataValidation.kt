@@ -16,27 +16,24 @@
 
 package dev.d1s.beam.commons.validation
 
-import dev.d1s.beam.commons.AbstractBlock
+import dev.d1s.beam.commons.Metadata
+import dev.d1s.beam.commons.MetadataEntry
+import dev.d1s.exkt.konform.matches
 import io.konform.validation.Validation
 import io.konform.validation.jsonschema.maxItems
-import io.konform.validation.jsonschema.minItems
-import io.konform.validation.jsonschema.minimum
+import io.konform.validation.jsonschema.maxLength
+import io.konform.validation.onEach
 
-public val validateBlock: Validation<AbstractBlock> = Validation {
-    AbstractBlock::index {
-        minimum(0)
-    }
+internal val validateMetadata: Validation<Metadata> = Validation {
+    maxItems(100)
 
-    AbstractBlock::entities {
-        minItems(1)
-        maxItems(100)
-    }
+    onEach {
+        MetadataEntry::key {
+            matches(Regex.Slug)
+        }
 
-    AbstractBlock::entities onEach {
-        run(validateContentEntity)
-    }
-
-    AbstractBlock::metadata {
-        run(validateMetadata)
+        MetadataEntry::value {
+            maxLength(100)
+        }
     }
 }

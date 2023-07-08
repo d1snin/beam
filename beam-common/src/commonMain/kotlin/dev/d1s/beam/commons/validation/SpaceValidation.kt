@@ -24,4 +24,8 @@ public val validateSpace: Validation<AbstractSpace> = Validation {
     AbstractSpace::slug {
         matches(Regex.Slug)
     }
+
+    AbstractSpace::metadata {
+        run(validateMetadata)
+    }
 }
