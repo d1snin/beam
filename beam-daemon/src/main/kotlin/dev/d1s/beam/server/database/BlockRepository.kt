@@ -136,6 +136,6 @@ internal class DefaultBlockRepository : BlockRepository, KoinComponent {
 
     private fun findBlocksInSpaceAsSequence(space: SpaceEntity) =
         database.blocks.filter {
-            it.id eq space.id
+            it.spaceId eq space.id
         }
 }
