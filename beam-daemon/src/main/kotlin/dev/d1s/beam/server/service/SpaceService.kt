@@ -95,7 +95,7 @@ internal class DefaultSpaceService : SpaceService, KoinComponent {
 
             checkRootSpaceCreated(space)
 
-            val addedSpace = handlePsqlUniqueViolationThrowingConflictStatusException {
+            val addedSpace = handleUniqueSlugViolation {
                 spaceRepository.addSpace(space).getOrThrow()
             }
 
@@ -194,7 +194,7 @@ internal class DefaultSpaceService : SpaceService, KoinComponent {
                 this.metadata = modification.metadata
             }
 
-            val updatedSpace = handlePsqlUniqueViolationThrowingConflictStatusException {
+            val updatedSpace = handleUniqueSlugViolation {
                 spaceRepository.updateSpace(originalSpace).getOrThrow()
             }
 
@@ -219,6 +219,11 @@ internal class DefaultSpaceService : SpaceService, KoinComponent {
             spaceRepository.removeSpace(space).getOrThrow()
 
             sendSpaceRemovedEvent(spaceDto)
+        }
+
+    private inline fun <R> handleUniqueSlugViolation(block: () -> R) =
+        handlePsqlUniqueViolationThrowingConflictStatusException("Space with the same slug already exists") {
+            block()
         }
 
     private fun checkRootCreation(space: SpaceEntity, allowRootCreation: Boolean) {
