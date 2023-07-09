@@ -186,11 +186,16 @@ internal class DefaultBlockService : BlockService, KoinComponent {
         val space = block.space
         val latestIndex = blockRepository.findLatestBlockIndexInSpace(space).getOrDefault(0)
         val index = block.index
+
+        logger.d {
+            "Processing block index. latestIndex: $latestIndex; index: $index"
+        }
+
         when {
             index == latestIndex + 1 -> {}
             index <= latestIndex -> {
                 val blocksToUpdate =
-                    blockRepository.findBlocksInSpaceWhichIndexIsGreaterOrEqualTo(space, latestIndex).getOrThrow()
+                    blockRepository.findBlocksInSpaceWhichIndexIsGreaterOrEqualTo(space, index).getOrThrow()
 
                 blocksToUpdate.forEach {
                     it.index++
