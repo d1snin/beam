@@ -184,11 +184,17 @@ internal class DefaultBlockService : BlockService, KoinComponent {
 
     private suspend fun processBlockIndex(block: BlockEntity) {
         val space = block.space
-        val latestIndex = blockRepository.findLatestBlockIndexInSpace(space).getOrDefault(0)
         val index = block.index
 
+        val latestIndex = blockRepository.findLatestBlockIndexInSpace(space).getOrNull()
+            ?: if (index != 0) {
+                throw BadRequestException("First block index must be 0")
+            } else {
+                0
+            }
+
         logger.d {
-            "Processing block index. latestIndex: $latestIndex; index: $index"
+            "Processing block index. index: $index; latestIndex: $latestIndex"
         }
 
         when {

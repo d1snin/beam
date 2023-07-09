@@ -94,7 +94,9 @@ internal class DefaultBlockRepository : BlockRepository, KoinComponent {
     ): Result<BlockEntities> =
         withIO {
             runCatching {
-                findBlocksInSpaceAsSequence(space).filter {
+                findBlocksInSpaceAsSequence(space).sortedByDescending {
+                    it.index
+                }.filter {
                     it.index greaterEq index
                 }.toList()
             }
@@ -121,9 +123,11 @@ internal class DefaultBlockRepository : BlockRepository, KoinComponent {
     override suspend fun updateBlocks(blocks: BlockEntities): Result<BlockEntities> =
         withIO {
             runCatching {
-                blocks.map {
-                    it.flushChanges()
-                    it
+                database.useTransaction {
+                    blocks.map {
+                        it.flushChanges()
+                        it
+                    }
                 }
             }
         }
