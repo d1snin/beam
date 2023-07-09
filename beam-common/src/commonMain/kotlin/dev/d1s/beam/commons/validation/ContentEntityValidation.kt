@@ -22,18 +22,12 @@ import io.konform.validation.Validation
 import io.konform.validation.ValidationBuilder
 
 internal val validateContentEntity: Validation<ContentEntity> = Validation {
-    contentEntityTypeExists()
-    validContentEntityParameters()
+    validContentEntityTypeAndParameters()
 }
 
-private fun ValidationBuilder<ContentEntity>.contentEntityTypeExists() =
-    addConstraint("content entity must have valid type") { entity ->
-        ContentEntityTypeDefinition.byName(entity.type) != null
-    }
-
-private fun ValidationBuilder<ContentEntity>.validContentEntityParameters() =
-    addConstraint("content entity must have valid parameters") { entity ->
-        val definition = ContentEntityTypeDefinition.byName(entity.type) ?: error("No definition for entity $entity")
+private fun ValidationBuilder<ContentEntity>.validContentEntityTypeAndParameters() =
+    addConstraint("content entity must have valid type and parameters") { entity ->
+        val definition = ContentEntityTypeDefinition.byName(entity.type) ?: return@addConstraint false
 
         definition.parameters.forEach { parameterDefinition ->
             if (parameterDefinition.required) {
