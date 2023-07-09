@@ -36,10 +36,12 @@ internal object StatusPages : ApplicationConfigurer {
                     is BadRequestException -> HttpStatusCode.BadRequest
                     is NotFoundException -> HttpStatusCode.NotFound
                     is HttpStatusException -> throwable.status
-                    else -> HttpStatusCode.InternalServerError
+                    else -> HttpStatusCode.InternalServerError.also {
+                        throwable.printStackTrace()
+                    }
                 }
 
-                val message = throwable.toMessage()
+                val message = throwable.toMessage(status)
                 call.respond(status, message)
             }
 
@@ -50,7 +52,9 @@ internal object StatusPages : ApplicationConfigurer {
         }
     }
 
-    private fun Throwable.toMessage() = Message(message ?: "No message")
+    private fun Throwable.toMessage(statusCode: HttpStatusCode) =
+        Message((message ?: "No message").takeIf { statusCode != HttpStatusCode.InternalServerError }
+            ?: HttpStatusCode.InternalServerError.description)
 
     @Serializable
     private data class Message(
