@@ -20,6 +20,7 @@ import dev.d1s.beam.commons.BlockModification
 import dev.d1s.beam.commons.Paths
 import dev.d1s.beam.commons.validation.validateBlock
 import dev.d1s.beam.server.configuration.DtoConverters
+import dev.d1s.beam.server.configuration.jwtSubject
 import dev.d1s.beam.server.entity.BlockEntity
 import dev.d1s.beam.server.service.AuthService
 import dev.d1s.beam.server.service.BlockService
@@ -51,10 +52,14 @@ internal class PutBlockRoute : Route, KoinComponent {
     override fun Routing.apply() {
         authenticate {
             put(Paths.PUT_BLOCK) {
-                if (authService.isBlockModificationAllowed(call)) {
-                    val body = call.receive<BlockModification>()
-                    validateBlock(body).orThrow()
+                val body = call.receive<BlockModification>()
+                validateBlock(body).orThrow()
 
+                val blockModificationAllowed = authService.isBlockModificationAllowed(call)
+                val spaceModificationAllowed =
+                    authService.isSpaceModificationAllowed(call.jwtSubject, body.spaceId).getOrThrow()
+
+                if (blockModificationAllowed && spaceModificationAllowed) {
                     val block = blockModificationDtoConverter.convertToEntity(body)
 
                     val blockId = call.requiredIdParameter
