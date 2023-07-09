@@ -17,10 +17,10 @@
 package dev.d1s.beam.server.route
 
 import dev.d1s.beam.commons.Paths
+import dev.d1s.beam.server.exception.ForbiddenException
 import dev.d1s.beam.server.service.AuthService
 import dev.d1s.beam.server.service.SpaceService
 import dev.d1s.beam.server.util.requiredIdParameter
-import dev.d1s.beam.server.util.respondForbidden
 import dev.d1s.exkt.ktor.server.koin.configuration.Route
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -48,7 +48,7 @@ internal class DeleteSpaceRoute : Route, KoinComponent {
 
                     call.respond(HttpStatusCode.NoContent)
                 } else {
-                    call.respondForbidden()
+                    throw ForbiddenException()
                 }
             }
         }

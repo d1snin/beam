@@ -22,9 +22,9 @@ import dev.d1s.beam.commons.validation.validateBlock
 import dev.d1s.beam.server.configuration.DtoConverters
 import dev.d1s.beam.server.configuration.jwtSubject
 import dev.d1s.beam.server.entity.BlockEntity
+import dev.d1s.beam.server.exception.ForbiddenException
 import dev.d1s.beam.server.service.AuthService
 import dev.d1s.beam.server.service.BlockService
-import dev.d1s.beam.server.util.respondForbidden
 import dev.d1s.beam.server.validation.orThrow
 import dev.d1s.exkt.dto.DtoConverter
 import dev.d1s.exkt.dto.requiredDto
@@ -65,7 +65,7 @@ internal class PostBlockRoute : Route, KoinComponent {
 
                     call.respond(HttpStatusCode.Created, createdBlock.requiredDto)
                 } else {
-                    call.respondForbidden()
+                    throw ForbiddenException()
                 }
             }
         }

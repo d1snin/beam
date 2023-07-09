@@ -21,10 +21,10 @@ import dev.d1s.beam.commons.SpaceModification
 import dev.d1s.beam.commons.validation.validateSpace
 import dev.d1s.beam.server.configuration.DtoConverters
 import dev.d1s.beam.server.entity.SpaceEntity
+import dev.d1s.beam.server.exception.ForbiddenException
 import dev.d1s.beam.server.service.AuthService
 import dev.d1s.beam.server.service.SpaceService
 import dev.d1s.beam.server.util.requiredIdParameter
-import dev.d1s.beam.server.util.respondForbidden
 import dev.d1s.beam.server.validation.orThrow
 import dev.d1s.exkt.dto.DtoConverter
 import dev.d1s.exkt.dto.requiredDto
@@ -62,7 +62,7 @@ internal class PutSpaceRoute : Route, KoinComponent {
 
                     call.respond(updatedSpace.requiredDto)
                 } else {
-                    call.respondForbidden()
+                    throw ForbiddenException()
                 }
             }
         }

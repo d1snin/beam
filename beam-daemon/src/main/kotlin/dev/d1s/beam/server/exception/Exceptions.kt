@@ -21,4 +21,4 @@ import io.ktor.http.*
 
 internal class UnprocessableEntityException(message: String) : HttpStatusException(HttpStatusCode.UnprocessableEntity, message)
 
-internal class ForbiddenException(message: String) : HttpStatusException(HttpStatusCode.Forbidden, message)
+internal class ForbiddenException(message: String = "Insufficient access") : HttpStatusException(HttpStatusCode.Forbidden, message)
