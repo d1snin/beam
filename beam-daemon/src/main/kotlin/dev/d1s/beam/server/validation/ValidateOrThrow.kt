@@ -25,6 +25,6 @@ internal fun ValidationResult<*>.orThrow() {
             it.message
         }
 
-        throw BadRequestException("Invalid body. $messages")
+        throw BadRequestException("Invalid body: $messages")
     }
 }

@@ -32,12 +32,12 @@ public sealed class ContentEntityTypeDefinition(
     }
 }
 
-public object EmptyContentEntityTypeDefinition : ContentEntityTypeDefinition(
+public data object EmptyContentEntityTypeDefinition : ContentEntityTypeDefinition(
     "empty",
     parameters()
 )
 
-public object SimpleTextContentEntityTypeDefinition : ContentEntityTypeDefinition(
+public data object SimpleTextContentEntityTypeDefinition : ContentEntityTypeDefinition(
     "simple-text",
     parameters("text" whichIs required)
 )

@@ -22,7 +22,7 @@ import io.konform.validation.Validation
 
 public val validateSpace: Validation<AbstractSpace> = Validation {
     AbstractSpace::slug {
-        matches(Regex.Slug)
+        matches(Regex.Slug) hint "space slug must match ${Regex.Slug}"
     }
 
     AbstractSpace::metadata {

@@ -29,11 +29,11 @@ internal val validateMetadata: Validation<Metadata> = Validation {
 
     onEach {
         MetadataEntry::key {
-            matches(Regex.Slug)
+            matches(Regex.Slug) hint "metadata key must match ${Regex.Slug}"
         }
 
         MetadataEntry::value {
-            maxLength(100)
+            maxLength(100) hint "metadata value length must be less than 100"
         }
     }
 }

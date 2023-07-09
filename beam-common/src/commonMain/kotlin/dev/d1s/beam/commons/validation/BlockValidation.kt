@@ -24,12 +24,12 @@ import io.konform.validation.jsonschema.minimum
 
 public val validateBlock: Validation<AbstractBlock> = Validation {
     AbstractBlock::index {
-        minimum(0)
+        minimum(0) hint "block index must be greater or equal to 0"
     }
 
     AbstractBlock::entities {
-        minItems(1)
-        maxItems(100)
+        minItems(1) hint "block must have at least 1 entity"
+        maxItems(100) hint "block must have less than 100 entities"
     }
 
     AbstractBlock::entities onEach {
