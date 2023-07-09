@@ -24,7 +24,7 @@ import dev.d1s.exkt.ktorm.UuidIdentifiedEntities
 import org.ktorm.jackson.json
 import org.ktorm.schema.enum
 import org.ktorm.schema.int
-import org.ktorm.schema.text
+import org.ktorm.schema.uuid
 
 @Suppress("unused")
 internal object Blocks : UuidIdentifiedEntities<BlockEntity>(tableName = "block") {
@@ -45,7 +45,7 @@ internal object Blocks : UuidIdentifiedEntities<BlockEntity>(tableName = "block"
         it.metadata
     }
 
-    val spaceId = text("space_id").references(Spaces) {
+    val spaceId = uuid("space_id").references(Spaces) {
         it.space
     }
 }
