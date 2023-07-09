@@ -91,19 +91,9 @@ internal class DefaultSpaceService : SpaceService, KoinComponent {
                 "Creating space ${space.asString}"
             }
 
-            if (space.slug == SpaceEntity.ROOT_SPACE_SLUG && !allowRootCreation) {
-                logger.e {
-                    "Root creation is not allowed"
-                }
+            checkRootCreation(space, allowRootCreation)
 
-                throw ForbiddenException("Unable to create root space")
-            }
-
-            if (!space.isRoot) {
-                getSpace(SpaceEntity.ROOT_SPACE_SLUG).getOrNull() ?: throw UnprocessableEntityException("Root space is not created")
-
-                space.role = Role.DEFAULT
-            }
+            checkRootSpaceCreated(space)
 
             val addedSpace = handlePsqlUniqueViolationThrowingConflictStatusException {
                 spaceRepository.addSpace(space).getOrThrow()
@@ -197,13 +187,7 @@ internal class DefaultSpaceService : SpaceService, KoinComponent {
             val (originalSpace, originalSpaceDto) = getSpace(uniqueIdentifier, requireDto = true).getOrThrow()
             requireNotNull(originalSpaceDto)
 
-            if (originalSpace.isRoot) {
-                logger.d {
-                    "Space ${originalSpace.id} is root. Unable to update it."
-                }
-
-                throw UnprocessableEntityException("Unable to update root space")
-            }
+            checkRootSpaceModification(originalSpace)
 
             originalSpace.apply {
                 this.slug = modification.slug
@@ -230,18 +214,41 @@ internal class DefaultSpaceService : SpaceService, KoinComponent {
             val (space, spaceDto) = getSpace(uniqueIdentifier, requireDto = true).getOrThrow()
             requireNotNull(spaceDto)
 
-            if (space.isRoot) {
-                logger.d {
-                    "Space ${space.id} is root. Unable to remove it."
-                }
-
-                throw UnprocessableEntityException("Unable to remove root space")
-            }
+            checkRootSpaceModification(space)
 
             spaceRepository.removeSpace(space).getOrThrow()
 
             sendSpaceRemovedEvent(spaceDto)
         }
+
+    private fun checkRootCreation(space: SpaceEntity, allowRootCreation: Boolean) {
+        if (space.isRoot && !allowRootCreation) {
+            logger.e {
+                "Root creation is not allowed"
+            }
+
+            throw ForbiddenException("Unable to create root space")
+        }
+    }
+
+    private suspend fun DefaultSpaceService.checkRootSpaceCreated(space: SpaceEntity) {
+        if (!space.isRoot) {
+            getSpace(SpaceEntity.ROOT_SPACE_SLUG).getOrNull()
+                ?: throw UnprocessableEntityException("Root space is not created")
+
+            space.role = Role.DEFAULT
+        }
+    }
+
+    private fun checkRootSpaceModification(originalSpace: SpaceEntity) {
+        if (originalSpace.isRoot) {
+            logger.d {
+                "Space ${originalSpace.id} is root. Unable to modify it."
+            }
+
+            throw UnprocessableEntityException("Unable to modify root space")
+        }
+    }
 
     private suspend fun sendSpaceCreatedEvent(spaceDto: Space) {
         val event = event(EventReferences.spaceCreated, spaceDto)
