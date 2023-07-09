@@ -103,7 +103,9 @@ internal class DefaultBlockRepository : BlockRepository, KoinComponent {
     override suspend fun findBlocksInSpace(space: SpaceEntity): Result<BlockEntities> =
         withIO {
             runCatching {
-                findBlocksInSpaceAsSequence(space).toList()
+                findBlocksInSpaceAsSequence(space).sortedBy {
+                    it.index
+                }.toList()
             }
         }
 
