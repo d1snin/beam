@@ -34,9 +34,7 @@
                     "type": "integer",
                     "constraints": {
                       "nullable": false,
-                      "notNullConstraintName": "nn_block_position",
-                      "unique": true,
-                      "uniqueConstraintName": "u_block_position"
+                      "notNullConstraintName": "nn_block_index"
                     }
                   }
                 },
