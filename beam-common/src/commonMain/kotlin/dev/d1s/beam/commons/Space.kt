@@ -30,6 +30,8 @@ public sealed interface AbstractSpace {
     public val slug: SpaceSlug
 
     public val metadata: Metadata
+
+    public val view: ViewConfiguration
 }
 
 public sealed interface IdentifiedSpace : AbstractSpace {

@@ -1,4 +1,4 @@
-`/*
+/*
  * Copyright 2023 Mikhail Titov
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,9 +14,19 @@
  * limitations under the License.
  */
 
-package dev.d1s.beam.commons
+import kotlinx.serialization.Serializable
 
-public typealias Metadata = Map<MetadataKey, MetadataValue>
-public typealias MetadataEntry = Map.Entry<MetadataKey, MetadataValue>
-public typealias MetadataKey = String
-public typealias MetadataValue = String
+ @Serializable
+ data class ViewConfiguration(
+    
+ )
+
+ // TODO:
+ // theme: SpaceThemeId ????
+ // icon: SpaceIconUrl
+ // title: SpaceTitle
+ // description: SpaceDescription
+
+ // preview: SpaceUrlPreview
+ //     openGraph: OpenGraphMeta
+ //     twitter: TwitterMeta
