@@ -25,6 +25,7 @@ import dev.d1s.beam.server.entity.SpaceEntity
 import dev.d1s.beam.server.exception.ForbiddenException
 import dev.d1s.beam.server.service.AuthService
 import dev.d1s.beam.server.service.SpaceService
+import dev.d1s.beam.server.validation.orThrow
 import dev.d1s.exkt.dto.DtoConverter
 import dev.d1s.exkt.dto.requiredDto
 import dev.d1s.exkt.ktor.server.koin.configuration.Route
@@ -56,7 +57,7 @@ internal class PutRootSpaceRoute : Route, KoinComponent {
 
                 if (spaceModificationAllowed) {
                     val body = call.receive<RootSpaceModification>()
-                    validateRootSpace(body)
+                    validateRootSpace(body).orThrow()
 
                     val space = rootSpaceModificationDtoConverter.convertToEntity(body)
 
