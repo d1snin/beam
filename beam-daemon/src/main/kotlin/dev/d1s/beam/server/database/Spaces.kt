@@ -18,6 +18,7 @@ package dev.d1s.beam.server.database
 
 import dev.d1s.beam.commons.Metadata
 import dev.d1s.beam.commons.Role
+import dev.d1s.beam.commons.ViewConfiguration
 import dev.d1s.beam.server.entity.SpaceEntity
 import dev.d1s.exkt.ktorm.UuidIdentifiedAndModificationTimestampAwareEntities
 import org.ktorm.jackson.json
@@ -32,6 +33,10 @@ internal object Spaces : UuidIdentifiedAndModificationTimestampAwareEntities<Spa
 
     val metadata = json<Metadata>("metadata").bindTo {
         it.metadata
+    }
+
+    val view = json<ViewConfiguration>("view").bindTo {
+        it.view
     }
 
     val role = enum<Role>("role").bindTo {

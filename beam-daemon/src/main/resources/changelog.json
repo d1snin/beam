@@ -141,6 +141,16 @@
                 },
                 {
                   "column": {
+                    "name": "view",
+                    "type": "json",
+                    "constraints": {
+                      "nullable": false,
+                      "notNullConstraintName": "nn_space_view"
+                    }
+                  }
+                },
+                {
+                  "column": {
                     "name": "role",
                     "type": "text",
                     "constraints": {

@@ -192,6 +192,7 @@ internal class DefaultSpaceService : SpaceService, KoinComponent {
             originalSpace.apply {
                 this.slug = modification.slug
                 this.metadata = modification.metadata
+                this.view = modification.view
             }
 
             val updatedSpace = handleUniqueSlugViolation {
@@ -280,6 +281,7 @@ internal class DefaultSpaceService : SpaceService, KoinComponent {
             updatedAt.toKotlinInstant(),
             slug,
             metadata,
+            view,
             role,
             token
         )

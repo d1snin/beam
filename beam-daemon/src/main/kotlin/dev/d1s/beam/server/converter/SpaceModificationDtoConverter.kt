@@ -27,5 +27,6 @@ internal class SpaceModificationDtoConverter : DtoConverter<SpaceEntity, SpaceMo
         SpaceEntity {
             slug = dto.slug
             metadata = dto.metadata
+            view = dto.view
         }
 }
