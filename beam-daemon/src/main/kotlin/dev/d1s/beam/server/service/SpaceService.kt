@@ -48,7 +48,7 @@ internal interface SpaceService {
         allowRootCreation: Boolean = false
     ): ResultingEntityWithOptionalDto<SpaceEntity, SpaceWithToken>
 
-    suspend fun createRootSpace(): ResultingEntityWithOptionalDto<SpaceEntity, SpaceWithToken>
+    suspend fun createRootSpace(space: SpaceEntity): ResultingEntityWithOptionalDto<SpaceEntity, SpaceWithToken>
 
     suspend fun getSpace(
         uniqueIdentifier: SpaceIdentifier,
@@ -115,7 +115,7 @@ internal class DefaultSpaceService : SpaceService, KoinComponent {
             addedSpace to addedSpace.toSpaceWithToken(token)
         }
 
-    override suspend fun createRootSpace(): ResultingEntityWithOptionalDto<SpaceEntity, SpaceWithToken> =
+    override suspend fun createRootSpace(space: SpaceEntity): ResultingEntityWithOptionalDto<SpaceEntity, SpaceWithToken> =
         runCatching {
             logger.d {
                 "Creating root space..."
@@ -123,6 +123,8 @@ internal class DefaultSpaceService : SpaceService, KoinComponent {
 
             val rootSpace = SpaceEntity {
                 slug = SpaceEntity.ROOT_SPACE_SLUG
+                metadata = metadataOf()
+                view = space.view
                 role = Role.ROOT
             }
 
@@ -257,7 +259,7 @@ internal class DefaultSpaceService : SpaceService, KoinComponent {
         }
 
     private inline fun <R> handleUniqueSlugViolation(block: () -> R) =
-        handlePsqlUniqueViolationThrowingConflictStatusException("Space with the same slug already exists") {
+        handlePsqlUniqueViolationThrowingConflictStatusException("Space already exists") {
             block()
         }
 

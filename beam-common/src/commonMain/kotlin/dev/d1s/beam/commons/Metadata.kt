@@ -20,3 +20,6 @@ public typealias Metadata = Map<MetadataKey, MetadataValue>
 public typealias MetadataEntry = Map.Entry<MetadataKey, MetadataValue>
 public typealias MetadataKey = String
 public typealias MetadataValue = String
+
+public fun metadataOf(vararg pairs: Pair<MetadataKey, MetadataValue>): Metadata =
+    mapOf(*pairs)

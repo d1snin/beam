@@ -17,11 +17,18 @@
 package dev.d1s.beam.server.route
 
 import dev.d1s.beam.commons.Paths
+import dev.d1s.beam.commons.RootSpaceModification
+import dev.d1s.beam.commons.validation.validateRootSpace
+import dev.d1s.beam.server.configuration.DtoConverters
+import dev.d1s.beam.server.entity.SpaceEntity
 import dev.d1s.beam.server.service.SpaceService
+import dev.d1s.beam.server.validation.orThrow
+import dev.d1s.exkt.dto.DtoConverter
 import dev.d1s.exkt.dto.requiredDto
 import dev.d1s.exkt.ktor.server.koin.configuration.Route
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.core.component.KoinComponent
@@ -34,9 +41,17 @@ internal class PostRootSpaceRoute : Route, KoinComponent {
 
     private val spaceService by inject<SpaceService>()
 
+    private val rootSpaceModificationDtoConverter
+            by inject<DtoConverter<SpaceEntity, RootSpaceModification>>(DtoConverters.RootSpaceModificationDtoConverterQualifier)
+
     override fun Routing.apply() {
         post(Paths.POST_ROOT_SPACE) {
-            val createdRootSpace = spaceService.createRootSpace().getOrThrow()
+            val body = call.receive<RootSpaceModification>()
+            validateRootSpace(body).orThrow()
+
+            val rootSpace = rootSpaceModificationDtoConverter.convertToEntity(body)
+
+            val createdRootSpace = spaceService.createRootSpace(rootSpace).getOrThrow()
 
             call.respond(HttpStatusCode.Created, createdRootSpace.requiredDto)
         }
