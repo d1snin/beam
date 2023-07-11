@@ -27,7 +27,7 @@ public sealed class ContentEntityTypeDefinition(
             SimpleTextContentEntityTypeDefinition
         )
 
-        public fun byName(name: String): ContentEntityTypeDefinition? = definitions.find {
+        public fun byName(name: ContentEntityTypeName): ContentEntityTypeDefinition? = definitions.find {
             it.name == name
         }
     }

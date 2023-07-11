@@ -28,4 +28,8 @@ public val validateSpace: Validation<AbstractSpace> = Validation {
     AbstractSpace::metadata {
         run(validateMetadata)
     }
+
+    AbstractSpace::view {
+        run(validateViewConfiguration)
+    }
 }

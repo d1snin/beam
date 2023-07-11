@@ -16,18 +16,19 @@
 
 package dev.d1s.beam.commons
 
-import kotlinx.serialization.Serializable
+public typealias SpaceThemeName = String
 
-public typealias SpaceIconUrl = String
+public sealed class SpaceThemeDefinition(public val name: SpaceThemeName) {
 
-public typealias SpaceTitle = String
-public typealias SpaceDescription = String
+    public data object DefaultSpaceThemeDefinition : SpaceThemeDefinition("default")
 
-@Serializable
-public data class ViewConfiguration(
-    val theme: SpaceThemeName,
-    val icon: SpaceIconUrl?,
-    val title: SpaceTitle?,
-    val description: SpaceDescription?,
-    val preview: SpaceUrlPreview?
-)
+    public companion object {
+
+        private val definitions = listOf(DefaultSpaceThemeDefinition)
+
+        public fun byName(name: SpaceThemeName): SpaceThemeDefinition? =
+            definitions.find {
+                it.name == name
+            }
+    }
+}

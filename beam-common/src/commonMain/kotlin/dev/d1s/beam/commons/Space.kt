@@ -52,13 +52,15 @@ public data class Space(
     override val updatedAt: Instant,
     override val slug: SpaceSlug,
     override val metadata: Metadata,
+    override val view: ViewConfiguration,
     override val role: Role,
 ) : IdentifiedSpace
 
 @Serializable
 public data class SpaceModification(
     override val slug: SpaceSlug,
-    override val metadata: Metadata
+    override val metadata: Metadata,
+    override val view: ViewConfiguration
 ) : AbstractSpace
 
 @Serializable
@@ -68,6 +70,7 @@ public data class SpaceWithToken(
     override val updatedAt: Instant,
     override val slug: SpaceSlug,
     override val metadata: Metadata,
+    override val view: ViewConfiguration,
     override val role: Role,
     public val token: SpaceToken
 ) : IdentifiedSpace

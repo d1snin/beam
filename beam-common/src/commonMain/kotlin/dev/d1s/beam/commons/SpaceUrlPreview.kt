@@ -18,16 +18,10 @@ package dev.d1s.beam.commons
 
 import kotlinx.serialization.Serializable
 
-public typealias SpaceIconUrl = String
-
-public typealias SpaceTitle = String
-public typealias SpaceDescription = String
-
 @Serializable
-public data class ViewConfiguration(
-    val theme: SpaceThemeName,
-    val icon: SpaceIconUrl?,
-    val title: SpaceTitle?,
-    val description: SpaceDescription?,
-    val preview: SpaceUrlPreview?
+public data class SpaceUrlPreview(
+    val url: String?,
+    val title: String?,
+    val description: String?,
+    val image: String?
 )
