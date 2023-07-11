@@ -145,6 +145,7 @@ internal class DefaultBlockService : BlockService, KoinComponent {
                 this.size = modification.size
                 this.entities = modification.entities
                 this.metadata = modification.metadata
+                this.space = modification.space
             }
 
             val updatedBlock = blockRepository.updateBlock(originalBlock).getOrThrow()
