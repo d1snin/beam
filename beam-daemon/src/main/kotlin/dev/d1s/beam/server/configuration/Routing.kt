@@ -32,6 +32,7 @@ internal object Routing : ApplicationConfigurer {
             +GetSpaceRoute()
             +GetSpacesRoute()
             +PutSpaceRoute()
+            +PutRootSpaceRoute()
             +DeleteSpaceRoute()
 
             +PostBlockRoute()

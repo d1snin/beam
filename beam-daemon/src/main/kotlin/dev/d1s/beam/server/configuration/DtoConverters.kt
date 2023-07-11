@@ -16,14 +16,12 @@
 
 package dev.d1s.beam.server.configuration
 
-import dev.d1s.beam.commons.Block
-import dev.d1s.beam.commons.BlockModification
-import dev.d1s.beam.commons.Space
-import dev.d1s.beam.commons.SpaceModification
+import dev.d1s.beam.commons.*
 import dev.d1s.beam.server.converter.BlockDtoConverter
 import dev.d1s.beam.server.converter.BlockModificationDtoConverter
 import dev.d1s.beam.server.converter.SpaceDtoConverter
 import dev.d1s.beam.server.converter.SpaceModificationDtoConverter
+import dev.d1s.beam.server.converter.RootSpaceModificationDtoConverter
 import dev.d1s.beam.server.entity.BlockEntity
 import dev.d1s.beam.server.entity.SpaceEntity
 import dev.d1s.exkt.dto.DtoConverter
@@ -41,6 +39,7 @@ internal object DtoConverters : ApplicationConfigurer {
 
     val SpaceDtoConverterQualifier = named("space-dto-converter")
     val SpaceModificationDtoConverterQualifier = named("space-modification-dto-converter")
+    val RootSpaceModificationDtoConverterQualifier = named("root-space-modification-dto-converter")
 
     override fun Application.configure(module: Module, config: ApplicationConfig) {
         module.singleOf<DtoConverter<BlockEntity, Block>>(::BlockDtoConverter) {
@@ -57,6 +56,10 @@ internal object DtoConverters : ApplicationConfigurer {
 
         module.singleOf<DtoConverter<SpaceEntity, SpaceModification>>(::SpaceModificationDtoConverter) {
             qualifier = SpaceModificationDtoConverterQualifier
+        }
+
+        module.singleOf<DtoConverter<SpaceEntity, RootSpaceModification>>(::RootSpaceModificationDtoConverter) {
+            qualifier = RootSpaceModificationDtoConverterQualifier
         }
     }
 }

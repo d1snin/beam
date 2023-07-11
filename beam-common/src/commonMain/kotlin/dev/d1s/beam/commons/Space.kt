@@ -25,16 +25,19 @@ public typealias SpaceSlug = SpaceIdentifier
 
 public typealias SpaceToken = String
 
-public sealed interface AbstractSpace {
-
-    public val slug: SpaceSlug
-
-    public val metadata: Metadata
+public sealed interface ModifiedRootSpace {
 
     public val view: ViewConfiguration
 }
 
-public sealed interface IdentifiedSpace : AbstractSpace {
+public sealed interface ModifiedSpace : ModifiedRootSpace {
+
+    public val slug: SpaceSlug
+
+    public val metadata: Metadata
+}
+
+public sealed interface IdentifiedSpace : ModifiedSpace {
 
     public val id: SpaceId
 
@@ -61,7 +64,12 @@ public data class SpaceModification(
     override val slug: SpaceSlug,
     override val metadata: Metadata,
     override val view: ViewConfiguration
-) : AbstractSpace
+) : ModifiedSpace
+
+@Serializable
+public data class RootSpaceModification(
+    override val view: ViewConfiguration
+) : ModifiedRootSpace
 
 @Serializable
 public data class SpaceWithToken(

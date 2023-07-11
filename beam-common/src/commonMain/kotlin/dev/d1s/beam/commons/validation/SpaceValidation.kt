@@ -16,20 +16,27 @@
 
 package dev.d1s.beam.commons.validation
 
-import dev.d1s.beam.commons.AbstractSpace
+import dev.d1s.beam.commons.ModifiedRootSpace
+import dev.d1s.beam.commons.ModifiedSpace
 import dev.d1s.exkt.konform.matches
 import io.konform.validation.Validation
 
-public val validateSpace: Validation<AbstractSpace> = Validation {
-    AbstractSpace::slug {
+public val validateRootSpace: Validation<ModifiedRootSpace> = Validation {
+    ModifiedRootSpace::view {
+        run(validateViewConfiguration)
+    }
+}
+
+public val validateSpace: Validation<ModifiedSpace> = Validation {
+    ModifiedSpace::slug {
         matches(Regex.Slug) hint "space slug must match ${Regex.Slug}"
     }
 
-    AbstractSpace::metadata {
+    ModifiedSpace::metadata {
         run(validateMetadata)
     }
 
-    AbstractSpace::view {
+    ModifiedSpace::view {
         run(validateViewConfiguration)
     }
 }

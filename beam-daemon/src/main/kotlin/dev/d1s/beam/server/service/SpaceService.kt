@@ -68,6 +68,10 @@ internal interface SpaceService {
         modification: SpaceEntity
     ): ResultingEntityWithOptionalDto<SpaceEntity, Space>
 
+    suspend fun updateRootSpace(
+        modification: SpaceEntity
+    ): ResultingEntityWithOptionalDto<SpaceEntity, Space>
+
     suspend fun removeSpace(uniqueIdentifier: SpaceIdentifier): Result<Unit>
 }
 
@@ -94,6 +98,10 @@ internal class DefaultSpaceService : SpaceService, KoinComponent {
             checkRootCreation(space, allowRootCreation)
 
             checkRootSpaceCreated(space)
+
+            if (!space.isRoot) {
+                space.role = Role.DEFAULT
+            }
 
             val addedSpace = handleUniqueSlugViolation {
                 spaceRepository.addSpace(space).getOrThrow()
@@ -206,6 +214,32 @@ internal class DefaultSpaceService : SpaceService, KoinComponent {
             updatedSpace to updatedSpaceDto
         }
 
+    override suspend fun updateRootSpace(modification: SpaceEntity): ResultingEntityWithOptionalDto<SpaceEntity, Space> =
+        runCatching {
+            logger.d {
+                "Updating root space with data ${modification.asString}..."
+            }
+
+            checkRootSpaceCreated()
+
+            val (originalSpace, originalSpaceDto) = getSpace(
+                SpaceEntity.ROOT_SPACE_SLUG,
+                requireDto = true
+            ).getOrThrow()
+            requireNotNull(originalSpaceDto)
+
+            originalSpace.apply {
+                this.view = modification.view
+            }
+
+            val updatedSpace = spaceRepository.updateSpace(originalSpace).getOrThrow()
+            val updatedSpaceDto = spaceDtoConverter.convertToDto(updatedSpace)
+
+            sendSpaceUpdatedEvent(originalSpaceDto, updatedSpaceDto)
+
+            updatedSpace to updatedSpaceDto
+        }
+
     override suspend fun removeSpace(uniqueIdentifier: SpaceIdentifier): Result<Unit> =
         runCatching {
             logger.d {
@@ -229,7 +263,7 @@ internal class DefaultSpaceService : SpaceService, KoinComponent {
 
     private fun checkRootCreation(space: SpaceEntity, allowRootCreation: Boolean) {
         if (space.isRoot && !allowRootCreation) {
-            logger.e {
+            logger.d {
                 "Root creation is not allowed"
             }
 
@@ -237,12 +271,10 @@ internal class DefaultSpaceService : SpaceService, KoinComponent {
         }
     }
 
-    private suspend fun DefaultSpaceService.checkRootSpaceCreated(space: SpaceEntity) {
-        if (!space.isRoot) {
+    private suspend fun DefaultSpaceService.checkRootSpaceCreated(space: SpaceEntity? = null) {
+        if (space?.isRoot == false) {
             getSpace(SpaceEntity.ROOT_SPACE_SLUG).getOrNull()
                 ?: throw UnprocessableEntityException("Root space is not created")
-
-            space.role = Role.DEFAULT
         }
     }
 
