@@ -35,8 +35,8 @@ internal class GetBlocksRoute : Route, KoinComponent {
     private val blockService by inject<BlockService>()
 
     private val ApplicationCall.spaceId
-        get() = request.queryParameters[SPACE_ID_QUERY_PARAMETER]
-            ?: throw BadRequestException("No '$SPACE_ID_QUERY_PARAMETER' query parameter present")
+        get() = request.queryParameters[Paths.SPACE_ID_QUERY_PARAMETER]
+            ?: throw BadRequestException("No '${Paths.SPACE_ID_QUERY_PARAMETER}' query parameter present")
 
     override fun Routing.apply() {
         get(Paths.GET_BLOCKS) {
@@ -46,10 +46,5 @@ internal class GetBlocksRoute : Route, KoinComponent {
 
             call.respond(foundSpaces.requiredDto)
         }
-    }
-
-    private companion object {
-
-        private const val SPACE_ID_QUERY_PARAMETER = "space"
     }
 }

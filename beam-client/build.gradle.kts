@@ -30,11 +30,13 @@ kotlin {
 
     js {
         browser {
-            commonWebpackConfig {
-                cssSupport {
-                    enabled.set(true)
+            commonWebpackConfig(
+                Action {
+                    cssSupport {
+                        enabled.set(true)
+                    }
                 }
-            }
+            )
         }
 
         nodejs()
@@ -47,6 +49,10 @@ kotlin {
 
                 val ktorWsEventsVersion: String by project
 
+                val exktVersion: String by project
+
+                val kotlinxCoroutinesVersion: String by project
+
                 api(project(":beam-common"))
 
                 api("io.ktor:ktor-client-core:$ktorVersion")
@@ -54,6 +60,10 @@ kotlin {
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
 
                 api("dev.d1s.ktor-ws-events:ktor-ws-events-client:$ktorWsEventsVersion")
+
+                implementation("dev.d1s.exkt:exkt-common:$exktVersion")
+
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion")
             }
         }
 

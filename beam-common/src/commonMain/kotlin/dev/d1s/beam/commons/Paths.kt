@@ -23,6 +23,8 @@ public object Paths {
     public const val LIMIT_QUERY_PARAMETER: String = "limit"
     public const val OFFSET_QUERY_PARAMETER: String = "offset"
 
+    public const val SPACE_ID_QUERY_PARAMETER: String = "space"
+
     public const val POST_SPACE: String = "/spaces"
     public const val POST_ROOT_SPACE: String = "/spaces/root"
     public const val GET_SPACE: String = "/spaces/{$ID_PARAMETER}"
