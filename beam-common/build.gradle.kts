@@ -30,11 +30,13 @@ kotlin {
 
     js {
         browser {
-            commonWebpackConfig {
-                cssSupport {
-                    enabled.set(true)
+            commonWebpackConfig(
+                Action {
+                    cssSupport {
+                        enabled.set(true)
+                    }
                 }
-            }
+            )
         }
 
         nodejs()
