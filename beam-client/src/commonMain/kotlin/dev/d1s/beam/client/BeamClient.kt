@@ -49,6 +49,8 @@ public interface PublicBeamClient {
 
     public val wsBaseUrl: BeamDaemonBaseUrl?
 
+    public suspend fun getDaemonStatus(): Result<DaemonStatus>
+
     public suspend fun postSpace(space: SpaceModification): Result<SpaceWithToken>
 
     public suspend fun postSpace(build: SpaceModificationBuilder.() -> Unit): Result<SpaceWithToken>
@@ -107,6 +109,11 @@ public class DefaultPublicBeamClient(
     }
 
     private val eventHandlingScope = CoroutineScope(Dispatchers.Main)
+
+    override suspend fun getDaemonStatus(): Result<DaemonStatus> =
+        runCatching {
+            httpClient.get(Paths.GET_DAEMON_STATUS_ROUTE).body()
+        }
 
     override suspend fun postSpace(space: SpaceModification): Result<SpaceWithToken> =
         runCatching {
