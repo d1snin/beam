@@ -27,6 +27,8 @@ internal object Routing : ApplicationConfigurer {
 
     override fun Application.configure(module: Module, config: ApplicationConfig) {
         module.configureRoutes {
+            +GetDaemonStatusRoute()
+
             +PostSpaceRoute()
             +PostRootSpaceRoute()
             +GetSpaceRoute()

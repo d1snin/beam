@@ -25,6 +25,8 @@ public object Paths {
 
     public const val SPACE_ID_QUERY_PARAMETER: String = "space"
 
+    public const val GET_DAEMON_STATUS_ROUTE: String = "/status"
+
     public const val POST_SPACE: String = "/spaces"
     public const val POST_ROOT_SPACE: String = "/spaces/root"
     public const val GET_SPACE: String = "/spaces/{$ID_PARAMETER}"
