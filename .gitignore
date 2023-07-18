@@ -38,3 +38,6 @@ out/
 
 ### Environment Configuration ###
 .env
+
+### Generated bundle file ###
+beam-bundle/src/main/resources/static/main.bundle.js

@@ -14,36 +14,28 @@
  * limitations under the License.
  */
 
-import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
-
 plugins {
     kotlin("multiplatform")
 }
 
+val mainJsFile = "main.bundle.js"
+
 kotlin {
     js {
         browser {
-            val outputFile = "main.bundle.js"
-
-            runTask {
-                outputFileName = outputFile
-                sourceMaps = false
-                devServer = KotlinWebpackConfig.DevServer(
-                    open = false,
-                    port = 8080,
-                    static = mutableListOf("$buildDir/processedResources/js/main")
-                )
-            }
-
-            webpackTask {
-                outputFileName = outputFile
-            }
-
-            testTask {
-                useKarma {
-                    useChromeHeadless()
+            webpackTask(
+                Action {
+                    mainOutputFileName.set(mainJsFile)
                 }
-            }
+            )
+
+            testTask(
+                Action {
+                    useKarma {
+                        useChromeHeadless()
+                    }
+                }
+            )
         }
 
         binaries.executable()
@@ -55,6 +47,11 @@ kotlin {
                 val exktVersion: String by project
 
                 val kvisionVersion: String by project
+
+                val sassVersion: String by project
+                val sassLoaderVersion: String by project
+                val cssLoaderVersion: String by project
+                val styleLoaderVersion: String by project
 
                 val catppuccinKotlinVersion: String by project
 
@@ -76,6 +73,11 @@ kotlin {
                 implementation("io.kvision:kvision-bootstrap-icons:$kvisionVersion")
                 implementation("io.kvision:kvision-routing-navigo-ng:$kvisionVersion")
 
+                implementation(npm("sass", sassVersion))
+                implementation(npm("sass-loader", sassLoaderVersion))
+                implementation(devNpm("css-loader", cssLoaderVersion))
+                implementation(devNpm("style-loader", styleLoaderVersion))
+
                 implementation("com.catppuccin:catppuccin-kotlin:$catppuccinKotlinVersion")
 
                 implementation(npm("animate.css", animateCssVersion))
@@ -90,3 +92,10 @@ kotlin {
         }
     }
 }
+
+tasks.register<Copy>("copyJs") {
+    from(buildDir.resolve("dist/js/productionExecutable/$mainJsFile"))
+    into("../beam-bundle/src/main/resources/static")
+}
+
+tasks["copyJs"].dependsOn(tasks["build"])
