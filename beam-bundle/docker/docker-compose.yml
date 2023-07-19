@@ -14,7 +14,7 @@ services:
       - "8574:8574"
       - "8573:8573"
     env_file:
-      - "../.env"
+      - "../../config/.env"
     depends_on:
       - beam-daemon-postgres
 

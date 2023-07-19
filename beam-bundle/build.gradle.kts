@@ -68,3 +68,17 @@ ktor {
         localImageName.set(project.name)
     }
 }
+
+tasks.register<Copy>("grabConfig") {
+    from("../config/bundle.conf", "../config/daemon.conf")
+    into("src/main/resources")
+}
+
+tasks["processResources"].dependsOn(tasks["grabConfig"])
+
+tasks.register<Copy>("grabDbChangelog") {
+    from("../config/db/changelog.json")
+    into("src/main/resources")
+}
+
+tasks["processResources"].dependsOn(tasks["grabDbChangelog"])
