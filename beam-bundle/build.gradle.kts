@@ -28,6 +28,8 @@ java {
 }
 
 dependencies {
+    val exktVersion: String by project
+
     val ktorVersion: String by project
 
     val logbackVersion: String by project
@@ -36,6 +38,10 @@ dependencies {
     val koinVersion: String by project
 
     implementation(project(":beam-daemon"))
+
+    implementation("dev.d1s.exkt:exkt-common:$exktVersion")
+    implementation("dev.d1s.exkt:exkt-ktor-server:$exktVersion")
+    implementation("dev.d1s.exkt:exkt-ktor-server-koin:$exktVersion")
 
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
     implementation("io.ktor:ktor-server-status-pages:$ktorVersion")

@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package dev.d1s.beam.daemon
+package dev.d1s.beam.bundle
 
 import com.typesafe.config.ConfigFactory
-import dev.d1s.beam.daemon.configuration.*
+import dev.d1s.beam.bundle.configuration.ApplicationConfigBean
+import dev.d1s.beam.daemon.BeamDaemonApplication
 import dev.d1s.exkt.ktor.server.koin.configuration.Configurers
 import dev.d1s.exkt.ktor.server.koin.configuration.ServerApplication
-import dev.d1s.exkt.ktor.server.koin.configuration.builtin.Connector
-import dev.d1s.exkt.ktor.server.koin.configuration.builtin.Di
 import io.ktor.server.application.*
 import io.ktor.server.config.*
 import io.ktor.server.engine.*
@@ -29,30 +28,17 @@ import io.ktor.server.netty.*
 import org.koin.core.component.KoinComponent
 import org.lighthousegames.logging.logging
 
-public class BeamDaemonApplication : ServerApplication(), KoinComponent {
+class BeamBundleApplication : ServerApplication(), KoinComponent {
 
     override val configurers: Configurers = listOf(
-        Connector,
-        ApplicationConfigBean,
-        ContentNegotiation,
-        Database,
-        Services,
-        Repositories,
-        DtoConverters,
-        Routing,
-        WebSocketEvents,
-        Cors,
-        Security,
-        RateLimit,
-        StatusPages,
-        Di
+        ApplicationConfigBean
     )
 
     private val logger = logging()
 
     override fun launch() {
         logger.i {
-            "Starting Beam Daemon..."
+            "Starting Beam Bundle..."
         }
 
         val loadedConfig = loadConfig()
@@ -60,15 +46,17 @@ public class BeamDaemonApplication : ServerApplication(), KoinComponent {
 
         applicationEngineEnvironment.monitor.subscribe(ApplicationStarted) {
             logger.i {
-                "Beam Daemon is ready to accept requests on port ${applicationEngineEnvironment.config.port}"
+                "Beam Bundle is ready to accept requests on port ${applicationEngineEnvironment.config.port}"
             }
         }
 
-        embeddedServer(Netty, applicationEngineEnvironment).start(wait = true)
+        embeddedServer(Netty, applicationEngineEnvironment).start()
+
+        BeamDaemonApplication().launch()
     }
 
     private fun loadConfig(): ApplicationConfig {
-        val config = ConfigFactory.load("daemon")
+        val config = ConfigFactory.load("bundle")
 
         return HoconApplicationConfig(config)
     }

@@ -1,0 +1,6 @@
+#!/bin/bash
+
+docker-compose -f ./beam-bundle/docker/docker-compose.yml down
+docker volume rm docker_beam-bundle-db-data-postgres docker_beam-bundle-db-data-postgres-config
+./gradlew beam-bundle:publishImageToLocalRegistry
+docker-compose -f ./beam-bundle/docker/docker-compose.yml up
