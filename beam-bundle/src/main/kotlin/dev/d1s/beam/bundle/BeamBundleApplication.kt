@@ -18,9 +18,12 @@ package dev.d1s.beam.bundle
 
 import com.typesafe.config.ConfigFactory
 import dev.d1s.beam.bundle.configuration.ApplicationConfigBean
+import dev.d1s.beam.bundle.configuration.Routing
 import dev.d1s.beam.daemon.BeamDaemonApplication
 import dev.d1s.exkt.ktor.server.koin.configuration.Configurers
 import dev.d1s.exkt.ktor.server.koin.configuration.ServerApplication
+import dev.d1s.exkt.ktor.server.koin.configuration.builtin.Connector
+import dev.d1s.exkt.ktor.server.koin.configuration.builtin.Di
 import io.ktor.server.application.*
 import io.ktor.server.config.*
 import io.ktor.server.engine.*
@@ -31,7 +34,10 @@ import org.lighthousegames.logging.logging
 class BeamBundleApplication : ServerApplication(), KoinComponent {
 
     override val configurers: Configurers = listOf(
-        ApplicationConfigBean
+        Connector,
+        Routing,
+        ApplicationConfigBean,
+        Di
     )
 
     private val logger = logging()
