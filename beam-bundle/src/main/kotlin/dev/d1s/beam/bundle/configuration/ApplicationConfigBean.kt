@@ -21,7 +21,7 @@ import io.ktor.server.application.*
 import io.ktor.server.config.*
 import org.koin.core.module.Module
 
-internal object ApplicationConfigBean : ApplicationConfigurer {
+object ApplicationConfigBean : ApplicationConfigurer {
 
     override fun Application.configure(module: Module, config: ApplicationConfig) {
         module.single {
@@ -29,3 +29,8 @@ internal object ApplicationConfigBean : ApplicationConfigurer {
         }
     }
 }
+
+val ApplicationConfig.dry get() = propertyOrNull("dry")?.getString() == "true"
+
+val ApplicationConfig.daemonHttpAddress get() = property("daemon.connector.http").getString()
+val ApplicationConfig.daemonWsAddress get() = property("daemon.connector.ws").getString()

@@ -19,6 +19,7 @@ package dev.d1s.beam.bundle
 import com.typesafe.config.ConfigFactory
 import dev.d1s.beam.bundle.configuration.ApplicationConfigBean
 import dev.d1s.beam.bundle.configuration.Routing
+import dev.d1s.beam.bundle.configuration.dry
 import dev.d1s.beam.daemon.BeamDaemonApplication
 import dev.d1s.exkt.ktor.server.koin.configuration.Configurers
 import dev.d1s.exkt.ktor.server.koin.configuration.ServerApplication
@@ -56,9 +57,13 @@ class BeamBundleApplication : ServerApplication(), KoinComponent {
             }
         }
 
-        embeddedServer(Netty, applicationEngineEnvironment).start()
+        val requireDaemonServer = !loadedConfig.dry
 
-        BeamDaemonApplication().launch()
+        embeddedServer(Netty, applicationEngineEnvironment).start(wait = !requireDaemonServer)
+
+        if (requireDaemonServer) {
+            BeamDaemonApplication().launch()
+        }
     }
 
     private fun loadConfig(): ApplicationConfig {
