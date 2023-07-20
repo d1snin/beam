@@ -18,6 +18,9 @@ package dev.d1s.beam.bundle.configuration
 
 import dev.d1s.beam.client.PublicBeamClient
 import dev.d1s.beam.commons.DaemonState
+import dev.d1s.beam.commons.DaemonStatus
+import dev.d1s.beam.commons.VERSION
+import dev.d1s.beam.commons.Version
 import dev.d1s.exkt.ktor.server.koin.configuration.ApplicationConfigurer
 import io.ktor.server.application.*
 import io.ktor.server.config.*
@@ -38,6 +41,16 @@ object BeamClient : ApplicationConfigurer {
 
         val client = PublicBeamClient(httpAddress, wsAddress)
 
+        wait()
+
+        client.launchDaemonChecks()
+
+        module.single {
+            client
+        }
+    }
+
+    private fun wait() {
         runBlocking {
             val duration = 5.seconds
 
@@ -47,27 +60,44 @@ object BeamClient : ApplicationConfigurer {
 
             delay(duration)
         }
+    }
 
+    private fun PublicBeamClient.launchDaemonChecks() {
         ioScope.launch {
-            val status = client.getDaemonStatus()
+            val status = getDaemonStatus()
 
-            status.onSuccess { (version, state) ->
-                if (state == DaemonState.UP) {
-                    logger.i {
-                        "Connected to daemon. Version: $version. State: $state"
-                    }
-                } else {
-                    throw IllegalStateException("Daemon isn't up. State: $state")
-                }
+            status.onSuccess { daemonStatus ->
+                checkState(daemonStatus)
             }
 
             status.onFailure {
                 throw IllegalStateException("Couldn't request daemon status", it)
             }
         }
+    }
 
-        module.single {
-            client
+    private suspend fun PublicBeamClient.checkState(status: DaemonStatus) {
+        val (version, state) = status
+
+        if (state == DaemonState.UP) {
+            logger.i {
+                "Connected to daemon. Version: $version. State: $state"
+            }
+
+            checkCompatibility(daemonVersion = version)
+        } else {
+            throw IllegalStateException("Daemon isn't up. State: $state")
+        }
+    }
+
+    private suspend fun PublicBeamClient.checkCompatibility(daemonVersion: Version) {
+        val compatible = isCompatible().getOrThrow()
+
+        if (!compatible) {
+            throw IllegalStateException(
+                "This build of Beam Bundle is not compatible with running daemon. " +
+                        "Bundle version: $VERSION. Daemon version: $daemonVersion"
+            )
         }
     }
 }
