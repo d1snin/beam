@@ -18,6 +18,7 @@ package dev.d1s.beam.commons.validation
 
 import dev.d1s.beam.commons.ModifiedRootSpace
 import dev.d1s.beam.commons.ModifiedSpace
+import dev.d1s.beam.commons.SpaceSlug
 import dev.d1s.exkt.konform.matches
 import io.konform.validation.Validation
 
@@ -29,6 +30,7 @@ public val validateRootSpace: Validation<ModifiedRootSpace> = Validation {
 
 public val validateSpace: Validation<ModifiedSpace> = Validation {
     ModifiedSpace::slug {
+        run(spaceSlugNotInBlacklist)
         matches(Regex.Slug) hint "space slug must match ${Regex.Slug}"
     }
 
@@ -38,5 +40,11 @@ public val validateSpace: Validation<ModifiedSpace> = Validation {
 
     ModifiedSpace::view {
         run(validateViewConfiguration)
+    }
+}
+
+private val spaceSlugNotInBlacklist: Validation<SpaceSlug> = Validation {
+    addConstraint("This space slug is blacklisted") { slug ->
+        !SpaceSlugBlacklist.contains(slug)
     }
 }
