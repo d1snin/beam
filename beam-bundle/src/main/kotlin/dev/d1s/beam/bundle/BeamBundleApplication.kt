@@ -17,9 +17,7 @@
 package dev.d1s.beam.bundle
 
 import com.typesafe.config.ConfigFactory
-import dev.d1s.beam.bundle.configuration.ApplicationConfigBean
-import dev.d1s.beam.bundle.configuration.Routing
-import dev.d1s.beam.bundle.configuration.dry
+import dev.d1s.beam.bundle.configuration.*
 import dev.d1s.beam.daemon.BeamDaemonApplication
 import dev.d1s.exkt.ktor.server.koin.configuration.Configurers
 import dev.d1s.exkt.ktor.server.koin.configuration.ServerApplication
@@ -29,6 +27,9 @@ import io.ktor.server.application.*
 import io.ktor.server.config.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.lighthousegames.logging.logging
 
@@ -37,33 +38,51 @@ class BeamBundleApplication : ServerApplication(), KoinComponent {
     override val configurers: Configurers = listOf(
         Connector,
         Routing,
+        Cors,
         ApplicationConfigBean,
+        Services,
         Di
     )
 
     private val logger = logging()
+
+    private val beamClientScope = CoroutineScope(Dispatchers.Default)
 
     override fun launch() {
         logger.i {
             "Starting Beam Bundle..."
         }
 
-        val loadedConfig = loadConfig()
-        val applicationEngineEnvironment = createApplicationEngineEnvironment(config = loadedConfig)
+        val config = loadConfig()
+        val environment = createApplicationEngineEnvironment(config = config)
+        startBundle(environment)
 
-        applicationEngineEnvironment.monitor.subscribe(ApplicationStarted) {
+        val requireDaemonServer = !config.dry
+        if (requireDaemonServer) {
+            val daemon = BeamDaemonApplication()
+
+            beamClientScope.launch {
+                daemon.serverReady.lock()
+
+                with(BeamClient) {
+                    environment.application.configure(koinModule, config)
+                }
+            }
+
+            daemon.launch()
+        }
+    }
+
+    private fun startBundle(environment: ApplicationEngineEnvironment) {
+        val config = environment.config
+
+        environment.monitor.subscribe(ServerReady) {
             logger.i {
-                "Beam Bundle is ready to accept requests on port ${applicationEngineEnvironment.config.port}"
+                "Beam Bundle is ready to accept requests on port ${config.port}"
             }
         }
 
-        val requireDaemonServer = !loadedConfig.dry
-
-        embeddedServer(Netty, applicationEngineEnvironment).start(wait = !requireDaemonServer)
-
-        if (requireDaemonServer) {
-            BeamDaemonApplication().launch()
-        }
+        embeddedServer(Netty, environment).start(wait = config.dry)
     }
 
     private fun loadConfig(): ApplicationConfig {

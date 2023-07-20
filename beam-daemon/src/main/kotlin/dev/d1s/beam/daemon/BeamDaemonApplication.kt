@@ -26,6 +26,7 @@ import io.ktor.server.application.*
 import io.ktor.server.config.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
+import kotlinx.coroutines.sync.Mutex
 import org.koin.core.component.KoinComponent
 import org.lighthousegames.logging.logging
 
@@ -35,6 +36,7 @@ public class BeamDaemonApplication : ServerApplication(), KoinComponent {
         Connector,
         ApplicationConfigBean,
         ContentNegotiation,
+        Security,
         Database,
         Services,
         Repositories,
@@ -42,11 +44,12 @@ public class BeamDaemonApplication : ServerApplication(), KoinComponent {
         Routing,
         WebSocketEvents,
         Cors,
-        Security,
         RateLimit,
         StatusPages,
         Di
     )
+
+    public val serverReady: Mutex = Mutex(locked = true)
 
     private val logger = logging()
 
@@ -58,10 +61,12 @@ public class BeamDaemonApplication : ServerApplication(), KoinComponent {
         val loadedConfig = loadConfig()
         val applicationEngineEnvironment = createApplicationEngineEnvironment(config = loadedConfig)
 
-        applicationEngineEnvironment.monitor.subscribe(ApplicationStarted) {
+        applicationEngineEnvironment.monitor.subscribe(ServerReady) {
             logger.i {
                 "Beam Daemon is ready to accept requests on port ${applicationEngineEnvironment.config.port}"
             }
+
+            serverReady.unlock()
         }
 
         embeddedServer(Netty, applicationEngineEnvironment).start(wait = true)

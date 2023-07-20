@@ -37,6 +37,7 @@ dependencies {
 
     val koinVersion: String by project
 
+    implementation(project(":beam-client"))
     implementation(project(":beam-daemon"))
 
     implementation("dev.d1s.exkt:exkt-common:$exktVersion")
