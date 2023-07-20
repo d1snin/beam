@@ -34,6 +34,7 @@ object BeamBundleApplication : ServerApplication(), KoinComponent {
     override val configurers: Configurers = listOf(
         Connector,
         Routing,
+        StaticResources,
         Cors,
         ApplicationConfigBean,
         BeamClient,
