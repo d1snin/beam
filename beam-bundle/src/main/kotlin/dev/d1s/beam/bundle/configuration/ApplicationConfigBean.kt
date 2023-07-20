@@ -30,7 +30,5 @@ object ApplicationConfigBean : ApplicationConfigurer {
     }
 }
 
-val ApplicationConfig.dry get() = propertyOrNull("dry")?.getString() == "true"
-
 val ApplicationConfig.daemonHttpAddress get() = property("daemon.connector.http").getString()
 val ApplicationConfig.daemonWsAddress get() = property("daemon.connector.ws").getString()

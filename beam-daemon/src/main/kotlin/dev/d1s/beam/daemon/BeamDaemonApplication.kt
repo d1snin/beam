@@ -30,7 +30,7 @@ import kotlinx.coroutines.sync.Mutex
 import org.koin.core.component.KoinComponent
 import org.lighthousegames.logging.logging
 
-public class BeamDaemonApplication : ServerApplication(), KoinComponent {
+public object BeamDaemonApplication : ServerApplication(), KoinComponent {
 
     override val configurers: Configurers = listOf(
         Connector,

@@ -18,7 +18,6 @@ package dev.d1s.beam.bundle
 
 import com.typesafe.config.ConfigFactory
 import dev.d1s.beam.bundle.configuration.*
-import dev.d1s.beam.daemon.BeamDaemonApplication
 import dev.d1s.exkt.ktor.server.koin.configuration.Configurers
 import dev.d1s.exkt.ktor.server.koin.configuration.ServerApplication
 import dev.d1s.exkt.ktor.server.koin.configuration.builtin.Connector
@@ -27,26 +26,22 @@ import io.ktor.server.application.*
 import io.ktor.server.config.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.lighthousegames.logging.logging
 
-class BeamBundleApplication : ServerApplication(), KoinComponent {
+object BeamBundleApplication : ServerApplication(), KoinComponent {
 
     override val configurers: Configurers = listOf(
         Connector,
         Routing,
         Cors,
         ApplicationConfigBean,
+        BeamClient,
         Services,
         Di
     )
 
     private val logger = logging()
-
-    private val beamClientScope = CoroutineScope(Dispatchers.Default)
 
     override fun launch() {
         logger.i {
@@ -56,21 +51,6 @@ class BeamBundleApplication : ServerApplication(), KoinComponent {
         val config = loadConfig()
         val environment = createApplicationEngineEnvironment(config = config)
         startBundle(environment)
-
-        val requireDaemonServer = !config.dry
-        if (requireDaemonServer) {
-            val daemon = BeamDaemonApplication()
-
-            beamClientScope.launch {
-                daemon.serverReady.lock()
-
-                with(BeamClient) {
-                    environment.application.configure(koinModule, config)
-                }
-            }
-
-            daemon.launch()
-        }
     }
 
     private fun startBundle(environment: ApplicationEngineEnvironment) {
@@ -82,7 +62,7 @@ class BeamBundleApplication : ServerApplication(), KoinComponent {
             }
         }
 
-        embeddedServer(Netty, environment).start(wait = config.dry)
+        embeddedServer(Netty, environment).start(wait = true)
     }
 
     private fun loadConfig(): ApplicationConfig {

@@ -38,7 +38,6 @@ dependencies {
     val koinVersion: String by project
 
     implementation(project(":beam-client"))
-    implementation(project(":beam-daemon"))
 
     implementation("dev.d1s.exkt:exkt-common:$exktVersion")
     implementation("dev.d1s.exkt:exkt-ktor-server:$exktVersion")
@@ -71,15 +70,8 @@ ktor {
 }
 
 tasks.register<Copy>("grabConfig") {
-    from("../config/bundle.conf", "../config/daemon.conf")
+    from("../config/bundle.conf")
     into("src/main/resources")
 }
 
 tasks["processResources"].dependsOn(tasks["grabConfig"])
-
-tasks.register<Copy>("grabDbChangelog") {
-    from("../config/db/changelog.json")
-    into("src/main/resources")
-}
-
-tasks["processResources"].dependsOn(tasks["grabDbChangelog"])

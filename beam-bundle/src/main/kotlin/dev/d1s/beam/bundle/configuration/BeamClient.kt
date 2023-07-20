@@ -20,20 +20,32 @@ import dev.d1s.beam.client.PublicBeamClient
 import dev.d1s.exkt.ktor.server.koin.configuration.ApplicationConfigurer
 import io.ktor.server.application.*
 import io.ktor.server.config.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.koin.core.module.Module
+import org.lighthousegames.logging.logging
+import kotlin.time.Duration.Companion.seconds
 
 object BeamClient : ApplicationConfigurer {
 
     private val ioScope = CoroutineScope(Dispatchers.IO)
+
+    private val logger = logging()
 
     override fun Application.configure(module: Module, config: ApplicationConfig) {
         val httpAddress = config.daemonHttpAddress
         val wsAddress = config.daemonWsAddress
 
         val client = PublicBeamClient(httpAddress, wsAddress)
+
+        runBlocking {
+            val duration = 5.seconds
+
+            logger.i {
+                "Will request daemon status in $duration"
+            }
+
+            delay(duration)
+        }
 
         ioScope.launch {
             client.getDaemonStatus().onFailure {

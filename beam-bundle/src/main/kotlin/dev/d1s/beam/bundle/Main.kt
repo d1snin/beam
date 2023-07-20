@@ -17,5 +17,5 @@
 package dev.d1s.beam.bundle
 
 fun main() {
-    BeamBundleApplication().launch()
+    BeamBundleApplication.launch()
 }
