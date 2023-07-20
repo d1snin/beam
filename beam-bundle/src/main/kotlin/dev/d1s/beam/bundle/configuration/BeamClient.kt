@@ -41,7 +41,7 @@ object BeamClient : ApplicationConfigurer {
 
         val client = PublicBeamClient(httpAddress, wsAddress)
 
-        wait()
+        waitDaemonStartup()
 
         client.launchDaemonChecks()
 
@@ -50,7 +50,7 @@ object BeamClient : ApplicationConfigurer {
         }
     }
 
-    private fun wait() {
+    private fun waitDaemonStartup() {
         runBlocking {
             val duration = 5.seconds
 
