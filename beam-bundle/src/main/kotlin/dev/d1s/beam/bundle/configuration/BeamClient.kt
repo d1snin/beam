@@ -17,6 +17,7 @@
 package dev.d1s.beam.bundle.configuration
 
 import dev.d1s.beam.client.PublicBeamClient
+import dev.d1s.beam.commons.DaemonState
 import dev.d1s.exkt.ktor.server.koin.configuration.ApplicationConfigurer
 import io.ktor.server.application.*
 import io.ktor.server.config.*
@@ -48,7 +49,19 @@ object BeamClient : ApplicationConfigurer {
         }
 
         ioScope.launch {
-            client.getDaemonStatus().onFailure {
+            val status = client.getDaemonStatus()
+
+            status.onSuccess { (version, state) ->
+                if (state == DaemonState.UP) {
+                    logger.i {
+                        "Connected to daemon. Version: $version. State: $state"
+                    }
+                } else {
+                    throw IllegalStateException("Daemon isn't up. State: $state")
+                }
+            }
+
+            status.onFailure {
                 throw IllegalStateException("Couldn't request daemon status", it)
             }
         }
