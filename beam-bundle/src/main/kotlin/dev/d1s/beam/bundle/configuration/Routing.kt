@@ -16,6 +16,7 @@
 
 package dev.d1s.beam.bundle.configuration
 
+import dev.d1s.beam.bundle.route.IndexRoute
 import dev.d1s.exkt.ktor.server.koin.configuration.ApplicationConfigurer
 import dev.d1s.exkt.ktor.server.koin.configuration.builtin.configureRoutes
 import io.ktor.server.application.*
@@ -26,6 +27,7 @@ object Routing : ApplicationConfigurer {
 
     override fun Application.configure(module: Module, config: ApplicationConfig) {
         module.configureRoutes {
+            +IndexRoute()
         }
     }
 }

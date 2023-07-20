@@ -14,21 +14,19 @@
  * limitations under the License.
  */
 
-package dev.d1s.beam.bundle.configuration
+package dev.d1s.beam.bundle.service
 
-import dev.d1s.beam.bundle.service.DefaultIndexService
-import dev.d1s.beam.bundle.service.IndexService
-import dev.d1s.exkt.ktor.server.koin.configuration.ApplicationConfigurer
-import io.ktor.server.application.*
-import io.ktor.server.config.*
-import org.koin.core.module.Module
-import org.koin.core.module.dsl.singleOf
+import dev.d1s.beam.bundle.entity.ResolvedSpace
+import dev.d1s.beam.commons.SpaceIdentifier
 
-object Services : ApplicationConfigurer {
+interface IndexService {
 
-    override fun Application.configure(module: Module, config: ApplicationConfig) {
-        module.apply {
-            singleOf<IndexService>(::DefaultIndexService)
-        }
+    suspend fun resolveSpace(spaceIdentifier: SpaceIdentifier?): ResolvedSpace
+}
+
+class DefaultIndexService : IndexService {
+
+    override suspend fun resolveSpace(spaceIdentifier: SpaceIdentifier?): ResolvedSpace {
+        TODO()
     }
 }
