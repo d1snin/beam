@@ -29,7 +29,7 @@ object StaticResources : ApplicationConfigurer {
 
     override fun Application.configure(module: Module, config: ApplicationConfig) {
         routing {
-            staticResources("/", STATIC_PACKAGE) {
+            staticResources("/", STATIC_PACKAGE, index = null) {
                 enableAutoHeadResponse()
             }
         }

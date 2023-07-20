@@ -24,9 +24,6 @@ internal object SpaceSlugBlacklist : List<SpaceSlug> by blackList {
     init {
         blackList.apply {
             add("robots.txt")
-            add("index")
-            add("index.html")
-            add("index.htm")
             add("main.bundle.js")
             add("sitemap.xml")
         }
