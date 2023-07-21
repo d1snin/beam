@@ -14,19 +14,12 @@
  * limitations under the License.
  */
 
-package dev.d1s.beam.commons
+package dev.d1s.beam.bundle.entity
 
-import kotlinx.serialization.Serializable
+import dev.d1s.beam.commons.SpaceIdentifier
+import io.ktor.server.application.*
 
-public typealias SpaceIconUrl = String
-
-public typealias SpaceTitle = String
-public typealias SpaceDescription = String
-
-@Serializable
-public data class ViewConfiguration(
-    val theme: SpaceThemeName,
-    val icon: SpaceIconUrl?,
-    val title: SpaceTitle?,
-    val description: SpaceDescription?
+data class SpaceRequest(
+    val spaceIdentifier: SpaceIdentifier?,
+    val call: ApplicationCall
 )

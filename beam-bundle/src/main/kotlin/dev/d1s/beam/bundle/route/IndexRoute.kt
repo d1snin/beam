@@ -17,6 +17,7 @@
 package dev.d1s.beam.bundle.route
 
 import dev.d1s.beam.bundle.entity.ResolvedSpace
+import dev.d1s.beam.bundle.entity.SpaceRequest
 import dev.d1s.beam.bundle.service.IndexService
 import dev.d1s.exkt.ktor.server.koin.configuration.Route
 import io.ktor.http.*
@@ -39,18 +40,22 @@ class IndexRoute : Route, KoinComponent {
             val path = call.request.path()
             val segments = path.split("/").filterNot { it.isBlank() }
 
-            val resolvedSpace = resolveSpace(segments)
+            val resolvedSpace = resolveSpace(segments, call)
             call.respondHtml(resolvedSpace)
         }
     }
 
-    private suspend fun resolveSpace(pathSegments: List<String>) =
-        if (pathSegments.size == 1) {
-            val spaceIdentifier = pathSegments.first()
-            indexService.resolveSpace(spaceIdentifier)
-        } else {
-            indexService.resolveSpace(spaceIdentifier = null)
+    private suspend fun resolveSpace(pathSegments: List<String>, call: ApplicationCall): ResolvedSpace {
+        val spaceIdentifier = when (pathSegments.size) {
+            0 -> "root"
+            1 -> pathSegments.first()
+            else -> null
         }
+
+        val request = SpaceRequest(spaceIdentifier, call)
+
+        return indexService.resolveSpace(request)
+    }
 
     private suspend fun ApplicationCall.respondHtml(resolvedSpace: ResolvedSpace) {
         val contentType = ContentType.Text.Html.withCharset(Charsets.UTF_8)

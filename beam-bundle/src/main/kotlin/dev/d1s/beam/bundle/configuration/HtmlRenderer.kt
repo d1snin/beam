@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package dev.d1s.beam.commons
+package dev.d1s.beam.bundle.configuration
 
-import kotlinx.serialization.Serializable
+import dev.d1s.beam.bundle.html.DefaultIndexHtmlRenderer
+import dev.d1s.beam.bundle.html.IndexHtmlRenderer
+import dev.d1s.exkt.ktor.server.koin.configuration.ApplicationConfigurer
+import io.ktor.server.application.*
+import io.ktor.server.config.*
+import org.koin.core.module.Module
+import org.koin.core.module.dsl.singleOf
 
-public typealias SpaceIconUrl = String
+object HtmlRenderer : ApplicationConfigurer {
 
-public typealias SpaceTitle = String
-public typealias SpaceDescription = String
-
-@Serializable
-public data class ViewConfiguration(
-    val theme: SpaceThemeName,
-    val icon: SpaceIconUrl?,
-    val title: SpaceTitle?,
-    val description: SpaceDescription?
-)
+    override fun Application.configure(module: Module, config: ApplicationConfig) {
+        module.singleOf<IndexHtmlRenderer>(::DefaultIndexHtmlRenderer)
+    }
+}

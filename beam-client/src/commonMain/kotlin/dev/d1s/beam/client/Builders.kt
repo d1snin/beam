@@ -68,14 +68,11 @@ public class ViewConfigurationBuilder {
 
     public var description: SpaceDescription? = null
 
-    public var preview: SpaceUrlPreview? = null
-
     internal fun build() =
         ViewConfiguration(
             theme ?: error("Space theme is undefined"),
             icon,
             title,
-            description,
-            preview
+            description
         )
 }

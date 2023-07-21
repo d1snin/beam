@@ -108,6 +108,8 @@ public class DefaultPublicBeamClient(
         defaultRequest {
             url(httpBaseUrl)
         }
+
+        expectSuccess = true
     }
 
     private val eventHandlingScope = CoroutineScope(Dispatchers.Main)

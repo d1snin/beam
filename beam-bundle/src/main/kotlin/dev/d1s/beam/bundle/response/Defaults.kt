@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-package dev.d1s.beam.commons
+package dev.d1s.beam.bundle.response
 
-import kotlinx.serialization.Serializable
+object Defaults {
 
-@Serializable
-public data class SpaceUrlPreview(
-    val url: String?,
-    val title: String?,
-    val description: String?,
-    val image: String?
-)
+    const val FOUND_SPACE_THEME_COLOR = "#73c5ff"
+
+    const val TITLE = "Beam Space"
+    const val DESCRIPTION = "Explore a public space created on Beam."
+
+    const val SITE_NAME = "Beam"
+
+    const val ICON = "/icon_gray.png"
+}
