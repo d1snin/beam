@@ -1,0 +1,6 @@
+#!/bin/bash
+
+./gradlew beam-ui:build
+./gradlew beam-bundle:publishImageToLocalRegistry
+./gradlew beam-daemon:publishImageToLocalRegistry
+docker-compose -f ./beam-bundle/docker/docker-compose.yml up -d
