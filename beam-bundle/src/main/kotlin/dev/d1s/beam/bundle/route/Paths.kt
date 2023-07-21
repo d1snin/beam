@@ -18,5 +18,5 @@ package dev.d1s.beam.bundle.route
 
 object Paths {
 
-    const val INDEX = "/{...}"
+    val Index = Regex("/.*")
 }

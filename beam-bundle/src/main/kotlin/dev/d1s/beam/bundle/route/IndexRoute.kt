@@ -39,9 +39,9 @@ class IndexRoute : Route, KoinComponent {
     private val logger = logging()
 
     override fun Routing.apply() {
-        get(Paths.INDEX) {
+        get(Paths.Index) {
             logger.d {
-                "Handling ${Paths.INDEX}"
+                "Handling ${Paths.Index}"
             }
 
             val path = call.request.path()
