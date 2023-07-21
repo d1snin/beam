@@ -23,9 +23,9 @@ private val blackList = mutableListOf<SpaceSlug>()
 internal object SpaceSlugBlacklist : List<SpaceSlug> by blackList {
     init {
         blackList.apply {
-            add("robots.txt")
+            add("icon.png")
             add("main.bundle.js")
-            add("sitemap.xml")
+            add("robots.txt")
         }
     }
 }
