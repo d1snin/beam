@@ -2,6 +2,7 @@
 
 docker-compose -f ./beam-bundle/docker/docker-compose.yml down
 docker volume rm docker_beam-daemon-db-data-postgres docker_beam-daemon-db-data-postgres-config
+./gradlew beam-ui:build
 ./gradlew beam-bundle:publishImageToLocalRegistry
 ./gradlew beam-daemon:publishImageToLocalRegistry
 docker-compose -f ./beam-bundle/docker/docker-compose.yml up

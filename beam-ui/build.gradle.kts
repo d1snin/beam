@@ -92,10 +92,3 @@ kotlin {
         }
     }
 }
-
-tasks.register<Copy>("copyJs") {
-    from(buildDir.resolve("dist/js/productionExecutable/$mainJsFile"))
-    into("../beam-bundle/src/main/resources/static")
-}
-
-tasks["copyJs"].dependsOn(tasks["build"])

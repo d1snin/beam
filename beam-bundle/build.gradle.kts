@@ -70,6 +70,13 @@ ktor {
     }
 }
 
+tasks.register<Copy>("grabJs") {
+    from("../beam-ui/build/dist/js/productionExecutable/main.bundle.js")
+    into("src/main/resources/static")
+}
+
+tasks["build"].dependsOn(tasks["grabJs"])
+
 tasks.register<Copy>("grabConfig") {
     from("../config/bundle.conf")
     into("src/main/resources")
