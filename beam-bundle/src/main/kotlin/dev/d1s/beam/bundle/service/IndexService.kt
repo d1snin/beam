@@ -29,6 +29,7 @@ import io.ktor.http.*
 import io.ktor.server.request.*
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import org.lighthousegames.logging.logging
 
 interface IndexService {
 
@@ -41,15 +42,33 @@ class DefaultIndexService : IndexService, KoinComponent {
 
     private val renderer by inject<IndexHtmlRenderer>()
 
+    private val logger = logging()
+
     override suspend fun resolveSpace(request: SpaceRequest): ResolvedSpace {
+        logger.d {
+            "Resolving space ${request.spaceIdentifier}..."
+        }
+
         val spaceIdentifier = request.spaceIdentifier ?: return notFoundSpace()
 
         val spaceResult = beamClient.getSpace(spaceIdentifier)
 
         spaceResult.onFailure {
+            logger.d {
+                "Failure fetching space. Message: ${it.message}"
+            }
+
             return if (it is ClientRequestException && it.response.status == HttpStatusCode.NotFound) {
+                logger.d {
+                    "Got 404"
+                }
+
                 notFoundSpace()
             } else {
+                logger.d {
+                    "Got something other than 404"
+                }
+
                 notFoundSpace("Beam Space not available")
             }
         }
@@ -60,6 +79,10 @@ class DefaultIndexService : IndexService, KoinComponent {
     }
 
     private fun notFoundSpace(message: String = "Beam Space not found"): ResolvedSpace {
+        logger.d {
+            "Resolving with unavailable space. Message: $message"
+        }
+
         val parameters = RenderParameters(
             title = message,
             description = null,
@@ -74,11 +97,19 @@ class DefaultIndexService : IndexService, KoinComponent {
     }
 
     private fun foundSpace(space: Space, request: SpaceRequest): ResolvedSpace {
+        logger.d {
+            "Resolving with found space by identifier ${request.spaceIdentifier}..."
+        }
+
         val url = URLBuilder(request.call.request.uri).apply {
             set {
                 parameters.clear()
             }
         }.build().toString()
+
+        logger.d {
+            "Url: $url"
+        }
 
         val view = space.view
 
@@ -101,6 +132,10 @@ class DefaultIndexService : IndexService, KoinComponent {
             themeColor = Defaults.FOUND_SPACE_THEME_COLOR,
             urlPreview
         )
+
+        logger.d {
+            "Render parameters: $parameters"
+        }
 
         val html = renderer.renderIndex(parameters)
 

@@ -22,12 +22,14 @@ import dev.d1s.beam.bundle.service.IndexService
 import dev.d1s.exkt.ktor.server.koin.configuration.Route
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.html.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
+import org.lighthousegames.logging.logging
 
 class IndexRoute : Route, KoinComponent {
 
@@ -35,12 +37,27 @@ class IndexRoute : Route, KoinComponent {
 
     private val indexService by inject<IndexService>()
 
+    private val logger = logging()
+
     override fun Routing.apply() {
         get(Paths.INDEX) {
+            logger.d {
+                "Handling ${Paths.INDEX}"
+            }
+
             val path = call.request.path()
             val segments = path.split("/").filterNot { it.isBlank() }
 
+            logger.d {
+                "Path: $path"
+            }
+
             val resolvedSpace = resolveSpace(segments, call)
+
+            logger.d {
+                "Responding resolved space..."
+            }
+
             call.respondHtml(resolvedSpace)
         }
     }
@@ -50,6 +67,10 @@ class IndexRoute : Route, KoinComponent {
             0 -> "root"
             1 -> pathSegments.first()
             else -> null
+        }
+
+        logger.d {
+            "Space identifier: $spaceIdentifier"
         }
 
         val request = SpaceRequest(spaceIdentifier, call)

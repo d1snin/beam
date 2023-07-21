@@ -64,9 +64,17 @@ object BeamClient : ApplicationConfigurer {
 
     private fun PublicBeamClient.launchDaemonChecks() {
         ioScope.launch {
+            logger.d {
+                "Launched daemon checks..."
+            }
+
             val status = getDaemonStatus()
 
             status.onSuccess { daemonStatus ->
+                logger.d {
+                    "Daemon status: $daemonStatus"
+                }
+
                 checkState(daemonStatus)
             }
 
