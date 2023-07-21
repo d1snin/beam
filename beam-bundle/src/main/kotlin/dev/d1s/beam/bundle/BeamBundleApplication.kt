@@ -32,6 +32,7 @@ import org.lighthousegames.logging.logging
 object BeamBundleApplication : ServerApplication(), KoinComponent {
 
     override val configurers: Configurers = listOf(
+        CheckStatic,
         Connector,
         Routing,
         StaticResources,
