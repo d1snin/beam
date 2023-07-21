@@ -26,4 +26,6 @@ object Defaults {
     const val SITE_NAME = "Beam"
 
     const val ICON = "/icon_gray.png"
+
+    const val SCRIPT = "/main.bundle.js"
 }

@@ -17,20 +17,25 @@
 package dev.d1s.beam.bundle.html
 
 import dev.d1s.beam.bundle.entity.Html
+import dev.d1s.beam.bundle.response.Defaults
+import dev.d1s.beam.commons.SpaceIconUrl
+import kotlinx.html.*
+import kotlinx.html.stream.createHTML
 
 data class RenderParameters(
     val title: String,
     val description: String?,
+    val image: SpaceIconUrl?,
     val themeColor: String?,
     val urlPreview: SpaceUrlPreview?
 )
 
 data class SpaceUrlPreview(
-    val url: String?,
-    val siteName: String?,
-    val title: String?,
-    val description: String?,
-    val image: String?
+    val url: String,
+    val siteName: String,
+    val title: String,
+    val description: String,
+    val image: String
 )
 
 interface IndexHtmlRenderer {
@@ -40,7 +45,51 @@ interface IndexHtmlRenderer {
 
 class DefaultIndexHtmlRenderer : IndexHtmlRenderer {
 
-    override fun renderIndex(renderParameters: RenderParameters): Html {
-        TODO("Not yet implemented")
-    }
+    override fun renderIndex(renderParameters: RenderParameters): Html =
+        createHTML().html {
+            lang = "en"
+
+            head {
+                title(renderParameters.title)
+                meta("title", renderParameters.title)
+
+                renderParameters.description?.let {
+                    meta("description", it)
+                }
+
+                renderParameters.themeColor?.let {
+                    meta("theme-color", it)
+                }
+
+                meta("charset", "utf-8")
+                meta("viewport", "width=device-width, initial-scale=1")
+
+                renderParameters.urlPreview?.let { preview ->
+                    meta("og:type", "website")
+                    meta("og:url", preview.url)
+                    meta("og:site_name", preview.siteName)
+                    meta("og:title", preview.title)
+                    meta("og:description", preview.description)
+                    meta("og:image", preview.image)
+
+                    meta("twitter:card", "summary_large_image")
+                    meta("twitter:url", preview.url)
+                    meta("twitter:title", preview.title)
+                    meta("twitter:description", preview.description)
+                    meta("twitter:image", preview.image)
+                }
+
+                link(rel = "icon", href = renderParameters.image)
+
+                script {
+                    src = Defaults.SCRIPT
+                }
+            }
+
+            body {
+                div {
+                    id = "root"
+                }
+            }
+        }
 }

@@ -63,6 +63,7 @@ class DefaultIndexService : IndexService, KoinComponent {
         val parameters = RenderParameters(
             title = message,
             description = null,
+            image = null,
             themeColor = null,
             urlPreview = null
         )
@@ -73,28 +74,30 @@ class DefaultIndexService : IndexService, KoinComponent {
     }
 
     private fun foundSpace(space: Space, request: SpaceRequest): ResolvedSpace {
-        val view = space.view
-
-        val title = view.title ?: Defaults.TITLE
-        val description = view.description ?: Defaults.DESCRIPTION
-
         val url = URLBuilder(request.call.request.uri).apply {
             set {
                 parameters.clear()
             }
         }.build().toString()
 
+        val view = space.view
+
+        val title = view.title ?: Defaults.TITLE
+        val description = view.description ?: Defaults.DESCRIPTION
+        val image = view.icon ?: Defaults.ICON
+
         val urlPreview = SpaceUrlPreview(
             url,
             siteName = Defaults.SITE_NAME,
             title,
             description,
-            image = view.icon ?: Defaults.ICON
+            image
         )
 
         val parameters = RenderParameters(
             title,
             description,
+            image,
             themeColor = Defaults.FOUND_SPACE_THEME_COLOR,
             urlPreview
         )
