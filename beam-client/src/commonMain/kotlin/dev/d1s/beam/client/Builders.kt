@@ -64,15 +64,54 @@ public class ViewConfigurationBuilder {
 
     public var icon: SpaceIconUrl? = null
 
+    private var favicon: SpaceFavicon? = null
+
     public var title: SpaceTitle? = null
 
     public var description: SpaceDescription? = null
+
+    public fun favicon(build: SpaceFaviconBuilder.() -> Unit) {
+        favicon = SpaceFaviconBuilder().apply(build).build()
+    }
 
     internal fun build() =
         ViewConfiguration(
             theme ?: error("Space theme is undefined"),
             icon,
+            favicon,
             title,
             description
+        )
+}
+
+@BuilderDsl
+public class SpaceFaviconBuilder {
+
+    public var webManifest: Url? = null
+
+    public var appleTouch: SpaceIconUrl? = null
+
+    public var favicon16: SpaceIconUrl? = null
+
+    public var favicon32: SpaceIconUrl? = null
+
+    public var faviconIco: SpaceIconUrl? = null
+
+    public var browserconfig: Url? = null
+
+    public var maskIcon: SpaceIconUrl? = null
+
+    public var maskIconColor: String? = null
+
+    internal fun build() =
+        SpaceFavicon(
+            webManifest,
+            appleTouch,
+            favicon16,
+            favicon32,
+            faviconIco,
+            browserconfig,
+            maskIcon,
+            maskIconColor
         )
 }

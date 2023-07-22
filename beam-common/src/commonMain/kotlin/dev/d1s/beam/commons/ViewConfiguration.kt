@@ -18,7 +18,8 @@ package dev.d1s.beam.commons
 
 import kotlinx.serialization.Serializable
 
-public typealias SpaceIconUrl = String
+public typealias Url = String
+public typealias SpaceIconUrl = Url
 
 public typealias SpaceTitle = String
 public typealias SpaceDescription = String
@@ -27,6 +28,19 @@ public typealias SpaceDescription = String
 public data class ViewConfiguration(
     val theme: SpaceThemeName,
     val icon: SpaceIconUrl?,
+    val favicon: SpaceFavicon?,
     val title: SpaceTitle?,
     val description: SpaceDescription?
+)
+
+@Serializable
+public data class SpaceFavicon(
+    val webManifest: Url?,
+    val appleTouch: SpaceIconUrl?,
+    val favicon16: SpaceIconUrl?,
+    val favicon32: SpaceIconUrl?,
+    val faviconIco: SpaceIconUrl?,
+    val browserconfig: Url?,
+    val maskIcon: SpaceIconUrl?,
+    val maskIconColor: String?
 )

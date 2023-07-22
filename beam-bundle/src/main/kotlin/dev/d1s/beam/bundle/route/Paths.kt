@@ -18,5 +18,10 @@ package dev.d1s.beam.bundle.route
 
 object Paths {
 
-    val Index = Regex("/(?!icon\\.png|main\\.bundle\\.js|robots\\.txt).*")
+    val Index = Regex(
+        "/(?!android-chrome-192x192\\.png|android-chrome-512x512\\.png|" +
+                "apple-touch-icon\\.png|browserconfig\\.xml|favicon\\.ico|favicon-16x16\\.png|" +
+                "favicon-32x32\\.png|icon\\.png|main\\.bundle\\.js|mstile-150x150\\.png|robots\\.txt|" +
+                "safari-pinned-tab\\.svg|site\\.webmanifest).*"
+    )
 }

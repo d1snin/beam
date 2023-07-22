@@ -20,6 +20,7 @@ import dev.d1s.beam.bundle.configuration.daemonHttpAddress
 import dev.d1s.beam.bundle.configuration.daemonWsAddress
 import dev.d1s.beam.bundle.entity.Html
 import dev.d1s.beam.bundle.response.Defaults
+import dev.d1s.beam.commons.SpaceFavicon
 import dev.d1s.beam.commons.SpaceIconUrl
 import io.ktor.server.config.*
 import kotlinx.html.*
@@ -30,7 +31,8 @@ import org.koin.core.component.inject
 data class RenderParameters(
     val title: String,
     val description: String?,
-    val image: SpaceIconUrl?,
+    val icon: SpaceIconUrl?,
+    val favicon: SpaceFavicon,
     val themeColor: String?,
     val urlPreview: SpaceUrlPreview?
 )
@@ -66,6 +68,7 @@ class DefaultIndexHtmlRenderer : IndexHtmlRenderer, KoinComponent {
 
                 renderParameters.themeColor?.let {
                     meta("theme-color", it)
+                    meta("msapplication-TileColor", it)
                 }
 
                 meta("charset", "utf-8")
@@ -89,7 +92,25 @@ class DefaultIndexHtmlRenderer : IndexHtmlRenderer, KoinComponent {
                 meta("x-connector-http", config.daemonHttpAddress)
                 meta("x-connector-ws", config.daemonWsAddress)
 
-                link(rel = "icon", href = renderParameters.image)
+                val favicon = renderParameters.favicon
+
+                link(rel = "apple-touch-icon", href = favicon.appleTouch) {
+                    sizes = "180x180"
+                }
+
+                link(rel = "icon", type = "image/png", href = favicon.favicon16) {
+                    sizes = "16x16"
+                }
+
+                link(rel = "icon", type = "image/png", href = favicon.favicon32) {
+                    sizes = "32x32"
+                }
+
+                link(rel = "manifest", href = Defaults.MANIFEST)
+
+                link(rel = "mask-icon", href = favicon.maskIcon) {
+                    attributes["color"] = favicon.maskIconColor ?: ""
+                }
 
                 script {
                     src = Defaults.SCRIPT

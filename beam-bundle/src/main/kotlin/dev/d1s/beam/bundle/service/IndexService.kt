@@ -24,6 +24,7 @@ import dev.d1s.beam.bundle.html.SpaceUrlPreview
 import dev.d1s.beam.bundle.response.Defaults
 import dev.d1s.beam.client.PublicBeamClient
 import dev.d1s.beam.commons.Space
+import dev.d1s.beam.commons.SpaceFavicon
 import io.ktor.client.plugins.*
 import io.ktor.http.*
 import io.ktor.server.request.*
@@ -41,6 +42,17 @@ class DefaultIndexService : IndexService, KoinComponent {
     private val beamClient by inject<PublicBeamClient>()
 
     private val renderer by inject<IndexHtmlRenderer>()
+
+    private val defaultFavicon = SpaceFavicon(
+        webManifest = Defaults.MANIFEST,
+        appleTouch = Defaults.APPLE_TOUCH_ICON,
+        favicon16 = Defaults.FAVICON_16,
+        favicon32 = Defaults.FAVICON_32,
+        faviconIco = Defaults.FAVICON_ICO,
+        browserconfig = Defaults.BROWSERCONFIG,
+        maskIcon = Defaults.MASK_ICON,
+        maskIconColor = Defaults.MASK_ICON_COLOR
+    )
 
     private val logger = logging()
 
@@ -86,7 +98,8 @@ class DefaultIndexService : IndexService, KoinComponent {
         val parameters = RenderParameters(
             title = message,
             description = null,
-            image = null,
+            icon = Defaults.ICON,
+            favicon = defaultFavicon,
             themeColor = null,
             urlPreview = null
         )
@@ -115,20 +128,21 @@ class DefaultIndexService : IndexService, KoinComponent {
 
         val title = view.title ?: Defaults.TITLE
         val description = view.description ?: Defaults.DESCRIPTION
-        val image = view.icon ?: Defaults.ICON
+        val icon = view.icon ?: Defaults.ICON
 
         val urlPreview = SpaceUrlPreview(
             url,
             siteName = Defaults.SITE_NAME,
             title,
             description,
-            image
+            icon
         )
 
         val parameters = RenderParameters(
             title,
             description,
-            image,
+            icon,
+            favicon = view.favicon ?: defaultFavicon,
             themeColor = Defaults.FOUND_SPACE_THEME_COLOR,
             urlPreview
         )
