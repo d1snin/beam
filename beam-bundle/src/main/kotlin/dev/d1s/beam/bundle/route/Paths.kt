@@ -18,5 +18,5 @@ package dev.d1s.beam.bundle.route
 
 object Paths {
 
-    val Index = Regex("/.*")
+    val Index = Regex("/(?!icon\\.png|main\\.bundle\\.js|robots\\.txt).*")
 }
