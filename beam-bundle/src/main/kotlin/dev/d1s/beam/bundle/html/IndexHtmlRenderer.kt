@@ -16,11 +16,16 @@
 
 package dev.d1s.beam.bundle.html
 
+import dev.d1s.beam.bundle.configuration.daemonHttpAddress
+import dev.d1s.beam.bundle.configuration.daemonWsAddress
 import dev.d1s.beam.bundle.entity.Html
 import dev.d1s.beam.bundle.response.Defaults
 import dev.d1s.beam.commons.SpaceIconUrl
+import io.ktor.server.config.*
 import kotlinx.html.*
 import kotlinx.html.stream.createHTML
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 data class RenderParameters(
     val title: String,
@@ -43,7 +48,9 @@ interface IndexHtmlRenderer {
     fun renderIndex(renderParameters: RenderParameters): Html
 }
 
-class DefaultIndexHtmlRenderer : IndexHtmlRenderer {
+class DefaultIndexHtmlRenderer : IndexHtmlRenderer, KoinComponent {
+
+    private val config by inject<ApplicationConfig>()
 
     override fun renderIndex(renderParameters: RenderParameters): Html =
         createHTML().html {
@@ -78,6 +85,9 @@ class DefaultIndexHtmlRenderer : IndexHtmlRenderer {
                     meta("twitter:description", preview.description)
                     meta("twitter:image", preview.image)
                 }
+
+                meta("x-connector-http", config.daemonHttpAddress)
+                meta("x-connector-ws", config.daemonWsAddress)
 
                 link(rel = "icon", href = renderParameters.image)
 
