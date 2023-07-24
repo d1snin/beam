@@ -29,7 +29,7 @@ public val validateBlock: Validation<AbstractBlock> = Validation {
 
     AbstractBlock::entities {
         minItems(1) hint "block must have at least 1 entity"
-        maxItems(100) hint "block must have less than 100 entities"
+        maxItems(Limits.BLOCK_MAX_CAPACITY) hint "block must have less than ${Limits.BLOCK_MAX_CAPACITY} entities"
     }
 
     AbstractBlock::entities onEach {

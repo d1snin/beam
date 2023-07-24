@@ -25,7 +25,7 @@ import io.konform.validation.jsonschema.maxLength
 import io.konform.validation.onEach
 
 internal val validateMetadata: Validation<Metadata> = Validation {
-    maxItems(100)
+    maxItems(Limits.METADATA_MAX_LENGTH) hint "metadata must have less than ${Limits.METADATA_MAX_LENGTH} entries"
 
     onEach {
         MetadataEntry::key {
@@ -33,7 +33,7 @@ internal val validateMetadata: Validation<Metadata> = Validation {
         }
 
         MetadataEntry::value {
-            maxLength(100) hint "metadata value length must be less than 100"
+            maxLength(Limits.METADATA_VALUE_MAX_LENGTH) hint "metadata value length must be less than ${Limits.METADATA_VALUE_MAX_LENGTH}"
         }
     }
 }
