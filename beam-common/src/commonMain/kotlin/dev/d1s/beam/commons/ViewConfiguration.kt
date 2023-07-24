@@ -35,7 +35,6 @@ public data class ViewConfiguration(
 
 @Serializable
 public data class SpaceFavicon(
-    val webManifest: Url?,
     val appleTouch: SpaceIconUrl?,
     val favicon16: SpaceIconUrl?,
     val favicon32: SpaceIconUrl?,
