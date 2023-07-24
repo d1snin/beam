@@ -87,8 +87,6 @@ public class ViewConfigurationBuilder {
 @BuilderDsl
 public class SpaceFaviconBuilder {
 
-    public var webManifest: Url? = null
-
     public var appleTouch: SpaceIconUrl? = null
 
     public var favicon16: SpaceIconUrl? = null
@@ -105,7 +103,6 @@ public class SpaceFaviconBuilder {
 
     internal fun build() =
         SpaceFavicon(
-            webManifest,
             appleTouch,
             favicon16,
             favicon32,
