@@ -44,7 +44,6 @@ class DefaultIndexService : IndexService, KoinComponent {
     private val renderer by inject<IndexHtmlRenderer>()
 
     private val defaultFavicon = SpaceFavicon(
-        webManifest = Defaults.MANIFEST,
         appleTouch = Defaults.APPLE_TOUCH_ICON,
         favicon16 = Defaults.FAVICON_16,
         favicon32 = Defaults.FAVICON_32,

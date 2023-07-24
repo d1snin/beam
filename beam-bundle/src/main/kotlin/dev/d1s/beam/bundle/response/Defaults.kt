@@ -32,7 +32,6 @@ object Defaults {
     const val FAVICON_32 = "/favicon-32x32.png"
     const val FAVICON_ICO = "/favicon.ico"
     const val BROWSERCONFIG = "/browserconfig.xml"
-    const val MANIFEST = "/site.webmanifest"
     const val MASK_ICON = "/safari-pinned-tab.svg"
     const val MASK_ICON_COLOR= "#5bbad5"
 

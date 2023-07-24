@@ -106,8 +106,6 @@ class DefaultIndexHtmlRenderer : IndexHtmlRenderer, KoinComponent {
                     sizes = "32x32"
                 }
 
-                link(rel = "manifest", href = Defaults.MANIFEST)
-
                 link(rel = "mask-icon", href = favicon.maskIcon) {
                     attributes["color"] = favicon.maskIconColor ?: ""
                 }
