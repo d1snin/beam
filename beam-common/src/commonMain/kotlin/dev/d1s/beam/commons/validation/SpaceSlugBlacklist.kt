@@ -23,9 +23,16 @@ private val blackList = mutableListOf<SpaceSlug>()
 internal object SpaceSlugBlacklist : List<SpaceSlug> by blackList {
     init {
         blackList.apply {
+            add("apple-touch-icon.png")
+            add("browserconfig.xml")
+            add("favicon.ico")
+            add("favicon-16x16.png")
+            add("favicon-32x32.png")
             add("icon.png")
             add("main.bundle.js")
+            add("mstile-150x150.png")
             add("robots.txt")
+            add("safari-pinned-tab.svg")
         }
     }
 }
