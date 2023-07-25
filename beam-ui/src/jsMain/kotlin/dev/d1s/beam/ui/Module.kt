@@ -20,6 +20,8 @@ import dev.d1s.beam.ui.client.buildBeamClient
 import dev.d1s.beam.ui.component.RootComponent
 import dev.d1s.beam.ui.routing.DefaultNavigoRouterFactory
 import dev.d1s.beam.ui.routing.NavigoRouterFactory
+import dev.d1s.beam.ui.theme.ThemeHolder
+import dev.d1s.beam.ui.theme.DefaultThemeHolder
 import dev.d1s.exkt.kvision.component.Component
 import org.koin.core.context.GlobalContext.startKoin
 import org.koin.core.module.Module
@@ -34,6 +36,7 @@ fun setupModule() {
 
 private val mainModule = module {
     beamClient()
+    themeHolder()
     routing()
     components()
 }
@@ -42,6 +45,10 @@ private fun Module.beamClient() {
     single {
         buildBeamClient()
     }
+}
+
+private fun Module.themeHolder() {
+    singleOf<ThemeHolder>(::DefaultThemeHolder)
 }
 
 private fun Module.routing() {

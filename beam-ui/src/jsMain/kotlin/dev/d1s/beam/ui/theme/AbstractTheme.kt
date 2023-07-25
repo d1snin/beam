@@ -14,24 +14,12 @@
  * limitations under the License.
  */
 
-package dev.d1s.beam.commons
+package dev.d1s.beam.ui.theme
 
-public typealias SpaceThemeName = String
-public typealias Color = Int
+import dev.d1s.beam.commons.SpaceThemeDefinition
+import io.kvision.core.Color
 
-public sealed class SpaceThemeDefinition(public val name: SpaceThemeName) {
+abstract class AbstractTheme(val definition: SpaceThemeDefinition) {
 
-    public data object AccentDark : SpaceThemeDefinition("accent-dark")
-
-    public companion object {
-
-        public val Fallback: SpaceThemeDefinition = AccentDark
-
-        public val definitions: List<SpaceThemeDefinition> = listOf(AccentDark)
-
-        public fun byName(name: SpaceThemeName): SpaceThemeDefinition? =
-            definitions.find {
-                it.name == name
-            }
-    }
+    abstract val background: Color
 }

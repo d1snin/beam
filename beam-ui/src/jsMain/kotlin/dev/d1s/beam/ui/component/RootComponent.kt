@@ -16,15 +16,37 @@
 
 package dev.d1s.beam.ui.component
 
-import dev.d1s.exkt.common.pathname
+import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.exkt.kvision.component.Component
-import io.kvision.html.p
 import io.kvision.panel.SimplePanel
+import io.kvision.utils.vh
+import kotlinx.browser.document
 import org.koin.core.component.KoinComponent
 
 class RootComponent : Component.Root(), KoinComponent {
 
     override fun SimplePanel.render() {
-        p(pathname)
+        sizing()
+        display()
+        background()
+    }
+
+    private fun SimplePanel.sizing() {
+        minHeight = 100.vh
+    }
+
+    private fun SimplePanel.display() {
+        addCssClass("d-flex")
+        addCssClass("flex-column")
+    }
+
+    private fun background() {
+        requireNotNull(document.body).style.apply {
+            backgroundColor = currentTheme.background.asString()
+            display = "flex"
+            flexDirection = "column"
+            minHeight = "100vh"
+            height = "100vh"
+        }
     }
 }
