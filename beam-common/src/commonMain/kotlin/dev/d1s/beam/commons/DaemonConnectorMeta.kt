@@ -16,22 +16,8 @@
 
 package dev.d1s.beam.commons
 
-public typealias SpaceThemeName = String
-public typealias Color = Int
+public object DaemonConnectorMeta {
 
-public sealed class SpaceThemeDefinition(public val name: SpaceThemeName) {
-
-    public data object AccentDarkSpaceThemeDefinition : SpaceThemeDefinition("accent-dark")
-
-    public companion object {
-
-        public val Fallback: AccentDarkSpaceThemeDefinition = AccentDarkSpaceThemeDefinition
-
-        public val definitions: List<SpaceThemeDefinition> = listOf(AccentDarkSpaceThemeDefinition)
-
-        public fun byName(name: SpaceThemeName): SpaceThemeDefinition? =
-            definitions.find {
-                it.name == name
-            }
-    }
+    public const val HTTP: String = "x-connector-http"
+    public const val WS: String = "x-connector-ws"
 }

@@ -16,6 +16,7 @@
 
 package dev.d1s.beam.ui
 
+import dev.d1s.beam.ui.client.buildBeamClient
 import dev.d1s.beam.ui.component.RootComponent
 import dev.d1s.beam.ui.routing.DefaultNavigoRouterFactory
 import dev.d1s.beam.ui.routing.NavigoRouterFactory
@@ -32,8 +33,15 @@ fun setupModule() {
 }
 
 private val mainModule = module {
+    beamClient()
     routing()
     components()
+}
+
+private fun Module.beamClient() {
+    single {
+        buildBeamClient()
+    }
 }
 
 private fun Module.routing() {

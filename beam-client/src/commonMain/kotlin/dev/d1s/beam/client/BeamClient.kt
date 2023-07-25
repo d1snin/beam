@@ -82,11 +82,11 @@ public interface PublicBeamClient {
     public suspend fun isCompatible(): Result<Boolean>
 }
 
-public fun PublicBeamClient(httpBaseUrl: String, wsBaseUrl: BeamDaemonBaseUrl? = null): PublicBeamClient =
+public fun PublicBeamClient(httpBaseUrl: BeamDaemonBaseUrl, wsBaseUrl: BeamDaemonBaseUrl? = null): PublicBeamClient =
     DefaultPublicBeamClient(httpBaseUrl, wsBaseUrl)
 
 public class DefaultPublicBeamClient(
-    override val httpBaseUrl: String,
+    override val httpBaseUrl: BeamDaemonBaseUrl,
     override val wsBaseUrl: BeamDaemonBaseUrl?
 ) : PublicBeamClient {
 

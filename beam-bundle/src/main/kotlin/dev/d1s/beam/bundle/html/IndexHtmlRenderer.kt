@@ -20,6 +20,7 @@ import dev.d1s.beam.bundle.configuration.daemonHttpAddress
 import dev.d1s.beam.bundle.configuration.daemonWsAddress
 import dev.d1s.beam.bundle.entity.Html
 import dev.d1s.beam.bundle.response.Defaults
+import dev.d1s.beam.commons.DaemonConnectorMeta
 import dev.d1s.beam.commons.SpaceFavicon
 import dev.d1s.beam.commons.SpaceIconUrl
 import io.ktor.server.config.*
@@ -89,8 +90,8 @@ class DefaultIndexHtmlRenderer : IndexHtmlRenderer, KoinComponent {
                     meta("twitter:image", preview.image)
                 }
 
-                meta("x-connector-http", config.daemonHttpAddress)
-                meta("x-connector-ws", config.daemonWsAddress)
+                meta(DaemonConnectorMeta.HTTP, config.daemonHttpAddress)
+                meta(DaemonConnectorMeta.WS, config.daemonWsAddress)
 
                 val favicon = renderParameters.favicon
 
