@@ -35,6 +35,7 @@ object BeamBundleApplication : ServerApplication(), KoinComponent {
         CheckStatic,
         Connector,
         Routing,
+        StatusPages,
         StaticResources,
         Cors,
         ApplicationConfigBean,

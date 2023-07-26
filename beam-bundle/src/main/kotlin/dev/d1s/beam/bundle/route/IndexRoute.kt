@@ -19,19 +19,16 @@ package dev.d1s.beam.bundle.route
 import dev.d1s.beam.bundle.entity.ResolvedSpace
 import dev.d1s.beam.bundle.entity.SpaceRequest
 import dev.d1s.beam.bundle.service.IndexService
+import dev.d1s.beam.bundle.util.respondHtml
 import dev.d1s.exkt.ktor.server.koin.configuration.Route
-import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
-import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import org.lighthousegames.logging.logging
 
-// TODO
-// Handle 404
 class IndexRoute : Route, KoinComponent {
 
     override val qualifier = named("index-route")
@@ -59,7 +56,7 @@ class IndexRoute : Route, KoinComponent {
                 "Responding resolved space..."
             }
 
-            call.respondHtml(resolvedSpace)
+            call.respondHtml(resolvedSpace.html)
         }
     }
 
@@ -77,14 +74,5 @@ class IndexRoute : Route, KoinComponent {
         val request = SpaceRequest(spaceIdentifier, call)
 
         return indexService.resolveSpace(request)
-    }
-
-    private suspend fun ApplicationCall.respondHtml(resolvedSpace: ResolvedSpace) {
-        val contentType = ContentType.Text.Html.withCharset(Charsets.UTF_8)
-
-        respondTextWriter(contentType) {
-            append("<!DOCTYPE html>\n")
-            append(resolvedSpace.html)
-        }
     }
 }
