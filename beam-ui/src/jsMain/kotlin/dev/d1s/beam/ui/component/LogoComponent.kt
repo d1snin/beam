@@ -28,7 +28,7 @@ class LogoComponent : Component<Unit>(), KoinComponent {
 
     override fun SimplePanel.render() {
         image(ResourceLocation.ICON, alt = Texts.Heading.LOGO_ALT) {
-            width = 50.px
+            width = 45.px
         }
     }
 }

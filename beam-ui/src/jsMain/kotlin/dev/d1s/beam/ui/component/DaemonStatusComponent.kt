@@ -55,13 +55,15 @@ class DaemonStatusComponent : Component<Unit>(), KoinComponent {
             if (status != null) {
                 visible = true
 
-                height = 40.px
+                height = 30.px
 
                 background = Background(color = currentTheme.overlay)
                 outline = Outline(width = 1.px, style = OutlineStyle.SOLID, color = currentTheme.outline)
 
+                fontSize = 0.8.rem
+
                 div {
-                    fontSize = 1.4.rem
+                    fontSize = 1.rem
                     color = currentTheme.green
                     iconWithMargin("bi bi-cloud")
                 }
