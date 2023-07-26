@@ -17,12 +17,7 @@
 package dev.d1s.beam.ui
 
 import dev.d1s.beam.ui.client.buildBeamClient
-import dev.d1s.beam.ui.component.DaemonStatusComponent
-import dev.d1s.beam.ui.component.HeadingComponent
-import dev.d1s.beam.ui.component.LogoComponent
-import dev.d1s.beam.ui.component.RootComponent
-import dev.d1s.beam.ui.routing.DefaultNavigoRouterFactory
-import dev.d1s.beam.ui.routing.NavigoRouterFactory
+import dev.d1s.beam.ui.component.*
 import dev.d1s.beam.ui.theme.DefaultThemeHolder
 import dev.d1s.beam.ui.theme.ThemeHolder
 import dev.d1s.exkt.kvision.component.Component
@@ -37,6 +32,7 @@ object Qualifier {
     val HeadingComponent = named("heading-component")
     val LogoComponent = named("logo-component")
     val DaemonStatusComponent = named("daemon-status-component")
+    val SpaceInfoComponent = named("space-info-component")
 }
 
 fun setupModule() {
@@ -48,7 +44,6 @@ fun setupModule() {
 private val mainModule = module {
     beamClient()
     themeHolder()
-    routing()
     components()
 }
 
@@ -62,10 +57,6 @@ private fun Module.themeHolder() {
     singleOf<ThemeHolder>(::DefaultThemeHolder)
 }
 
-private fun Module.routing() {
-    singleOf<NavigoRouterFactory>(::DefaultNavigoRouterFactory)
-}
-
 private fun Module.components() {
     singleOf<Component.Root>(::RootComponent)
 
@@ -75,6 +66,10 @@ private fun Module.components() {
 
     singleOf<Component<Unit>>(::LogoComponent) {
         qualifier = Qualifier.LogoComponent
+    }
+
+    singleOf<Component<Unit>>(::SpaceInfoComponent) {
+        qualifier = Qualifier.SpaceInfoComponent
     }
 
     singleOf<Component<Unit>>(::DaemonStatusComponent) {

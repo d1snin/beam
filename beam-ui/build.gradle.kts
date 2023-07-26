@@ -61,7 +61,6 @@ kotlin {
 
                 implementation("io.kvision:kvision:$kvisionVersion")
                 implementation("io.kvision:kvision-state:$kvisionVersion")
-                implementation("io.kvision:kvision-routing-navigo-ng:$kvisionVersion")
 
                 implementation("com.catppuccin:catppuccin-kotlin:$catppuccinKotlinVersion")
 
