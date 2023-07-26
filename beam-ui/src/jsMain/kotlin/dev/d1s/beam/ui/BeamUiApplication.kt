@@ -16,6 +16,7 @@
 
 package dev.d1s.beam.ui
 
+import dev.d1s.beam.ui.client.DaemonConnector
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.render
 import io.kvision.Application
@@ -28,7 +29,11 @@ class BeamUiApplication : Application(), KoinComponent {
 
     private val rootComponent by inject<Component.Root>()
 
+    private val daemonConnector by inject<DaemonConnector>()
+
     override fun start() {
+        daemonConnector.launchMonitor()
+
         root(ROOT_ELEMENT_ID) {
             render(rootComponent)
         }

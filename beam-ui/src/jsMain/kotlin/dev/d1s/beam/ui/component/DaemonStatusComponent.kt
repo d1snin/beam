@@ -16,8 +16,8 @@
 
 package dev.d1s.beam.ui.component
 
-import dev.d1s.beam.client.PublicBeamClient
-import dev.d1s.beam.commons.DaemonStatus
+import dev.d1s.beam.ui.client.DaemonConnector
+import dev.d1s.beam.ui.client.DaemonStatusWithPing
 import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.util.Texts
 import dev.d1s.beam.ui.util.iconWithMargin
@@ -29,65 +29,69 @@ import io.kvision.core.OutlineStyle
 import io.kvision.html.div
 import io.kvision.html.span
 import io.kvision.panel.SimplePanel
-import io.kvision.state.ObservableValue
 import io.kvision.state.bind
 import io.kvision.utils.px
 import io.kvision.utils.rem
-import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import org.koin.core.time.measureDuration
-import kotlin.time.Duration.Companion.seconds
 
 class DaemonStatusComponent : Component<Unit>(), KoinComponent {
 
-    private val client by inject<PublicBeamClient>()
+    private val daemonConnector by inject<DaemonConnector>()
 
-    private val daemonStatus = ObservableValue<DaemonStatusWithPing?>(null)
-    private val monitoringScope = CoroutineScope(Dispatchers.Main)
-
-    private var connectionFailed = atomic(false)
+    private val renderingScope = CoroutineScope(Dispatchers.Main)
 
     override fun SimplePanel.render() {
-        div(className = "rounded shadow px-2 text-white d-flex align-items-center").bind(daemonStatus) { status ->
+        div(className = "rounded shadow px-2 text-white d-flex align-items-center").bind(daemonConnector.observableStatus) { status ->
             visible = false
 
-            if (status == null && connectionFailed.value) {
-                applyStyle()
-
-                cloudIcon(currentTheme.red)
-                text(Texts.Heading.DaemonStatus.DISCONNECTED)
-
-                visible = true
-            }
-
-            if (status != null) {
-                applyStyle()
-
-                cloudIcon(currentTheme.green)
-                text(Texts.Heading.DaemonStatus.CONNECTED)
-
-                span {
-                    val ping = status.ping
-
-                    color = when {
-                        ping < 150 -> currentTheme.green
-                        ping in 150..<250 -> currentTheme.orange
-                        else -> currentTheme.red
-                    }
-
-                    +(ping.toString() + Texts.Heading.DaemonStatus.MS_UNIT)
+            renderingScope.launch {
+                if (status != null) {
+                    reportConnectedState(status)
                 }
 
-                visible = true
+                if (status == null && daemonConnector.isUp() == false) {
+                    reportDisconnectedState()
+                }
             }
         }
+    }
 
-        monitorDaemonStatus()
+    private fun SimplePanel.reportConnectedState(status: DaemonStatusWithPing) {
+        applyStyle()
+
+        cloudIcon(currentTheme.green)
+        text(Texts.Heading.DaemonStatus.CONNECTED)
+
+        reportPing(status)
+
+        visible = true
+    }
+
+    private fun SimplePanel.reportPing(status: DaemonStatusWithPing) {
+        span {
+            val ping = status.ping
+
+            color = when {
+                ping < 150 -> currentTheme.green
+                ping in 150..<250 -> currentTheme.orange
+                else -> currentTheme.red
+            }
+
+            +(ping.toString() + Texts.Heading.DaemonStatus.MS_UNIT)
+        }
+    }
+
+    private fun SimplePanel.reportDisconnectedState() {
+        applyStyle()
+
+        cloudIcon(currentTheme.red)
+        text(Texts.Heading.DaemonStatus.DISCONNECTED)
+
+        visible = true
     }
 
     private fun SimplePanel.applyStyle() {
@@ -110,33 +114,4 @@ class DaemonStatusComponent : Component<Unit>(), KoinComponent {
     private fun SimplePanel.text(text: String) {
         span(text, className = "me-2")
     }
-
-    private fun monitorDaemonStatus() {
-        monitoringScope.launch {
-            while (true) {
-                var status: DaemonStatus? = null
-
-                val ping = measureDuration {
-                    status = client.getDaemonStatus().getOrNull()
-                }
-
-                status ?: run {
-                    connectionFailed.value = true
-                    daemonStatus.value = null
-                }
-
-                status?.let {
-                    connectionFailed.value = false
-                    daemonStatus.value = DaemonStatusWithPing(it, ping.toInt())
-                }
-
-                delay(3.seconds)
-            }
-        }
-    }
 }
-
-private data class DaemonStatusWithPing(
-    val status: DaemonStatus,
-    val ping: Int
-)

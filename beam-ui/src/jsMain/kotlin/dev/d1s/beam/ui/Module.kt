@@ -16,6 +16,8 @@
 
 package dev.d1s.beam.ui
 
+import dev.d1s.beam.ui.client.DaemonConnector
+import dev.d1s.beam.ui.client.DefaultDaemonConnector
 import dev.d1s.beam.ui.client.buildBeamClient
 import dev.d1s.beam.ui.component.*
 import dev.d1s.beam.ui.theme.DefaultThemeHolder
@@ -43,6 +45,7 @@ fun setupModule() {
 
 private val mainModule = module {
     beamClient()
+    daemonConnector()
     themeHolder()
     components()
 }
@@ -51,6 +54,10 @@ private fun Module.beamClient() {
     single {
         buildBeamClient()
     }
+}
+
+private fun Module.daemonConnector() {
+    singleOf<DaemonConnector>(::DefaultDaemonConnector)
 }
 
 private fun Module.themeHolder() {
