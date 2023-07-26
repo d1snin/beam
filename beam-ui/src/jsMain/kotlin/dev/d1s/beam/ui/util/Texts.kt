@@ -34,6 +34,8 @@ object Texts {
 
             const val CONNECTED = "Connected to daemon."
 
+            const val DISCONNECTED = "Couldn't connect to daemon."
+
             const val MS_UNIT = "ms"
         }
     }

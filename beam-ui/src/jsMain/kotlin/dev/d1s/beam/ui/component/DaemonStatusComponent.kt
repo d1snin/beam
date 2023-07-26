@@ -23,6 +23,7 @@ import dev.d1s.beam.ui.util.Texts
 import dev.d1s.beam.ui.util.iconWithMargin
 import dev.d1s.exkt.kvision.component.Component
 import io.kvision.core.Background
+import io.kvision.core.Color
 import io.kvision.core.Outline
 import io.kvision.core.OutlineStyle
 import io.kvision.html.div
@@ -32,6 +33,7 @@ import io.kvision.state.ObservableValue
 import io.kvision.state.bind
 import io.kvision.utils.px
 import io.kvision.utils.rem
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -48,27 +50,27 @@ class DaemonStatusComponent : Component<Unit>(), KoinComponent {
     private val daemonStatus = ObservableValue<DaemonStatusWithPing?>(null)
     private val monitoringScope = CoroutineScope(Dispatchers.Main)
 
+    private var connectionFailed = atomic(false)
+
     override fun SimplePanel.render() {
         div(className = "rounded shadow px-2 text-white d-flex align-items-center").bind(daemonStatus) { status ->
             visible = false
 
-            if (status != null) {
+            if (status == null && connectionFailed.value) {
+                applyStyle()
+
+                cloudIcon(currentTheme.red)
+                text(Texts.Heading.DaemonStatus.DISCONNECTED)
+
                 visible = true
+            }
 
-                height = 30.px
+            if (status != null) {
+                applyStyle()
 
-                background = Background(color = currentTheme.overlay)
-                outline = Outline(width = 1.px, style = OutlineStyle.SOLID, color = currentTheme.outline)
+                cloudIcon(currentTheme.green)
+                text(Texts.Heading.DaemonStatus.CONNECTED)
 
-                fontSize = 0.8.rem
-
-                div {
-                    fontSize = 1.rem
-                    color = currentTheme.green
-                    iconWithMargin("bi bi-cloud")
-                }
-
-                span(Texts.Heading.DaemonStatus.CONNECTED, className = "me-2")
                 span {
                     val ping = status.ping
 
@@ -80,10 +82,33 @@ class DaemonStatusComponent : Component<Unit>(), KoinComponent {
 
                     +(ping.toString() + Texts.Heading.DaemonStatus.MS_UNIT)
                 }
+
+                visible = true
             }
         }
 
         monitorDaemonStatus()
+    }
+
+    private fun SimplePanel.applyStyle() {
+        height = 30.px
+
+        background = Background(color = currentTheme.overlay)
+        outline = Outline(width = 1.px, style = OutlineStyle.SOLID, color = currentTheme.outline)
+
+        fontSize = 0.8.rem
+    }
+
+    private fun SimplePanel.cloudIcon(iconColor: Color) {
+        div {
+            fontSize = 1.rem
+            color = iconColor
+            iconWithMargin("bi bi-cloud")
+        }
+    }
+
+    private fun SimplePanel.text(text: String) {
+        span(text, className = "me-2")
     }
 
     private fun monitorDaemonStatus() {
@@ -96,10 +121,12 @@ class DaemonStatusComponent : Component<Unit>(), KoinComponent {
                 }
 
                 status ?: run {
+                    connectionFailed.value = true
                     daemonStatus.value = null
                 }
 
                 status?.let {
+                    connectionFailed.value = false
                     daemonStatus.value = DaemonStatusWithPing(it, ping.toInt())
                 }
 
