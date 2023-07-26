@@ -26,7 +26,7 @@ import org.koin.core.component.inject
 
 class HeadingComponent : Component<Unit>(), KoinComponent {
 
-    private val logoComponent by inject<Component<Unit>>(Qualifier.LogoComponent)
+    private val iconComponent by inject<Component<Unit>>(Qualifier.IconComponent)
 
     private val spaceInfoComponent by inject<Component<Unit>>(Qualifier.SpaceInfoComponent)
 
@@ -35,7 +35,7 @@ class HeadingComponent : Component<Unit>(), KoinComponent {
     override fun SimplePanel.render() {
         div(className = "container-fluid mt-3 mb-4 my-5 d-flex flex-column flex-lg-row justify-content-lg-between") {
             div(className = "d-flex align-items-center") {
-                render(logoComponent)
+                render(iconComponent)
                 render(spaceInfoComponent)
             }
 

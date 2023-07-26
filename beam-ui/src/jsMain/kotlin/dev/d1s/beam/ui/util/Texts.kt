@@ -21,7 +21,8 @@ object Texts {
     object Heading {
 
         object Logo {
-            const val ALT = "Beam logo"
+
+            const val ALT = "Beam space icon"
         }
 
         object SpaceInfo {

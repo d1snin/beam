@@ -30,7 +30,7 @@ import org.koin.dsl.module
 object Qualifier {
 
     val HeadingComponent = named("heading-component")
-    val LogoComponent = named("logo-component")
+    val IconComponent = named("icon-component")
     val DaemonStatusComponent = named("daemon-status-component")
     val SpaceInfoComponent = named("space-info-component")
 }
@@ -64,8 +64,8 @@ private fun Module.components() {
         qualifier = Qualifier.HeadingComponent
     }
 
-    singleOf<Component<Unit>>(::LogoComponent) {
-        qualifier = Qualifier.LogoComponent
+    singleOf<Component<Unit>>(::IconComponent) {
+        qualifier = Qualifier.IconComponent
     }
 
     singleOf<Component<Unit>>(::SpaceInfoComponent) {

@@ -18,17 +18,30 @@ package dev.d1s.beam.ui.component
 
 import dev.d1s.beam.ui.resource.ResourceLocation
 import dev.d1s.beam.ui.util.Texts
+import dev.d1s.beam.ui.util.currentSpace
 import dev.d1s.exkt.kvision.component.Component
+import io.kvision.html.div
 import io.kvision.html.image
 import io.kvision.panel.SimplePanel
 import io.kvision.utils.px
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 
-class LogoComponent : Component<Unit>(), KoinComponent {
+class IconComponent : Component<Unit>(), KoinComponent {
+
+    private val renderingScope = CoroutineScope(Dispatchers.Main)
 
     override fun SimplePanel.render() {
-        image(ResourceLocation.ICON, alt = Texts.Heading.Logo.ALT) {
-            width = 45.px
+        div {
+            renderingScope.launch {
+                val space = currentSpace()
+
+                image(space?.view?.icon ?: ResourceLocation.ICON, alt = Texts.Heading.Logo.ALT) {
+                    width = 45.px
+                }
+            }
         }
     }
 }
