@@ -113,9 +113,21 @@ tasks.register<Copy>("grabConfig") {
 
 tasks["processResources"].dependsOn(tasks["grabConfig"])
 
+tasks.register<Delete>("cleanConfig") {
+    delete("src/main/resources/daemon.conf")
+}
+
+tasks["clean"].dependsOn(tasks["cleanConfig"])
+
 tasks.register<Copy>("grabDbChangelog") {
     from("../config/db/changelog.json")
     into("src/main/resources")
 }
 
 tasks["processResources"].dependsOn(tasks["grabDbChangelog"])
+
+tasks.register<Delete>("cleanDbChangelog") {
+    delete("src/main/resources/changelog.json")
+}
+
+tasks["clean"].dependsOn(tasks["cleanDbChangelog"])

@@ -43,8 +43,6 @@ out/
 beam-bundle/src/main/resources/static/main.bundle.js
 
 ### Grabbed Configurations ###
+beam-bundle/src/main/resources/bundle.conf
 beam-daemon/src/main/resources/changelog.json
 beam-daemon/src/main/resources/daemon.conf
-beam-bundle/src/main/resources/changelog.json
-beam-bundle/src/main/resources/bundle.conf
-beam-bundle/src/main/resources/daemon.conf
