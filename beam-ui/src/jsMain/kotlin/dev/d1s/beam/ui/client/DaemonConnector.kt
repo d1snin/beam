@@ -72,6 +72,8 @@ class DefaultDaemonConnector : DaemonConnector, KoinComponent {
             error("Monitor has already been launched")
         }
 
+        monitorLaunched.value = true
+
         return monitoringScope.launch {
             while (true) {
                 val status = getDaemonStatus()
