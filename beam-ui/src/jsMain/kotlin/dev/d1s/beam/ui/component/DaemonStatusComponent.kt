@@ -68,8 +68,15 @@ class DaemonStatusComponent : Component<Unit>(), KoinComponent {
 
                 span(Texts.Heading.DaemonStatus.CONNECTED, className = "me-2")
                 span {
-                    color = currentTheme.green
-                    +(status.ping.toString() + Texts.Heading.DaemonStatus.MS_UNIT)
+                    val ping = status.ping
+
+                    color = when {
+                        ping < 150 -> currentTheme.green
+                        ping in 150..<250 -> currentTheme.orange
+                        else -> currentTheme.red
+                    }
+
+                    +(ping.toString() + Texts.Heading.DaemonStatus.MS_UNIT)
                 }
             }
         }
