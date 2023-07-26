@@ -14,22 +14,19 @@
  * limitations under the License.
  */
 
-package dev.d1s.beam.ui.theme
+package dev.d1s.beam.ui.util
 
-import dev.d1s.beam.commons.SpaceThemeDefinition
-import io.kvision.core.Color
+object Texts {
 
-abstract class AbstractTheme(val definition: SpaceThemeDefinition) {
+    object Heading {
 
-    abstract val background: Color
+        const val LOGO_ALT = "Beam logo"
 
-    abstract val overlay: Color
+        object DaemonStatus {
 
-    abstract val outline: Color
+            const val CONNECTED = "Connected to daemon."
 
-    abstract val text: Color
-
-    abstract val green: Color
-
-    abstract val red: Color
+            const val MS_UNIT = "ms"
+        }
+    }
 }

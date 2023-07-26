@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package dev.d1s.beam.ui.module
+package dev.d1s.beam.ui.util
 
-import io.kvision.ModuleInitializer
-import io.kvision.require
+import io.kvision.html.icon
+import io.kvision.panel.SimplePanel
 
-object AnimateCssModule : ModuleInitializer {
-
-    override fun initialize() {
-        require("animate.css")
-    }
+fun SimplePanel.iconWithMargin(icon: String, margin: Int = 2, className: String? = null) {
+    val classList = "$icon me-$margin" + (className?.let { " $it" } ?: "")
+    icon(classList)
 }

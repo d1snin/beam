@@ -14,22 +14,9 @@
  * limitations under the License.
  */
 
-package dev.d1s.beam.ui.theme
+package dev.d1s.beam.ui.resource
 
-import dev.d1s.beam.commons.SpaceThemeDefinition
-import io.kvision.core.Color
+object ResourceLocation {
 
-abstract class AbstractTheme(val definition: SpaceThemeDefinition) {
-
-    abstract val background: Color
-
-    abstract val overlay: Color
-
-    abstract val outline: Color
-
-    abstract val text: Color
-
-    abstract val green: Color
-
-    abstract val red: Color
+    const val ICON = "/icon.png"
 }

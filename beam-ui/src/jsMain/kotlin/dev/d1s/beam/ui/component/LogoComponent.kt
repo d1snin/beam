@@ -14,22 +14,21 @@
  * limitations under the License.
  */
 
-package dev.d1s.beam.ui.theme
+package dev.d1s.beam.ui.component
 
-import dev.d1s.beam.commons.SpaceThemeDefinition
-import io.kvision.core.Color
+import dev.d1s.beam.ui.resource.ResourceLocation
+import dev.d1s.beam.ui.util.Texts
+import dev.d1s.exkt.kvision.component.Component
+import io.kvision.html.image
+import io.kvision.panel.SimplePanel
+import io.kvision.utils.px
+import org.koin.core.component.KoinComponent
 
-abstract class AbstractTheme(val definition: SpaceThemeDefinition) {
+class LogoComponent : Component<Unit>(), KoinComponent {
 
-    abstract val background: Color
-
-    abstract val overlay: Color
-
-    abstract val outline: Color
-
-    abstract val text: Color
-
-    abstract val green: Color
-
-    abstract val red: Color
+    override fun SimplePanel.render() {
+        image(ResourceLocation.ICON, alt = Texts.Heading.LOGO_ALT) {
+            width = 50.px
+        }
+    }
 }

@@ -16,19 +16,26 @@
 
 package dev.d1s.beam.ui.component
 
+import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.exkt.kvision.component.Component
+import dev.d1s.exkt.kvision.component.render
 import io.kvision.panel.SimplePanel
 import io.kvision.utils.vh
 import kotlinx.browser.document
 import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 class RootComponent : Component.Root(), KoinComponent {
+
+    private val headingComponent by inject<Component<Unit>>(Qualifier.HeadingComponent)
 
     override fun SimplePanel.render() {
         sizing()
         display()
         background()
+        font()
+        components()
     }
 
     private fun SimplePanel.sizing() {
@@ -48,5 +55,13 @@ class RootComponent : Component.Root(), KoinComponent {
             minHeight = "100vh"
             height = "100vh"
         }
+    }
+
+    private fun SimplePanel.font() {
+        color = currentTheme.text
+    }
+
+    private fun SimplePanel.components() {
+        render(headingComponent)
     }
 }
