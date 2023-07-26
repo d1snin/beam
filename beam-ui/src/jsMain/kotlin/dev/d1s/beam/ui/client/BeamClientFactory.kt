@@ -18,7 +18,10 @@ package dev.d1s.beam.ui.client
 
 import dev.d1s.beam.client.PublicBeamClient
 import dev.d1s.beam.commons.DaemonConnectorMeta
+import io.ktor.http.*
 import kotlinx.browser.document
+
+private const val DAEMON_DOCKER_HOST = "beam-daemon"
 
 fun buildBeamClient(): PublicBeamClient {
     val connectorHttp = document.querySelector("meta[name=\"${DaemonConnectorMeta.HTTP}\"]")?.textContent
@@ -27,5 +30,22 @@ fun buildBeamClient(): PublicBeamClient {
     val connectorWs = document.querySelector("meta[name=\"${DaemonConnectorMeta.WS}\"]")?.textContent
         ?: error("No ${DaemonConnectorMeta.WS} meta")
 
-    return PublicBeamClient(connectorHttp, connectorWs)
+    val httpUrl = Url(connectorHttp)
+    val wsUrl = Url(connectorWs)
+
+    return PublicBeamClient(httpUrl.ensureCorrectUrl(), wsUrl.ensureCorrectUrl())
+}
+
+private fun Url.ensureCorrectUrl(): String {
+    if (host == DAEMON_DOCKER_HOST) {
+        val builder = URLBuilder(this)
+
+        builder.set {
+            host = "localhost"
+        }
+
+        return builder.buildString()
+    }
+
+    return this.toString()
 }
