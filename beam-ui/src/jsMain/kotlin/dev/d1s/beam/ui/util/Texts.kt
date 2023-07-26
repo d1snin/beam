@@ -39,4 +39,13 @@ object Texts {
             const val MS_UNIT = "ms"
         }
     }
+
+    object Body {
+
+        object DisconnectedDaemonStatusReporter {
+
+            const val ALERT_FIRST_LINE = "Beam is unavailable."
+            const val ALERT_SECOND_LINE = "Check back later."
+        }
+    }
 }

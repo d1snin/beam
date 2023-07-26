@@ -23,6 +23,7 @@ import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.*
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import org.koin.core.context.GlobalContext
 import org.koin.core.time.measureDuration
 import kotlin.time.Duration.Companion.seconds
 
@@ -78,10 +79,8 @@ class DefaultDaemonConnector : DaemonConnector, KoinComponent {
             while (true) {
                 val status = getDaemonStatus()
 
-                status?.let {
-                    observableStatus.value = it
-                } ?: run {
-                    observableStatus.value = null
+                if (observableStatus.value != status) {
+                    observableStatus.value = status
                 }
 
                 delay(3.seconds)
@@ -89,3 +88,9 @@ class DefaultDaemonConnector : DaemonConnector, KoinComponent {
         }
     }
 }
+
+private val daemonConnector by lazy {
+    GlobalContext.get().get<DaemonConnector>()
+}
+
+suspend fun DaemonStatusWithPing?.down() = this == null && daemonConnector.isUp() == false

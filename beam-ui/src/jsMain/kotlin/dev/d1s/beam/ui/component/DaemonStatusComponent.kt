@@ -18,6 +18,7 @@ package dev.d1s.beam.ui.component
 
 import dev.d1s.beam.ui.client.DaemonConnector
 import dev.d1s.beam.ui.client.DaemonStatusWithPing
+import dev.d1s.beam.ui.client.down
 import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.util.Texts
 import dev.d1s.beam.ui.util.iconWithMargin
@@ -53,7 +54,7 @@ class DaemonStatusComponent : Component<Unit>(), KoinComponent {
                     reportConnectedState(status)
                 }
 
-                if (status == null && daemonConnector.isUp() == false) {
+                if (status.down()) {
                     reportDisconnectedState()
                 }
             }

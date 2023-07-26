@@ -24,24 +24,13 @@ import io.kvision.panel.SimplePanel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class HeadingComponent : Component<Unit>(), KoinComponent {
+class SpaceContentComponent : Component<Unit>(), KoinComponent {
 
-    private val iconComponent by inject<Component<Unit>>(Qualifier.IconComponent)
-
-    private val spaceInfoComponent by inject<Component<Unit>>(Qualifier.SpaceInfoComponent)
-
-    private val daemonStatusComponent by inject<Component<Unit>>(Qualifier.DaemonStatusComponent)
+    private val disconnectedDaemonStatusReporter by inject<Component<Unit>>(Qualifier.DisconnectedDaemonStatusReporterComponent)
 
     override fun SimplePanel.render() {
-        div(className = "container-fluid mt-3 mb-4 my-5 d-flex flex-column flex-lg-row justify-content-lg-between") {
-            div(className = "d-flex align-items-center") {
-                render(iconComponent)
-                render(spaceInfoComponent)
-            }
-
-            div(className = "align-self-center mt-5 mt-lg-0") {
-                render(daemonStatusComponent)
-            }
+        div(className = "container-fluid") {
+            render(disconnectedDaemonStatusReporter)
         }
     }
 }

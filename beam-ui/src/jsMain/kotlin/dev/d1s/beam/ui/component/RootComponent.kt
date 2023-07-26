@@ -30,6 +30,8 @@ class RootComponent : Component.Root(), KoinComponent {
 
     private val headingComponent by inject<Component<Unit>>(Qualifier.HeadingComponent)
 
+    private val spaceContentComponent by inject<Component<Unit>>(Qualifier.SpaceContentComponent)
+
     override fun SimplePanel.render() {
         sizing()
         display()
@@ -63,5 +65,6 @@ class RootComponent : Component.Root(), KoinComponent {
 
     private fun SimplePanel.components() {
         render(headingComponent)
+        render(spaceContentComponent)
     }
 }
