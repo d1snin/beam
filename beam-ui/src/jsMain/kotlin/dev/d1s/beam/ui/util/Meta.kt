@@ -14,32 +14,12 @@
  * limitations under the License.
  */
 
-package dev.d1s.beam.ui.routing
+package dev.d1s.beam.ui.util
 
-import io.kvision.navigo.Navigo
-import io.kvision.routing.Routing
-import org.koin.core.component.KoinComponent
+import kotlinx.browser.document
 
-interface NavigoRouterFactory {
+fun getMeta(key: String) =
+    document.querySelector("meta[name=\"$key\"]")?.getAttribute("content")
 
-    val router: Navigo
-}
-
-class DefaultNavigoRouterFactory : NavigoRouterFactory, KoinComponent {
-
-    override val router: Navigo by lazy {
-        Routing("/").apply {
-            configureRouting()
-        }
-    }
-
-    private var configured = false
-
-    private fun Navigo.configureRouting() {
-        // ...
-
-        resolve()
-
-        configured = true
-    }
-}
+fun getMetaOrThrow(key: String) =
+    getMeta(key) ?: error("No $key meta")

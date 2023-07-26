@@ -28,12 +28,20 @@ class HeadingComponent : Component<Unit>(), KoinComponent {
 
     private val logoComponent by inject<Component<Unit>>(Qualifier.LogoComponent)
 
+    private val spaceInfoComponent by inject<Component<Unit>>(Qualifier.SpaceInfoComponent)
+
     private val daemonStatusComponent by inject<Component<Unit>>(Qualifier.DaemonStatusComponent)
 
     override fun SimplePanel.render() {
-        div(className = "container-fluid mt-3 mb-4 my-5 d-flex justify-content-between align-items-center") {
-            render(logoComponent)
-            render(daemonStatusComponent)
+        div(className = "container-fluid mt-3 mb-4 my-5 d-flex flex-column flex-lg-row justify-content-lg-between") {
+            div(className = "d-flex align-items-center") {
+                render(logoComponent)
+                render(spaceInfoComponent)
+            }
+
+            div(className = "align-self-center mt-4 mt-lg-0") {
+                render(daemonStatusComponent)
+            }
         }
     }
 }

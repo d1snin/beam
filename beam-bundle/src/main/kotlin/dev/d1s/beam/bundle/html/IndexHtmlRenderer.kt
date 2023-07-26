@@ -20,9 +20,7 @@ import dev.d1s.beam.bundle.configuration.daemonHttpAddress
 import dev.d1s.beam.bundle.configuration.daemonWsAddress
 import dev.d1s.beam.bundle.entity.Html
 import dev.d1s.beam.bundle.response.Defaults
-import dev.d1s.beam.commons.DaemonConnectorMeta
-import dev.d1s.beam.commons.SpaceFavicon
-import dev.d1s.beam.commons.SpaceIconUrl
+import dev.d1s.beam.commons.*
 import io.ktor.server.config.*
 import kotlinx.html.*
 import kotlinx.html.stream.createHTML
@@ -30,6 +28,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 data class RenderParameters(
+    val space: Space?,
     val title: String,
     val description: String?,
     val icon: SpaceIconUrl?,
@@ -92,6 +91,10 @@ class DefaultIndexHtmlRenderer : IndexHtmlRenderer, KoinComponent {
 
                 meta(DaemonConnectorMeta.HTTP, config.daemonHttpAddress)
                 meta(DaemonConnectorMeta.WS, config.daemonWsAddress)
+
+                renderParameters.space?.let {
+                    meta(SpaceMeta.SPACE, it.id)
+                }
 
                 val favicon = renderParameters.favicon
 

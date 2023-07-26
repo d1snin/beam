@@ -14,21 +14,15 @@
  * limitations under the License.
  */
 
-package dev.d1s.beam.ui.component
+package dev.d1s.beam.commons
 
-import dev.d1s.beam.ui.resource.ResourceLocation
-import dev.d1s.beam.ui.util.Texts
-import dev.d1s.exkt.kvision.component.Component
-import io.kvision.html.image
-import io.kvision.panel.SimplePanel
-import io.kvision.utils.px
-import org.koin.core.component.KoinComponent
+public object DaemonConnectorMeta {
 
-class LogoComponent : Component<Unit>(), KoinComponent {
+    public const val HTTP: String = "x-connector-http"
+    public const val WS: String = "x-connector-ws"
+}
 
-    override fun SimplePanel.render() {
-        image(ResourceLocation.ICON, alt = Texts.Heading.Logo.ALT) {
-            width = 45.px
-        }
-    }
+public object SpaceMeta {
+
+    public const val SPACE: String = "x-space"
 }

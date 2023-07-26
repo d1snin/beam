@@ -14,10 +14,18 @@
  * limitations under the License.
  */
 
-package dev.d1s.beam.commons
+package dev.d1s.beam.ui.util
 
-public object DaemonConnectorMeta {
+import dev.d1s.beam.client.PublicBeamClient
+import dev.d1s.beam.commons.Space
+import dev.d1s.beam.commons.SpaceMeta
+import org.koin.core.context.GlobalContext
 
-    public const val HTTP: String = "x-connector-http"
-    public const val WS: String = "x-connector-ws"
+private val beamClient by lazy {
+    GlobalContext.get().get<PublicBeamClient>()
+}
+
+suspend fun currentSpace(): Space? {
+    val space = getMeta(SpaceMeta.SPACE) ?: return null
+    return beamClient.getSpace(space).getOrNull()
 }

@@ -30,6 +30,8 @@ import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import org.lighthousegames.logging.logging
 
+// TODO
+// Handle 404
 class IndexRoute : Route, KoinComponent {
 
     override val qualifier = named("index-route")

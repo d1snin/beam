@@ -20,7 +20,14 @@ object Texts {
 
     object Heading {
 
-        const val LOGO_ALT = "Beam logo"
+        object Logo {
+            const val ALT = "Beam logo"
+        }
+
+        object SpaceInfo {
+
+            const val DEFAULT_TITLE = "Beam"
+        }
 
         object DaemonStatus {
 

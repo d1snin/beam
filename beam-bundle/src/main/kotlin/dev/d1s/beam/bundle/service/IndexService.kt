@@ -95,6 +95,7 @@ class DefaultIndexService : IndexService, KoinComponent {
         }
 
         val parameters = RenderParameters(
+            space = null,
             title = message,
             description = null,
             icon = Defaults.ICON,
@@ -138,6 +139,7 @@ class DefaultIndexService : IndexService, KoinComponent {
         )
 
         val parameters = RenderParameters(
+            space,
             title,
             description,
             icon,
