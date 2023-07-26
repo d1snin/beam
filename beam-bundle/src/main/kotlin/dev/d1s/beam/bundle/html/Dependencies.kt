@@ -14,24 +14,21 @@
  * limitations under the License.
  */
 
-package dev.d1s.beam.commons.validation
+package dev.d1s.beam.bundle.html
 
-import dev.d1s.beam.commons.SpaceSlug
-import kotlin.text.Regex
+import kotlinx.html.HEAD
+import kotlinx.html.styleLink
 
-private val blackList = mutableListOf<Regex>()
+typealias Dependency = HEAD.() -> Unit
 
-internal object SpaceSlugBlacklist : List<Regex> by blackList {
-
-    init {
-        +".+\\..+"
+val dependencies = listOf<Dependency>(
+    {
+        styleLink("https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css")
+    },
+    {
+        styleLink("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css")
+    },
+    {
+        styleLink("https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css")
     }
-
-    internal fun matches(slug: SpaceSlug) =
-        blackList.find {
-            it.matches(slug)
-        } != null
-}
-
-private operator fun String.unaryPlus() =
-    blackList.add(Regex(this))
+)

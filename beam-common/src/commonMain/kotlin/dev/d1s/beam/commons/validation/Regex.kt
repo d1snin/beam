@@ -16,7 +16,9 @@
 
 package dev.d1s.beam.commons.validation
 
-internal object Regex {
+import kotlin.text.Regex
 
-    val Slug = Regex("([a-z0-9]{1,20})(-[a-z0-9]{0,20}){0,10}")
+public object Regex {
+
+    public val Slug: Regex = Regex("(([a-z0-9]{1,20})(-[a-z0-9]{0,20}){0,10})")
 }

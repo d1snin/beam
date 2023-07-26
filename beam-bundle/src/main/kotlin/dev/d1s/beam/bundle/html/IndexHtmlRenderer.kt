@@ -111,6 +111,10 @@ class DefaultIndexHtmlRenderer : IndexHtmlRenderer, KoinComponent {
                     attributes["color"] = favicon.maskIconColor ?: ""
                 }
 
+                dependencies.forEach { dependency ->
+                    dependency()
+                }
+
                 script {
                     src = Defaults.SCRIPT
                 }

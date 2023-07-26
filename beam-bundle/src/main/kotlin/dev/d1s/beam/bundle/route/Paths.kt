@@ -16,11 +16,11 @@
 
 package dev.d1s.beam.bundle.route
 
+import dev.d1s.beam.commons.validation.Regex as CommonRegex
+
 object Paths {
 
     val Index = Regex(
-        "/(?!apple-touch-icon\\.png|browserconfig\\.xml|favicon\\.ico|favicon-16x16\\.png|" +
-                "favicon-32x32\\.png|icon\\.png|main\\.bundle\\.js|mstile-150x150\\.png|robots\\.txt|" +
-                "safari-pinned-tab\\.svg).*"
+        "/${CommonRegex.Slug}?"
     )
 }

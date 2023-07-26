@@ -48,14 +48,7 @@ kotlin {
 
                 val kvisionVersion: String by project
 
-                val sassVersion: String by project
-                val sassLoaderVersion: String by project
-                val cssLoaderVersion: String by project
-                val styleLoaderVersion: String by project
-
                 val catppuccinKotlinVersion: String by project
-
-                val animateCssVersion: String by project
 
                 val koinVersion: String by project
 
@@ -68,19 +61,9 @@ kotlin {
 
                 implementation("io.kvision:kvision:$kvisionVersion")
                 implementation("io.kvision:kvision-state:$kvisionVersion")
-                implementation("io.kvision:kvision-bootstrap:$kvisionVersion")
-                implementation("io.kvision:kvision-bootstrap-css:$kvisionVersion")
-                implementation("io.kvision:kvision-bootstrap-icons:$kvisionVersion")
                 implementation("io.kvision:kvision-routing-navigo-ng:$kvisionVersion")
 
-                implementation(npm("sass", sassVersion))
-                implementation(npm("sass-loader", sassLoaderVersion))
-                implementation(devNpm("css-loader", cssLoaderVersion))
-                implementation(devNpm("style-loader", styleLoaderVersion))
-
                 implementation("com.catppuccin:catppuccin-kotlin:$catppuccinKotlinVersion")
-
-                implementation(npm("animate.css", animateCssVersion))
 
                 implementation("io.insert-koin:koin-core:$koinVersion")
 

@@ -16,11 +16,9 @@
 
 package dev.d1s.beam.ui
 
-import dev.d1s.beam.ui.module.AnimateCssModule
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.render
 import io.kvision.Application
-import io.kvision.BootstrapCssModule
 import io.kvision.panel.root
 import io.kvision.startApplication
 import org.koin.core.component.KoinComponent
@@ -47,8 +45,6 @@ fun main() {
 
     startApplication(
         ::BeamUiApplication,
-        hot = null,
-        BootstrapCssModule,
-        AnimateCssModule,
+        hot = null
     )
 }
