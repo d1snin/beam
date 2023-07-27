@@ -79,7 +79,7 @@ class DefaultDaemonConnector : DaemonConnector, KoinComponent {
             while (true) {
                 val status = getDaemonStatus()
 
-                if (observableStatus.value != status) {
+                if (observableStatus.value?.status != status?.status) {
                     observableStatus.value = status
                 }
 
