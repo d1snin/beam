@@ -24,5 +24,5 @@ internal object Limits {
     const val METADATA_MAX_LENGTH = 100
     const val METADATA_VALUE_MAX_LENGTH = 100
 
-    const val BLOCK_MAX_CAPACITY = 100
+    const val BLOCK_MAX_CAPACITY = 20
 }
