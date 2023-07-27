@@ -34,7 +34,7 @@ import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class DisconnectedDaemonStatusReporter : Component<Unit>(), KoinComponent {
+class DisconnectedDaemonStatusBlankslate : Component<Unit>(), KoinComponent {
 
     private val daemonConnector by inject<DaemonConnector>()
 

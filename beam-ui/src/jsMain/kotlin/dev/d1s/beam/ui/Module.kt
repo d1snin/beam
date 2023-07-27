@@ -36,7 +36,7 @@ object Qualifier {
     val SpaceInfoComponent = named("space-info-component")
     val DaemonStatusComponent = named("daemon-status-component")
     val SpaceContentComponent = named("space-content-component")
-    val DisconnectedDaemonStatusReporterComponent = named("disconnected-daemon-status-reporter-component")
+    val DisconnectedDaemonStatusBlankslateComponent = named("disconnected-daemon-status-blankslate-component")
 }
 
 fun setupModule() {
@@ -89,7 +89,7 @@ private fun Module.components() {
         qualifier = Qualifier.SpaceContentComponent
     }
 
-    singleOf<Component<Unit>>(::DisconnectedDaemonStatusReporter) {
-        qualifier = Qualifier.DisconnectedDaemonStatusReporterComponent
+    singleOf<Component<Unit>>(::DisconnectedDaemonStatusBlankslate) {
+        qualifier = Qualifier.DisconnectedDaemonStatusBlankslateComponent
     }
 }

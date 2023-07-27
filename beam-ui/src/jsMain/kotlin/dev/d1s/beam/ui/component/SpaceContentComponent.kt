@@ -26,11 +26,11 @@ import org.koin.core.component.inject
 
 class SpaceContentComponent : Component<Unit>(), KoinComponent {
 
-    private val disconnectedDaemonStatusReporter by inject<Component<Unit>>(Qualifier.DisconnectedDaemonStatusReporterComponent)
+    private val disconnectedDaemonStatusBlankslate by inject<Component<Unit>>(Qualifier.DisconnectedDaemonStatusBlankslateComponent)
 
     override fun SimplePanel.render() {
         div(className = "container-fluid") {
-            render(disconnectedDaemonStatusReporter)
+            render(disconnectedDaemonStatusBlankslate)
         }
     }
 }
