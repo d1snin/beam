@@ -17,20 +17,34 @@
 package dev.d1s.beam.ui.component
 
 import dev.d1s.beam.ui.Qualifier
+import dev.d1s.beam.ui.client.DaemonConnector
+import dev.d1s.beam.ui.client.down
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.render
 import io.kvision.html.div
 import io.kvision.panel.SimplePanel
+import io.kvision.state.bind
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class SpaceContentComponent : Component<Unit>(), KoinComponent {
 
+    private val daemonConnector by inject<DaemonConnector>()
+
     private val disconnectedDaemonStatusBlankslate by inject<Component<Unit>>(Qualifier.DisconnectedDaemonStatusBlankslateComponent)
 
+    private val renderingScope = CoroutineScope(Dispatchers.Main)
+
     override fun SimplePanel.render() {
-        div(className = "container-fluid") {
-            render(disconnectedDaemonStatusBlankslate)
+        div(className = "container-fluid").bind(daemonConnector.observableStatus) { status ->
+            renderingScope.launch {
+                if (status.down()) {
+                    render(disconnectedDaemonStatusBlankslate)
+                }
+            }
         }
     }
 }
