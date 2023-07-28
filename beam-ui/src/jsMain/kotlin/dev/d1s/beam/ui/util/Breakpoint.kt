@@ -14,12 +14,9 @@
  * limitations under the License.
  */
 
-package dev.d1s.beam.ui.resource
+package dev.d1s.beam.ui.util
 
-object ResourceLocation {
+object Breakpoint {
 
-    const val ICON = "/icon.png"
-
-    const val NOT_FOUND_DARK = "/404_dark.svg"
-    const val NOT_FOUND_LIGHT = "/404_light.svg"
+    const val MD = 768
 }

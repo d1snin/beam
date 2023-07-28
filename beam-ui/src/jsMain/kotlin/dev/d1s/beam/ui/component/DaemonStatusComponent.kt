@@ -23,10 +23,7 @@ import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.util.Texts
 import dev.d1s.beam.ui.util.iconWithMargin
 import dev.d1s.exkt.kvision.component.Component
-import io.kvision.core.Background
 import io.kvision.core.Color
-import io.kvision.core.Outline
-import io.kvision.core.OutlineStyle
 import io.kvision.html.div
 import io.kvision.html.span
 import io.kvision.panel.SimplePanel
@@ -46,7 +43,7 @@ class DaemonStatusComponent : Component<Unit>(), KoinComponent {
     private val renderingScope = CoroutineScope(Dispatchers.Main)
 
     override fun SimplePanel.render() {
-        div(className = "rounded shadow px-2 text-white d-flex align-items-center").bind(daemonConnector.observableStatus) { status ->
+        card(className = "d-flex align-items-center px-2").bind(daemonConnector.observableStatus) { status ->
             visible = false
 
             renderingScope.launch {
@@ -97,10 +94,6 @@ class DaemonStatusComponent : Component<Unit>(), KoinComponent {
 
     private fun SimplePanel.applyStyle() {
         height = 30.px
-
-        background = Background(color = currentTheme.overlay)
-        outline = Outline(width = 1.px, style = OutlineStyle.SOLID, color = currentTheme.outline)
-
         fontSize = 0.8.rem
     }
 

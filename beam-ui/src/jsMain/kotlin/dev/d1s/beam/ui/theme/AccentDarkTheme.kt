@@ -17,15 +17,20 @@
 package dev.d1s.beam.ui.theme
 
 import dev.d1s.beam.commons.SpaceThemeDefinition
+import dev.d1s.beam.ui.resource.ResourceLocation
 import io.kvision.core.Color
 
 object AccentDarkTheme : AbstractTheme(SpaceThemeDefinition.AccentDark) {
 
+    override val notFoundIcon = ResourceLocation.NOT_FOUND_LIGHT
+
+    override val buttonClass = "btn-outline-light"
+
     // https://colorpicker.me/#212121
     override val background = Color.hex(0x212121)
 
-    // https://colorpicker.me/#232323
-    override val overlay = Color.hex(0x232323)
+    // https://colorpicker.me/#2b2b2b
+    override val overlay = Color.hex(0x2b2b2b)
 
     // https://colorpicker.me/#b4b4b4
     override val outline = Color.hex(0xb4b4b4)

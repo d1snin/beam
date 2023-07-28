@@ -19,6 +19,7 @@ package dev.d1s.beam.ui.component
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.client.DaemonConnector
 import dev.d1s.beam.ui.client.down
+import dev.d1s.beam.ui.util.currentSpace
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.render
 import io.kvision.html.div
@@ -36,14 +37,29 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
 
     private val disconnectedDaemonStatusBlankslate by inject<Component<Unit>>(Qualifier.DisconnectedDaemonStatusBlankslateComponent)
 
+    private val spaceSearchCardComponent by inject<Component<SpaceSearchCardComponent.Config>>(Qualifier.SpaceSearchCardComponent)
+
     private val renderingScope = CoroutineScope(Dispatchers.Main)
 
     override fun SimplePanel.render() {
-        div(className = "container-fluid").bind(daemonConnector.observableStatus) { status ->
+        div(className = "container-fluid mt-4").bind(
+            daemonConnector.observableStatus,
+            runImmediately = false
+        ) { status ->
             renderingScope.launch {
                 if (status.down()) {
                     render(disconnectedDaemonStatusBlankslate)
+                } else {
+                    handleNotFound()
                 }
+            }
+        }
+    }
+
+    private suspend fun SimplePanel.handleNotFound() {
+        if (currentSpace() == null && daemonConnector.isUp() == true) {
+            render(spaceSearchCardComponent) {
+                mode.value = SpaceSearchCardComponent.Mode.NOT_FOUND
             }
         }
     }

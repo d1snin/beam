@@ -18,6 +18,7 @@ package dev.d1s.beam.ui.component
 
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.theme.currentTheme
+import dev.d1s.beam.ui.theme.setTextColor
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.render
 import io.kvision.panel.SimplePanel
@@ -25,6 +26,7 @@ import io.kvision.utils.vh
 import kotlinx.browser.document
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import org.w3c.dom.css.CSSStyleDeclaration
 
 class RootComponent : Component.Root(), KoinComponent {
 
@@ -35,13 +37,18 @@ class RootComponent : Component.Root(), KoinComponent {
     override fun SimplePanel.render() {
         sizing()
         display()
-        background()
         font()
+        background()
         components()
     }
 
     private fun SimplePanel.sizing() {
         minHeight = 100.vh
+
+        bodyStyle {
+            minHeight = "100vh"
+            height = "100vh"
+        }
     }
 
     private fun SimplePanel.display() {
@@ -49,22 +56,22 @@ class RootComponent : Component.Root(), KoinComponent {
         addCssClass("flex-column")
     }
 
-    private fun background() {
-        requireNotNull(document.body).style.apply {
-            backgroundColor = currentTheme.background.asString()
-            display = "flex"
-            flexDirection = "column"
-            minHeight = "100vh"
-            height = "100vh"
-        }
+    private fun SimplePanel.font() {
+        setTextColor()
     }
 
-    private fun SimplePanel.font() {
-        color = currentTheme.text
+    private fun background() {
+        bodyStyle {
+            backgroundColor = currentTheme.background.asString()
+        }
     }
 
     private fun SimplePanel.components() {
         render(headingComponent)
         render(spaceContentComponent)
+    }
+
+    private fun bodyStyle(block: CSSStyleDeclaration.() -> Unit) {
+        requireNotNull(document.body).style.apply(block)
     }
 }

@@ -19,7 +19,7 @@ package dev.d1s.beam.ui.theme
 import dev.d1s.beam.commons.SpaceThemeDefinition
 import kotlinx.atomicfu.atomic
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
+import org.koin.core.context.GlobalContext
 
 interface ThemeHolder {
 
@@ -46,4 +46,6 @@ class DefaultThemeHolder : ThemeHolder, KoinComponent {
     }
 }
 
-val KoinComponent.currentTheme get() = get<ThemeHolder>().current
+val currentTheme: AbstractTheme by lazy {
+    GlobalContext.get().get<ThemeHolder>().current
+}

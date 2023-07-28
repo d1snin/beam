@@ -27,7 +27,7 @@ import io.kvision.panel.vPanel
 import io.kvision.utils.vh
 import org.koin.core.component.KoinComponent
 
-class DisconnectedDaemonStatusBlankslate : Component<Unit>(), KoinComponent {
+class DisconnectedDaemonStatusBlankslateComponent : Component<Unit>(), KoinComponent {
 
     override fun SimplePanel.render() {
         div(className = "container-fluid d-flex justify-content-center") {

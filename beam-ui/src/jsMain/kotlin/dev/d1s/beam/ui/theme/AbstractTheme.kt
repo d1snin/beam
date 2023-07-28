@@ -17,9 +17,16 @@
 package dev.d1s.beam.ui.theme
 
 import dev.d1s.beam.commons.SpaceThemeDefinition
+import dev.d1s.beam.commons.Url
+import io.kvision.core.Background
 import io.kvision.core.Color
+import io.kvision.core.Widget
 
 abstract class AbstractTheme(val definition: SpaceThemeDefinition) {
+
+    abstract val notFoundIcon: Url
+
+    abstract val buttonClass: String
 
     abstract val background: Color
 
@@ -36,4 +43,12 @@ abstract class AbstractTheme(val definition: SpaceThemeDefinition) {
     abstract val orange: Color
 
     abstract val red: Color
+}
+
+fun Widget.setTextColor() {
+    color = currentTheme.text
+}
+
+fun Widget.setBackground() {
+    background = Background(color = currentTheme.background)
 }
