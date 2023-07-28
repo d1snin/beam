@@ -18,15 +18,15 @@ package dev.d1s.beam.ui.component
 
 import dev.d1s.beam.client.PublicBeamClient
 import dev.d1s.beam.commons.Role
-import dev.d1s.beam.commons.SpaceIdentifier
+import dev.d1s.beam.commons.Space
 import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.theme.setBackground
 import dev.d1s.beam.ui.theme.setTextColor
 import dev.d1s.beam.ui.util.Breakpoint
 import dev.d1s.beam.ui.util.Texts
+import dev.d1s.beam.ui.util.buildSpaceUrl
 import dev.d1s.beam.ui.util.isRootPath
 import dev.d1s.exkt.kvision.component.Component
-import io.ktor.http.*
 import io.kvision.core.onClick
 import io.kvision.core.onEvent
 import io.kvision.html.*
@@ -35,7 +35,6 @@ import io.kvision.state.ObservableValue
 import io.kvision.state.bind
 import io.kvision.utils.event
 import io.kvision.utils.px
-import io.kvision.utils.rem
 import kotlinx.atomicfu.atomic
 import kotlinx.browser.document
 import kotlinx.browser.window
@@ -49,96 +48,108 @@ class SpaceSearchCardComponent : Component<SpaceSearchCardComponent.Config>(::Co
 
     private val client by inject<PublicBeamClient>()
 
-    private val notFoundMode get() = config.mode.value == Mode.NOT_FOUND
-
     private val renderingScope = CoroutineScope(Dispatchers.Main)
 
     private val invalidInput = ObservableValue(false)
+
+    private val contents by lazy {
+        getKoin().getAll<SpaceSearchCardContent>()
+    }
+
+    private val content by lazy {
+        val mode = config.mode.value
+
+        contents.find {
+            it.mode == mode
+        } ?: error("$mode is unsupported")
+    }
 
     override fun SimplePanel.render() {
         div(className = "container d-flex justify-content-center") {
             maxWidth = Breakpoint.MD.px
 
             card(className = "d-flex flex-column justify-content-center w-100 p-5") {
-                notFoundImage()
+                image()
                 text()
                 searchBar()
             }
         }
     }
 
-    private fun SimplePanel.notFoundImage() {
-        if (notFoundMode) {
-            image(
-                currentTheme.notFoundIcon,
-                alt = Texts.Body.SpaceSearchCard.NotFoundMode.ICON_ALT,
-                className = "w-100 mb-4 mb-lg-5"
-            )
+    private fun SimplePanel.image() {
+        with(content) {
+            image()
         }
     }
 
     private fun SimplePanel.text() {
-        if (notFoundMode) {
-            p(Texts.Body.SpaceSearchCard.NotFoundMode.TEXT, className = "mb-3") {
-                fontSize = 1.6.rem
-            }
+        with(content) {
+            text()
+        }
 
-            p {
-                span(Texts.Body.SpaceSearchCard.NotFoundMode.SEARCH_HINT)
-                latestSpacesHint()
-                rootHint()
-            }
+        p {
+            span(Texts.Body.SpaceSearchCard.SEARCH_HINT)
+            latestSpacesHint()
+            rootHint()
         }
     }
 
     private fun SimplePanel.latestSpacesHint() {
-        secondaryText {
-            visible = false
+        initiallyInvisibleSecondaryText {
+            val spaces = client.getSpaces(limit = LATEST_SPACES_LIMIT, offset = 0).getOrElse {
+                return@initiallyInvisibleSecondaryText
+            }
 
-            renderingScope.launch {
-                client.getSpaces(limit = 5, offset = 0).onSuccess {
-                    val latestSpaces = it.elements.filter { space ->
-                        space.role != Role.ROOT
-                    }
+            val latestSpaces = spaces.elements.filter { space ->
+                space.role != Role.ROOT
+            }
 
-                    if (latestSpaces.isNotEmpty()) {
-                        span(" ")
-                        span(Texts.Body.SpaceSearchCard.NotFoundMode.LATEST_SPACES_HINT)
+            renderLatestSpaceLinks(latestSpaces)
 
-                        latestSpaces.forEach { space ->
-                            val slug = space.slug
-                            val url = buildSpaceUrl(slug)
+            visible = true
+        }
+    }
 
-                            link(slug, url)
+    private fun SimplePanel.renderLatestSpaceLinks(latestSpaces: List<Space>) {
+        if (latestSpaces.isNotEmpty()) {
+            span(" ")
+            span(Texts.Body.SpaceSearchCard.LATEST_SPACES_HINT)
 
-                            if (space != latestSpaces.last()) {
-                                span(", ")
-                            } else {
-                                span(".")
-                            }
-                        }
-                    }
+            latestSpaces.forEach { space ->
+                val slug = space.slug
+                val url = buildSpaceUrl(slug)
 
-                    visible = true
+                link(slug, url)
+
+                if (space != latestSpaces.last()) {
+                    span(", ")
+                } else {
+                    span(".")
                 }
             }
         }
     }
 
     private fun SimplePanel.rootHint() {
+        initiallyInvisibleSecondaryText {
+            if (!isRootPath()) {
+                span(Texts.Body.SpaceSearchCard.ROOT_HINT)
+
+                val rootUrl = buildSpaceUrl()
+                link("root", rootUrl)
+                span(".")
+
+                visible = true
+            }
+        }
+    }
+
+    private fun SimplePanel.initiallyInvisibleSecondaryText(block: suspend SimplePanel.() -> Unit) {
         secondaryText {
             visible = false
 
             renderingScope.launch {
-                if (!isRootPath()) {
-                    span(Texts.Body.SpaceSearchCard.NotFoundMode.ROOT_HINT)
-
-                    val rootUrl = buildSpaceUrl()
-                    link("root", rootUrl)
-                    span(".")
-
-                    visible = true
-                }
+                block()
             }
         }
     }
@@ -159,37 +170,48 @@ class SpaceSearchCardComponent : Component<SpaceSearchCardComponent.Config>(::Co
 
     private fun SimplePanel.input() {
         div(className = "form-floating w-75 me-2 me-md-3") {
-            input(InputType.TEXT, className = "form-control").bind(invalidInput) { invalid ->
-                if (invalid) {
-                    addCssClass("is-invalid")
-                }
+            inputField()
+            inputLabel()
+        }
+    }
 
-                setTextColor()
-                setBackground()
-
-                id = INPUT_TEXT_ID
-                required = true
-                placeholder = Texts.Body.SpaceSearchCard.PLACEHOLDER
-                setAttribute("aria-label", Texts.Body.SpaceSearchCard.PLACEHOLDER)
-
-                onEvent {
-                    event("keyup") { event ->
-                        event.preventDefault()
-
-                        if (event.asDynamic().keyCode == ENTER_KEY_CODE) {
-                            redirectUserOrMarkInvalid()
-                        }
-                    }
-                }
+    private fun SimplePanel.inputField() {
+        input(InputType.TEXT, className = "form-control").bind(invalidInput) { invalid ->
+            if (invalid) {
+                addCssClass("is-invalid")
             }
 
-            label(forId = INPUT_TEXT_ID) {
-                setStyle("--bs-body-bg", currentTheme.background.asString())
+            setTextColor()
+            setBackground()
 
-                span {
-                    color = currentTheme.text
-                    +Texts.Body.SpaceSearchCard.PLACEHOLDER
+            id = INPUT_TEXT_ID
+            required = true
+            placeholder = Texts.Body.SpaceSearchCard.PLACEHOLDER
+            setAttribute("aria-label", Texts.Body.SpaceSearchCard.PLACEHOLDER)
+
+            handleEnterKeyEvent()
+        }
+    }
+
+    private fun SimplePanel.handleEnterKeyEvent() {
+        onEvent {
+            event("keyup") { event ->
+                event.preventDefault()
+
+                if (event.asDynamic().keyCode == ENTER_KEY_CODE) {
+                    redirectUserOrMarkInvalid()
                 }
+            }
+        }
+    }
+
+    private fun SimplePanel.inputLabel() {
+        label(forId = INPUT_TEXT_ID) {
+            setStyle("--bs-body-bg", currentTheme.background.asString())
+
+            span {
+                color = currentTheme.text
+                +Texts.Body.SpaceSearchCard.PLACEHOLDER
             }
         }
     }
@@ -214,14 +236,9 @@ class SpaceSearchCardComponent : Component<SpaceSearchCardComponent.Config>(::Co
         }
     }
 
-    private fun buildSpaceUrl(spaceIdentifier: SpaceIdentifier? = null) =
-        URLBuilder(window.location.href).apply {
-            set(path = spaceIdentifier ?: "/")
-        }.buildString()
-
     enum class Mode {
 
-        NORMAL, NOT_FOUND
+        NORMAL, NOT_FOUND, EMPTY_SPACE
     }
 
     class Config {
@@ -230,6 +247,8 @@ class SpaceSearchCardComponent : Component<SpaceSearchCardComponent.Config>(::Co
     }
 
     private companion object {
+
+        private const val LATEST_SPACES_LIMIT = 5
 
         private const val INPUT_TEXT_ID = "spaceSearchInput"
 

@@ -16,6 +16,7 @@
 
 package dev.d1s.beam.ui.component
 
+import dev.d1s.beam.client.PublicBeamClient
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.client.DaemonConnector
 import dev.d1s.beam.ui.client.down
@@ -35,6 +36,8 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
 
     private val daemonConnector by inject<DaemonConnector>()
 
+    private val client by inject<PublicBeamClient>()
+
     private val disconnectedDaemonStatusBlankslate by inject<Component<Unit>>(Qualifier.DisconnectedDaemonStatusBlankslateComponent)
 
     private val spaceSearchCardComponent by inject<Component<SpaceSearchCardComponent.Config>>(Qualifier.SpaceSearchCardComponent)
@@ -51,6 +54,7 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
                     render(disconnectedDaemonStatusBlankslate)
                 } else {
                     handleNotFound()
+                    handleEmptySpace()
                 }
             }
         }
@@ -60,6 +64,18 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
         if (currentSpace() == null && daemonConnector.isUp() == true) {
             render(spaceSearchCardComponent) {
                 mode.value = SpaceSearchCardComponent.Mode.NOT_FOUND
+            }
+        }
+    }
+
+    private suspend fun SimplePanel.handleEmptySpace() {
+        currentSpace()?.let {
+            val blocks = client.getBlocks(it.id).getOrNull()
+
+            if (blocks?.isEmpty() == true) {
+                render(spaceSearchCardComponent) {
+                    mode.value = SpaceSearchCardComponent.Mode.EMPTY_SPACE
+                }
             }
         }
     }

@@ -24,6 +24,8 @@ object AccentDarkTheme : AbstractTheme(SpaceThemeDefinition.AccentDark) {
 
     override val notFoundIcon = ResourceLocation.NOT_FOUND_LIGHT
 
+    override val emptySpaceIcon = ResourceLocation.EMPTY_SPACE_LIGHT
+
     override val buttonClass = "btn-outline-light"
 
     // https://colorpicker.me/#212121

@@ -100,7 +100,6 @@ class DefaultIndexService : IndexService, KoinComponent {
             description = null,
             icon = Defaults.ICON,
             favicon = defaultFavicon,
-            themeColor = null,
             urlPreview = null
         )
 
@@ -144,7 +143,6 @@ class DefaultIndexService : IndexService, KoinComponent {
             description,
             icon,
             favicon = view.favicon ?: defaultFavicon,
-            themeColor = Defaults.FOUND_SPACE_THEME_COLOR,
             urlPreview
         )
 

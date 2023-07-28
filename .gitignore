@@ -46,3 +46,9 @@ beam-bundle/src/main/resources/static/main.bundle.js
 beam-bundle/src/main/resources/bundle.conf
 beam-daemon/src/main/resources/changelog.json
 beam-daemon/src/main/resources/daemon.conf
+
+### Grabbed Resources ###
+beam-bundle/src/main/resources/static/404_light.svg
+beam-bundle/src/main/resources/static/404_dark.svg
+beam-bundle/src/main/resources/static/empty_space_light.svg
+beam-bundle/src/main/resources/static/empty_space_dark.svg

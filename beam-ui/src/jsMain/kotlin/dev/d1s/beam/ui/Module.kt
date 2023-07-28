@@ -38,6 +38,9 @@ object Qualifier {
     val SpaceContentComponent = named("space-content-component")
     val DisconnectedDaemonStatusBlankslateComponent = named("disconnected-daemon-status-blankslate-component")
     val SpaceSearchCardComponent = named("space-search-card-component")
+
+    val NotFoundSpaceSearchCardContent = named("not-found-space-search-card-content")
+    val EmptySpaceSearchCardContent = named("empty-space-search-card-content")
 }
 
 fun setupModule() {
@@ -51,6 +54,7 @@ private val mainModule = module {
     daemonConnector()
     themeHolder()
     components()
+    spaceSearchCardContents()
 }
 
 private fun Module.beamClient() {
@@ -96,5 +100,15 @@ private fun Module.components() {
 
     singleOf<Component<SpaceSearchCardComponent.Config>>(::SpaceSearchCardComponent) {
         qualifier = Qualifier.SpaceSearchCardComponent
+    }
+}
+
+private fun Module.spaceSearchCardContents() {
+    singleOf<SpaceSearchCardContent>(::NotFoundSpaceSearchCardContent) {
+        qualifier = Qualifier.NotFoundSpaceSearchCardContent
+    }
+
+    singleOf<SpaceSearchCardContent>(::EmptySpaceSearchCardContent) {
+        qualifier = Qualifier.EmptySpaceSearchCardContent
     }
 }

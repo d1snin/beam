@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package dev.d1s.beam.ui.resource
+package dev.d1s.beam.ui.component
 
-object ResourceLocation {
+import io.kvision.panel.SimplePanel
 
-    const val ICON = "/icon.png"
+interface SpaceSearchCardContent {
 
-    const val NOT_FOUND_LIGHT = "/404_light.svg"
-    const val NOT_FOUND_DARK = "/404_dark.svg"
+    val mode: SpaceSearchCardComponent.Mode
 
-    const val EMPTY_SPACE_LIGHT = "/empty_space_light.svg"
-    const val EMPTY_SPACE_DARK = "/empty_space_dark.svg"
+    fun SimplePanel.image()
+
+    fun SimplePanel.text()
 }

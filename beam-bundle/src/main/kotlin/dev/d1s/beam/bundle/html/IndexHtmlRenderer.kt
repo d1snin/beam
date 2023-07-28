@@ -33,7 +33,6 @@ data class RenderParameters(
     val description: String?,
     val icon: SpaceIconUrl?,
     val favicon: SpaceFavicon,
-    val themeColor: String?,
     val urlPreview: SpaceUrlPreview?
 )
 
@@ -64,11 +63,6 @@ class DefaultIndexHtmlRenderer : IndexHtmlRenderer, KoinComponent {
 
                 renderParameters.description?.let {
                     meta("description", it)
-                }
-
-                renderParameters.themeColor?.let {
-                    meta("theme-color", it)
-                    meta("msapplication-TileColor", it)
                 }
 
                 meta("charset", "utf-8")

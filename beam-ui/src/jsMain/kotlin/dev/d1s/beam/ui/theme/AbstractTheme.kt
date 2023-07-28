@@ -26,6 +26,8 @@ abstract class AbstractTheme(val definition: SpaceThemeDefinition) {
 
     abstract val notFoundIcon: Url
 
+    abstract val emptySpaceIcon: Url
+
     abstract val buttonClass: String
 
     abstract val background: Color
