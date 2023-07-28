@@ -24,6 +24,7 @@ import dev.d1s.beam.ui.theme.setBackground
 import dev.d1s.beam.ui.theme.setTextColor
 import dev.d1s.beam.ui.util.Breakpoint
 import dev.d1s.beam.ui.util.Texts
+import dev.d1s.beam.ui.util.isRootPath
 import dev.d1s.exkt.common.pathname
 import dev.d1s.exkt.kvision.component.Component
 import io.ktor.http.*
@@ -92,6 +93,8 @@ class SpaceSearchCardComponent : Component<SpaceSearchCardComponent.Config>(::Co
 
     private fun SimplePanel.latestSpacesHint() {
         secondaryText {
+            visible = false
+
             renderingScope.launch {
                 client.getSpaces(limit = 5, offset = 0).onSuccess {
                     val latestSpaces = it.elements.filter { space ->
@@ -115,6 +118,8 @@ class SpaceSearchCardComponent : Component<SpaceSearchCardComponent.Config>(::Co
                             }
                         }
                     }
+
+                    visible = true
                 }
             }
         }
@@ -123,11 +128,19 @@ class SpaceSearchCardComponent : Component<SpaceSearchCardComponent.Config>(::Co
     private fun SimplePanel.rootHint() {
         if (pathname != "/") {
             secondaryText {
-                span(Texts.Body.SpaceSearchCard.NotFoundMode.ROOT_HINT)
+                visible = false
 
-                val rootUrl = buildSpaceUrl()
-                link("root", rootUrl)
-                span(".")
+                renderingScope.launch {
+                    if (!isRootPath()) {
+                        span(Texts.Body.SpaceSearchCard.NotFoundMode.ROOT_HINT)
+
+                        val rootUrl = buildSpaceUrl()
+                        link("root", rootUrl)
+                        span(".")
+
+                        visible = true
+                    }
+                }
             }
         }
     }
