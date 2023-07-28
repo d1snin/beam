@@ -25,7 +25,6 @@ import dev.d1s.beam.ui.theme.setTextColor
 import dev.d1s.beam.ui.util.Breakpoint
 import dev.d1s.beam.ui.util.Texts
 import dev.d1s.beam.ui.util.isRootPath
-import dev.d1s.exkt.common.pathname
 import dev.d1s.exkt.kvision.component.Component
 import io.ktor.http.*
 import io.kvision.core.onClick
@@ -127,20 +126,18 @@ class SpaceSearchCardComponent : Component<SpaceSearchCardComponent.Config>(::Co
     }
 
     private fun SimplePanel.rootHint() {
-        if (pathname != "/") {
-            secondaryText {
-                visible = false
+        secondaryText {
+            visible = false
 
-                renderingScope.launch {
-                    if (!isRootPath()) {
-                        span(Texts.Body.SpaceSearchCard.NotFoundMode.ROOT_HINT)
+            renderingScope.launch {
+                if (!isRootPath()) {
+                    span(Texts.Body.SpaceSearchCard.NotFoundMode.ROOT_HINT)
 
-                        val rootUrl = buildSpaceUrl()
-                        link("root", rootUrl)
-                        span(".")
+                    val rootUrl = buildSpaceUrl()
+                    link("root", rootUrl)
+                    span(".")
 
-                        visible = true
-                    }
+                    visible = true
                 }
             }
         }
