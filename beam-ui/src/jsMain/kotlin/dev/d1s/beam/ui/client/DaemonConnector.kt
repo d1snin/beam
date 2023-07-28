@@ -36,6 +36,8 @@ interface DaemonConnector {
 
     val observableStatus: ObservableValue<DaemonStatusWithPing?>
 
+    val observableStatusWithPing: ObservableValue<DaemonStatusWithPing?>
+
     suspend fun isUp(): Boolean?
 
     suspend fun getDaemonStatus(): DaemonStatusWithPing?
@@ -46,6 +48,8 @@ interface DaemonConnector {
 class DefaultDaemonConnector : DaemonConnector, KoinComponent {
 
     override val observableStatus = ObservableValue<DaemonStatusWithPing?>(null)
+
+    override val observableStatusWithPing = ObservableValue<DaemonStatusWithPing?>(null)
 
     private val client by inject<PublicBeamClient>()
 
@@ -81,6 +85,10 @@ class DefaultDaemonConnector : DaemonConnector, KoinComponent {
 
                 if (observableStatus.value?.status != status?.status) {
                     observableStatus.value = status
+                }
+
+                if (observableStatusWithPing.value != status) {
+                    observableStatusWithPing.value = status
                 }
 
                 delay(3.seconds)
