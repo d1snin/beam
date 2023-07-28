@@ -161,7 +161,7 @@ class SpaceSearchCardComponent : Component<SpaceSearchCardComponent.Config>(::Co
     }
 
     private fun SimplePanel.input() {
-        div(className = "form-floating w-75 me-2 me-md-3 me-lg-4") {
+        div(className = "form-floating w-75 me-2 me-md-3") {
             input(InputType.TEXT, className = "form-control").bind(invalidInput) { invalid ->
                 if (invalid) {
                     addCssClass("is-invalid")
