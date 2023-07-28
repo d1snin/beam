@@ -29,11 +29,12 @@ import dev.d1s.exkt.common.pathname
 import dev.d1s.exkt.kvision.component.Component
 import io.ktor.http.*
 import io.kvision.core.onClick
-import io.kvision.form.form
+import io.kvision.core.onEvent
 import io.kvision.html.*
 import io.kvision.panel.SimplePanel
 import io.kvision.state.ObservableValue
 import io.kvision.state.bind
+import io.kvision.utils.event
 import io.kvision.utils.px
 import io.kvision.utils.rem
 import kotlinx.atomicfu.atomic
@@ -153,7 +154,7 @@ class SpaceSearchCardComponent : Component<SpaceSearchCardComponent.Config>(::Co
     }
 
     private fun SimplePanel.searchBar() {
-        form(className = "d-flex w-100") {
+        div(className = "d-flex w-100") {
             input()
             goButton()
         }
@@ -173,6 +174,16 @@ class SpaceSearchCardComponent : Component<SpaceSearchCardComponent.Config>(::Co
                 required = true
                 placeholder = Texts.Body.SpaceSearchCard.PLACEHOLDER
                 setAttribute("aria-label", Texts.Body.SpaceSearchCard.PLACEHOLDER)
+
+                onEvent {
+                    event("keyup") { event ->
+                        event.preventDefault()
+
+                        if (event.asDynamic().keyCode == ENTER_KEY_CODE) {
+                            redirectUserOrMarkInvalid()
+                        }
+                    }
+                }
             }
 
             label(forId = INPUT_TEXT_ID) {
@@ -191,14 +202,18 @@ class SpaceSearchCardComponent : Component<SpaceSearchCardComponent.Config>(::Co
             value = Texts.Body.SpaceSearchCard.GO_BUTTON_VALUE
 
             onClick {
-                val spaceIdentifier = document.getElementById(INPUT_TEXT_ID)?.asDynamic()?.value as? String ?: ""
-
-                if (spaceIdentifier.isBlank()) {
-                    invalidInput.setState(true)
-                } else {
-                    window.location.href = buildSpaceUrl(spaceIdentifier)
-                }
+                redirectUserOrMarkInvalid()
             }
+        }
+    }
+
+    private fun redirectUserOrMarkInvalid() {
+        val spaceIdentifier = document.getElementById(INPUT_TEXT_ID)?.asDynamic()?.value as? String ?: ""
+
+        if (spaceIdentifier.isBlank()) {
+            invalidInput.setState(true)
+        } else {
+            window.location.href = buildSpaceUrl(spaceIdentifier)
         }
     }
 
@@ -220,5 +235,7 @@ class SpaceSearchCardComponent : Component<SpaceSearchCardComponent.Config>(::Co
     private companion object {
 
         private const val INPUT_TEXT_ID = "spaceSearchInput"
+
+        private const val ENTER_KEY_CODE = 13
     }
 }
