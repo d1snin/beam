@@ -23,7 +23,7 @@ import dev.d1s.beam.commons.Url as UrlString
 
 public interface SpaceResolver {
 
-    public suspend fun resolve(url: UrlString): Result<Space?>
+    public suspend fun resolve(url: UrlString): Result<Space>
 
     public fun resolveIdentifier(url: UrlString): SpaceIdentifier?
 }

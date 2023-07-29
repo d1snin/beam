@@ -21,8 +21,3 @@ public object DaemonConnectorMeta {
     public const val HTTP: String = "x-connector-http"
     public const val WS: String = "x-connector-ws"
 }
-
-public object SpaceMeta {
-
-    public const val SPACE: String = "x-space"
-}

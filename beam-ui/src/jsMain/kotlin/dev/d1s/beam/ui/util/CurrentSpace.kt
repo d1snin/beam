@@ -19,8 +19,8 @@ package dev.d1s.beam.ui.util
 import dev.d1s.beam.client.PublicBeamClient
 import dev.d1s.beam.commons.Role
 import dev.d1s.beam.commons.Space
-import dev.d1s.beam.commons.SpaceMeta
 import dev.d1s.exkt.common.pathname
+import kotlinx.browser.window
 import org.koin.core.context.GlobalContext
 
 private val beamClient by lazy {
@@ -28,8 +28,8 @@ private val beamClient by lazy {
 }
 
 suspend fun currentSpace(): Space? {
-    val space = getMeta(SpaceMeta.SPACE) ?: return null
-    return beamClient.getSpace(space).getOrNull()
+    val url = window.location.href
+    return beamClient.resolver.resolve(url).getOrNull()
 }
 
 suspend fun isRootPath(): Boolean {
