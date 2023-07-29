@@ -20,10 +20,11 @@ import dev.d1s.beam.bundle.entity.ResolvedSpace
 import dev.d1s.beam.bundle.entity.SpaceRequest
 import dev.d1s.beam.bundle.service.IndexService
 import dev.d1s.beam.bundle.util.respondHtml
+import dev.d1s.beam.client.PublicBeamClient
 import dev.d1s.exkt.ktor.server.koin.configuration.Route
 import io.ktor.server.application.*
-import io.ktor.server.request.*
 import io.ktor.server.routing.*
+import io.ktor.server.util.*
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
@@ -35,6 +36,8 @@ class IndexRoute : Route, KoinComponent {
 
     private val indexService by inject<IndexService>()
 
+    private val client by inject<PublicBeamClient>()
+
     private val logger = logging()
 
     override fun Routing.apply() {
@@ -43,14 +46,7 @@ class IndexRoute : Route, KoinComponent {
                 "Handling ${Paths.Index}"
             }
 
-            val path = call.request.path()
-            val segments = path.split("/").filterNot { it.isBlank() }
-
-            logger.d {
-                "Path: $path"
-            }
-
-            val resolvedSpace = resolveSpace(segments, call)
+            val resolvedSpace = resolveSpace(call)
 
             logger.d {
                 "Responding resolved space..."
@@ -60,12 +56,14 @@ class IndexRoute : Route, KoinComponent {
         }
     }
 
-    private suspend fun resolveSpace(pathSegments: List<String>, call: ApplicationCall): ResolvedSpace {
-        val spaceIdentifier = when (pathSegments.size) {
-            0 -> "root"
-            1 -> pathSegments.first()
-            else -> null
+    private suspend fun resolveSpace(call: ApplicationCall): ResolvedSpace {
+        val url = call.url()
+
+        logger.d {
+            "URL: $url"
         }
+
+        val spaceIdentifier = client.resolver.resolveIdentifier(url)
 
         logger.d {
             "Space identifier: $spaceIdentifier"

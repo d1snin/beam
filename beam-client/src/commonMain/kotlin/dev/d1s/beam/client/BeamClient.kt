@@ -49,6 +49,8 @@ public interface PublicBeamClient {
 
     public val wsBaseUrl: BeamDaemonBaseUrl?
 
+    public val resolver: SpaceResolver
+
     public suspend fun getDaemonStatus(): Result<DaemonStatus>
 
     public suspend fun postSpace(space: SpaceModification): Result<SpaceWithToken>
@@ -89,6 +91,10 @@ public class DefaultPublicBeamClient(
     override val httpBaseUrl: BeamDaemonBaseUrl,
     override val wsBaseUrl: BeamDaemonBaseUrl?
 ) : PublicBeamClient {
+
+    override val resolver: SpaceResolver by lazy {
+        DefaultSpaceResolver(this)
+    }
 
     private val httpClient = HttpClient {
         install(ContentNegotiation) {
