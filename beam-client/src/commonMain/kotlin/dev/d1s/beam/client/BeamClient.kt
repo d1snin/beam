@@ -82,6 +82,8 @@ public interface PublicBeamClient {
     public suspend fun onBlockRemoved(id: BlockId? = null, block: suspend (WebSocketEvent<Block>) -> Unit): Result<Job>
 
     public suspend fun isCompatible(): Result<Boolean>
+
+    public fun isCompatible(daemonVersion: Version): Boolean
 }
 
 public fun PublicBeamClient(httpBaseUrl: BeamDaemonBaseUrl, wsBaseUrl: BeamDaemonBaseUrl? = null): PublicBeamClient =
@@ -206,8 +208,11 @@ public class DefaultPublicBeamClient(
         runCatching {
             val status = getDaemonStatus().getOrThrow()
 
-            status.version == VERSION
+            isCompatible(status.version)
         }
+
+    override fun isCompatible(daemonVersion: Version): Boolean =
+        daemonVersion == VERSION
 
     private inline fun <reified T> handleWsEvents(
         reference: EventReference,
