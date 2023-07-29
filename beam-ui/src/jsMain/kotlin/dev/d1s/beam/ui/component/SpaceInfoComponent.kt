@@ -26,31 +26,22 @@ import io.kvision.html.span
 import io.kvision.panel.SimplePanel
 import io.kvision.panel.vPanel
 import io.kvision.utils.rem
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 
 class SpaceInfoComponent : Component<Unit>(), KoinComponent {
 
-    private val renderingScope = CoroutineScope(Dispatchers.Main)
-
     override fun SimplePanel.render() {
 
         vPanel(justify = JustifyContent.CENTER, className = "ms-2 ms-lg-3") {
-            renderingScope.launch {
-                val currentSpace = currentSpace()
+            p(className = "h2 mb-0") {
+                +(currentSpace?.view?.title ?: Texts.Heading.SpaceInfo.DEFAULT_TITLE)
+            }
 
-                p(className = "h2 mb-0") {
-                    +(currentSpace?.view?.title ?: Texts.Heading.SpaceInfo.DEFAULT_TITLE)
-                }
-
-                currentSpace?.view?.description?.let {
-                    span {
-                        fontSize = 0.8.rem
-                        color = currentTheme.secondaryText
-                        +it
-                    }
+            currentSpace?.view?.description?.let {
+                span {
+                    fontSize = 0.8.rem
+                    color = currentTheme.secondaryText
+                    +it
                 }
             }
         }

@@ -24,13 +24,15 @@ import kotlinx.coroutines.delay
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class DaemonStatusWithPingObservable : Observable<DaemonStatusWithPing?, Any>, KoinComponent {
+class DaemonStatusWithPingObservable : Observable<DaemonStatusWithPing?>, KoinComponent {
+
+    override val launchOnStartup = true
 
     override val state = ObservableValue<DaemonStatusWithPing?>(null)
 
     private val daemonConnector by inject<DaemonConnector>()
 
-    override fun monitor(subject: Any?): Job =
+    override fun monitor(): Job =
         launchMonitor(loop = true) {
             val status = daemonConnector.getDaemonStatus()
 

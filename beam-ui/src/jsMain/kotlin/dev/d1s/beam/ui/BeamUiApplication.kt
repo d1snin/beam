@@ -16,13 +16,17 @@
 
 package dev.d1s.beam.ui
 
-import dev.d1s.beam.ui.client.DaemonStatusWithPing
-import dev.d1s.beam.ui.state.Observable
+import dev.d1s.beam.ui.state.ObservableLauncher
+import dev.d1s.beam.ui.util.initCurrentSpace
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.render
 import io.kvision.Application
 import io.kvision.panel.root
 import io.kvision.startApplication
+import kotlinx.browser.window
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -30,15 +34,17 @@ class BeamUiApplication : Application(), KoinComponent {
 
     private val rootComponent by inject<Component.Root>()
 
-    private val observableDaemonStatus by inject<Observable<DaemonStatusWithPing?, Any>>(Qualifier.DaemonStatusObservable)
-    private val observableDaemonStatusWithPing by inject<Observable<DaemonStatusWithPing?, Any>>(Qualifier.DaemonStatusWithPingObservable)
+    private val observableLauncher by inject<ObservableLauncher>()
 
     override fun start() {
-        observableDaemonStatus.monitor()
-        observableDaemonStatusWithPing.monitor()
+        CoroutineScope(Dispatchers.Main).launch {
+            initCurrentSpace()
 
-        root(ROOT_ELEMENT_ID) {
-            render(rootComponent)
+            observableLauncher.launchMonitors()
+
+            root(ROOT_ELEMENT_ID) {
+                render(rootComponent)
+            }
         }
     }
 

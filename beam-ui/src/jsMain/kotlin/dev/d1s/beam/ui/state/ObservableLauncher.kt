@@ -16,25 +16,24 @@
 
 package dev.d1s.beam.ui.state
 
-import io.kvision.state.ObservableState
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Job
+import org.koin.core.component.KoinComponent
 
-interface Observable<TState> {
+interface ObservableLauncher {
 
-    val launchOnStartup: Boolean
-
-    val state: ObservableState<TState>
-
-    fun monitor(): Job
+    fun launchMonitors(): List<Job>
 }
 
-fun launchMonitor(loop: Boolean = false, block: suspend () -> Unit) =
-    CoroutineScope(Dispatchers.Main).launch {
-        if (loop) {
-            while (isActive) {
-                block()
-            }
-        } else {
-            block()
+class DefaultObservableLauncher : ObservableLauncher, KoinComponent {
+
+    private val observables by lazy {
+        getKoin().getAll<Observable<*>>().filter {
+            it.launchOnStartup
         }
     }
+
+    override fun launchMonitors() =
+        observables.map {
+            it.monitor()
+        }
+}

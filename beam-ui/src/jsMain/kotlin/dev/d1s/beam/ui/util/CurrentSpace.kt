@@ -17,23 +17,32 @@
 package dev.d1s.beam.ui.util
 
 import dev.d1s.beam.client.PublicBeamClient
+import dev.d1s.beam.commons.Blocks
 import dev.d1s.beam.commons.Role
 import dev.d1s.beam.commons.Space
 import dev.d1s.exkt.common.pathname
 import kotlinx.browser.window
 import org.koin.core.context.GlobalContext
 
-private val beamClient by lazy {
+private val client by lazy {
     GlobalContext.get().get<PublicBeamClient>()
 }
 
-suspend fun currentSpace(): Space? {
-    val url = window.location.href
-    return beamClient.resolver.resolve(url).getOrNull()
+private var lateInitCurrentSpace: Space? = null
+val currentSpace get() = lateInitCurrentSpace
+
+private var lateInitCurrentBlocks: Blocks? = null
+val currentBlocks get() = lateInitCurrentBlocks
+
+suspend fun initCurrentSpace() {
+    lateInitCurrentSpace = client.resolver.resolve(window.location.href).getOrNull()
+    lateInitCurrentBlocks = currentSpace?.let {
+        client.getBlocks(it.id).getOrNull()
+    }
 }
 
-suspend fun isRootPath(): Boolean {
-    currentSpace()?.let {
+fun isRootPath(): Boolean {
+    currentSpace?.let {
         return it.role == Role.ROOT
     }
 

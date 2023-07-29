@@ -29,8 +29,6 @@ import org.koin.core.component.inject
 
 class HeadingComponent : Component<Unit>(), KoinComponent {
 
-    private val currentSpaceChangeObservable by inject<Observable<Space?, Any>>(Qualifier.CurrentSpaceChangeObservable)
-
     private val iconComponent by inject<Component<Unit>>(Qualifier.IconComponent)
 
     private val spaceInfoComponent by inject<Component<Unit>>(Qualifier.SpaceInfoComponent)
@@ -40,9 +38,7 @@ class HeadingComponent : Component<Unit>(), KoinComponent {
     override fun SimplePanel.render() {
         div(className = "container-fluid mt-3 mb-4 my-5 d-flex flex-column flex-lg-row justify-content-lg-between") {
             div(className = "d-flex align-items-center") {
-                bind(currentSpaceChangeObservable.state) {
-                    renderSpaceHeading()
-                }
+                renderSpaceHeading()
             }
 
             div(className = "align-self-center mt-5 mt-lg-0") {

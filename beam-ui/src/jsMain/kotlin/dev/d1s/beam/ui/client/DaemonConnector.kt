@@ -20,17 +20,14 @@ import dev.d1s.beam.client.PublicBeamClient
 import dev.d1s.beam.commons.DaemonStatus
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import org.koin.core.context.GlobalContext
 import org.koin.core.time.measureDuration
 
 data class DaemonStatusWithPing(
-    val status: DaemonStatus,
+    val daemonStatus: DaemonStatus,
     val ping: Int
 )
 
 interface DaemonConnector {
-
-    suspend fun isUp(): Boolean
 
     suspend fun getDaemonStatus(): DaemonStatusWithPing?
 }
@@ -38,9 +35,6 @@ interface DaemonConnector {
 class DefaultDaemonConnector : DaemonConnector, KoinComponent {
 
     private val client by inject<PublicBeamClient>()
-
-    override suspend fun isUp(): Boolean =
-        getDaemonStatus() != null
 
     override suspend fun getDaemonStatus(): DaemonStatusWithPing? {
         var status: DaemonStatus? = null
@@ -54,9 +48,3 @@ class DefaultDaemonConnector : DaemonConnector, KoinComponent {
         }
     }
 }
-
-private val daemonConnector by lazy {
-    GlobalContext.get().get<DaemonConnector>()
-}
-
-suspend fun DaemonStatusWithPing?.up() = this != null && daemonConnector.isUp()

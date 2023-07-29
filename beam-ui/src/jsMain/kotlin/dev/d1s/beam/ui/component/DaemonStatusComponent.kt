@@ -18,7 +18,6 @@ package dev.d1s.beam.ui.component
 
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.client.DaemonStatusWithPing
-import dev.d1s.beam.ui.client.up
 import dev.d1s.beam.ui.state.Observable
 import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.util.Texts
@@ -39,20 +38,18 @@ import org.koin.core.component.inject
 
 class DaemonStatusComponent : Component<Unit>(), KoinComponent {
 
-    private val observableDaemonStatusWithPing by inject<Observable<DaemonStatusWithPing?, Any>>(Qualifier.DaemonStatusWithPingObservable)
+    private val daemonStatusWithPingObservable by inject<Observable<DaemonStatusWithPing?>>(Qualifier.DaemonStatusWithPingObservable)
 
     private val renderingScope = CoroutineScope(Dispatchers.Main)
 
     override fun SimplePanel.render() {
-        card(className = "d-flex align-items-center px-2").bind(observableDaemonStatusWithPing.state) { status ->
+        card(className = "d-flex align-items-center px-2").bind(daemonStatusWithPingObservable.state) { status ->
             visible = false
 
             renderingScope.launch {
                 if (status != null) {
                     reportConnectedState(status)
-                }
-
-                if (!status.up()) {
+                } else {
                     reportDisconnectedState()
                 }
             }

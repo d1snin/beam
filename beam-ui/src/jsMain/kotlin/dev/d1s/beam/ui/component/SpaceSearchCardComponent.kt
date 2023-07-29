@@ -22,10 +22,7 @@ import dev.d1s.beam.commons.Space
 import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.theme.setBackground
 import dev.d1s.beam.ui.theme.setTextColor
-import dev.d1s.beam.ui.util.Breakpoint
-import dev.d1s.beam.ui.util.Texts
-import dev.d1s.beam.ui.util.buildSpaceUrl
-import dev.d1s.beam.ui.util.isRootPath
+import dev.d1s.beam.ui.util.*
 import dev.d1s.exkt.kvision.component.Component
 import io.kvision.core.onClick
 import io.kvision.core.onEvent
@@ -111,7 +108,7 @@ class SpaceSearchCardComponent : Component<SpaceSearchCardComponent.Config>(::Co
     }
 
     private fun SimplePanel.renderLatestSpaceLinks(latestSpaces: List<Space>) {
-        if (latestSpaces.isNotEmpty()) {
+        if (latestSpaces.isNotEmpty() && currentSpace !in latestSpaces) {
             span(" ")
             span(Texts.Body.SpaceSearchCard.LATEST_SPACES_HINT)
 

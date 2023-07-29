@@ -36,9 +36,7 @@ class IconComponent : Component<Unit>(), KoinComponent {
     override fun SimplePanel.render() {
         div {
             renderingScope.launch {
-                val space = currentSpace()
-
-                image(space?.view?.icon ?: ResourceLocation.ICON, alt = Texts.Heading.Logo.ALT) {
+                image(currentSpace?.view?.icon ?: ResourceLocation.ICON, alt = Texts.Heading.Logo.ALT) {
                     width = 45.px
                 }
             }

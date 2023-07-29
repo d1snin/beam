@@ -16,28 +16,27 @@
 
 package dev.d1s.beam.ui.state
 
-import dev.d1s.beam.ui.client.DaemonConnector
+import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.client.DaemonStatusWithPing
 import io.kvision.state.ObservableValue
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class DaemonStatusObservable : Observable<DaemonStatusWithPing?, Any>, KoinComponent {
+class DaemonStatusObservable : Observable<DaemonStatusWithPing?>, KoinComponent {
+
+    override val launchOnStartup = true
 
     override val state = ObservableValue<DaemonStatusWithPing?>(null)
 
-    private val daemonConnector by inject<DaemonConnector>()
+    private val daemonStatusWithPingObservable by inject<Observable<DaemonStatusWithPing?>>(Qualifier.DaemonStatusWithPingObservable)
 
-    override fun monitor(subject: Any?): Job =
-        launchMonitor(loop = true) {
-            val statusWithPing = daemonConnector.getDaemonStatus()
-
-            if (state.value?.status != statusWithPing?.status) {
-                state.value = statusWithPing
+    override fun monitor(): Job =
+        launchMonitor {
+            daemonStatusWithPingObservable.state.subscribe { statusWithPing ->
+                if (state.value?.daemonStatus != statusWithPing?.daemonStatus) {
+                    state.value = statusWithPing
+                }
             }
-
-            delay(DaemonCheckDelay)
         }
 }

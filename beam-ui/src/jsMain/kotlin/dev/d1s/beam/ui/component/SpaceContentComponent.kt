@@ -16,70 +16,53 @@
 
 package dev.d1s.beam.ui.component
 
-import dev.d1s.beam.client.PublicBeamClient
 import dev.d1s.beam.ui.Qualifier
-import dev.d1s.beam.ui.client.DaemonConnector
 import dev.d1s.beam.ui.client.DaemonStatusWithPing
-import dev.d1s.beam.ui.client.up
 import dev.d1s.beam.ui.state.Observable
+import dev.d1s.beam.ui.util.currentBlocks
 import dev.d1s.beam.ui.util.currentSpace
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.render
 import io.kvision.html.div
 import io.kvision.panel.SimplePanel
 import io.kvision.state.bind
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class SpaceContentComponent : Component<Unit>(), KoinComponent {
 
-    private val daemonConnector by inject<DaemonConnector>()
-
-    private val observableDaemonStatus by inject<Observable<DaemonStatusWithPing?, Any>>(Qualifier.DaemonStatusObservable)
-
-    private val client by inject<PublicBeamClient>()
+    private val daemonStatusObservable by inject<Observable<DaemonStatusWithPing?>>(Qualifier.DaemonStatusObservable)
 
     private val disconnectedDaemonStatusBlankslate by inject<Component<Unit>>(Qualifier.DisconnectedDaemonStatusBlankslateComponent)
 
     private val spaceSearchCardComponent by inject<Component<SpaceSearchCardComponent.Config>>(Qualifier.SpaceSearchCardComponent)
 
-    private val renderingScope = CoroutineScope(Dispatchers.Main)
-
     override fun SimplePanel.render() {
         div(className = "container-fluid mt-4").bind(
-            observableDaemonStatus.state,
+            daemonStatusObservable.state,
             runImmediately = false
         ) { status ->
-            renderingScope.launch {
-                if (status.up()) {
-                    handleNotFound()
-                    handleEmptySpace()
-                } else {
-                    render(disconnectedDaemonStatusBlankslate)
-                }
+            if (status != null) {
+                handleNotFound()
+                handleEmptySpace()
+            } else {
+                render(disconnectedDaemonStatusBlankslate)
             }
         }
     }
 
-    private suspend fun SimplePanel.handleNotFound() {
-        if (currentSpace() == null && daemonConnector.isUp()) {
+    private fun SimplePanel.handleNotFound() {
+        if (currentSpace == null) {
             render(spaceSearchCardComponent) {
                 mode.value = SpaceSearchCardComponent.Mode.NOT_FOUND
             }
         }
     }
 
-    private suspend fun SimplePanel.handleEmptySpace() {
-        currentSpace()?.let {
-            val blocks = client.getBlocks(it.id).getOrNull()
-
-            if (blocks?.isEmpty() == true) {
-                render(spaceSearchCardComponent) {
-                    mode.value = SpaceSearchCardComponent.Mode.EMPTY_SPACE
-                }
+    private fun SimplePanel.handleEmptySpace() {
+        if (currentBlocks?.isEmpty() == true) {
+            render(spaceSearchCardComponent) {
+                mode.value = SpaceSearchCardComponent.Mode.EMPTY_SPACE
             }
         }
     }
