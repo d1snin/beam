@@ -16,14 +16,11 @@
 
 package dev.d1s.beam.ui.component
 
-import dev.d1s.beam.commons.Space
 import dev.d1s.beam.ui.Qualifier
-import dev.d1s.beam.ui.state.Observable
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.render
 import io.kvision.html.div
 import io.kvision.panel.SimplePanel
-import io.kvision.state.bind
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 

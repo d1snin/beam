@@ -23,7 +23,6 @@ import dev.d1s.exkt.kvision.component.render
 import io.kvision.Application
 import io.kvision.panel.root
 import io.kvision.startApplication
-import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
