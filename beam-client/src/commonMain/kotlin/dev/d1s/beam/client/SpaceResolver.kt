@@ -38,7 +38,9 @@ public class DefaultSpaceResolver(private val client: PublicBeamClient) : SpaceR
         }
 
     override fun resolveIdentifier(url: UrlString): SpaceIdentifier? {
-        val segments = Url(url).pathSegments
+        val segments = Url(url).pathSegments.filter {
+            it.isNotEmpty()
+        }
 
         return when (segments.size) {
             0 -> "root"
