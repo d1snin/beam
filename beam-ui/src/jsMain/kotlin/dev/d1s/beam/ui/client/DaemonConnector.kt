@@ -18,14 +18,10 @@ package dev.d1s.beam.ui.client
 
 import dev.d1s.beam.client.PublicBeamClient
 import dev.d1s.beam.commons.DaemonStatus
-import io.kvision.state.ObservableValue
-import kotlinx.atomicfu.atomic
-import kotlinx.coroutines.*
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.context.GlobalContext
 import org.koin.core.time.measureDuration
-import kotlin.time.Duration.Companion.seconds
 
 data class DaemonStatusWithPing(
     val status: DaemonStatus,
@@ -34,31 +30,17 @@ data class DaemonStatusWithPing(
 
 interface DaemonConnector {
 
-    val observableStatus: ObservableValue<DaemonStatusWithPing?>
-
-    val observableStatusWithPing: ObservableValue<DaemonStatusWithPing?>
-
-    suspend fun isUp(): Boolean?
+    suspend fun isUp(): Boolean
 
     suspend fun getDaemonStatus(): DaemonStatusWithPing?
-
-    fun launchMonitor(): Job
 }
 
 class DefaultDaemonConnector : DaemonConnector, KoinComponent {
 
-    override val observableStatus = ObservableValue<DaemonStatusWithPing?>(null)
-
-    override val observableStatusWithPing = ObservableValue<DaemonStatusWithPing?>(null)
-
     private val client by inject<PublicBeamClient>()
 
-    private val monitoringScope = CoroutineScope(Dispatchers.Main)
-
-    private var monitorLaunched = atomic(false)
-
-    override suspend fun isUp(): Boolean? =
-        (getDaemonStatus() != null).takeIf { monitorLaunched.value }
+    override suspend fun isUp(): Boolean =
+        getDaemonStatus() != null
 
     override suspend fun getDaemonStatus(): DaemonStatusWithPing? {
         var status: DaemonStatus? = null
@@ -71,34 +53,10 @@ class DefaultDaemonConnector : DaemonConnector, KoinComponent {
             DaemonStatusWithPing(it, ping.toInt())
         }
     }
-
-    override fun launchMonitor(): Job {
-        if (monitorLaunched.value) {
-            error("Monitor has already been launched")
-        }
-
-        monitorLaunched.value = true
-
-        return monitoringScope.launch {
-            while (true) {
-                val status = getDaemonStatus()
-
-                if (observableStatus.value?.status != status?.status) {
-                    observableStatus.value = status
-                }
-
-                if (observableStatusWithPing.value != status) {
-                    observableStatusWithPing.value = status
-                }
-
-                delay(3.seconds)
-            }
-        }
-    }
 }
 
 private val daemonConnector by lazy {
     GlobalContext.get().get<DaemonConnector>()
 }
 
-suspend fun DaemonStatusWithPing?.down() = this == null && daemonConnector.isUp() == false
+suspend fun DaemonStatusWithPing?.up() = this != null && daemonConnector.isUp()

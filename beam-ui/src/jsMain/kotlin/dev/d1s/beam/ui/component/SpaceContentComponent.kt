@@ -19,7 +19,9 @@ package dev.d1s.beam.ui.component
 import dev.d1s.beam.client.PublicBeamClient
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.client.DaemonConnector
-import dev.d1s.beam.ui.client.down
+import dev.d1s.beam.ui.client.DaemonStatusWithPing
+import dev.d1s.beam.ui.client.up
+import dev.d1s.beam.ui.state.Observable
 import dev.d1s.beam.ui.util.currentSpace
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.render
@@ -36,6 +38,8 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
 
     private val daemonConnector by inject<DaemonConnector>()
 
+    private val observableDaemonStatus by inject<Observable<DaemonStatusWithPing?, Any>>(Qualifier.DaemonStatusObservable)
+
     private val client by inject<PublicBeamClient>()
 
     private val disconnectedDaemonStatusBlankslate by inject<Component<Unit>>(Qualifier.DisconnectedDaemonStatusBlankslateComponent)
@@ -46,22 +50,22 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
 
     override fun SimplePanel.render() {
         div(className = "container-fluid mt-4").bind(
-            daemonConnector.observableStatus,
+            observableDaemonStatus.state,
             runImmediately = false
         ) { status ->
             renderingScope.launch {
-                if (status.down()) {
-                    render(disconnectedDaemonStatusBlankslate)
-                } else {
+                if (status.up()) {
                     handleNotFound()
                     handleEmptySpace()
+                } else {
+                    render(disconnectedDaemonStatusBlankslate)
                 }
             }
         }
     }
 
     private suspend fun SimplePanel.handleNotFound() {
-        if (currentSpace() == null && daemonConnector.isUp() == true) {
+        if (currentSpace() == null && daemonConnector.isUp()) {
             render(spaceSearchCardComponent) {
                 mode.value = SpaceSearchCardComponent.Mode.NOT_FOUND
             }

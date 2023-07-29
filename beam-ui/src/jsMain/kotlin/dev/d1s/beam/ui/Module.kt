@@ -16,10 +16,16 @@
 
 package dev.d1s.beam.ui
 
+import dev.d1s.beam.commons.Space
 import dev.d1s.beam.ui.client.DaemonConnector
+import dev.d1s.beam.ui.client.DaemonStatusWithPing
 import dev.d1s.beam.ui.client.DefaultDaemonConnector
 import dev.d1s.beam.ui.client.buildBeamClient
 import dev.d1s.beam.ui.component.*
+import dev.d1s.beam.ui.state.Observable
+import dev.d1s.beam.ui.state.DaemonStatusObservable
+import dev.d1s.beam.ui.state.DaemonStatusWithPingObservable
+import dev.d1s.beam.ui.state.CurrentSpaceChangeObservable
 import dev.d1s.beam.ui.theme.DefaultThemeHolder
 import dev.d1s.beam.ui.theme.ThemeHolder
 import dev.d1s.exkt.kvision.component.Component
@@ -30,6 +36,10 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 object Qualifier {
+
+    val DaemonStatusObservable = named("daemon-status-observable")
+    val DaemonStatusWithPingObservable = named("daemon-status-with-ping-observable")
+    val CurrentSpaceChangeObservable = named("current-space-change-observable")
 
     val HeadingComponent = named("heading-component")
     val IconComponent = named("icon-component")
@@ -53,6 +63,7 @@ private val mainModule = module {
     beamClient()
     daemonConnector()
     themeHolder()
+    observables()
     components()
     spaceSearchCardContents()
 }
@@ -69,6 +80,20 @@ private fun Module.daemonConnector() {
 
 private fun Module.themeHolder() {
     singleOf<ThemeHolder>(::DefaultThemeHolder)
+}
+
+private fun Module.observables() {
+    singleOf<Observable<DaemonStatusWithPing?, Any>>(::DaemonStatusObservable) {
+        qualifier = Qualifier.DaemonStatusObservable
+    }
+
+    singleOf<Observable<DaemonStatusWithPing?, Any>>(::DaemonStatusWithPingObservable) {
+        qualifier = Qualifier.DaemonStatusWithPingObservable
+    }
+
+    singleOf<Observable<Space?, Any>>(::CurrentSpaceChangeObservable) {
+        qualifier = Qualifier.CurrentSpaceChangeObservable
+    }
 }
 
 private fun Module.components() {

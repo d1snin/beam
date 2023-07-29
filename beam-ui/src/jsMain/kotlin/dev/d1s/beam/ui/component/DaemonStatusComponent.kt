@@ -16,9 +16,10 @@
 
 package dev.d1s.beam.ui.component
 
-import dev.d1s.beam.ui.client.DaemonConnector
+import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.client.DaemonStatusWithPing
-import dev.d1s.beam.ui.client.down
+import dev.d1s.beam.ui.client.up
+import dev.d1s.beam.ui.state.Observable
 import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.util.Texts
 import dev.d1s.beam.ui.util.iconWithMargin
@@ -38,12 +39,12 @@ import org.koin.core.component.inject
 
 class DaemonStatusComponent : Component<Unit>(), KoinComponent {
 
-    private val daemonConnector by inject<DaemonConnector>()
+    private val observableDaemonStatusWithPing by inject<Observable<DaemonStatusWithPing?, Any>>(Qualifier.DaemonStatusWithPingObservable)
 
     private val renderingScope = CoroutineScope(Dispatchers.Main)
 
     override fun SimplePanel.render() {
-        card(className = "d-flex align-items-center px-2").bind(daemonConnector.observableStatusWithPing) { status ->
+        card(className = "d-flex align-items-center px-2").bind(observableDaemonStatusWithPing.state) { status ->
             visible = false
 
             renderingScope.launch {
@@ -51,7 +52,7 @@ class DaemonStatusComponent : Component<Unit>(), KoinComponent {
                     reportConnectedState(status)
                 }
 
-                if (status.down()) {
+                if (!status.up()) {
                     reportDisconnectedState()
                 }
             }

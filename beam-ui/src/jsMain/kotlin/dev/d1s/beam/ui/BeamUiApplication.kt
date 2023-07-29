@@ -16,7 +16,8 @@
 
 package dev.d1s.beam.ui
 
-import dev.d1s.beam.ui.client.DaemonConnector
+import dev.d1s.beam.ui.client.DaemonStatusWithPing
+import dev.d1s.beam.ui.state.Observable
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.render
 import io.kvision.Application
@@ -29,10 +30,12 @@ class BeamUiApplication : Application(), KoinComponent {
 
     private val rootComponent by inject<Component.Root>()
 
-    private val daemonConnector by inject<DaemonConnector>()
+    private val observableDaemonStatus by inject<Observable<DaemonStatusWithPing?, Any>>(Qualifier.DaemonStatusObservable)
+    private val observableDaemonStatusWithPing by inject<Observable<DaemonStatusWithPing?, Any>>(Qualifier.DaemonStatusWithPingObservable)
 
     override fun start() {
-        daemonConnector.launchMonitor()
+        observableDaemonStatus.monitor()
+        observableDaemonStatusWithPing.monitor()
 
         root(ROOT_ELEMENT_ID) {
             render(rootComponent)
