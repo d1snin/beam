@@ -18,4 +18,4 @@ package dev.d1s.beam.ui.state
 
 import kotlin.time.Duration.Companion.seconds
 
-val DaemonCheckDelay = 3.seconds
+val DaemonCheckDelay = 10.seconds
