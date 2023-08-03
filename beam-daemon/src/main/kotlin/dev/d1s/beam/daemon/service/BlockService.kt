@@ -36,7 +36,7 @@ import org.koin.core.component.inject
 import org.lighthousegames.logging.logging
 import java.util.*
 
-internal interface BlockService {
+interface BlockService {
 
     suspend fun createBlock(block: BlockEntity): ResultingEntityWithOptionalDto<BlockEntity, Block>
 
@@ -58,7 +58,7 @@ internal interface BlockService {
     suspend fun removeBlock(id: BlockId): Result<Unit>
 }
 
-internal class DefaultBlockService : BlockService, KoinComponent {
+class DefaultBlockService : BlockService, KoinComponent {
 
     private val blockRepository by inject<BlockRepository>()
 

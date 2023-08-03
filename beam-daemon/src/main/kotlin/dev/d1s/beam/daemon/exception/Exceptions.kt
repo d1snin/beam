@@ -19,6 +19,6 @@ package dev.d1s.beam.daemon.exception
 import dev.d1s.exkt.ktor.server.statuspages.HttpStatusException
 import io.ktor.http.*
 
-internal class UnprocessableEntityException(message: String) : HttpStatusException(HttpStatusCode.UnprocessableEntity, message)
+class UnprocessableEntityException(message: String) : HttpStatusException(HttpStatusCode.UnprocessableEntity, message)
 
-internal class ForbiddenException(message: String = "Insufficient access") : HttpStatusException(HttpStatusCode.Forbidden, message)
+class ForbiddenException(message: String = "Insufficient access") : HttpStatusException(HttpStatusCode.Forbidden, message)

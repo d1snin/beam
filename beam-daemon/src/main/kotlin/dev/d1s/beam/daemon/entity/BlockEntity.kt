@@ -23,9 +23,9 @@ import dev.d1s.beam.commons.contententity.ContentEntities
 import dev.d1s.exkt.ktorm.UuidIdentified
 import org.ktorm.entity.Entity
 
-internal typealias BlockEntities = List<BlockEntity>
+typealias BlockEntities = List<BlockEntity>
 
-internal interface BlockEntity : UuidIdentified<BlockEntity> {
+interface BlockEntity : UuidIdentified<BlockEntity> {
 
     var index: BlockIndex
 
@@ -40,5 +40,5 @@ internal interface BlockEntity : UuidIdentified<BlockEntity> {
     companion object : Entity.Factory<BlockEntity>()
 }
 
-internal val BlockEntity.asString
+val BlockEntity.asString
     get() = "BlockEntity{index = $index, size = $size, entities = $entities, metadata = $metadata}"

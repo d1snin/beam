@@ -28,7 +28,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.module.Module
 
-internal object Security : ApplicationConfigurer, KoinComponent {
+object Security : ApplicationConfigurer, KoinComponent {
 
     val jwtAlgorithm get() = _jwtAlgorithm ?: error("Algorithm is not available")
 
@@ -68,17 +68,17 @@ internal object Security : ApplicationConfigurer, KoinComponent {
     }
 }
 
-internal val ApplicationConfig.jwtRealm
+val ApplicationConfig.jwtRealm
     get() = property("jwt.realm").getString()
 
-internal val ApplicationConfig.jwtSecret
+val ApplicationConfig.jwtSecret
     get() = property("jwt.secret").getString()
 
 
-internal val ApplicationConfig.jwtIssuer
+val ApplicationConfig.jwtIssuer
     get() = property("jwt.issuer").getString()
 
-internal val ApplicationCall.jwtSubject
+val ApplicationCall.jwtSubject
     get() = (principal<JWTPrincipal>()
         ?: error("No JWT principal")).payload.subject
         ?: error("No JWT subject")

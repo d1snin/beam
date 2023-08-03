@@ -28,7 +28,7 @@ import org.ktorm.dsl.greaterEq
 import org.ktorm.entity.*
 import java.util.*
 
-internal interface BlockRepository {
+interface BlockRepository {
 
     suspend fun addBlock(block: BlockEntity): Result<BlockEntity>
 
@@ -49,7 +49,7 @@ internal interface BlockRepository {
     suspend fun removeBlock(block: BlockEntity): Result<Unit>
 }
 
-internal class DefaultBlockRepository : BlockRepository, KoinComponent {
+class DefaultBlockRepository : BlockRepository, KoinComponent {
 
     private val database by inject<Database>()
 

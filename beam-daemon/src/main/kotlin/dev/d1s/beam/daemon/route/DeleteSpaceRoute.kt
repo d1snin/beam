@@ -31,7 +31,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 
-internal class DeleteSpaceRoute : Route, KoinComponent {
+class DeleteSpaceRoute : Route, KoinComponent {
 
     override val qualifier = named("delete-space-route")
 

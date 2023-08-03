@@ -35,7 +35,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 
-internal class PostSpaceRoute : Route, KoinComponent {
+class PostSpaceRoute : Route, KoinComponent {
 
     override val qualifier = named("post-space-route")
 

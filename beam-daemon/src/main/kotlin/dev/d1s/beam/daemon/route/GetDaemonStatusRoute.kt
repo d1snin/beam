@@ -27,7 +27,7 @@ import io.ktor.server.routing.*
 import org.koin.core.component.KoinComponent
 import org.koin.core.qualifier.named
 
-internal class GetDaemonStatusRoute : Route, KoinComponent {
+class GetDaemonStatusRoute : Route, KoinComponent {
 
     override val qualifier = named("get-daemon-status-route")
 

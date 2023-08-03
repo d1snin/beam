@@ -19,7 +19,7 @@ package dev.d1s.beam.daemon.validation
 import io.konform.validation.ValidationResult
 import io.ktor.server.plugins.*
 
-internal fun ValidationResult<*>.orThrow() {
+fun ValidationResult<*>.orThrow() {
     if (errors.isNotEmpty()) {
         val messages = errors.joinToString("; ") {
             it.message

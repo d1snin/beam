@@ -24,7 +24,7 @@ import dev.d1s.exkt.dto.entity
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-internal class BlockModificationDtoConverter : DtoConverter<BlockEntity, BlockModification>, KoinComponent {
+class BlockModificationDtoConverter : DtoConverter<BlockEntity, BlockModification>, KoinComponent {
 
     private val spaceService by inject<SpaceService>()
 

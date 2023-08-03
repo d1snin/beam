@@ -101,10 +101,6 @@ tasks.withType<KotlinCompile> {
     }
 }
 
-kotlin {
-    explicitApi()
-}
-
 ktor {
     docker {
         localImageName.set(project.name)

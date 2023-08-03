@@ -27,7 +27,7 @@ import org.ktorm.schema.int
 import org.ktorm.schema.uuid
 
 @Suppress("unused")
-internal object Blocks : UuidIdentifiedEntities<BlockEntity>(tableName = "block") {
+object Blocks : UuidIdentifiedEntities<BlockEntity>(tableName = "block") {
 
     val index = int("index").bindTo {
         it.index

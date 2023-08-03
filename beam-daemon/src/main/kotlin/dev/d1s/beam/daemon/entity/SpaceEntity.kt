@@ -24,7 +24,7 @@ import dev.d1s.exkt.ktorm.UuidIdentifiedAndModificationTimestampAware
 import org.koin.core.component.KoinComponent
 import org.ktorm.entity.Entity
 
-internal interface SpaceEntity : UuidIdentifiedAndModificationTimestampAware<SpaceEntity>, KoinComponent {
+interface SpaceEntity : UuidIdentifiedAndModificationTimestampAware<SpaceEntity>, KoinComponent {
 
     var slug: SpaceSlug
 
@@ -42,7 +42,7 @@ internal interface SpaceEntity : UuidIdentifiedAndModificationTimestampAware<Spa
     }
 }
 
-internal val SpaceEntity.asString
+val SpaceEntity.asString
     get() = "SpaceEntity{slug = $slug, metadata = $metadata, view = $view, role = $role}"
 
-internal val SpaceEntity.isRoot get() = slug == SpaceEntity.ROOT_SPACE_SLUG
+val SpaceEntity.isRoot get() = slug == SpaceEntity.ROOT_SPACE_SLUG

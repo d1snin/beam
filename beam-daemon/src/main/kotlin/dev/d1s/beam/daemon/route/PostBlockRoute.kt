@@ -39,7 +39,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 
-internal class PostBlockRoute : Route, KoinComponent {
+class PostBlockRoute : Route, KoinComponent {
 
     override val qualifier = named("post-block-route")
 

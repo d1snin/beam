@@ -20,12 +20,12 @@ import dev.d1s.beam.commons.Paths
 import io.ktor.server.application.*
 import io.ktor.server.plugins.*
 
-internal data class LimitAndOffsetQueryParameters(
+data class LimitAndOffsetQueryParameters(
     val limit: Int,
     val offset: Int
 )
 
-internal val ApplicationCall.requiredLimitAndOffsetQueryParameters: LimitAndOffsetQueryParameters
+val ApplicationCall.requiredLimitAndOffsetQueryParameters: LimitAndOffsetQueryParameters
     get() {
         val query = request.queryParameters
 

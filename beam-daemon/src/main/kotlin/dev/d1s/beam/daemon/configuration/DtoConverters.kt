@@ -32,7 +32,7 @@ import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
 
-internal object DtoConverters : ApplicationConfigurer {
+object DtoConverters : ApplicationConfigurer {
 
     val BlockDtoConverterQualifier = named("block-dto-converter")
     val BlockModificationDtoConverterQualifier = named("block-modification-dto-converter")

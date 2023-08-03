@@ -30,7 +30,7 @@ import org.ktorm.entity.add
 import org.ktorm.entity.find
 import java.util.*
 
-internal interface SpaceRepository {
+interface SpaceRepository {
 
     suspend fun addSpace(space: SpaceEntity): Result<SpaceEntity>
 
@@ -45,7 +45,7 @@ internal interface SpaceRepository {
     suspend fun removeSpace(space: SpaceEntity): Result<Unit>
 }
 
-internal class DefaultSpaceRepository : SpaceRepository, KoinComponent {
+class DefaultSpaceRepository : SpaceRepository, KoinComponent {
 
     private val database by inject<Database>()
 

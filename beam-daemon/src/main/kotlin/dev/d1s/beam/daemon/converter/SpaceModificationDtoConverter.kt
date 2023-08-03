@@ -21,7 +21,7 @@ import dev.d1s.beam.daemon.entity.SpaceEntity
 import dev.d1s.exkt.dto.DtoConverter
 import org.koin.core.component.KoinComponent
 
-internal class SpaceModificationDtoConverter : DtoConverter<SpaceEntity, SpaceModification>, KoinComponent {
+class SpaceModificationDtoConverter : DtoConverter<SpaceEntity, SpaceModification>, KoinComponent {
 
     override suspend fun convertToEntity(dto: SpaceModification) =
         SpaceEntity {

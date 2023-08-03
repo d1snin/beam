@@ -41,7 +41,7 @@ import org.koin.core.component.inject
 import org.lighthousegames.logging.logging
 import java.util.*
 
-internal interface SpaceService {
+interface SpaceService {
 
     suspend fun createSpace(
         space: SpaceEntity,
@@ -75,7 +75,7 @@ internal interface SpaceService {
     suspend fun removeSpace(uniqueIdentifier: SpaceIdentifier): Result<Unit>
 }
 
-internal class DefaultSpaceService : SpaceService, KoinComponent {
+class DefaultSpaceService : SpaceService, KoinComponent {
 
     private val spaceRepository by inject<SpaceRepository>()
 

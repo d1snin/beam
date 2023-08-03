@@ -27,7 +27,7 @@ import kotlinx.serialization.Serializable
 import org.koin.core.module.Module
 import io.ktor.server.plugins.statuspages.StatusPages as StatusPagesPlugin
 
-internal object StatusPages : ApplicationConfigurer {
+object StatusPages : ApplicationConfigurer {
 
     override fun Application.configure(module: Module, config: ApplicationConfig) {
         install(StatusPagesPlugin) {

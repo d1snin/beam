@@ -21,7 +21,7 @@ import dev.d1s.beam.daemon.entity.BlockEntity
 import dev.d1s.exkt.dto.DtoConverter
 import org.koin.core.component.KoinComponent
 
-internal class BlockDtoConverter : DtoConverter<BlockEntity, Block>, KoinComponent {
+class BlockDtoConverter : DtoConverter<BlockEntity, Block>, KoinComponent {
 
     override suspend fun convertToDto(entity: BlockEntity) =
         with(entity) {

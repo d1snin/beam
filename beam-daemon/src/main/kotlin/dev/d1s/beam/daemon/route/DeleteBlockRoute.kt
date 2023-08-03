@@ -31,7 +31,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 
-internal class DeleteBlockRoute : Route, KoinComponent {
+class DeleteBlockRoute : Route, KoinComponent {
 
     override val qualifier = named("delete-block-route")
 

@@ -32,7 +32,7 @@ import io.ktor.server.config.*
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-internal interface AuthService {
+interface AuthService {
 
     fun createToken(space: SpaceEntity): SpaceToken
 
@@ -45,7 +45,7 @@ internal interface AuthService {
     suspend fun isBlockModificationAllowed(subject: SpaceId, block: BlockId): Result<Boolean>
 }
 
-internal class DefaultAuthService : AuthService, KoinComponent {
+class DefaultAuthService : AuthService, KoinComponent {
 
     private val config by inject<ApplicationConfig>()
 

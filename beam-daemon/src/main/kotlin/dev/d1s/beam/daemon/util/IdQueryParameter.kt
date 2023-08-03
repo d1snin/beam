@@ -20,6 +20,6 @@ import dev.d1s.beam.commons.Paths
 import io.ktor.server.application.*
 import io.ktor.server.plugins.*
 
-internal val ApplicationCall.requiredIdParameter: String
+val ApplicationCall.requiredIdParameter: String
     get() = parameters[Paths.ID_PARAMETER]
         ?: throw BadRequestException("Parameter ${Paths.ID_PARAMETER} not found")

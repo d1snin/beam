@@ -28,7 +28,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 
-internal class GetSpaceRoute : Route, KoinComponent {
+class GetSpaceRoute : Route, KoinComponent {
 
     override val qualifier = named("get-space-route")
 

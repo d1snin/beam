@@ -21,7 +21,7 @@ import io.ktor.server.application.*
 import io.ktor.server.config.*
 import org.koin.core.module.Module
 
-internal object ApplicationConfigBean : ApplicationConfigurer {
+object ApplicationConfigBean : ApplicationConfigurer {
 
     override fun Application.configure(module: Module, config: ApplicationConfig) {
         module.single {

@@ -28,7 +28,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 
-internal class GetSpacesRoute : Route, KoinComponent {
+class GetSpacesRoute : Route, KoinComponent {
 
     private val spaceService by inject<SpaceService>()
 

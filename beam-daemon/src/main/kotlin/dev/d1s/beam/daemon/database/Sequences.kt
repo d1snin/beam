@@ -19,6 +19,6 @@ package dev.d1s.beam.daemon.database
 import org.ktorm.database.Database
 import org.ktorm.entity.sequenceOf
 
-internal val Database.spaces get() = sequenceOf(Spaces)
+val Database.spaces get() = sequenceOf(Spaces)
 
-internal val Database.blocks get() = sequenceOf(Blocks)
+val Database.blocks get() = sequenceOf(Blocks)

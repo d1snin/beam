@@ -28,7 +28,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 
-internal class GetBlocksRoute : Route, KoinComponent {
+class GetBlocksRoute : Route, KoinComponent {
 
     override val qualifier = named("get-blocks-route")
 

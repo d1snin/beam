@@ -16,6 +16,6 @@
 
 package dev.d1s.beam.daemon
 
-internal fun main() {
+fun main() {
     BeamDaemonApplication.launch()
 }

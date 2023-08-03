@@ -29,7 +29,7 @@ import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import org.koin.core.module.Module
 
-internal object WebSocketEvents : ApplicationConfigurer {
+object WebSocketEvents : ApplicationConfigurer {
 
     override fun Application.configure(module: Module, config: ApplicationConfig) {
         install(WebSockets) {

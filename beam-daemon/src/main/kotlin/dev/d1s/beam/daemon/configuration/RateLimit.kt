@@ -23,7 +23,7 @@ import io.ktor.server.plugins.ratelimit.RateLimit
 import org.koin.core.module.Module
 import kotlin.time.Duration.Companion.seconds
 
-internal object RateLimit : ApplicationConfigurer {
+object RateLimit : ApplicationConfigurer {
 
     override fun Application.configure(module: Module, config: ApplicationConfig) {
         install(RateLimit) {

@@ -25,7 +25,7 @@ import org.ktorm.jackson.json
 import org.ktorm.schema.enum
 import org.ktorm.schema.text
 
-internal object Spaces : UuidIdentifiedAndModificationTimestampAwareEntities<SpaceEntity>(tableName = "space") {
+object Spaces : UuidIdentifiedAndModificationTimestampAwareEntities<SpaceEntity>(tableName = "space") {
 
     val slug = text("slug").bindTo {
         it.slug

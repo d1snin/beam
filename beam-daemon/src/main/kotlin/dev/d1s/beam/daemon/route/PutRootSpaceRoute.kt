@@ -38,7 +38,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 
-internal class PutRootSpaceRoute : Route, KoinComponent {
+class PutRootSpaceRoute : Route, KoinComponent {
 
     override val qualifier = named("put-root-space-route")
 

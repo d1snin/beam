@@ -22,7 +22,7 @@ import dev.d1s.exkt.dto.DtoConverter
 import kotlinx.datetime.toKotlinInstant
 import org.koin.core.component.KoinComponent
 
-internal class SpaceDtoConverter : DtoConverter<SpaceEntity, Space>, KoinComponent {
+class SpaceDtoConverter : DtoConverter<SpaceEntity, Space>, KoinComponent {
 
     override suspend fun convertToDto(entity: SpaceEntity) =
         with(entity) {

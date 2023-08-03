@@ -23,7 +23,7 @@ import io.ktor.server.config.*
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
 
-internal object Services : ApplicationConfigurer {
+object Services : ApplicationConfigurer {
 
     override fun Application.configure(module: Module, config: ApplicationConfig) {
         module.apply {

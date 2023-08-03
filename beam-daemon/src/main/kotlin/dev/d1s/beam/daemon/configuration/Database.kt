@@ -27,7 +27,7 @@ import org.koin.core.module.Module
 import org.ktorm.database.Database
 import org.ktorm.support.postgresql.PostgreSqlDialect
 
-internal object Database : ApplicationConfigurer {
+object Database : ApplicationConfigurer {
 
     override fun Application.configure(module: Module, config: ApplicationConfig) {
         val hikariDataSource = HikariDataSource().apply {

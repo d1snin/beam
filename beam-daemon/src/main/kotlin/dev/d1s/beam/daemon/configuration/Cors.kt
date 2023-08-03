@@ -23,7 +23,7 @@ import io.ktor.server.config.*
 import io.ktor.server.plugins.cors.routing.*
 import org.koin.core.module.Module
 
-internal object Cors : ApplicationConfigurer {
+object Cors : ApplicationConfigurer {
 
     override fun Application.configure(module: Module, config: ApplicationConfig) {
         install(CORS) {
