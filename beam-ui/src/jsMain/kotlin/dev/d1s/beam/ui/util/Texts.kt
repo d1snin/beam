@@ -20,7 +20,7 @@ object Texts {
 
     object Heading {
 
-        object Logo {
+        object Icon {
 
             const val ALT = "Beam space icon"
         }
