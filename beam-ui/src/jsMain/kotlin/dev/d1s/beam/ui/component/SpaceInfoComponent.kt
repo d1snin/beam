@@ -31,7 +31,6 @@ import org.koin.core.component.KoinComponent
 class SpaceInfoComponent : Component<Unit>(), KoinComponent {
 
     override fun SimplePanel.render() {
-
         vPanel(justify = JustifyContent.CENTER, className = "ms-2 ms-lg-3") {
             p(className = "h2 mb-0") {
                 +(currentSpace?.view?.title ?: Texts.Heading.SpaceInfo.DEFAULT_TITLE)
