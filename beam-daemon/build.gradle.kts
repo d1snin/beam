@@ -48,6 +48,8 @@ dependencies {
 
     val kotlinxDatetimeVersion: String by project
 
+    val jacksonVersion: String by project
+
     implementation("dev.d1s.exkt:exkt-common:$exktVersion")
     implementation("dev.d1s.exkt:exkt-ktor-server:$exktVersion")
     implementation("dev.d1s.exkt:exkt-ktor-server-koin:$exktVersion")
@@ -64,6 +66,7 @@ dependencies {
     implementation("io.ktor:ktor-server-cors:$ktorVersion")
     implementation("io.ktor:ktor-server-status-pages:$ktorVersion")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+    implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
     implementation("dev.d1s.exkt:exkt-ktor-server:$exktVersion")
     implementation("dev.d1s.exkt:exkt-ktor-server-postgres-support:$exktVersion")
     implementation("dev.d1s:ktor-server-liquibase:$ktorServerLiquibaseVersion")
@@ -84,6 +87,8 @@ dependencies {
     implementation("com.rickbusarow.dispatch:dispatch-core:$dispatchVersion")
 
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:$kotlinxDatetimeVersion")
+
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
 }
 
 application {
