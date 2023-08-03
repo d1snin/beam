@@ -16,16 +16,29 @@
 
 package dev.d1s.beam.bundle.configuration
 
-import dev.d1s.exkt.ktor.server.koin.configuration.ApplicationConfigurer
-import io.ktor.server.application.*
+import io.ktor.http.*
 import io.ktor.server.config.*
-import org.koin.core.module.Module
 
-object ApplicationConfigBean : ApplicationConfigurer {
+private const val DAEMON_DOCKER_HOST = "beam-daemon"
 
-    override fun Application.configure(module: Module, config: ApplicationConfig) {
-        module.single {
-            config
+internal val ApplicationConfig.daemonHttpAddress
+    get() = property("daemon.connector.http").getString()
+        .ensureCorrectUrl()
+
+internal val ApplicationConfig.daemonWsAddress
+    get() = property("daemon.connector.ws").getString()
+        .ensureCorrectUrl()
+
+private fun String.ensureCorrectUrl(): String {
+    val url = URLBuilder(this)
+
+    if (url.host == DAEMON_DOCKER_HOST) {
+        url.set {
+            host = "localhost"
         }
+
+        return url.buildString()
     }
+
+    return this
 }
