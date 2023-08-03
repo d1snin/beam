@@ -18,6 +18,7 @@ package dev.d1s.beam.client
 
 import dev.d1s.beam.client.response.Spaces
 import dev.d1s.beam.commons.*
+import dev.d1s.beam.commons.event.EntityUpdate
 import dev.d1s.beam.commons.event.EventReferences
 import dev.d1s.exkt.common.pagination.LimitAndOffset
 import dev.d1s.exkt.common.replaceIdPlaceholder
@@ -71,13 +72,13 @@ public interface PublicBeamClient {
 
     public suspend fun onSpaceCreated(block: suspend (WebSocketEvent<Space>) -> Unit): Result<Job>
 
-    public suspend fun onSpaceUpdated(id: SpaceId? = null, block: suspend (WebSocketEvent<Space>) -> Unit): Result<Job>
+    public suspend fun onSpaceUpdated(id: SpaceId? = null, block: suspend (WebSocketEvent<EntityUpdate<Space>>) -> Unit): Result<Job>
 
     public suspend fun onSpaceRemoved(id: SpaceId? = null, block: suspend (WebSocketEvent<Space>) -> Unit): Result<Job>
 
     public suspend fun onBlockCreated(block: suspend (WebSocketEvent<Block>) -> Unit): Result<Job>
 
-    public suspend fun onBlockUpdated(id: BlockId? = null, block: suspend (WebSocketEvent<Block>) -> Unit): Result<Job>
+    public suspend fun onBlockUpdated(id: BlockId? = null, block: suspend (WebSocketEvent<EntityUpdate<Block>>) -> Unit): Result<Job>
 
     public suspend fun onBlockRemoved(id: BlockId? = null, block: suspend (WebSocketEvent<Block>) -> Unit): Result<Job>
 
@@ -177,7 +178,7 @@ public class DefaultPublicBeamClient(
     override suspend fun onSpaceCreated(block: suspend (WebSocketEvent<Space>) -> Unit): Result<Job> =
         handleWsEvents(EventReferences.spaceCreated, block)
 
-    override suspend fun onSpaceUpdated(id: SpaceId?, block: suspend (WebSocketEvent<Space>) -> Unit): Result<Job> {
+    override suspend fun onSpaceUpdated(id: SpaceId?, block: suspend (WebSocketEvent<EntityUpdate<Space>>) -> Unit): Result<Job> {
         val reference = EventReferences.spaceUpdated(id)
 
         return handleWsEvents(reference, block)
@@ -192,7 +193,7 @@ public class DefaultPublicBeamClient(
     override suspend fun onBlockCreated(block: suspend (WebSocketEvent<Block>) -> Unit): Result<Job> =
         handleWsEvents(EventReferences.blockCreated, block)
 
-    override suspend fun onBlockUpdated(id: BlockId?, block: suspend (WebSocketEvent<Block>) -> Unit): Result<Job> {
+    override suspend fun onBlockUpdated(id: BlockId?, block: suspend (WebSocketEvent<EntityUpdate<Block>>) -> Unit): Result<Job> {
         val reference = EventReferences.blockUpdated(id)
 
         return handleWsEvents(reference, block)
