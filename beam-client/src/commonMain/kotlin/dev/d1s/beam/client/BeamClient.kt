@@ -222,11 +222,8 @@ public class DefaultPublicBeamClient(
 
         eventHandlingScope.launch {
             httpClient.webSocketEvents(reference) {
-                while (true) {
-                    val event = receiveWebSocketEvent<T>()
-
-                    handler(event)
-                }
+                val event = receiveWebSocketEvent<T>()
+                handler(event)
             }
         }
     }
