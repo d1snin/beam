@@ -43,9 +43,10 @@ class DaemonStatusComponent : Component<Unit>(), KoinComponent {
     private val renderingScope = CoroutineScope(Dispatchers.Main)
 
     override fun SimplePanel.render() {
-        card(className = "d-flex align-items-center px-2").bind(daemonStatusWithPingObservable.state) { status ->
-            visible = false
-
+        card(className = "d-flex align-items-center px-2").bind(
+            daemonStatusWithPingObservable.state,
+            runImmediately = false
+        ) { status ->
             renderingScope.launch {
                 if (status != null) {
                     reportConnectedState(status)
@@ -63,8 +64,6 @@ class DaemonStatusComponent : Component<Unit>(), KoinComponent {
         text(Texts.Heading.DaemonStatus.CONNECTED)
 
         reportPing(status)
-
-        visible = true
     }
 
     private fun SimplePanel.reportPing(status: DaemonStatusWithPing) {
@@ -86,8 +85,6 @@ class DaemonStatusComponent : Component<Unit>(), KoinComponent {
 
         cloudIcon(currentTheme.red)
         text(Texts.Heading.DaemonStatus.DISCONNECTED)
-
-        visible = true
     }
 
     private fun SimplePanel.applyStyle() {
