@@ -55,8 +55,6 @@ kotlin {
 
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinxSerializationVersion")
 
-                implementation("org.jetbrains.kotlinx:kotlinx-datetime:$kotlinxDatetimeVersion")
-
                 implementation("dev.d1s.ktor-ws-events:ktor-ws-events-commons:$ktorWsEventsVersion")
 
                 implementation("dev.d1s.exkt:exkt-konform:$exktVersion")

@@ -35,7 +35,6 @@ import dev.d1s.exkt.ktorm.dto.convertExportedSequenceToDtoIf
 import dev.d1s.ktor.events.commons.event
 import dev.d1s.ktor.events.server.WebSocketEventChannel
 import io.ktor.server.plugins.*
-import kotlinx.datetime.toKotlinInstant
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.lighthousegames.logging.logging
@@ -311,8 +310,8 @@ class DefaultSpaceService : SpaceService, KoinComponent {
     private fun SpaceEntity.toSpaceWithToken(token: SpaceToken) =
         SpaceWithToken(
             id.toString(),
-            createdAt.toKotlinInstant(),
-            updatedAt.toKotlinInstant(),
+            createdAt.toString(),
+            updatedAt.toString(),
             slug,
             metadata,
             view,

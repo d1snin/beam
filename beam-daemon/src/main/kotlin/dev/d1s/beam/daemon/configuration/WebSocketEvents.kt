@@ -16,27 +16,18 @@
 
 package dev.d1s.beam.daemon.configuration
 
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import dev.d1s.exkt.ktor.server.koin.configuration.ApplicationConfigurer
 import dev.d1s.ktor.events.server.WebSocketEventChannel
 import dev.d1s.ktor.events.server.WebSocketEvents
 import dev.d1s.ktor.events.server.webSocketEvents
-import io.ktor.serialization.jackson.*
 import io.ktor.server.application.*
 import io.ktor.server.config.*
 import io.ktor.server.routing.*
-import io.ktor.server.websocket.*
 import org.koin.core.module.Module
 
 object WebSocketEvents : ApplicationConfigurer {
 
     override fun Application.configure(module: Module, config: ApplicationConfig) {
-        install(WebSockets) {
-            val mapper = jacksonMapperBuilder().addModule(JavaTimeModule()).build()
-            contentConverter = JacksonWebsocketContentConverter(mapper)
-        }
-
         val eventChannel = WebSocketEventChannel()
 
         install(WebSocketEvents) {

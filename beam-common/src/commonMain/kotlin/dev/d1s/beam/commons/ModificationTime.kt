@@ -14,21 +14,6 @@
  * limitations under the License.
  */
 
-plugins {
-    kotlin("multiplatform") apply false
-    kotlin("jvm") apply false
-    id("com.github.ben-manes.versions")
-}
+package dev.d1s.beam.commons
 
-allprojects {
-    val projectGroup: String by project
-    val projectVersion: String by project
-
-    group = projectGroup
-    version = projectVersion
-
-    repositories {
-        mavenCentral()
-        maven(url = "https://maven.d1s.dev/releases")
-    }
-}
+public typealias ModificationTime = String

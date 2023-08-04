@@ -19,7 +19,6 @@ package dev.d1s.beam.daemon.converter
 import dev.d1s.beam.commons.Space
 import dev.d1s.beam.daemon.entity.SpaceEntity
 import dev.d1s.exkt.dto.DtoConverter
-import kotlinx.datetime.toKotlinInstant
 import org.koin.core.component.KoinComponent
 
 class SpaceDtoConverter : DtoConverter<SpaceEntity, Space>, KoinComponent {
@@ -28,8 +27,8 @@ class SpaceDtoConverter : DtoConverter<SpaceEntity, Space>, KoinComponent {
         with(entity) {
             Space(
                 id.toString(),
-                createdAt.toKotlinInstant(),
-                updatedAt.toKotlinInstant(),
+                createdAt.toString(),
+                updatedAt.toString(),
                 slug,
                 metadata,
                 view,
