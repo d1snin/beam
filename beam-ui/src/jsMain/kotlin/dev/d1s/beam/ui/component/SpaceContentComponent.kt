@@ -16,11 +16,11 @@
 
 package dev.d1s.beam.ui.component
 
+import dev.d1s.beam.commons.Space
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.client.DaemonStatusWithPing
 import dev.d1s.beam.ui.state.Observable
 import dev.d1s.beam.ui.util.currentBlocks
-import dev.d1s.beam.ui.util.currentSpace
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.render
 import io.kvision.html.div
@@ -32,6 +32,8 @@ import org.koin.core.component.inject
 class SpaceContentComponent : Component<Unit>(), KoinComponent {
 
     private val daemonStatusObservable by inject<Observable<DaemonStatusWithPing?>>(Qualifier.DaemonStatusObservable)
+
+    private val currentSpaceChangeObservable by inject<Observable<Space?>>(Qualifier.CurrentSpaceChangeObservable)
 
     private val disconnectedDaemonStatusBlankslate by inject<Component<Unit>>(Qualifier.DisconnectedDaemonStatusBlankslateComponent)
 
@@ -52,9 +54,11 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
     }
 
     private fun SimplePanel.handleNotFound() {
-        if (currentSpace == null) {
-            render(spaceSearchCardComponent) {
-                mode.value = SpaceSearchCardComponent.Mode.NOT_FOUND
+        bind(currentSpaceChangeObservable.state) { space ->
+            if (space == null) {
+                render(spaceSearchCardComponent) {
+                    mode.value = SpaceSearchCardComponent.Mode.NOT_FOUND
+                }
             }
         }
     }

@@ -16,27 +16,28 @@
 
 package dev.d1s.beam.ui.component
 
+import dev.d1s.beam.commons.Space
+import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.resource.ResourceLocation
+import dev.d1s.beam.ui.state.Observable
 import dev.d1s.beam.ui.util.Texts
-import dev.d1s.beam.ui.util.currentSpace
 import dev.d1s.exkt.kvision.component.Component
 import io.kvision.html.div
 import io.kvision.html.image
 import io.kvision.panel.SimplePanel
+import io.kvision.state.bind
 import io.kvision.utils.px
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 class IconComponent : Component<Unit>(), KoinComponent {
 
-    private val renderingScope = CoroutineScope(Dispatchers.Main)
+    private val currentSpaceChangeObservable by inject<Observable<Space?>>(Qualifier.CurrentSpaceChangeObservable)
 
     override fun SimplePanel.render() {
         div {
-            renderingScope.launch {
-                image(currentSpace?.view?.icon ?: ResourceLocation.ICON, alt = Texts.Heading.Logo.ALT) {
+            bind(currentSpaceChangeObservable.state) { space ->
+                image(space?.view?.icon ?: ResourceLocation.ICON, alt = Texts.Heading.Icon.ALT) {
                     width = 45.px
                 }
             }

@@ -26,7 +26,6 @@ import dev.d1s.beam.ui.util.currentSpaceIdentifier
 import dev.d1s.beam.ui.util.setCurrentSpace
 import dev.d1s.beam.ui.util.setCurrentSpaceIdentifier
 import io.kvision.state.ObservableValue
-import io.kvision.state.sub
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -42,6 +41,10 @@ class CurrentSpaceChangeObservable : Observable<Space?>, KoinComponent {
 
     override fun monitor() =
         launchMonitor {
+            val currentSpace = currentSpace
+
+            state.setState(currentSpace)
+
             currentSpace?.id?.let { spaceId ->
                 handleExistingSpaceUpdates(spaceId)
             } ?: run {

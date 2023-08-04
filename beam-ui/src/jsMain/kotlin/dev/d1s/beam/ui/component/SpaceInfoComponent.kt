@@ -16,31 +16,39 @@
 
 package dev.d1s.beam.ui.component
 
+import dev.d1s.beam.commons.Space
+import dev.d1s.beam.ui.Qualifier
+import dev.d1s.beam.ui.state.Observable
 import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.util.Texts
-import dev.d1s.beam.ui.util.currentSpace
 import dev.d1s.exkt.kvision.component.Component
 import io.kvision.core.JustifyContent
 import io.kvision.html.p
 import io.kvision.html.span
 import io.kvision.panel.SimplePanel
 import io.kvision.panel.vPanel
+import io.kvision.state.bind
 import io.kvision.utils.rem
 import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 class SpaceInfoComponent : Component<Unit>(), KoinComponent {
 
+    private val currentSpaceChangeObservable by inject<Observable<Space?>>(Qualifier.CurrentSpaceChangeObservable)
+
     override fun SimplePanel.render() {
         vPanel(justify = JustifyContent.CENTER, className = "ms-2 ms-lg-3") {
-            p(className = "h2 mb-0") {
-                +(currentSpace?.view?.title ?: Texts.Heading.SpaceInfo.DEFAULT_TITLE)
-            }
+            bind(currentSpaceChangeObservable.state) { space ->
+                p(className = "h2 mb-0") {
+                    +(space?.view?.title ?: Texts.Heading.SpaceInfo.DEFAULT_TITLE)
+                }
 
-            currentSpace?.view?.description?.let {
-                span {
-                    fontSize = 0.8.rem
-                    color = currentTheme.secondaryText
-                    +it
+                space?.view?.description?.let {
+                    span {
+                        fontSize = 0.8.rem
+                        color = currentTheme.secondaryText
+                        +it
+                    }
                 }
             }
         }
