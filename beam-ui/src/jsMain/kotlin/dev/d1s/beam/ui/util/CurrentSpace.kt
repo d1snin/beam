@@ -65,6 +65,10 @@ fun setCurrentSpace(space: Space?) {
     lateInitCurrentSpace = space
 }
 
+fun setCurrentSpaceBlocks(blocks: Blocks?) {
+    lateInitCurrentBlocks = blocks
+}
+
 fun isRootPath(): Boolean {
     currentSpace?.let {
         return it.role == Role.ROOT

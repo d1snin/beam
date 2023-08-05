@@ -21,19 +21,27 @@ import dev.d1s.beam.commons.Space
 import dev.d1s.beam.commons.SpaceId
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.client.DaemonStatusWithPing
-import dev.d1s.beam.ui.util.currentSpace
-import dev.d1s.beam.ui.util.currentSpaceIdentifier
-import dev.d1s.beam.ui.util.setCurrentSpace
-import dev.d1s.beam.ui.util.setCurrentSpaceIdentifier
+import dev.d1s.beam.ui.util.*
 import io.kvision.state.ObservableValue
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class CurrentSpaceChangeObservable : Observable<Space?>, KoinComponent {
+data class CurrentSpaceChange(
+    val space: Space?,
+    val type: Type? = null
+) {
+    enum class Type {
+        ADDED, UPDATED, REMOVED
+    }
+}
+
+class CurrentSpaceChangeObservable : Observable<CurrentSpaceChange>, KoinComponent {
 
     override val launchOnStartup = true
 
-    override val state = ObservableValue(currentSpace)
+    override val state = ObservableValue(
+        CurrentSpaceChange(currentSpace)
+    )
 
     private val client by inject<PublicBeamClient>()
 
@@ -41,10 +49,6 @@ class CurrentSpaceChangeObservable : Observable<Space?>, KoinComponent {
 
     override fun monitor() =
         launchMonitor {
-            val currentSpace = currentSpace
-
-            state.setState(currentSpace)
-
             currentSpace?.id?.let { spaceId ->
                 handleExistingSpaceUpdates(spaceId)
             } ?: run {
@@ -75,19 +79,22 @@ class CurrentSpaceChangeObservable : Observable<Space?>, KoinComponent {
             }
 
             setCurrentSpace(newSpace)
-            state.setState(newSpace)
+
+            val change = CurrentSpaceChange(newSpace, CurrentSpaceChange.Type.UPDATED)
+            state.setState(change)
         }
     }
 
     private suspend fun handleSpaceRemoval(spaceId: SpaceId) {
         client.onSpaceRemoved(id = spaceId) {
-            setNullSpace()
+            setNullSpace(type = CurrentSpaceChange.Type.REMOVED)
         }
     }
 
-    private fun setNullSpace() {
+    private fun setNullSpace(type: CurrentSpaceChange.Type?) {
+        val change = CurrentSpaceChange(space = null, type)
         setCurrentSpace(space = null)
-        state.setState(null)
+        state.setState(change)
     }
 
     private suspend fun handleSpaceCreation() {
@@ -97,7 +104,9 @@ class CurrentSpaceChangeObservable : Observable<Space?>, KoinComponent {
 
             if (spaceId == currentSpaceIdentifier || space.slug == currentSpaceIdentifier) {
                 setCurrentSpace(space)
-                state.setState(space)
+
+                val change = CurrentSpaceChange(space, CurrentSpaceChange.Type.ADDED)
+                state.setState(change)
 
                 handleExistingSpaceUpdates(spaceId)
             }
@@ -105,15 +114,10 @@ class CurrentSpaceChangeObservable : Observable<Space?>, KoinComponent {
     }
 
     private fun handleDaemonStatus() {
-        var skipped = false
-        daemonStatusObservable.state.subscribe { status ->
-            if (skipped) {
-                if (status == null) {
-                    setNullSpace()
-                }
+        daemonStatusObservable.state.subscribeSkipping { status ->
+            if (status == null) {
+                setNullSpace(type = null)
             }
-
-            skipped = true
         }
     }
 }

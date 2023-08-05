@@ -14,27 +14,18 @@
  * limitations under the License.
  */
 
-package dev.d1s.beam.ui.state
+package dev.d1s.beam.ui.util
 
 import io.kvision.state.ObservableState
-import kotlinx.coroutines.*
 
-interface Observable<TState> {
+fun <TState> ObservableState<TState>.subscribeSkipping(observer: (TState) -> Unit) {
+    var skipped = false
 
-    val launchOnStartup: Boolean
-
-    val state: ObservableState<TState>
-
-    fun monitor(): Job
-}
-
-inline fun launchMonitor(loop: Boolean = false, crossinline block: suspend () -> Unit) =
-    CoroutineScope(Dispatchers.Main).launch {
-        if (loop) {
-            while (isActive) {
-                block()
-            }
-        } else {
-            block()
+    subscribe { state ->
+        if (skipped) {
+            observer(state)
         }
+
+        skipped = true
     }
+}
