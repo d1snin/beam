@@ -16,11 +16,11 @@
 
 package dev.d1s.beam.ui.component
 
-import dev.d1s.beam.commons.Space
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.client.DaemonStatusWithPing
+import dev.d1s.beam.ui.state.CurrentSpaceChange
 import dev.d1s.beam.ui.state.Observable
-import dev.d1s.beam.ui.util.currentBlocks
+import dev.d1s.beam.ui.state.CurrentSpaceContentChange
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.render
 import io.kvision.html.div
@@ -33,28 +33,31 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
 
     private val daemonStatusObservable by inject<Observable<DaemonStatusWithPing?>>(Qualifier.DaemonStatusObservable)
 
-    private val currentSpaceChangeObservable by inject<Observable<Space?>>(Qualifier.CurrentSpaceChangeObservable)
+    private val currentSpaceChangeObservable by inject<Observable<CurrentSpaceChange>>(Qualifier.CurrentSpaceChangeObservable)
+
+    private val currentSpaceContentChangeObservable by inject<Observable<CurrentSpaceContentChange>>(Qualifier.CurrentSpaceContentChangeObservable)
 
     private val disconnectedDaemonStatusBlankslate by inject<Component<Unit>>(Qualifier.DisconnectedDaemonStatusBlankslateComponent)
 
     private val spaceSearchCardComponent by inject<Component<SpaceSearchCardComponent.Config>>(Qualifier.SpaceSearchCardComponent)
 
     override fun SimplePanel.render() {
-        div(className = "container-fluid mt-4").bind(
-            daemonStatusObservable.state,
-            runImmediately = false
-        ) { status ->
-            if (status != null) {
-                handleNotFound()
-                handleEmptySpace()
-            } else {
-                render(disconnectedDaemonStatusBlankslate)
+        div(className = "container-fluid mt-4") {
+            bind(daemonStatusObservable.state, runImmediately = false) { status ->
+                if (status != null) {
+                    handleNotFound()
+                    handleSpaceContent()
+                } else {
+                    render(disconnectedDaemonStatusBlankslate)
+                }
             }
         }
     }
 
     private fun SimplePanel.handleNotFound() {
-        bind(currentSpaceChangeObservable.state) { space ->
+        div().bind(currentSpaceChangeObservable.state) {
+            val space = it.space
+
             if (space == null) {
                 render(spaceSearchCardComponent) {
                     mode.value = SpaceSearchCardComponent.Mode.NOT_FOUND
@@ -63,10 +66,18 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
         }
     }
 
+    private fun SimplePanel.handleSpaceContent() {
+        handleEmptySpace()
+    }
+
     private fun SimplePanel.handleEmptySpace() {
-        if (currentBlocks?.isEmpty() == true) {
-            render(spaceSearchCardComponent) {
-                mode.value = SpaceSearchCardComponent.Mode.EMPTY_SPACE
+        div().bind(currentSpaceContentChangeObservable.state) {
+            val blocks = it.blocks
+
+            if (blocks?.isEmpty() == true) {
+                render(spaceSearchCardComponent) {
+                    mode.value = SpaceSearchCardComponent.Mode.EMPTY_SPACE
+                }
             }
         }
     }

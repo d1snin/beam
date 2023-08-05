@@ -53,13 +53,14 @@ class SpaceSearchCardComponent : Component<SpaceSearchCardComponent.Config>(::Co
         getKoin().getAll<SpaceSearchCardContent>()
     }
 
-    private val content by lazy {
-        val mode = config.mode.value
+    private val content: SpaceSearchCardContent
+        get() {
+            val mode = config.mode.value
 
-        contents.find {
-            it.mode == mode
-        } ?: error("$mode is unsupported")
-    }
+            return contents.find {
+                it.mode == mode
+            } ?: error("$mode is unsupported")
+        }
 
     override fun SimplePanel.render() {
         div(className = "container d-flex justify-content-center") {

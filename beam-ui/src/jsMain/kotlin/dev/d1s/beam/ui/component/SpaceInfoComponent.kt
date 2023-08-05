@@ -16,8 +16,8 @@
 
 package dev.d1s.beam.ui.component
 
-import dev.d1s.beam.commons.Space
 import dev.d1s.beam.ui.Qualifier
+import dev.d1s.beam.ui.state.CurrentSpaceChange
 import dev.d1s.beam.ui.state.Observable
 import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.util.Texts
@@ -34,11 +34,13 @@ import org.koin.core.component.inject
 
 class SpaceInfoComponent : Component<Unit>(), KoinComponent {
 
-    private val currentSpaceChangeObservable by inject<Observable<Space?>>(Qualifier.CurrentSpaceChangeObservable)
+    private val currentSpaceChangeObservable by inject<Observable<CurrentSpaceChange>>(Qualifier.CurrentSpaceChangeObservable)
 
     override fun SimplePanel.render() {
         vPanel(justify = JustifyContent.CENTER, className = "ms-2 ms-lg-3") {
-            bind(currentSpaceChangeObservable.state) { space ->
+            bind(currentSpaceChangeObservable.state) {
+                val space = it.space
+
                 p(className = "h2 mb-0") {
                     +(space?.view?.title ?: Texts.Heading.SpaceInfo.DEFAULT_TITLE)
                 }
