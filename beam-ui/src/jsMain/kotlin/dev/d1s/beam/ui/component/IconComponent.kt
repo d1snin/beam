@@ -21,8 +21,8 @@ import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.resource.ResourceLocation
 import dev.d1s.beam.ui.state.Observable
 import dev.d1s.beam.ui.util.Texts
+import dev.d1s.beam.ui.util.currentSpaceLink
 import dev.d1s.exkt.kvision.component.Component
-import io.kvision.html.div
 import io.kvision.html.image
 import io.kvision.panel.SimplePanel
 import io.kvision.state.bind
@@ -35,7 +35,7 @@ class IconComponent : Component<Unit>(), KoinComponent {
     private val currentSpaceChangeObservable by inject<Observable<Space?>>(Qualifier.CurrentSpaceChangeObservable)
 
     override fun SimplePanel.render() {
-        div {
+        currentSpaceLink {
             bind(currentSpaceChangeObservable.state) { space ->
                 image(space?.view?.icon ?: ResourceLocation.ICON, alt = Texts.Heading.Icon.ALT) {
                     width = 45.px

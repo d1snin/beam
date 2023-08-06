@@ -21,6 +21,7 @@ import dev.d1s.beam.ui.state.CurrentSpaceChange
 import dev.d1s.beam.ui.state.Observable
 import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.util.Texts
+import dev.d1s.beam.ui.util.currentSpaceLink
 import dev.d1s.exkt.kvision.component.Component
 import io.kvision.core.JustifyContent
 import io.kvision.html.p
@@ -37,19 +38,21 @@ class SpaceInfoComponent : Component<Unit>(), KoinComponent {
     private val currentSpaceChangeObservable by inject<Observable<CurrentSpaceChange>>(Qualifier.CurrentSpaceChangeObservable)
 
     override fun SimplePanel.render() {
-        vPanel(justify = JustifyContent.CENTER, className = "ms-2 ms-lg-3") {
-            bind(currentSpaceChangeObservable.state) {
-                val space = it.space
+        currentSpaceLink {
+            vPanel(justify = JustifyContent.CENTER, className = "ms-2 ms-lg-3") {
+                bind(currentSpaceChangeObservable.state) {
+                    val space = it.space
 
-                p(className = "h2 mb-0") {
-                    +(space?.view?.title ?: Texts.Heading.SpaceInfo.DEFAULT_TITLE)
-                }
+                    p(className = "h2 mb-0") {
+                        +(space?.view?.title ?: Texts.Heading.SpaceInfo.DEFAULT_TITLE)
+                    }
 
-                space?.view?.description?.let {
-                    span {
-                        fontSize = 0.8.rem
-                        color = currentTheme.secondaryText
-                        +it
+                    space?.view?.description?.let {
+                        span {
+                            fontSize = 0.8.rem
+                            color = currentTheme.secondaryText
+                            +it
+                        }
                     }
                 }
             }
