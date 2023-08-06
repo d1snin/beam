@@ -16,6 +16,9 @@
 
 package dev.d1s.beam.commons.event
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 public data class EntityUpdate<T>(
     val old: T,
     val new: T
