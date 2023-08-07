@@ -38,7 +38,7 @@ class VoidContentEntityRenderer : ContentEntityRenderer, KoinComponent {
         val passedHeight = parameters[definition.height]?.toIntOrNull() ?: defaultHeight
         val height = max(passedHeight, defaultHeight)
 
-        div(className = "w-100 rounded") {
+        div(className = "w-100") {
             this.height = height.px
         }
     }
