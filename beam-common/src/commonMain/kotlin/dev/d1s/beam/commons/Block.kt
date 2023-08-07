@@ -57,6 +57,9 @@ public data class BlockModification(
     override val spaceId: SpaceId
 ) : AbstractBlock
 
-public enum class BlockSize {
-    SMALL, MEDIUM, LARGE, EXTRA_LARGE
+public enum class BlockSize(public val level: Int) {
+    SMALL(level = 1),
+    MEDIUM(level = 2),
+    LARGE(level = 3),
+    EXTRA_LARGE(level = 4)
 }

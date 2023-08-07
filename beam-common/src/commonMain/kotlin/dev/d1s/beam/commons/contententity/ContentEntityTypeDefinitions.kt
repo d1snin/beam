@@ -27,18 +27,6 @@ public sealed class ContentEntityTypeDefinition(public val name: ContentEntityTy
         required: Boolean = notRequired
     ): ContentEntityParameterDefinition =
         ContentEntityParameterDefinition(name, required)
-
-    public companion object {
-
-        private val definitions: List<ContentEntityTypeDefinition> = listOf(
-            VoidContentEntityTypeDefinition,
-            TextContentEntityTypeDefinition
-        )
-
-        public fun byName(name: ContentEntityTypeName): ContentEntityTypeDefinition? = definitions.find {
-            it.name == name
-        }
-    }
 }
 
 public data object VoidContentEntityTypeDefinition : ContentEntityTypeDefinition(name = "void") {
@@ -62,3 +50,13 @@ public data object TextContentEntityTypeDefinition : ContentEntityTypeDefinition
 
     val url: ContentEntityParameterDefinition = parameter("url")
 }
+
+private val definitions = listOf(
+    VoidContentEntityTypeDefinition,
+    TextContentEntityTypeDefinition
+)
+
+public fun definition(name: ContentEntityTypeName): ContentEntityTypeDefinition? =
+    definitions.find {
+        it.name == name
+    }

@@ -17,23 +17,20 @@
 package dev.d1s.beam.commons.validation
 
 import dev.d1s.beam.commons.contententity.ContentEntity
-import dev.d1s.beam.commons.contententity.ContentEntityTypeDefinition
+import dev.d1s.beam.commons.validation.VoidContentEntityValidator.validate
 import io.konform.validation.Validation
 import io.konform.validation.ValidationBuilder
 
 internal val validateContentEntity: Validation<ContentEntity> = Validation {
-    validContentEntityTypeAndParameters()
+    runValidators()
 }
 
-private fun ValidationBuilder<ContentEntity>.validContentEntityTypeAndParameters() =
-    addConstraint("content entity must have valid type and parameters") { entity ->
-        val definition = ContentEntityTypeDefinition.byName(entity.type) ?: return@addConstraint false
+private fun ValidationBuilder<ContentEntity>.runValidators() {
+    val validators = ContentEntityValidator.validators
 
-        definition.parameters.forEach { parameterDefinition ->
-            if (parameterDefinition.required) {
-                entity.parameters[parameterDefinition.name] ?: return@addConstraint false
-            }
+    validators.forEach { validator ->
+        with(validator) {
+            validate()
         }
-
-        true
     }
+}
