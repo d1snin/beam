@@ -18,12 +18,12 @@ package dev.d1s.beam.ui.contententity
 
 import dev.d1s.beam.commons.contententity.ContentEntities
 import dev.d1s.beam.commons.contententity.ContentEntityParameters
-import dev.d1s.beam.commons.contententity.ContentEntityTypeName
+import dev.d1s.beam.commons.contententity.ContentEntityTypeDefinition
 import io.kvision.panel.SimplePanel
 
 interface ContentEntityRenderer {
 
-    val type: ContentEntityTypeName
+    val definition: ContentEntityTypeDefinition
 
     fun SimplePanel.render(parameters: ContentEntityParameters, previousEntities: ContentEntities)
 }

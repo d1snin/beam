@@ -21,6 +21,9 @@ import dev.d1s.beam.ui.client.DaemonStatusWithPing
 import dev.d1s.beam.ui.client.DefaultDaemonConnector
 import dev.d1s.beam.ui.client.buildBeamClient
 import dev.d1s.beam.ui.component.*
+import dev.d1s.beam.ui.contententity.ContentEntityRenderer
+import dev.d1s.beam.ui.contententity.TextContentEntityRenderer
+import dev.d1s.beam.ui.contententity.VoidContentEntityRenderer
 import dev.d1s.beam.ui.state.*
 import dev.d1s.beam.ui.theme.DefaultThemeHolder
 import dev.d1s.beam.ui.theme.ThemeHolder
@@ -48,6 +51,9 @@ object Qualifier {
     val DisconnectedDaemonStatusBlankslateComponent = named("disconnected-daemon-status-blankslate-component")
     val SpaceSearchCardComponent = named("space-search-card-component")
 
+    val VoidContentEntityRenderer = named("void-content-entity-renderer")
+    val TextContentEntityRenderer = named("text-content-entity-renderer")
+
     val NotFoundSpaceSearchCardContent = named("not-found-space-search-card-content")
     val EmptySpaceSearchCardContent = named("empty-space-search-card-content")
 }
@@ -64,6 +70,7 @@ private val mainModule = module {
     themeHolder()
     observables()
     components()
+    contentEntityRenderers()
     spaceSearchCardContents()
 }
 
@@ -128,7 +135,7 @@ private fun Module.components() {
         qualifier = Qualifier.BlockContainerComponent
     }
 
-    factory<Component<BlockComponent.Config>>(qualifier = Qualifier.BlockContainerComponent) {
+    factory<Component<BlockComponent.Config>>(qualifier = Qualifier.BlockComponent) {
         BlockComponent()
     }
 
@@ -138,6 +145,16 @@ private fun Module.components() {
 
     singleOf<Component<SpaceSearchCardComponent.Config>>(::SpaceSearchCardComponent) {
         qualifier = Qualifier.SpaceSearchCardComponent
+    }
+}
+
+private fun Module.contentEntityRenderers() {
+    singleOf<ContentEntityRenderer>(::VoidContentEntityRenderer) {
+        qualifier = Qualifier.VoidContentEntityRenderer
+    }
+
+    singleOf<ContentEntityRenderer>(::TextContentEntityRenderer) {
+        qualifier = Qualifier.TextContentEntityRenderer
     }
 }
 

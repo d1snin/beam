@@ -17,32 +17,16 @@
 package dev.d1s.beam.ui.contententity
 
 import dev.d1s.beam.commons.contententity.ContentEntities
-import dev.d1s.beam.commons.contententity.ContentEntity
+import dev.d1s.beam.commons.contententity.ContentEntityParameters
+import dev.d1s.beam.commons.contententity.TextContentEntityTypeDefinition
 import io.kvision.panel.SimplePanel
-import org.koin.core.context.GlobalContext
+import org.koin.core.component.KoinComponent
 
-private val contentEntityRenderers by lazy {
-    GlobalContext.get().getAll<ContentEntityRenderer>()
-}
+class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
 
-fun SimplePanel.renderEntity(entity: ContentEntity, previousEntities: ContentEntities) {
-    val type = entity.type
+    override val definition = TextContentEntityTypeDefinition
 
-    val renderer = contentEntityRenderers.find {
-        it.definition.name == type
-    }
+    override fun SimplePanel.render(parameters: ContentEntityParameters, previousEntities: ContentEntities) {
 
-    renderer ?: error("No renderer for type $type")
-
-    with(renderer) {
-        render(entity.parameters, previousEntities)
-    }
-}
-
-fun SimplePanel.renderEntities(entities: ContentEntities) {
-    val renderedEntities = mutableListOf<ContentEntity>()
-
-    entities.forEach { entity ->
-        renderEntity(entity, renderedEntities)
     }
 }
