@@ -17,8 +17,6 @@
 package dev.d1s.beam.ui.util
 
 import dev.d1s.beam.commons.BlockSize
-import io.kvision.core.CssSize
-import io.kvision.utils.px
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlin.math.max
@@ -28,49 +26,40 @@ object Size {
     private const val STEP = 225
     private const val WHITESPACE = 45
 
-    val MdBreakpoint = breakpointOf(BlockLevel.MD)
-    val LgBreakpoint = breakpointOf(BlockLevel.LG)
-    val XlBreakpoint = breakpointOf(BlockLevel.XL)
+    val MdBreakpoint = breakpointOf(BlockSize.MEDIUM)
+    val LgBreakpoint = breakpointOf(BlockSize.LARGE)
+    val XlBreakpoint = breakpointOf(BlockSize.EXTRA_LARGE)
 
-    val MaxBlockLevel: BlockLevel?
+    val MaxBlockSize: BlockSize?
         get() {
             val width = vw
 
             return when {
-                width >= BlockLevel.MD.breakpoint && width < BlockLevel.LG.breakpoint -> BlockLevel.MD
-                width >= BlockLevel.LG.breakpoint && width < BlockLevel.XL.breakpoint -> BlockLevel.LG
-                width >= BlockLevel.XL.breakpoint -> BlockLevel.XL
+                width in MdBreakpoint..<LgBreakpoint -> BlockSize.MEDIUM
+                width in LgBreakpoint..<XlBreakpoint -> BlockSize.LARGE
+                width >= XlBreakpoint -> BlockSize.EXTRA_LARGE
                 else -> null
             }
         }
 
-    val Sm = sizeOf(BlockLevel.SM).px
-    val Md = sizeOf(BlockLevel.MD).px
+    val Sm = sizeOf(BlockSize.SMALL)
+    val Md = sizeOf(BlockSize.MEDIUM)
     val Lg
         get() = when {
-            vw >= BlockLevel.LG.breakpoint -> sizeOf(BlockLevel.LG).px
+            vw >= LgBreakpoint -> sizeOf(BlockSize.LARGE)
             else -> Md
         }
     val Xl
         get() = when {
-            vw >= BlockLevel.XL.breakpoint -> sizeOf(BlockLevel.XL).px
+            vw >= XlBreakpoint -> sizeOf(BlockSize.EXTRA_LARGE)
             else -> Lg
         }
 
-    private fun breakpointOf(blockLevel: BlockLevel) =
-        sizeOf(blockLevel) + WHITESPACE
+    fun sizeOf(blockSize: BlockSize) =
+        STEP * blockSize.level
 
-    private fun sizeOf(blockLevel: BlockLevel) =
-        STEP * blockLevel.level
+    private fun breakpointOf(blockSize: BlockSize) =
+        sizeOf(blockSize) + WHITESPACE
 
     private val vw get() = max(document.documentElement?.clientWidth ?: 0, window.innerWidth)
 }
-
-enum class BlockLevel(val level: Int, val breakpoint: Int, val size: BlockSize) {
-    SM(level = 1, breakpoint = Size.MdBreakpoint, size = BlockSize.SMALL),
-    MD(level = 2, breakpoint = Size.MdBreakpoint, size = BlockSize.MEDIUM),
-    LG(level = 3, breakpoint = Size.LgBreakpoint, size = BlockSize.LARGE),
-    XL(level = 4, breakpoint = Size.XlBreakpoint, size = BlockSize.EXTRA_LARGE)
-}
-
-val CssSize.int get() = first.toInt()
