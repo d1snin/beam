@@ -43,6 +43,8 @@ object Qualifier {
     val SpaceInfoComponent = named("space-info-component")
     val DaemonStatusComponent = named("daemon-status-component")
     val SpaceContentComponent = named("space-content-component")
+    val BlockContainerComponent = named("block-container-component")
+    val BlockComponent = named("block-component")
     val DisconnectedDaemonStatusBlankslateComponent = named("disconnected-daemon-status-blankslate-component")
     val SpaceSearchCardComponent = named("space-search-card-component")
 
@@ -120,6 +122,14 @@ private fun Module.components() {
 
     singleOf<Component<Unit>>(::SpaceContentComponent) {
         qualifier = Qualifier.SpaceContentComponent
+    }
+
+    singleOf<Component<Unit>>(::BlockContainerComponent) {
+        qualifier = Qualifier.BlockContainerComponent
+    }
+
+    factory<Component<BlockComponent.Config>>(qualifier = Qualifier.BlockContainerComponent) {
+        BlockComponent()
     }
 
     singleOf<Component<Unit>>(::DisconnectedDaemonStatusBlankslateComponent) {
