@@ -21,22 +21,19 @@ import dev.d1s.beam.commons.contententity.ContentEntityParameters
 import dev.d1s.beam.commons.contententity.VoidContentEntityTypeDefinition
 import dev.d1s.beam.commons.contententity.get
 import dev.d1s.beam.ui.util.Size
-import dev.d1s.beam.ui.util.int
 import io.kvision.html.div
 import io.kvision.panel.SimplePanel
 import io.kvision.utils.px
 import org.koin.core.component.KoinComponent
-import kotlin.math.max
 
 class VoidContentEntityRenderer : ContentEntityRenderer, KoinComponent {
 
     override val definition = VoidContentEntityTypeDefinition
 
-    private val defaultHeight = Size.Sm.int
+    private val defaultHeight = Size.Sm
 
     override fun SimplePanel.render(parameters: ContentEntityParameters, previousEntities: ContentEntities) {
-        val passedHeight = parameters[definition.height]?.toIntOrNull() ?: defaultHeight
-        val height = max(passedHeight, defaultHeight)
+        val height = parameters[definition.height]?.toIntOrNull() ?: defaultHeight
 
         div(className = "w-100") {
             this.height = height.px

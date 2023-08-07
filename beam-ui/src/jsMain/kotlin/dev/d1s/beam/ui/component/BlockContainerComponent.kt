@@ -16,16 +16,42 @@
 
 package dev.d1s.beam.ui.component
 
+import dev.d1s.beam.commons.Block
+import dev.d1s.beam.ui.Qualifier
+import dev.d1s.beam.ui.state.CurrentSpaceContentChange
+import dev.d1s.beam.ui.state.Observable
 import dev.d1s.exkt.kvision.component.Component
+import dev.d1s.exkt.kvision.component.render
+import io.kvision.core.JustifyContent
+import io.kvision.html.div
 import io.kvision.panel.SimplePanel
 import io.kvision.panel.vPanel
+import io.kvision.state.bind
 import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
+import org.koin.core.component.inject
 
 class BlockContainerComponent : Component<Unit>(), KoinComponent {
 
-    override fun SimplePanel.render() {
-        vPanel {
+    private val currentSpaceContentChangeObservable by inject<Observable<CurrentSpaceContentChange>>(Qualifier.CurrentSpaceContentChangeObservable)
 
+    override fun SimplePanel.render() {
+        div(className = "container-fluid d-flex justify-content-center") {
+            vPanel(justify = JustifyContent.START).bind(
+                currentSpaceContentChangeObservable.state
+            ) { change ->
+                change.blocks?.forEach { block ->
+                    renderBlock(block)
+                }
+            }
+        }
+    }
+
+    private fun SimplePanel.renderBlock(block: Block) {
+        val blockComponent = get<Component<BlockComponent.Config>>(Qualifier.BlockComponent)
+
+        render(blockComponent) {
+            this.block.setState(block)
         }
     }
 }
