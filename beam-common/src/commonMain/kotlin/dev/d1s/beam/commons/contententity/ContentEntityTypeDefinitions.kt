@@ -23,8 +23,8 @@ public sealed class ContentEntityTypeDefinition(
     public companion object {
 
         private val definitions: List<ContentEntityTypeDefinition> = listOf(
-            EmptyContentEntityTypeDefinition,
-            SimpleTextContentEntityTypeDefinition
+            VoidContentEntityTypeDefinition,
+            TextContentEntityTypeDefinition
         )
 
         public fun byName(name: ContentEntityTypeName): ContentEntityTypeDefinition? = definitions.find {
@@ -33,12 +33,12 @@ public sealed class ContentEntityTypeDefinition(
     }
 }
 
-public data object EmptyContentEntityTypeDefinition : ContentEntityTypeDefinition(
-    "empty",
+public data object VoidContentEntityTypeDefinition : ContentEntityTypeDefinition(
+    "void",
     parameters()
 )
 
-public data object SimpleTextContentEntityTypeDefinition : ContentEntityTypeDefinition(
-    "simple-text",
+public data object TextContentEntityTypeDefinition : ContentEntityTypeDefinition(
+    "text",
     parameters("text" whichIs required)
 )
