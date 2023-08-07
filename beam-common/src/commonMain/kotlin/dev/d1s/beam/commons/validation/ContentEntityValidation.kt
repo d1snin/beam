@@ -17,7 +17,6 @@
 package dev.d1s.beam.commons.validation
 
 import dev.d1s.beam.commons.contententity.ContentEntity
-import dev.d1s.beam.commons.validation.VoidContentEntityValidator.validate
 import io.konform.validation.Validation
 import io.konform.validation.ValidationBuilder
 
