@@ -70,6 +70,8 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
                 render(spaceSearchCardComponent) {
                     mode.value = SpaceSearchCardComponent.Mode.NOT_FOUND
                 }
+            } else {
+                showBlockContainer.setState(true)
             }
         }
     }
@@ -92,6 +94,8 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
                 render(spaceSearchCardComponent) {
                     mode.value = SpaceSearchCardComponent.Mode.EMPTY_SPACE
                 }
+            } else {
+                showBlockContainer.setState(true)
             }
         }
     }
