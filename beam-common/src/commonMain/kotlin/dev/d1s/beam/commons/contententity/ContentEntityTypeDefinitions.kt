@@ -16,10 +16,18 @@
 
 package dev.d1s.beam.commons.contententity
 
-public sealed class ContentEntityTypeDefinition(
-    public val name: ContentEntityTypeName,
-    public val parameters: ContentEntityParameterDefinitions
-) {
+public sealed class ContentEntityTypeDefinition(public val name: ContentEntityTypeName) {
+
+    private val internalParameters = mutableListOf<ContentEntityParameterDefinition>()
+
+    public val parameters: ContentEntityParameterDefinitions = internalParameters
+
+    protected fun parameter(
+        name: ContentEntityParameterName,
+        required: Boolean = notRequired
+    ): ContentEntityParameterDefinition =
+        ContentEntityParameterDefinition(name, required)
+
     public companion object {
 
         private val definitions: List<ContentEntityTypeDefinition> = listOf(
@@ -33,12 +41,24 @@ public sealed class ContentEntityTypeDefinition(
     }
 }
 
-public data object VoidContentEntityTypeDefinition : ContentEntityTypeDefinition(
-    "void",
-    parameters()
-)
+public data object VoidContentEntityTypeDefinition : ContentEntityTypeDefinition(name = "void") {
 
-public data object TextContentEntityTypeDefinition : ContentEntityTypeDefinition(
-    "text",
-    parameters("text" whichIs required)
-)
+    val height: ContentEntityParameterDefinition = parameter("height")
+}
+
+public data object TextContentEntityTypeDefinition : ContentEntityTypeDefinition(name = "text") {
+
+    val value: ContentEntityParameterDefinition = parameter("value", required)
+
+    val bold: ContentEntityParameterDefinition = parameter("bold")
+
+    val italic: ContentEntityParameterDefinition = parameter("italic")
+
+    val underline: ContentEntityParameterDefinition = parameter("underline")
+
+    val strikethrough: ContentEntityParameterDefinition = parameter("strikethrough")
+
+    val monospace: ContentEntityParameterDefinition = parameter("monospace")
+
+    val url: ContentEntityParameterDefinition = parameter("url")
+}

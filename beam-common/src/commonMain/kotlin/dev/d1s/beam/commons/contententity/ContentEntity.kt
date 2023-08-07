@@ -31,3 +31,10 @@ public data class ContentEntity(
     val type: ContentEntityTypeName,
     val parameters: ContentEntityParameters
 )
+
+public operator fun ContentEntityParameters.get(definition: ContentEntityParameterDefinition): ContentEntityParameterValue? =
+    this[definition.name].also {
+        if (definition.required && it == null) {
+            error("Parameter isn't specified: $definition")
+        }
+    }

@@ -25,9 +25,3 @@ public class ContentEntityParameterDefinition(
 
 internal const val required = true
 internal const val notRequired = false
-
-internal infix fun ContentEntityParameterName.whichIs(required: Boolean): ContentEntityParameterDefinition =
-    ContentEntityParameterDefinition(this, required)
-
-internal fun parameters(vararg parameters: ContentEntityParameterDefinition): List<ContentEntityParameterDefinition> =
-    parameters.toList()
