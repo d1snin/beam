@@ -64,7 +64,7 @@ class SpaceSearchCardComponent : Component<SpaceSearchCardComponent.Config>(::Co
 
     override fun SimplePanel.render() {
         div(className = "container d-flex justify-content-center") {
-            maxWidth = Size.MdBreakpoint.px
+            maxWidth = Size.LgBreakpoint.px
 
             card(className = "d-flex flex-column justify-content-center w-100 p-5") {
                 image()
