@@ -88,7 +88,7 @@ class CurrentSpaceContentChangeObservable : Observable<CurrentSpaceContentChange
         client.onBlockCreated {
             val block = it.data
 
-            handleEvent(block, spaceId) {
+            ifSpaceMatches(block, spaceId) {
                 val blocks = state.value.blocks.modifyBlocks {
                     add(block)
                 }
@@ -104,11 +104,17 @@ class CurrentSpaceContentChangeObservable : Observable<CurrentSpaceContentChange
     }
 
     private suspend fun handleBlockUpdate(spaceId: SpaceId) {
-        client.onBlockUpdated {
-            val block = it.data.new
+        client.onBlockUpdated { event ->
+            val block = event.data.new
 
-            handleEvent(block, spaceId) {
-                val blocks = state.value.blocks
+            ifSpaceMatches(block, spaceId) {
+                val blocks = state.value.blocks.modifyBlocks {
+                    val updatedBlockIndex = indexOfFirst {
+                        it.id == block.id
+                    }
+
+                    set(updatedBlockIndex, block)
+                }
 
                 val change = CurrentSpaceContentChange(
                     blocks,
@@ -154,7 +160,7 @@ class CurrentSpaceContentChangeObservable : Observable<CurrentSpaceContentChange
         client.onBlockRemoved {
             val block = it.data
 
-            handleEvent(block, spaceId) {
+            ifSpaceMatches(block, spaceId) {
                 val blocks = state.value.blocks.modifyBlocks {
                     remove(block)
                 }
@@ -169,7 +175,7 @@ class CurrentSpaceContentChangeObservable : Observable<CurrentSpaceContentChange
         }
     }
 
-    private inline fun handleEvent(block: Block, spaceId: SpaceId, handler: () -> Unit) {
+    private inline fun ifSpaceMatches(block: Block, spaceId: SpaceId, handler: () -> Unit) {
         if (block.spaceId == spaceId) {
             handler()
         }
