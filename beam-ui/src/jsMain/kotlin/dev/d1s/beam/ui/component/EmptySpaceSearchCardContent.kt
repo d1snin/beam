@@ -19,9 +19,7 @@ package dev.d1s.beam.ui.component
 import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.util.Texts
 import io.kvision.html.image
-import io.kvision.html.p
 import io.kvision.panel.SimplePanel
-import io.kvision.utils.rem
 import org.koin.core.component.KoinComponent
 
 class EmptySpaceSearchCardContent : SpaceSearchCardContent, KoinComponent {
@@ -37,8 +35,6 @@ class EmptySpaceSearchCardContent : SpaceSearchCardContent, KoinComponent {
     }
 
     override fun SimplePanel.text() {
-        p(Texts.Body.SpaceSearchCard.EmptySpaceMode.TEXT, className = "mb-3") {
-            fontSize = 1.6.rem
-        }
+        spaceSearchCardText(Texts.Body.SpaceSearchCard.EmptySpaceMode.TEXT)
     }
 }

@@ -16,25 +16,19 @@
 
 package dev.d1s.beam.ui.component
 
-import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.util.Texts
-import io.kvision.html.image
 import io.kvision.panel.SimplePanel
 import org.koin.core.component.KoinComponent
 
-class NotFoundSpaceSearchCardContent : SpaceSearchCardContent, KoinComponent {
+class NormalSpaceSearchCardContent : SpaceSearchCardContent, KoinComponent {
 
-    override val mode = SpaceSearchCardComponent.Mode.NOT_FOUND
+    override val mode = SpaceSearchCardComponent.Mode.NORMAL
 
     override fun SimplePanel.image() {
-        image(
-            currentTheme.notFoundIcon,
-            alt = Texts.Body.SpaceSearchCard.NotFoundMode.ICON_ALT,
-            className = "w-100 mb-4 mb-lg-5"
-        )
+        // nop
     }
 
     override fun SimplePanel.text() {
-        spaceSearchCardText(Texts.Body.SpaceSearchCard.NotFoundMode.TEXT)
+        spaceSearchCardText(Texts.Body.SpaceSearchCard.NormalMode.TEXT)
     }
 }

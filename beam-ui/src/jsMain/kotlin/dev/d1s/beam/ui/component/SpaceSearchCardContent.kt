@@ -16,7 +16,9 @@
 
 package dev.d1s.beam.ui.component
 
+import io.kvision.html.p
 import io.kvision.panel.SimplePanel
+import io.kvision.utils.rem
 
 interface SpaceSearchCardContent {
 
@@ -25,4 +27,10 @@ interface SpaceSearchCardContent {
     fun SimplePanel.image()
 
     fun SimplePanel.text()
+}
+
+fun SimplePanel.spaceSearchCardText(text: String) {
+    p(text, className = "mb-3") {
+        fontSize = 1.6.rem
+    }
 }

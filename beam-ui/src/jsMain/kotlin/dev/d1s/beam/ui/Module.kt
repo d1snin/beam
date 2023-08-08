@@ -54,6 +54,7 @@ object Qualifier {
     val VoidContentEntityRenderer = named("void-content-entity-renderer")
     val TextContentEntityRenderer = named("text-content-entity-renderer")
 
+    val NormalSpaceSearchCardContent = named("normal-space-search-card-content")
     val NotFoundSpaceSearchCardContent = named("not-found-space-search-card-content")
     val EmptySpaceSearchCardContent = named("empty-space-search-card-content")
 }
@@ -159,6 +160,10 @@ private fun Module.contentEntityRenderers() {
 }
 
 private fun Module.spaceSearchCardContents() {
+    singleOf<SpaceSearchCardContent>(::NormalSpaceSearchCardContent) {
+        qualifier = Qualifier.NormalSpaceSearchCardContent
+    }
+
     singleOf<SpaceSearchCardContent>(::NotFoundSpaceSearchCardContent) {
         qualifier = Qualifier.NotFoundSpaceSearchCardContent
     }

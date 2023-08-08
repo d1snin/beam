@@ -17,6 +17,7 @@
 package dev.d1s.beam.ui.component
 
 import dev.d1s.beam.commons.Block
+import dev.d1s.beam.commons.Blocks
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.state.CurrentSpaceContentChange
 import dev.d1s.beam.ui.state.Observable
@@ -35,12 +36,21 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
 
     private val currentSpaceContentChangeObservable by inject<Observable<CurrentSpaceContentChange>>(Qualifier.CurrentSpaceContentChangeObservable)
 
+    private val spaceSearchCardComponent by inject<Component<SpaceSearchCardComponent.Config>>(Qualifier.SpaceSearchCardComponent)
+
     override fun SimplePanel.render() {
-        div(className = "container-fluid d-flex justify-content-center") {
-            vPanel(justify = JustifyContent.START).bind(
-                currentSpaceContentChangeObservable.state
-            ) { change ->
-                change.blocks?.forEach { block ->
+        div().bind(currentSpaceContentChangeObservable.state) { change ->
+            change.blocks?.let { blocks ->
+                renderBlocks(blocks)
+                renderSpaceSearchCard()
+            }
+        }
+    }
+
+    private fun SimplePanel.renderBlocks(blocks: Blocks) {
+        div(className = "container-fluid d-flex justify-content-center mb-5") {
+            vPanel(justify = JustifyContent.START) {
+                blocks.forEach { block ->
                     renderBlock(block)
                 }
             }
@@ -52,6 +62,12 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
 
         render(blockComponent) {
             this.block.setState(block)
+        }
+    }
+
+    private fun SimplePanel.renderSpaceSearchCard() {
+        render(spaceSearchCardComponent) {
+            mode.value = SpaceSearchCardComponent.Mode.NORMAL
         }
     }
 }

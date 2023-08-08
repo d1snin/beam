@@ -34,7 +34,7 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
             block ?: error("Block isn't set")
 
             card("p-4 d-flex flex-column justify-content-start mb-4") {
-                width = sizeOf(block.size).px
+                maxWidth = sizeOf(block.size).px
                 renderEntities(block.entities)
             }
         }
