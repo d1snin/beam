@@ -23,12 +23,17 @@ import io.konform.validation.ValidationBuilder
 internal object ContentEntityParametersValidator : ContentEntityValidator<Nothing>(global = true) {
 
     override fun ValidationBuilder<ContentEntity>.validate() {
-        fun ContentEntity.definition() = definition(type)
+        requireDefinition()
+        requireParameters()
+    }
 
+    private fun ValidationBuilder<ContentEntity>.requireDefinition() {
         addConstraint("content entity definition does not exist") { entity ->
             entity.definition() != null
         }
+    }
 
+    private fun ValidationBuilder<ContentEntity>.requireParameters() {
         addConstraint("missing parameters") { entity ->
             val definition = entity.definition()
             requireNotNull(definition)
@@ -43,4 +48,6 @@ internal object ContentEntityParametersValidator : ContentEntityValidator<Nothin
             true
         }
     }
+
+    private fun ContentEntity.definition() = definition(type)
 }
