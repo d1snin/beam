@@ -31,7 +31,7 @@ public val validateRootSpace: Validation<ModifiedRootSpace> = Validation {
 public val validateSpace: Validation<ModifiedSpace> = Validation {
     ModifiedSpace::slug {
         val spaceSlugNotInBlacklist: Validation<SpaceSlug> = Validation {
-            addConstraint("this space slug is blacklisted") { slug ->
+            addConstraint("space slug is blacklisted") { slug ->
                 !SpaceSlugBlacklist.matches(slug)
             }
         }

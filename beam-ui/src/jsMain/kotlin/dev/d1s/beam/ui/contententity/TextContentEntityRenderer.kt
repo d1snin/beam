@@ -16,9 +16,8 @@
 
 package dev.d1s.beam.ui.contententity
 
-import dev.d1s.beam.commons.contententity.ContentEntities
-import dev.d1s.beam.commons.contententity.ContentEntityParameters
-import dev.d1s.beam.commons.contententity.TextContentEntityTypeDefinition
+import dev.d1s.beam.commons.contententity.*
+import io.kvision.html.*
 import io.kvision.panel.SimplePanel
 import org.koin.core.component.KoinComponent
 
@@ -26,7 +25,117 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
 
     override val definition = TextContentEntityTypeDefinition
 
-    override fun SimplePanel.render(parameters: ContentEntityParameters, previousEntities: ContentEntities) {
+    override fun SimplePanel.render(sequence: ContentEntities) {
+        p(className = "mb-0") {
+            sequence.forEach { entity ->
+                renderTextEntity(entity.parameters)
+            }
+        }
+    }
 
+    private fun SimplePanel.renderTextEntity(parameters: ContentEntityParameters) {
+        optionalLink(parameters) {
+            optionalCodeBlock(parameters) {
+                optionalHeading(parameters) {
+                    val content = parameters[definition.value]
+                    requireNotNull(content)
+
+                    val classList = buildClasses(parameters)
+
+                    span(content, className = classList)
+                }
+            }
+        }
+    }
+
+    private inline fun SimplePanel.optionalLink(
+        parameters: ContentEntityParameters,
+        crossinline block: SimplePanel.() -> Unit
+    ) {
+        parameters[definition.url]?.let { url ->
+            link("", url) {
+                block()
+            }
+        } ?: block()
+    }
+
+    private inline fun SimplePanel.optionalCodeBlock(
+        parameters: ContentEntityParameters,
+        crossinline block: SimplePanel.() -> Unit
+    ) {
+        val monospace = parameters.getBoolean(definition.monospace)
+
+        if (monospace) {
+            tag(TAG.PRE) {
+                code {
+                    block()
+                }
+            }
+        } else {
+            block()
+        }
+    }
+
+    private inline fun SimplePanel.optionalHeading(
+        parameters: ContentEntityParameters,
+        crossinline block: SimplePanel.() -> Unit
+    ) {
+        val heading = parameters[definition.heading]?.let {
+            TextContentEntityTypeDefinition.Heading.byKey(it)
+        }
+
+        heading?.let {
+            val className = it.toBootstrapHeadingClass()
+
+            p(className = className) {
+                block()
+            }
+        } ?: block()
+    }
+
+    private fun TextContentEntityTypeDefinition.Heading.toBootstrapHeadingClass() =
+        when (this) {
+            TextContentEntityTypeDefinition.Heading.H1 -> "h3"
+            TextContentEntityTypeDefinition.Heading.H2 -> "h4"
+            TextContentEntityTypeDefinition.Heading.H3 -> "h5"
+        }
+
+    private fun buildClasses(parameters: ContentEntityParameters): String {
+        val classNames = buildList {
+            parameters.ifTrue(definition.bold) {
+                add("fw-bold")
+            }
+
+            parameters.ifTrue(definition.italic) {
+                add("fst-italic")
+            }
+
+            parameters.ifTrue(definition.underline) {
+                add("text-decoration-underline")
+            }
+
+            parameters.ifTrue(definition.strikethrough) {
+                add("text-decoration-line-through")
+            }
+        }
+
+        return classNames.joinToString(" ")
+    }
+
+    private inline fun ContentEntityParameters.ifTrue(
+        booleanParameter: ContentEntityParameterDefinition,
+        block: () -> Unit
+    ) {
+        val parameterValue = this[booleanParameter] ?: return
+        val parameter = parameterValue.toBooleanStrict()
+
+        if (parameter) {
+            block()
+        }
+    }
+
+    private fun ContentEntityParameters.getBoolean(booleanParameter: ContentEntityParameterDefinition): Boolean {
+        val parameterValue = this[booleanParameter] ?: return false
+        return parameterValue.toBooleanStrict()
     }
 }

@@ -48,7 +48,21 @@ public data object TextContentEntityTypeDefinition : ContentEntityTypeDefinition
 
     val monospace: ContentEntityParameterDefinition = parameter("monospace")
 
+    val heading: ContentEntityParameterDefinition = parameter("heading")
+
     val url: ContentEntityParameterDefinition = parameter("url")
+
+    public enum class Heading(public val key: String) {
+        H1("h1"), H2("h2"), H3("h3");
+
+        public companion object {
+
+            public fun byKey(key: String): Heading? =
+                entries.find {
+                    it.key == key
+                }
+        }
+    }
 }
 
 private val definitions = listOf(

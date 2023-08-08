@@ -28,7 +28,7 @@ internal object ContentEntityParametersValidator : ContentEntityValidator<Nothin
     }
 
     private fun ValidationBuilder<ContentEntity>.requireDefinition() {
-        addConstraint("content entity definition does not exist") { entity ->
+        addConstraint("content entity does not exist") { entity ->
             entity.definition() != null
         }
     }

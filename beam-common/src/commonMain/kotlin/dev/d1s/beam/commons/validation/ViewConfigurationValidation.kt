@@ -16,16 +16,11 @@
 
 package dev.d1s.beam.commons.validation
 
-import dev.d1s.beam.commons.SpaceFavicon
-import dev.d1s.beam.commons.SpaceThemeDefinition
-import dev.d1s.beam.commons.SpaceThemeName
-import dev.d1s.beam.commons.Url
-import dev.d1s.beam.commons.ViewConfiguration
+import dev.d1s.beam.commons.*
 import dev.d1s.exkt.konform.isNotBlank
 import io.konform.validation.Validation
 import io.konform.validation.ValidationBuilder
 import io.konform.validation.jsonschema.maxLength
-import io.ktor.http.*
 
 internal val validateViewConfiguration: Validation<ViewConfiguration> = Validation {
     ViewConfiguration::theme {
@@ -77,21 +72,16 @@ private fun ValidationBuilder<SpaceFavicon>.validFavicon() {
     }
 
     SpaceFavicon::maskIconColor ifPresent {
-        isNotBlank() hint "mask icon color must not be blank"
+        isNotBlank() hint "view mask icon color must not be blank"
     }
 }
 
 private fun ValidationBuilder<SpaceThemeName>.themeExists() =
-    addConstraint("space theme not found") { themeName ->
+    addConstraint("view theme not found") { themeName ->
         SpaceThemeDefinition.byName(themeName) != null
     }
 
 private fun ValidationBuilder<Url>.correctUrl() =
     addConstraint("URL is invalid") { url ->
-        try {
-            Url(url)
-            true
-        } catch (_: URLParserException) {
-            false
-        }
+        isUrl(url)
     }

@@ -25,24 +25,51 @@ private val contentEntityRenderers by lazy {
     GlobalContext.get().getAll<ContentEntityRenderer>()
 }
 
-fun SimplePanel.renderEntity(entity: ContentEntity, previousEntities: ContentEntities) {
+fun SimplePanel.renderEntities(entities: ContentEntities) {
+    val sequence = mutableListOf<ContentEntity>()
+    fun lastEntity() = sequence.lastOrNull()
+
+    fun render() {
+        val lastEntity = lastEntity()
+
+        lastEntity?.let {
+            val renderer = getRenderer(entity = it)
+
+            with(renderer) {
+                render(sequence)
+            }
+
+            sequence.clear()
+        }
+    }
+
+    entities.forEach { entity ->
+        val lastEntity = lastEntity()
+
+        when {
+            lastEntity == null -> {
+                sequence.add(entity)
+            }
+
+            entity.type == lastEntity.type -> {
+                sequence.add(entity)
+            }
+
+            else -> {
+                render()
+            }
+        }
+    }
+
+    render()
+}
+
+private fun getRenderer(entity: ContentEntity): ContentEntityRenderer {
     val type = entity.type
 
     val renderer = contentEntityRenderers.find {
         it.definition.name == type
     }
 
-    renderer ?: error("No renderer for type $type")
-
-    with(renderer) {
-        render(entity.parameters, previousEntities)
-    }
-}
-
-fun SimplePanel.renderEntities(entities: ContentEntities) {
-    val renderedEntities = mutableListOf<ContentEntity>()
-
-    entities.forEach { entity ->
-        renderEntity(entity, renderedEntities)
-    }
+    return renderer ?: error("No renderer for type $type")
 }
