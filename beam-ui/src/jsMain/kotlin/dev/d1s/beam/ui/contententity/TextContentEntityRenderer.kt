@@ -28,15 +28,15 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
     override fun SimplePanel.render(sequence: ContentEntities) {
         p(className = "mb-0") {
             sequence.forEach { entity ->
-                renderTextEntity(entity.parameters)
+                renderTextEntity(entity.parameters, entity == sequence.first())
             }
         }
     }
 
-    private fun SimplePanel.renderTextEntity(parameters: ContentEntityParameters) {
+    private fun SimplePanel.renderTextEntity(parameters: ContentEntityParameters, first: Boolean) {
         optionalLink(parameters) {
             optionalCodeBlock(parameters) {
-                optionalHeading(parameters) {
+                optionalHeading(parameters, first) {
                     val content = parameters[definition.value]
                     requireNotNull(content)
 
@@ -78,6 +78,7 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
 
     private inline fun SimplePanel.optionalHeading(
         parameters: ContentEntityParameters,
+        first: Boolean,
         crossinline block: SimplePanel.() -> Unit
     ) {
         val heading = parameters[definition.heading]?.let {
@@ -88,6 +89,12 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
             val className = it.toBootstrapHeadingClass()
 
             p(className = className) {
+                addCssClass("mb-0")
+
+                if (!first) {
+                    addCssClass("mt-3")
+                }
+
                 block()
             }
         } ?: block()
