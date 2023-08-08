@@ -47,16 +47,14 @@ fun SimplePanel.renderEntities(entities: ContentEntities) {
         val lastEntity = lastEntity()
 
         when {
-            lastEntity == null -> {
-                sequence.add(entity)
-            }
-
-            entity.type == lastEntity.type -> {
+            lastEntity == null || entity.type == lastEntity.type -> {
                 sequence.add(entity)
             }
 
             else -> {
                 render()
+
+                sequence.add(entity)
             }
         }
     }
