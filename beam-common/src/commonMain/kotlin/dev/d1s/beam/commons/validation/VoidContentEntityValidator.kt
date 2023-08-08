@@ -27,14 +27,19 @@ internal object VoidContentEntityValidator :
     private val boundary = 1..1200
 
     override fun ValidationBuilder<ContentEntity>.validate() {
-        fun ContentEntity.height() = parameters[definition.height]
+        requireInt()
+        requireBoundary()
+    }
 
+    private fun ValidationBuilder<ContentEntity>.requireInt() {
         addTypedConstraint("height is not an integer") { entity ->
             entity.height()?.let {
                 it.toIntOrNull() != null
             } ?: true
         }
+    }
 
+    private fun ValidationBuilder<ContentEntity>.requireBoundary() {
         addTypedConstraint("height is not in boundary $boundary") { entity ->
             entity.height()?.let {
                 val height = it.toIntOrNull()
@@ -42,4 +47,6 @@ internal object VoidContentEntityValidator :
             } ?: true
         }
     }
+
+    private fun ContentEntity.height() = parameters[definition.height]
 }
