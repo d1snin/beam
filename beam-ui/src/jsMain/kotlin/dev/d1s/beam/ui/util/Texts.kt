@@ -62,6 +62,8 @@ object Texts {
 
             object NormalMode {
 
+                const val ICON_ALT = "Found space icon"
+
                 const val TEXT = "Explore the other spaces on this instance."
             }
 

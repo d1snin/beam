@@ -16,8 +16,11 @@
 
 package dev.d1s.beam.ui.component
 
+import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.util.Texts
+import io.kvision.html.image
 import io.kvision.panel.SimplePanel
+import io.kvision.utils.perc
 import org.koin.core.component.KoinComponent
 
 class NormalSpaceSearchCardContent : SpaceSearchCardContent, KoinComponent {
@@ -25,7 +28,13 @@ class NormalSpaceSearchCardContent : SpaceSearchCardContent, KoinComponent {
     override val mode = SpaceSearchCardComponent.Mode.NORMAL
 
     override fun SimplePanel.image() {
-        // nop
+        image(
+            currentTheme.normalSpaceIcon,
+            alt = Texts.Body.SpaceSearchCard.NormalMode.ICON_ALT,
+            className = "mb-4 mb-lg-5 align-self-center"
+        ) {
+            width = 40.perc
+        }
     }
 
     override fun SimplePanel.text() {

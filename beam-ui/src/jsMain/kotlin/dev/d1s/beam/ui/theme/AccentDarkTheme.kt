@@ -17,10 +17,13 @@
 package dev.d1s.beam.ui.theme
 
 import dev.d1s.beam.commons.SpaceThemeDefinition
+import dev.d1s.beam.commons.Url
 import dev.d1s.beam.ui.resource.ResourceLocation
 import io.kvision.core.Color
 
 object AccentDarkTheme : AbstractTheme(SpaceThemeDefinition.AccentDark) {
+
+    override val normalSpaceIcon = ResourceLocation.NORMAL_SPACE_LIGHT
 
     override val notFoundIcon = ResourceLocation.NOT_FOUND_LIGHT
 

@@ -20,6 +20,7 @@ import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.util.Texts
 import io.kvision.html.image
 import io.kvision.panel.SimplePanel
+import io.kvision.utils.perc
 import org.koin.core.component.KoinComponent
 
 class EmptySpaceSearchCardContent : SpaceSearchCardContent, KoinComponent {
@@ -30,8 +31,10 @@ class EmptySpaceSearchCardContent : SpaceSearchCardContent, KoinComponent {
         image(
             currentTheme.emptySpaceIcon,
             alt = Texts.Body.SpaceSearchCard.EmptySpaceMode.ICON_ALT,
-            className = "w-50 mb-4 mb-lg-5 align-self-center"
-        )
+            className = "mb-4 mb-lg-5 align-self-center"
+        ) {
+            width = 35.perc
+        }
     }
 
     override fun SimplePanel.text() {
