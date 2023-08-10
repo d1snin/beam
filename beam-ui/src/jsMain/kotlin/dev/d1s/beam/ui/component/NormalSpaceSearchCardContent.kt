@@ -17,15 +17,23 @@
 package dev.d1s.beam.ui.component
 
 import dev.d1s.beam.ui.theme.currentTheme
+import dev.d1s.beam.ui.util.Size
 import dev.d1s.beam.ui.util.Texts
 import io.kvision.html.image
 import io.kvision.panel.SimplePanel
 import io.kvision.utils.perc
+import io.kvision.utils.px
+import io.kvision.utils.rem
 import org.koin.core.component.KoinComponent
 
 class NormalSpaceSearchCardContent : SpaceSearchCardContent, KoinComponent {
 
     override val mode = SpaceSearchCardComponent.Mode.NORMAL
+
+    override fun SimplePanel.configureContainer() {
+        maxWidth = Size.Md.px
+        fontSize = 0.8.rem
+    }
 
     override fun SimplePanel.image() {
         image(
@@ -38,6 +46,6 @@ class NormalSpaceSearchCardContent : SpaceSearchCardContent, KoinComponent {
     }
 
     override fun SimplePanel.text() {
-        spaceSearchCardText(Texts.Body.SpaceSearchCard.NormalMode.TEXT)
+        spaceSearchCardText(Texts.Body.SpaceSearchCard.NormalMode.TEXT, fontSize = 1.1.rem)
     }
 }

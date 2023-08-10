@@ -183,7 +183,9 @@ class CurrentSpaceContentChangeObservable : Observable<CurrentSpaceContentChange
 
     private inline fun Blocks?.modifyBlocks(modification: MutableList<Block>. () -> Unit): Blocks =
         this?.let {
-            this.toMutableList().apply(modification)
+            this.toMutableList().apply(modification).sortedBy {
+                it.index
+            }
         } ?: listOf()
 
     private fun setCurrentSpaceContentChange(change: CurrentSpaceContentChange) {

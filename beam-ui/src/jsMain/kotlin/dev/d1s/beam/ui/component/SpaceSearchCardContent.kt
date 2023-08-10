@@ -16,6 +16,7 @@
 
 package dev.d1s.beam.ui.component
 
+import io.kvision.core.CssSize
 import io.kvision.html.p
 import io.kvision.panel.SimplePanel
 import io.kvision.utils.rem
@@ -24,13 +25,17 @@ interface SpaceSearchCardContent {
 
     val mode: SpaceSearchCardComponent.Mode
 
+    fun SimplePanel.configureContainer() {
+        // nop
+    }
+
     fun SimplePanel.image()
 
     fun SimplePanel.text()
 }
 
-fun SimplePanel.spaceSearchCardText(text: String) {
+fun SimplePanel.spaceSearchCardText(text: String, fontSize: CssSize = 1.6.rem) {
     p(text, className = "mb-3") {
-        fontSize = 1.6.rem
+        this.fontSize = fontSize
     }
 }
