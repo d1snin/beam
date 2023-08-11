@@ -16,6 +16,7 @@
 
 package dev.d1s.beam.ui
 
+import dev.d1s.beam.commons.Blocks
 import dev.d1s.beam.ui.client.DaemonConnector
 import dev.d1s.beam.ui.client.DaemonStatusWithPing
 import dev.d1s.beam.ui.client.DefaultDaemonConnector
@@ -104,7 +105,7 @@ private fun Module.observables() {
         qualifier = Qualifier.CurrentSpaceChangeObservable
     }
 
-    singleOf<Observable<CurrentSpaceContentChange>>(::CurrentSpaceContentChangeObservable) {
+    singleOf<Observable<Blocks?>>(::CurrentSpaceContentChangeObservable) {
         qualifier = Qualifier.CurrentSpaceContentChangeObservable
     }
 }

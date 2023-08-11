@@ -16,10 +16,10 @@
 
 package dev.d1s.beam.ui.component
 
+import dev.d1s.beam.commons.Blocks
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.client.DaemonStatusWithPing
 import dev.d1s.beam.ui.state.CurrentSpaceChange
-import dev.d1s.beam.ui.state.CurrentSpaceContentChange
 import dev.d1s.beam.ui.state.Observable
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.render
@@ -36,7 +36,7 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
 
     private val currentSpaceChangeObservable by inject<Observable<CurrentSpaceChange>>(Qualifier.CurrentSpaceChangeObservable)
 
-    private val currentSpaceContentChangeObservable by inject<Observable<CurrentSpaceContentChange>>(Qualifier.CurrentSpaceContentChangeObservable)
+    private val currentSpaceContentChangeObservable by inject<Observable<Blocks?>>(Qualifier.CurrentSpaceContentChangeObservable)
 
     private val blockContainerComponent by inject<Component<Unit>>(Qualifier.BlockContainerComponent)
 
@@ -85,9 +85,7 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
     }
 
     private fun SimplePanel.handleEmptySpace() {
-        div().bind(currentSpaceContentChangeObservable.state) {
-            val blocks = it.blocks
-
+        div().bind(currentSpaceContentChangeObservable.state) { blocks ->
             if (blocks?.isEmpty() == true) {
                 showBlockContainer.setState(false)
 

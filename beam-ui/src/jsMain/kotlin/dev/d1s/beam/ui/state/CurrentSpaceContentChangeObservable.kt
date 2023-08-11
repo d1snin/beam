@@ -19,7 +19,6 @@ package dev.d1s.beam.ui.state
 import dev.d1s.beam.client.PublicBeamClient
 import dev.d1s.beam.commons.Block
 import dev.d1s.beam.commons.Blocks
-import dev.d1s.beam.commons.Space
 import dev.d1s.beam.commons.SpaceId
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.util.currentBlocks
@@ -31,20 +30,11 @@ import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-data class CurrentSpaceContentChange(
-    val blocks: Blocks? = null,
-    val addedBlock: Block? = null,
-    val updatedBlock: Block? = null,
-    val removedBlock: Block? = null
-)
-
-class CurrentSpaceContentChangeObservable : Observable<CurrentSpaceContentChange>, KoinComponent {
+class CurrentSpaceContentChangeObservable : Observable<Blocks?>, KoinComponent {
 
     override val launchOnStartup = true
 
-    override val state = ObservableValue(
-        CurrentSpaceContentChange(currentBlocks)
-    )
+    override val state = ObservableValue(currentBlocks)
 
     private val client by inject<PublicBeamClient>()
 
@@ -58,21 +48,18 @@ class CurrentSpaceContentChangeObservable : Observable<CurrentSpaceContentChange
                 val space = it.space
 
                 if (space != null) {
-                    setCurrentBlocks(space)
+                    actualizeCurrentSpaceContent(space.id)
                     handleSpaceContentUpdates(space.id)
                 } else {
-                    val change = CurrentSpaceContentChange(blocks = null)
-                    setCurrentSpaceContentChange(change)
+                    setCurrentSpaceContent(blocks = null)
                 }
             }
         }
 
-    private fun setCurrentBlocks(space: Space) {
+    private fun actualizeCurrentSpaceContent(space: SpaceId) {
         handlerScope.launch {
-            val blocks = client.getBlocks(space.id).getOrNull()
-            val change = CurrentSpaceContentChange(blocks)
-
-            setCurrentSpaceContentChange(change)
+            val blocks = client.getBlocks(space).getOrNull()
+            setCurrentSpaceContent(blocks)
         }
     }
 
@@ -89,16 +76,7 @@ class CurrentSpaceContentChangeObservable : Observable<CurrentSpaceContentChange
             val block = it.data
 
             ifSpaceMatches(block, spaceId) {
-                val blocks = state.value.blocks.modifyBlocks {
-                    add(block)
-                }
-
-                val change = CurrentSpaceContentChange(
-                    blocks,
-                    addedBlock = block
-                )
-
-                setCurrentSpaceContentChange(change)
+                actualizeCurrentSpaceContent(spaceId)
             }
         }
     }
@@ -108,20 +86,7 @@ class CurrentSpaceContentChangeObservable : Observable<CurrentSpaceContentChange
             val block = event.data.new
 
             ifSpaceMatches(block, spaceId) {
-                val blocks = state.value.blocks.modifyBlocks {
-                    val updatedBlockIndex = indexOfFirst {
-                        it.id == block.id
-                    }
-
-                    set(updatedBlockIndex, block)
-                }
-
-                val change = CurrentSpaceContentChange(
-                    blocks,
-                    updatedBlock = block
-                )
-
-                setCurrentSpaceContentChange(change)
+                actualizeCurrentSpaceContent(spaceId)
             }
         }
     }
@@ -161,16 +126,7 @@ class CurrentSpaceContentChangeObservable : Observable<CurrentSpaceContentChange
             val block = it.data
 
             ifSpaceMatches(block, spaceId) {
-                val blocks = state.value.blocks.modifyBlocks {
-                    remove(block)
-                }
-
-                val change = CurrentSpaceContentChange(
-                    blocks,
-                    removedBlock = block
-                )
-
-                setCurrentSpaceContentChange(change)
+                actualizeCurrentSpaceContent(spaceId)
             }
         }
     }
@@ -181,15 +137,8 @@ class CurrentSpaceContentChangeObservable : Observable<CurrentSpaceContentChange
         }
     }
 
-    private inline fun Blocks?.modifyBlocks(modification: MutableList<Block>. () -> Unit): Blocks =
-        this?.let {
-            this.toMutableList().apply(modification).sortedBy {
-                it.index
-            }
-        } ?: listOf()
-
-    private fun setCurrentSpaceContentChange(change: CurrentSpaceContentChange) {
-        setCurrentSpaceBlocks(change.blocks)
-        state.setState(change)
+    private fun setCurrentSpaceContent(blocks: Blocks?) {
+        setCurrentSpaceBlocks(blocks)
+        state.setState(blocks)
     }
 }

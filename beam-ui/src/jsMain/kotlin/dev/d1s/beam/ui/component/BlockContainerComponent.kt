@@ -19,7 +19,6 @@ package dev.d1s.beam.ui.component
 import dev.d1s.beam.commons.Block
 import dev.d1s.beam.commons.Blocks
 import dev.d1s.beam.ui.Qualifier
-import dev.d1s.beam.ui.state.CurrentSpaceContentChange
 import dev.d1s.beam.ui.state.Observable
 import dev.d1s.beam.ui.util.Size
 import dev.d1s.exkt.kvision.component.Component
@@ -38,13 +37,13 @@ import kotlin.math.min
 
 class BlockContainerComponent : Component<Unit>(), KoinComponent {
 
-    private val currentSpaceContentChangeObservable by inject<Observable<CurrentSpaceContentChange>>(Qualifier.CurrentSpaceContentChangeObservable)
+    private val currentSpaceContentChangeObservable by inject<Observable<Blocks?>>(Qualifier.CurrentSpaceContentChangeObservable)
 
     private val spaceSearchCardComponent by inject<Component<SpaceSearchCardComponent.Config>>(Qualifier.SpaceSearchCardComponent)
 
     override fun SimplePanel.render() {
         div(className = "mb-5").bind(currentSpaceContentChangeObservable.state) { change ->
-            change.blocks?.let { blocks ->
+            change?.let { blocks ->
                 renderBlocks(blocks)
                 renderSpaceSearchCard()
             }
