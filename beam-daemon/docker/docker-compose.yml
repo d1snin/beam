@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+  beam-daemon:
+    image: beam-daemon:latest
+    container_name: beam-daemon
+    restart: always
+    networks:
+      - beam-daemon-net
+    expose:
+      - "8573"
+    ports:
+      - "8573:8573"
+    env_file:
+      - "../../config/.env"
+    depends_on:
+      - beam-daemon-postgres
+
+  beam-daemon-postgres:
+    image: postgres:latest
+    container_name: beam-daemon-postgres
+    environment:
+      - POSTGRES_DB=beam_database
+      - POSTGRES_USER=postgres_user
+      - POSTGRES_PASSWORD=postgres_password
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    restart: always
+    networks:
+      - beam-daemon-net
+    expose:
+      - "5432"
+    volumes:
+      - beam-daemon-db-data-postgres:/var/lib/postgresql/data
+      - beam-daemon-db-data-postgres-config:/var/lib/postgresql/dataConfig
+
+networks:
+  beam-daemon-net:
+    driver: bridge
+
+volumes:
+  beam-daemon-db-data-postgres:
+    driver: local
+
+  beam-daemon-db-data-postgres-config:
+    driver: local

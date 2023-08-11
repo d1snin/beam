@@ -17,7 +17,6 @@
 plugins {
     kotlin("multiplatform") apply false
     kotlin("jvm") apply false
-    kotlin("js") apply false
     id("com.github.ben-manes.versions")
 }
 
