@@ -26,19 +26,17 @@ object Size {
     private const val STEP = 225
     private const val WHITESPACE = 45
 
-    val MdBreakpoint = breakpointOf(BlockSize.MEDIUM)
-    val LgBreakpoint = breakpointOf(BlockSize.LARGE)
-    val XlBreakpoint = breakpointOf(BlockSize.EXTRA_LARGE)
+    private val LgBreakpoint = breakpointOf(BlockSize.LARGE)
+    private val XlBreakpoint = breakpointOf(BlockSize.EXTRA_LARGE)
 
-    val MaxBlockSize: BlockSize?
+    val MaxBlockSize: BlockSize
         get() {
             val width = vw
 
             return when {
-                width in MdBreakpoint..<LgBreakpoint -> BlockSize.MEDIUM
                 width in LgBreakpoint..<XlBreakpoint -> BlockSize.LARGE
                 width >= XlBreakpoint -> BlockSize.EXTRA_LARGE
-                else -> null
+                else -> BlockSize.MEDIUM
             }
         }
 
@@ -46,14 +44,10 @@ object Size {
     val Md = sizeOf(BlockSize.MEDIUM)
     val Lg
         get() = when {
-            vw >= LgBreakpoint -> sizeOf(BlockSize.LARGE)
+            MaxBlockSize.level >= BlockSize.LARGE.level -> sizeOf(BlockSize.LARGE)
             else -> Md
         }
-    val Xl
-        get() = when {
-            vw >= XlBreakpoint -> sizeOf(BlockSize.EXTRA_LARGE)
-            else -> Lg
-        }
+    val Xl get() = sizeOf(MaxBlockSize)
 
     fun sizeOf(blockSize: BlockSize) =
         STEP * blockSize.level

@@ -20,28 +20,27 @@ import dev.d1s.beam.commons.Block
 import dev.d1s.beam.ui.contententity.renderEntities
 import dev.d1s.beam.ui.util.Size.sizeOf
 import dev.d1s.exkt.kvision.component.Component
-import io.kvision.html.div
 import io.kvision.panel.SimplePanel
-import io.kvision.state.ObservableValue
-import io.kvision.state.bind
 import io.kvision.utils.px
 import org.koin.core.component.KoinComponent
 
 class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent {
 
     override fun SimplePanel.render() {
-        div().bind(config.block) { block ->
-            block ?: error("Block isn't set")
+        val block = config.block
 
-            card("p-4 d-flex flex-column justify-content-start mb-4") {
-                maxWidth = sizeOf(block.size).px
-                renderEntities(block.entities)
-            }
+        requireNotNull(block) {
+            "Block isn't set"
+        }
+
+        card("p-4 d-flex flex-column justify-content-start m-4") {
+            maxWidth = sizeOf(block.size).px
+            renderEntities(block.entities)
         }
     }
 
     class Config {
 
-        val block = ObservableValue<Block?>(null)
+        var block: Block? = null
     }
 }
