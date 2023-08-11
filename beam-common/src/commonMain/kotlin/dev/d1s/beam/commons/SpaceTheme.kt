@@ -23,11 +23,14 @@ public sealed class SpaceThemeDefinition(public val name: SpaceThemeName) {
 
     public data object AccentDark : SpaceThemeDefinition("accent-dark")
 
+    public data object Barbie : SpaceThemeDefinition("barbie")
+
     public companion object {
 
         public val Fallback: SpaceThemeDefinition = AccentDark
 
-        public val definitions: List<SpaceThemeDefinition> = listOf(AccentDark)
+        public val definitions: List<SpaceThemeDefinition> =
+            listOf(AccentDark, Barbie)
 
         public fun byName(name: SpaceThemeName): SpaceThemeDefinition? =
             definitions.find {

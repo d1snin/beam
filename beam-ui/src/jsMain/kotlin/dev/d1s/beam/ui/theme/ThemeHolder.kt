@@ -30,8 +30,9 @@ interface ThemeHolder {
 
 class DefaultThemeHolder : ThemeHolder, KoinComponent {
 
-    private val themes = listOf<AbstractTheme>(
-        AccentDarkTheme
+    private val themes = listOf(
+        AccentDarkTheme,
+        BarbieTheme
     )
 
     private val currentThemeDefinition = atomic(SpaceThemeDefinition.Fallback)
