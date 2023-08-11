@@ -17,6 +17,7 @@
 package dev.d1s.beam.ui.theme
 
 import dev.d1s.beam.commons.SpaceThemeDefinition
+import dev.d1s.beam.ui.util.currentSpace
 import kotlinx.atomicfu.atomic
 import org.koin.core.component.KoinComponent
 import org.koin.core.context.GlobalContext
@@ -25,7 +26,9 @@ interface ThemeHolder {
 
     val current: AbstractTheme
 
-    fun setCurrent(theme: SpaceThemeDefinition)
+    fun setCurrentTheme(theme: SpaceThemeDefinition)
+
+    fun actualizeTheme()
 }
 
 class DefaultThemeHolder : ThemeHolder, KoinComponent {
@@ -42,8 +45,18 @@ class DefaultThemeHolder : ThemeHolder, KoinComponent {
             it.definition == currentThemeDefinition.value
         } ?: error("No theme for definition $currentThemeDefinition")
 
-    override fun setCurrent(theme: SpaceThemeDefinition) {
+    override fun setCurrentTheme(theme: SpaceThemeDefinition) {
         this.currentThemeDefinition.value = theme
+    }
+
+    override fun actualizeTheme() {
+        val themeName = currentSpace?.view?.theme
+
+        val definition = themeName?.let {
+            SpaceThemeDefinition.byName(themeName)
+        } ?: SpaceThemeDefinition.Fallback
+
+        setCurrentTheme(definition)
     }
 }
 

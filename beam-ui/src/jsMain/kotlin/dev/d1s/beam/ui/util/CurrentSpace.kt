@@ -24,6 +24,7 @@ import dev.d1s.beam.commons.SpaceIdentifier
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.client.DaemonStatusWithPing
 import dev.d1s.beam.ui.state.Observable
+import dev.d1s.beam.ui.theme.ThemeHolder
 import dev.d1s.beam.ui.theme.setTextColor
 import dev.d1s.exkt.common.pathname
 import io.kvision.html.div
@@ -43,6 +44,10 @@ private val resolver by lazy {
 
 private val daemonStatusObservable by lazy {
     GlobalContext.get().get<Observable<DaemonStatusWithPing?>>(Qualifier.DaemonStatusObservable)
+}
+
+private val themeHolder by lazy {
+    GlobalContext.get().get<ThemeHolder>()
 }
 
 private var lateInitCurrentSpaceIdentifier: SpaceIdentifier? = null
@@ -65,6 +70,7 @@ suspend fun initCurrentSpace() {
 
     lateInitCurrentSpace = resolver.resolve(window.location.href).getOrNull()
     lateInitCurrentBlocks = currentSpace?.let {
+        themeHolder.actualizeTheme()
         client.getBlocks(it.id).getOrNull()
     }
 }
