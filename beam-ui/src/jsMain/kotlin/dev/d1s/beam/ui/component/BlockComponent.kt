@@ -33,7 +33,7 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
             "Block isn't set"
         }
 
-        card("p-4 d-flex flex-column justify-content-start m-4") {
+        card("p-4 d-flex flex-column justify-content-start mb-${config.marginBottom} me-${config.marginEnd}") {
             maxWidth = sizeOf(block.size).px
             renderEntities(block.entities)
         }
@@ -42,5 +42,8 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
     class Config {
 
         var block: Block? = null
+
+        var marginBottom = 4
+        var marginEnd = 4
     }
 }
