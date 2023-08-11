@@ -17,6 +17,8 @@
 package dev.d1s.beam.ui.component
 
 import dev.d1s.beam.ui.Qualifier
+import dev.d1s.beam.ui.state.CurrentSpaceChange
+import dev.d1s.beam.ui.state.Observable
 import dev.d1s.beam.ui.state.bindToCurrentTheme
 import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.theme.setTextColor
@@ -25,6 +27,7 @@ import dev.d1s.exkt.kvision.component.render
 import io.kvision.panel.SimplePanel
 import io.kvision.utils.vh
 import kotlinx.browser.document
+import kotlinx.browser.window
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.w3c.dom.css.CSSStyleDeclaration
@@ -35,12 +38,25 @@ class RootComponent : Component.Root(), KoinComponent {
 
     private val spaceContentComponent by inject<Component<Unit>>(Qualifier.SpaceContentComponent)
 
+    private val currentSpaceChangeObservable by inject<Observable<CurrentSpaceChange>>(Qualifier.CurrentSpaceChangeObservable)
+
     override fun SimplePanel.render() {
+        title()
         sizing()
         display()
         font()
         background()
         components()
+    }
+
+    private fun title() {
+        val document = window.top.document
+
+        currentSpaceChangeObservable.state.subscribe {
+            val space = it.space
+
+            document.title = space?.view?.title ?: "Beam Space not available"
+        }
     }
 
     private fun SimplePanel.sizing() {
