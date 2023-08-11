@@ -22,11 +22,11 @@ import io.kvision.core.Color
 
 object BarbieTheme : AbstractTheme(SpaceThemeDefinition.Barbie) {
 
-    override val normalSpaceIcon = ResourceLocation.NORMAL_SPACE_LIGHT
+    override val normalSpaceIcon = ResourceLocation.NORMAL_SPACE_DARK
 
-    override val notFoundIcon = ResourceLocation.NOT_FOUND_LIGHT
+    override val notFoundIcon = ResourceLocation.NOT_FOUND_DARK
 
-    override val emptySpaceIcon = ResourceLocation.EMPTY_SPACE_LIGHT
+    override val emptySpaceIcon = ResourceLocation.EMPTY_SPACE_DARK
 
     override val buttonClass = "btn-outline-light"
 
@@ -39,18 +39,18 @@ object BarbieTheme : AbstractTheme(SpaceThemeDefinition.Barbie) {
     // https://colorpicker.me/#ed5c9b
     override val outline = Color.hex(0xed5c9b)
 
-    // https://colorpicker.me/#f0f0f0
-    override val text = Color.hex(0xf0f0f0)
+    // https://colorpicker.me/#3c3c3c
+    override val text = Color.hex(0x3c3c3c)
 
-    // https://colorpicker.me/#959595
-    override val secondaryText = Color.hex(0x959595)
+    // https://colorpicker.me/#565656
+    override val secondaryText = Color.hex(0x565656)
 
-    // https://colorpicker.me/#89ffa9
-    override val green = Color.hex(0x89ffa9)
+    // https://colorpicker.me/#38ff6e
+    override val green = Color.hex(0x38ff6e)
 
-    // https://colorpicker.me/#ffbe5e
-    override val orange = Color.hex(0xffbe5e)
+    // https://colorpicker.me/#ff8f1f
+    override val orange = Color.hex(0xff8f1f)
 
-    // https://colorpicker.me/#ff7878
-    override val red = Color.hex(0xff7878)
+    // https://colorpicker.me/#ff2020
+    override val red = Color.hex(0xff2020)
 }
