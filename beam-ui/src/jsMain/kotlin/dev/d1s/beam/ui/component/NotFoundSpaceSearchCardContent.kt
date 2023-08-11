@@ -22,7 +22,7 @@ import io.kvision.html.image
 import io.kvision.panel.SimplePanel
 import org.koin.core.component.KoinComponent
 
-class NotFoundSpaceSearchCardContent : SpaceSearchCardContent, KoinComponent {
+class NotFoundSpaceSearchCardContent : SpaceSearchCardContent(), KoinComponent {
 
     override val mode = SpaceSearchCardComponent.Mode.NOT_FOUND
 

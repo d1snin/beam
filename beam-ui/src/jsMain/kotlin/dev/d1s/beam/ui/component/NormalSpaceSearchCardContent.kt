@@ -26,14 +26,22 @@ import io.kvision.utils.px
 import io.kvision.utils.rem
 import org.koin.core.component.KoinComponent
 
-class NormalSpaceSearchCardContent : SpaceSearchCardContent, KoinComponent {
+class NormalSpaceSearchCardContent : SpaceSearchCardContent(), KoinComponent {
+
+    init {
+        container.apply {
+            maxWidth = Size.Md.px
+            fontSize = 0.8.rem
+            padding = ContainerConfiguration.Padding(
+                top = 5,
+                bottom = 4,
+                start = 4,
+                end = 4
+            )
+        }
+    }
 
     override val mode = SpaceSearchCardComponent.Mode.NORMAL
-
-    override fun SimplePanel.configureContainer() {
-        maxWidth = Size.Md.px
-        fontSize = 0.8.rem
-    }
 
     override fun SimplePanel.image() {
         image(

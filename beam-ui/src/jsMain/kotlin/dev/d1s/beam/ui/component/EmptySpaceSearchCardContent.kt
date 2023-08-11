@@ -23,7 +23,7 @@ import io.kvision.panel.SimplePanel
 import io.kvision.utils.perc
 import org.koin.core.component.KoinComponent
 
-class EmptySpaceSearchCardContent : SpaceSearchCardContent, KoinComponent {
+class EmptySpaceSearchCardContent : SpaceSearchCardContent(), KoinComponent {
 
     override val mode = SpaceSearchCardComponent.Mode.EMPTY_SPACE
 

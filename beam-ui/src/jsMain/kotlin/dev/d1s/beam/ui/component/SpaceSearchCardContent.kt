@@ -16,22 +16,47 @@
 
 package dev.d1s.beam.ui.component
 
+import dev.d1s.beam.ui.util.Size
 import io.kvision.core.CssSize
 import io.kvision.html.p
 import io.kvision.panel.SimplePanel
+import io.kvision.utils.px
 import io.kvision.utils.rem
 
-interface SpaceSearchCardContent {
+abstract class SpaceSearchCardContent {
 
-    val mode: SpaceSearchCardComponent.Mode
+    abstract val mode: SpaceSearchCardComponent.Mode
 
-    fun SimplePanel.configureContainer() {
-        // nop
+    val container =
+        ContainerConfiguration(
+            maxWidth = Size.Lg.px,
+            fontSize = 1.rem,
+            padding = ContainerConfiguration.Padding(padding = 5)
+        )
+
+    abstract fun SimplePanel.image()
+
+    abstract fun SimplePanel.text()
+
+    data class ContainerConfiguration(
+        var maxWidth: CssSize,
+        var fontSize: CssSize,
+        var padding: Padding
+    ) {
+        data class Padding(
+            val top: Int,
+            val bottom: Int,
+            val start: Int,
+            val end: Int
+        ) {
+            constructor(padding: Int) : this(
+                top = padding,
+                bottom = padding,
+                start = padding,
+                end = padding
+            )
+        }
     }
-
-    fun SimplePanel.image()
-
-    fun SimplePanel.text()
 }
 
 fun SimplePanel.spaceSearchCardText(text: String, fontSize: CssSize = 1.6.rem) {
