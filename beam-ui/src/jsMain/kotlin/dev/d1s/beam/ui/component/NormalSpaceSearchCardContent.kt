@@ -16,6 +16,7 @@
 
 package dev.d1s.beam.ui.component
 
+import dev.d1s.beam.ui.state.bindToCurrentTheme
 import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.util.Size
 import dev.d1s.beam.ui.util.Texts
@@ -44,12 +45,14 @@ class NormalSpaceSearchCardContent : SpaceSearchCardContent(), KoinComponent {
     override val mode = SpaceSearchCardComponent.Mode.NORMAL
 
     override fun SimplePanel.image() {
-        image(
-            currentTheme.normalSpaceIcon,
-            alt = Texts.Body.SpaceSearchCard.NormalMode.ICON_ALT,
-            className = "mb-4 mb-lg-5 align-self-center"
-        ) {
-            width = 40.perc
+        bindToCurrentTheme {
+            image(
+                currentTheme.normalSpaceIcon,
+                alt = Texts.Body.SpaceSearchCard.NormalMode.ICON_ALT,
+                className = "mb-4 mb-lg-5 align-self-center"
+            ) {
+                width = 40.perc
+            }
         }
     }
 

@@ -19,6 +19,7 @@ package dev.d1s.beam.ui.component
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.state.CurrentSpaceChange
 import dev.d1s.beam.ui.state.Observable
+import dev.d1s.beam.ui.state.bindToCurrentTheme
 import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.util.Texts
 import dev.d1s.beam.ui.util.currentSpaceLink
@@ -50,7 +51,11 @@ class SpaceInfoComponent : Component<Unit>(), KoinComponent {
                     space?.view?.description?.let {
                         span {
                             fontSize = 0.8.rem
-                            color = currentTheme.secondaryText
+
+                            bindToCurrentTheme {
+                                color = currentTheme.secondaryText
+                            }
+
                             +it
                         }
                     }

@@ -16,6 +16,7 @@
 
 package dev.d1s.beam.ui.component
 
+import dev.d1s.beam.ui.state.bindToCurrentTheme
 import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.util.Texts
 import dev.d1s.exkt.kvision.component.Component
@@ -32,7 +33,10 @@ class DisconnectedDaemonStatusBlankslateComponent : Component<Unit>(), KoinCompo
     override fun SimplePanel.render() {
         div(className = "container-fluid d-flex justify-content-center") {
             marginTop = 20.vh
-            color = currentTheme.secondaryText
+
+            bindToCurrentTheme {
+                color = currentTheme.secondaryText
+            }
 
             vPanel(alignItems = AlignItems.CENTER) {
                 h2(Texts.Body.DisconnectedDaemonStatusReporter.ALERT_FIRST_LINE)

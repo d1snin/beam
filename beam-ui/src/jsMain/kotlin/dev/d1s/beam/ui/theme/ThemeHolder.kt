@@ -60,6 +60,5 @@ class DefaultThemeHolder : ThemeHolder, KoinComponent {
     }
 }
 
-val currentTheme: AbstractTheme by lazy {
-    GlobalContext.get().get<ThemeHolder>().current
-}
+val currentTheme: AbstractTheme
+    get() = GlobalContext.get().get<ThemeHolder>().current

@@ -18,6 +18,7 @@ package dev.d1s.beam.ui.theme
 
 import dev.d1s.beam.commons.SpaceThemeDefinition
 import dev.d1s.beam.commons.Url
+import dev.d1s.beam.ui.state.bindToCurrentTheme
 import io.kvision.core.Background
 import io.kvision.core.Color
 import io.kvision.core.Widget
@@ -50,9 +51,13 @@ abstract class AbstractTheme(val definition: SpaceThemeDefinition) {
 }
 
 fun Widget.setTextColor() {
-    color = currentTheme.text
+    bindToCurrentTheme {
+        color = currentTheme.text
+    }
 }
 
 fun Widget.setBackground() {
-    background = Background(color = currentTheme.background)
+    bindToCurrentTheme {
+        background = Background(color = currentTheme.background)
+    }
 }

@@ -16,6 +16,7 @@
 
 package dev.d1s.beam.ui.component
 
+import dev.d1s.beam.ui.state.bindToCurrentTheme
 import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.util.Texts
 import io.kvision.html.image
@@ -28,12 +29,14 @@ class EmptySpaceSearchCardContent : SpaceSearchCardContent(), KoinComponent {
     override val mode = SpaceSearchCardComponent.Mode.EMPTY_SPACE
 
     override fun SimplePanel.image() {
-        image(
-            currentTheme.emptySpaceIcon,
-            alt = Texts.Body.SpaceSearchCard.EmptySpaceMode.ICON_ALT,
-            className = "mb-4 mb-lg-5 align-self-center"
-        ) {
-            width = 35.perc
+        bindToCurrentTheme {
+            image(
+                currentTheme.emptySpaceIcon,
+                alt = Texts.Body.SpaceSearchCard.EmptySpaceMode.ICON_ALT,
+                className = "mb-4 mb-lg-5 align-self-center"
+            ) {
+                width = 35.perc
+            }
         }
     }
 

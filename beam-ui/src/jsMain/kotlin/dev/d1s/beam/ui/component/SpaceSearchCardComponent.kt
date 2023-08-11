@@ -19,6 +19,7 @@ package dev.d1s.beam.ui.component
 import dev.d1s.beam.client.PublicBeamClient
 import dev.d1s.beam.commons.Role
 import dev.d1s.beam.commons.Space
+import dev.d1s.beam.ui.state.bindToCurrentTheme
 import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.theme.setBackground
 import dev.d1s.beam.ui.theme.setTextColor
@@ -163,7 +164,10 @@ class SpaceSearchCardComponent : Component<SpaceSearchCardComponent.Config>(::Co
 
     private fun SimplePanel.secondaryText(block: SimplePanel.() -> Unit) {
         div {
-            color = currentTheme.secondaryText
+            bindToCurrentTheme {
+                color = currentTheme.secondaryText
+            }
+
             block()
         }
     }
@@ -214,21 +218,28 @@ class SpaceSearchCardComponent : Component<SpaceSearchCardComponent.Config>(::Co
 
     private fun SimplePanel.inputLabel() {
         label(forId = INPUT_TEXT_ID) {
-            setStyle("--bs-body-bg", currentTheme.background.asString())
+            bindToCurrentTheme {
+                setStyle("--bs-body-bg", currentTheme.background.asString())
+            }
 
             span {
-                color = currentTheme.text
+                bindToCurrentTheme {
+                    color = currentTheme.text
+                }
+
                 +Texts.Body.SpaceSearchCard.PLACEHOLDER
             }
         }
     }
 
     private fun SimplePanel.goButton() {
-        input(InputType.BUTTON, "btn ${currentTheme.buttonClass} w-25") {
-            value = Texts.Body.SpaceSearchCard.GO_BUTTON_VALUE
+        bindToCurrentTheme {
+            input(InputType.BUTTON, "btn ${currentTheme.buttonClass} w-25") {
+                value = Texts.Body.SpaceSearchCard.GO_BUTTON_VALUE
 
-            onClick {
-                redirectUserOrMarkInvalid()
+                onClick {
+                    redirectUserOrMarkInvalid()
+                }
             }
         }
     }

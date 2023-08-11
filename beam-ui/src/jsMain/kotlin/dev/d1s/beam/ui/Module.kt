@@ -17,6 +17,7 @@
 package dev.d1s.beam.ui
 
 import dev.d1s.beam.commons.Blocks
+import dev.d1s.beam.commons.SpaceThemeDefinition
 import dev.d1s.beam.ui.client.DaemonConnector
 import dev.d1s.beam.ui.client.DaemonStatusWithPing
 import dev.d1s.beam.ui.client.DefaultDaemonConnector
@@ -41,6 +42,7 @@ object Qualifier {
     val DaemonStatusWithPingObservable = named("daemon-status-with-ping-observable")
     val CurrentSpaceChangeObservable = named("current-space-change-observable")
     val CurrentSpaceContentChangeObservable = named("current-space-content-change-observable")
+    val CurrentSpaceThemeChangeObservable = named("current-space-theme-change-observable")
 
     val HeadingComponent = named("heading-component")
     val IconComponent = named("icon-component")
@@ -107,6 +109,10 @@ private fun Module.observables() {
 
     singleOf<Observable<Blocks?>>(::CurrentSpaceContentChangeObservable) {
         qualifier = Qualifier.CurrentSpaceContentChangeObservable
+    }
+
+    singleOf<Observable<SpaceThemeDefinition>>(::CurrentSpaceThemeChangeObservable) {
+        qualifier = Qualifier.CurrentSpaceThemeChangeObservable
     }
 }
 

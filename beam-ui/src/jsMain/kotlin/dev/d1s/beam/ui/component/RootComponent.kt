@@ -17,6 +17,7 @@
 package dev.d1s.beam.ui.component
 
 import dev.d1s.beam.ui.Qualifier
+import dev.d1s.beam.ui.state.bindToCurrentTheme
 import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.theme.setTextColor
 import dev.d1s.exkt.kvision.component.Component
@@ -62,7 +63,9 @@ class RootComponent : Component.Root(), KoinComponent {
 
     private fun background() {
         bodyStyle {
-            backgroundColor = currentTheme.background.asString()
+            bindToCurrentTheme {
+                backgroundColor = currentTheme.background.asString()
+            }
         }
     }
 
