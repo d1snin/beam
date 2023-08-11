@@ -32,8 +32,6 @@ import org.koin.core.component.inject
 
 class CurrentSpaceContentChangeObservable : Observable<Blocks?>, KoinComponent {
 
-    override val launchOnStartup = true
-
     override val state = ObservableValue(currentBlocks)
 
     private val client by inject<PublicBeamClient>()

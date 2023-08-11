@@ -27,9 +27,7 @@ interface ObservableLauncher {
 class DefaultObservableLauncher : ObservableLauncher, KoinComponent {
 
     private val observables by lazy {
-        getKoin().getAll<Observable<*>>().filter {
-            it.launchOnStartup
-        }
+        getKoin().getAll<Observable<*>>()
     }
 
     override fun launchMonitors() =

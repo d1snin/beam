@@ -21,8 +21,6 @@ import kotlinx.coroutines.*
 
 interface Observable<TState> {
 
-    val launchOnStartup: Boolean
-
     val state: ObservableState<TState>
 
     fun monitor(): Job

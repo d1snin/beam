@@ -26,8 +26,6 @@ import org.koin.core.component.inject
 
 class DaemonStatusWithPingObservable : Observable<DaemonStatusWithPing?>, KoinComponent {
 
-    override val launchOnStartup = true
-
     override val state = ObservableValue<DaemonStatusWithPing?>(null)
 
     private val daemonConnector by inject<DaemonConnector>()

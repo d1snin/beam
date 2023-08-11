@@ -37,8 +37,6 @@ data class CurrentSpaceChange(
 
 class CurrentSpaceChangeObservable : Observable<CurrentSpaceChange>, KoinComponent {
 
-    override val launchOnStartup = true
-
     override val state = ObservableValue(
         CurrentSpaceChange(currentSpace)
     )
