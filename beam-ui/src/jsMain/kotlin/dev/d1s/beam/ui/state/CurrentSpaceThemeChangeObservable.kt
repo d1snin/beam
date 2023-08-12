@@ -50,7 +50,6 @@ private val currentSpaceThemeChangeObservable by lazy {
 
 fun bindToCurrentTheme(block: (SpaceThemeDefinition) -> Unit) {
     currentSpaceThemeChangeObservable.state.subscribe { definition ->
-        println("currentTheme: ${currentTheme.definition}")
         block(definition)
     }
 }
