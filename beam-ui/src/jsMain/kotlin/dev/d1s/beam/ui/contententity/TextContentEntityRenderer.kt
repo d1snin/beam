@@ -28,15 +28,18 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
     override fun SimplePanel.render(sequence: ContentEntities) {
         p(className = "mb-0") {
             sequence.forEach { entity ->
-                renderTextEntity(entity.parameters, entity == sequence.first())
+                val isFirst = entity == sequence.first()
+                val isLast = entity == sequence.last()
+
+                renderTextEntity(entity.parameters, isFirst, isLast)
             }
         }
     }
 
-    private fun SimplePanel.renderTextEntity(parameters: ContentEntityParameters, first: Boolean) {
+    private fun SimplePanel.renderTextEntity(parameters: ContentEntityParameters, first: Boolean, last: Boolean) {
         optionalLink(parameters) {
             optionalCodeBlock(parameters) {
-                optionalHeading(parameters, first) {
+                optionalHeading(parameters, first, last) {
                     val content = parameters[definition.value]
                     requireNotNull(content)
 
@@ -79,6 +82,7 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
     private inline fun SimplePanel.optionalHeading(
         parameters: ContentEntityParameters,
         first: Boolean,
+        last: Boolean,
         crossinline block: SimplePanel.() -> Unit
     ) {
         val heading = parameters[definition.heading]?.let {
@@ -89,10 +93,14 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
             val className = it.toBootstrapHeadingClass()
 
             p(className = className) {
-                addCssClass("mb-0")
-
                 if (!first) {
                     addCssClass("mt-3")
+                }
+
+                if (!last) {
+                    addCssClass("mb-2")
+                } else {
+                    addCssClass("mb-0")
                 }
 
                 block()
@@ -102,8 +110,8 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
 
     private fun TextContentEntityTypeDefinition.Heading.toBootstrapHeadingClass() =
         when (this) {
-            TextContentEntityTypeDefinition.Heading.H1 -> "h3"
-            TextContentEntityTypeDefinition.Heading.H2 -> "h4"
+            TextContentEntityTypeDefinition.Heading.H1 -> "h1"
+            TextContentEntityTypeDefinition.Heading.H2 -> "h3"
             TextContentEntityTypeDefinition.Heading.H3 -> "h5"
         }
 
