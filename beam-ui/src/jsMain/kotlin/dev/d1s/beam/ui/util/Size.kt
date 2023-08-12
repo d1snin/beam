@@ -17,9 +17,6 @@
 package dev.d1s.beam.ui.util
 
 import dev.d1s.beam.commons.BlockSize
-import kotlinx.browser.document
-import kotlinx.browser.window
-import kotlin.math.max
 
 object Size {
 
@@ -54,6 +51,4 @@ object Size {
 
     private fun breakpointOf(blockSize: BlockSize) =
         sizeOf(blockSize) + WHITESPACE
-
-    private val vw get() = max(document.documentElement?.clientWidth ?: 0, window.innerWidth)
 }

@@ -16,6 +16,7 @@
 
 package dev.d1s.beam.ui.component
 
+import dev.d1s.beam.commons.BlockSize
 import dev.d1s.beam.commons.Blocks
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.client.DaemonStatusWithPing
@@ -38,6 +39,8 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
 
     private val currentSpaceContentChangeObservable by inject<Observable<Blocks?>>(Qualifier.CurrentSpaceContentChangeObservable)
 
+    private val maxBlockSizeChangeObservable by inject<Observable<BlockSize>>(Qualifier.MaxBlockSizeChangeObservable)
+
     private val blockContainerComponent by inject<Component<Unit>>(Qualifier.BlockContainerComponent)
 
     private val disconnectedDaemonStatusBlankslateComponent by inject<Component<Unit>>(Qualifier.DisconnectedDaemonStatusBlankslateComponent)
@@ -49,12 +52,14 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
     override fun SimplePanel.render() {
         div(className = "container-fluid mt-4") {
             bind(daemonStatusObservable.state, runImmediately = false) { status ->
-                if (status != null) {
-                    handleNotFound()
-                    handleEmptySpace()
-                    spaceContent()
-                } else {
-                    render(disconnectedDaemonStatusBlankslateComponent)
+                div().bind(maxBlockSizeChangeObservable.state) {
+                    if (status != null) {
+                        handleNotFound()
+                        handleEmptySpace()
+                        spaceContent()
+                    } else {
+                        render(disconnectedDaemonStatusBlankslateComponent)
+                    }
                 }
             }
         }

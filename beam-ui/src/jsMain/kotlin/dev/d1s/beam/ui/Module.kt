@@ -16,6 +16,7 @@
 
 package dev.d1s.beam.ui
 
+import dev.d1s.beam.commons.BlockSize
 import dev.d1s.beam.commons.Blocks
 import dev.d1s.beam.commons.SpaceThemeDefinition
 import dev.d1s.beam.ui.client.DaemonConnector
@@ -43,6 +44,7 @@ object Qualifier {
     val CurrentSpaceChangeObservable = named("current-space-change-observable")
     val CurrentSpaceContentChangeObservable = named("current-space-content-change-observable")
     val CurrentSpaceThemeChangeObservable = named("current-space-theme-change-observable")
+    val MaxBlockSizeChangeObservable = named("max-block-size-change-observable")
 
     val HeadingComponent = named("heading-component")
     val IconComponent = named("icon-component")
@@ -113,6 +115,10 @@ private fun Module.observables() {
 
     singleOf<Observable<SpaceThemeDefinition>>(::CurrentSpaceThemeChangeObservable) {
         qualifier = Qualifier.CurrentSpaceThemeChangeObservable
+    }
+
+    singleOf<Observable<BlockSize>>(::MaxBlockSizeChangeObservable) {
+        qualifier = Qualifier.MaxBlockSizeChangeObservable
     }
 }
 
