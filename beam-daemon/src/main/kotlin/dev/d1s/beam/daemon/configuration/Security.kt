@@ -68,17 +68,20 @@ object Security : ApplicationConfigurer, KoinComponent {
     }
 }
 
-val ApplicationConfig.jwtRealm
-    get() = property("jwt.realm").getString()
-
-val ApplicationConfig.jwtSecret
-    get() = property("jwt.secret").getString()
-
-
-val ApplicationConfig.jwtIssuer
-    get() = property("jwt.issuer").getString()
-
 val ApplicationCall.jwtSubject
     get() = (principal<JWTPrincipal>()
         ?: error("No JWT principal")).payload.subject
         ?: error("No JWT subject")
+
+val ApplicationConfig.jwtRealm
+    get() = property("security.jwt.realm").getString()
+
+val ApplicationConfig.jwtSecret
+    get() = property("security.jwt.secret").getString()
+
+
+val ApplicationConfig.jwtIssuer
+    get() = property("security.jwt.issuer").getString()
+
+val ApplicationConfig.allowPublicSpaces
+    get() = property("security.allow-public-spaces").getString().toBooleanStrict()
