@@ -27,14 +27,20 @@ internal object TextContentEntityValidator :
 
     override fun ValidationBuilder<ContentEntity>.validate() {
         requireNotBlankValue()
+
         requireBoolean(definition.bold)
         requireBoolean(definition.italic)
         requireBoolean(definition.underline)
         requireBoolean(definition.strikethrough)
         requireBoolean(definition.monospace)
+        requireBoolean(definition.paragraph)
         requireBoolean(definition.secondary)
+
         requireHeading()
+
         requireUrl()
+
+        requireNoCollision(definition.heading, definition.paragraph)
     }
 
     private fun ValidationBuilder<ContentEntity>.requireNotBlankValue() {
@@ -75,6 +81,30 @@ internal object TextContentEntityValidator :
             }
 
             true
+        }
+    }
+
+    private fun ValidationBuilder<ContentEntity>.requireNoCollision(vararg collidingParameters: ContentEntityParameterDefinition) {
+        val parameterNames = collidingParameters.joinToString(", ") {
+            "\"${it.name}\""
+        }
+
+        addTypedConstraint("parameters $parameterNames are colliding") { entity ->
+            var oneSpecified = false
+
+            collidingParameters.forEach { collidingParameter ->
+                val value = entity.parameters[collidingParameter]
+
+                value?.let {
+                    if (oneSpecified) {
+                        return@addTypedConstraint false
+                    } else {
+                        oneSpecified = true
+                    }
+                }
+            }
+
+            return@addTypedConstraint true
         }
     }
 }

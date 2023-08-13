@@ -43,13 +43,15 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
         optionalLink(parameters) {
             optionalCodeBlock(parameters) {
                 optionalHeading(parameters, first, last) {
-                    val content = parameters[definition.value]
-                    requireNotNull(content)
+                    optionalParagraph(parameters, last) {
+                        val content = parameters[definition.value]
+                        requireNotNull(content)
 
-                    val classList = buildClasses(parameters)
+                        val classList = buildClasses(parameters)
 
-                    span(content, className = classList) {
-                        optionalSecondaryText(parameters)
+                        span(content, className = classList) {
+                            optionalSecondaryText(parameters)
+                        }
                     }
                 }
             }
@@ -119,6 +121,26 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
             TextContentEntityTypeDefinition.Heading.H2 -> "h3"
             TextContentEntityTypeDefinition.Heading.H3 -> "h5"
         }
+
+    private inline fun SimplePanel.optionalParagraph(
+        parameters: ContentEntityParameters,
+        last: Boolean,
+        crossinline block: SimplePanel.() -> Unit
+    ) {
+        val paragraph = parameters.getBoolean(definition.paragraph)
+
+        if (paragraph) {
+            p {
+                if (last) {
+                    addCssClass("mb-0")
+                }
+
+                block()
+            }
+        } else {
+            block()
+        }
+    }
 
     private fun buildClasses(parameters: ContentEntityParameters): String {
         val classNames = buildList {

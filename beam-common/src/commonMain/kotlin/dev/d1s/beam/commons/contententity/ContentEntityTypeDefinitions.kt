@@ -50,6 +50,8 @@ public data object TextContentEntityTypeDefinition : ContentEntityTypeDefinition
 
     val heading: ContentEntityParameterDefinition = parameter("heading")
 
+    val paragraph: ContentEntityParameterDefinition = parameter("paragraph")
+
     val secondary: ContentEntityParameterDefinition = parameter("secondary")
 
     val url: ContentEntityParameterDefinition = parameter("url")
