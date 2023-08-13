@@ -98,8 +98,6 @@ tasks["clean"].dependsOn(tasks["cleanConfig"])
 
 tasks.register<Copy>("grabResources") {
     from(
-        "../img/normal_space_light.svg",
-        "../img/normal_space_dark.svg",
         "../img/404_light.svg",
         "../img/404_dark.svg",
         "../img/empty_space_light.svg",
@@ -112,8 +110,6 @@ tasks["processResources"].dependsOn(tasks["grabResources"])
 
 tasks.register<Delete>("cleanResources") {
     delete(
-        "src/main/resources/static/normal_space_light.svg",
-        "src/main/resources/static/normal_space_dark.svg",
         "src/main/resources/static/404_light.svg",
         "src/main/resources/static/404_dark.svg",
         "src/main/resources/static/empty_space_light.svg",

@@ -39,13 +39,10 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
 
     private val currentSpaceContentChangeObservable by inject<Observable<Blocks?>>(Qualifier.CurrentSpaceContentChangeObservable)
 
-    private val spaceSearchCardComponent by inject<Component<SpaceSearchCardComponent.Config>>(Qualifier.SpaceSearchCardComponent)
-
     override fun SimplePanel.render() {
         div(className = "mb-5").bind(currentSpaceContentChangeObservable.state) { change ->
             change?.let { blocks ->
                 renderBlocks(blocks)
-                renderSpaceSearchCard()
             }
         }
     }
@@ -115,12 +112,6 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
             if (lastBlock) {
                 this.marginEnd = 0
             }
-        }
-    }
-
-    private fun SimplePanel.renderSpaceSearchCard() {
-        render(spaceSearchCardComponent) {
-            mode.value = SpaceSearchCardComponent.Mode.NORMAL
         }
     }
 }

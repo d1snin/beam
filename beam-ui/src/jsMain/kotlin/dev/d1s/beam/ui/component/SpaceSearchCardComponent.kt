@@ -23,10 +23,7 @@ import dev.d1s.beam.ui.state.bindToCurrentTheme
 import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.theme.setBackground
 import dev.d1s.beam.ui.theme.setTextColor
-import dev.d1s.beam.ui.util.Texts
-import dev.d1s.beam.ui.util.buildSpaceUrl
-import dev.d1s.beam.ui.util.currentSpace
-import dev.d1s.beam.ui.util.isRootPath
+import dev.d1s.beam.ui.util.*
 import dev.d1s.exkt.kvision.component.Component
 import io.kvision.core.onClick
 import io.kvision.core.onEvent
@@ -35,6 +32,7 @@ import io.kvision.panel.SimplePanel
 import io.kvision.state.ObservableValue
 import io.kvision.state.bind
 import io.kvision.utils.event
+import io.kvision.utils.px
 import kotlinx.atomicfu.atomic
 import kotlinx.browser.document
 import kotlinx.browser.window
@@ -67,16 +65,9 @@ class SpaceSearchCardComponent : Component<SpaceSearchCardComponent.Config>(::Co
 
     override fun SimplePanel.render() {
         div(className = "container d-flex justify-content-center") {
-            val containerConfig = this@SpaceSearchCardComponent.content.container
+            maxWidth = Size.Lg.px
 
-            maxWidth = containerConfig.maxWidth
-            fontSize = containerConfig.fontSize
-
-            val padding = with(containerConfig.padding) {
-                "pt-$top pb-$bottom ps-$start pe-$end"
-            }
-
-            card(className = "d-flex flex-column justify-content-center w-100 $padding") {
+            card(className = "d-flex flex-column justify-content-center w-100 p-5") {
                 image()
                 text()
                 searchBar()
@@ -256,12 +247,12 @@ class SpaceSearchCardComponent : Component<SpaceSearchCardComponent.Config>(::Co
 
     enum class Mode {
 
-        NORMAL, NOT_FOUND, EMPTY_SPACE
+        NOT_FOUND, EMPTY_SPACE
     }
 
     class Config {
 
-        val mode = atomic(Mode.NORMAL)
+        val mode = atomic(Mode.NOT_FOUND)
     }
 
     private companion object {

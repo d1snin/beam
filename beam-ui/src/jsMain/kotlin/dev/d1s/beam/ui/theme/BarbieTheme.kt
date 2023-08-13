@@ -22,8 +22,6 @@ import io.kvision.core.Color
 
 object BarbieTheme : AbstractTheme(SpaceThemeDefinition.Barbie) {
 
-    override val normalSpaceIcon = ResourceLocation.NORMAL_SPACE_DARK
-
     override val notFoundIcon = ResourceLocation.NOT_FOUND_DARK
 
     override val emptySpaceIcon = ResourceLocation.EMPTY_SPACE_DARK

@@ -25,8 +25,6 @@ import io.kvision.core.Widget
 
 abstract class AbstractTheme(val definition: SpaceThemeDefinition) {
 
-    abstract val normalSpaceIcon: Url
-
     abstract val notFoundIcon: Url
 
     abstract val emptySpaceIcon: Url

@@ -27,36 +27,9 @@ abstract class SpaceSearchCardContent {
 
     abstract val mode: SpaceSearchCardComponent.Mode
 
-    val container =
-        ContainerConfiguration(
-            maxWidth = Size.Lg.px,
-            fontSize = 1.rem,
-            padding = ContainerConfiguration.Padding(padding = 5)
-        )
-
     abstract fun SimplePanel.image()
 
     abstract fun SimplePanel.text()
-
-    data class ContainerConfiguration(
-        var maxWidth: CssSize,
-        var fontSize: CssSize,
-        var padding: Padding
-    ) {
-        data class Padding(
-            val top: Int,
-            val bottom: Int,
-            val start: Int,
-            val end: Int
-        ) {
-            constructor(padding: Int) : this(
-                top = padding,
-                bottom = padding,
-                start = padding,
-                end = padding
-            )
-        }
-    }
 }
 
 fun SimplePanel.spaceSearchCardText(text: String, fontSize: CssSize = 1.6.rem) {

@@ -20,9 +20,6 @@ object ResourceLocation {
 
     const val ICON = "/icon.png"
 
-    const val NORMAL_SPACE_LIGHT = "/normal_space_light.svg"
-    const val NORMAL_SPACE_DARK = "/normal_space_dark.svg"
-
     const val NOT_FOUND_LIGHT = "/404_light.svg"
     const val NOT_FOUND_DARK = "/404_dark.svg"
 

@@ -23,8 +23,6 @@ import io.kvision.core.Color
 
 object AccentDarkTheme : AbstractTheme(SpaceThemeDefinition.AccentDark) {
 
-    override val normalSpaceIcon = ResourceLocation.NORMAL_SPACE_LIGHT
-
     override val notFoundIcon = ResourceLocation.NOT_FOUND_LIGHT
 
     override val emptySpaceIcon = ResourceLocation.EMPTY_SPACE_LIGHT

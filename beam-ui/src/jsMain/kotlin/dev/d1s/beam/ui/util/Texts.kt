@@ -60,13 +60,6 @@ object Texts {
 
             const val GO_BUTTON_VALUE = "Go!"
 
-            object NormalMode {
-
-                const val ICON_ALT = "Found space icon"
-
-                const val TEXT = "Explore the other spaces on this instance."
-            }
-
             object NotFoundMode {
 
                 const val ICON_ALT = "404 image"
