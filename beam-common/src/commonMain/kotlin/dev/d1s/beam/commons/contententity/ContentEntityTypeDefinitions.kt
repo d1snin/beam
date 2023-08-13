@@ -50,6 +50,8 @@ public data object TextContentEntityTypeDefinition : ContentEntityTypeDefinition
 
     val heading: ContentEntityParameterDefinition = parameter("heading")
 
+    val secondary: ContentEntityParameterDefinition = parameter("secondary")
+
     val url: ContentEntityParameterDefinition = parameter("url")
 
     public enum class Heading(public val key: String) {

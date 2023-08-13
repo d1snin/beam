@@ -17,8 +17,11 @@
 package dev.d1s.beam.ui.contententity
 
 import dev.d1s.beam.commons.contententity.*
+import dev.d1s.beam.ui.state.bindToCurrentTheme
+import dev.d1s.beam.ui.theme.currentTheme
 import io.kvision.html.*
 import io.kvision.panel.SimplePanel
+import io.kvision.utils.rem
 import org.koin.core.component.KoinComponent
 
 class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
@@ -45,7 +48,9 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
 
                     val classList = buildClasses(parameters)
 
-                    span(content, className = classList)
+                    span(content, className = classList) {
+                        optionalSecondaryText(parameters)
+                    }
                 }
             }
         }
@@ -135,6 +140,16 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
         }
 
         return classNames.joinToString(" ")
+    }
+
+    private fun SimplePanel.optionalSecondaryText(parameters: ContentEntityParameters) {
+        parameters.ifTrue(definition.secondary) {
+            fontSize = 0.9.rem
+
+            bindToCurrentTheme {
+                color = currentTheme.secondaryText
+            }
+        }
     }
 
     private inline fun ContentEntityParameters.ifTrue(

@@ -32,6 +32,7 @@ internal object TextContentEntityValidator :
         requireBoolean(definition.underline)
         requireBoolean(definition.strikethrough)
         requireBoolean(definition.monospace)
+        requireBoolean(definition.secondary)
         requireHeading()
         requireUrl()
     }
