@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-package dev.d1s.beam.commons.validation
+package dev.d1s.beam.commons
 
-import kotlin.text.Regex
+public object MetadataKeys {
 
-public object Regex {
+    public object Ui {
 
-    public val Slug: Regex = Regex("(([a-z0-9]{1,20})(-[a-z0-9]{0,20}){0,10})")
+        public object Block {
 
-    public val Metadata: Regex = Regex("(([a-z0-9]{1,20})([-.][a-z0-9]{0,20}){0,10})")
+            public const val ID: MetadataKey = "ui.block.id"
+        }
+    }
 }

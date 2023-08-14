@@ -17,6 +17,7 @@
 package dev.d1s.beam.ui.component
 
 import dev.d1s.beam.commons.Block
+import dev.d1s.beam.commons.MetadataKeys
 import dev.d1s.beam.ui.contententity.renderEntities
 import dev.d1s.beam.ui.util.Size.sizeOf
 import dev.d1s.exkt.kvision.component.Component
@@ -34,8 +35,20 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
         }
 
         card("p-4 d-flex flex-column justify-content-start mb-${config.marginBottom} me-${config.marginEnd}") {
+            setOptionalBlockId(block)
+
             maxWidth = sizeOf(block.size).px
             renderEntities(block.entities)
+        }
+    }
+
+    private fun SimplePanel.setOptionalBlockId(block: Block) {
+        val blockElementId = block.metadata[MetadataKeys.Ui.Block.ID]
+
+        blockElementId?.let {
+            if (it.isNotBlank() && !it.contains(" ")) {
+                id = it
+            }
         }
     }
 
