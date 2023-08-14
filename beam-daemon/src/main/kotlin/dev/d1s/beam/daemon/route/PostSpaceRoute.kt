@@ -20,7 +20,6 @@ import dev.d1s.beam.commons.Paths
 import dev.d1s.beam.commons.SpaceModification
 import dev.d1s.beam.commons.validation.validateSpace
 import dev.d1s.beam.daemon.configuration.DtoConverters
-import dev.d1s.beam.daemon.configuration.allowPublicSpaces
 import dev.d1s.beam.daemon.configuration.jwtSubject
 import dev.d1s.beam.daemon.entity.SpaceEntity
 import dev.d1s.beam.daemon.exception.ForbiddenException
@@ -33,7 +32,6 @@ import dev.d1s.exkt.ktor.server.koin.configuration.Route
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
-import io.ktor.server.config.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -51,12 +49,10 @@ class PostSpaceRoute : Route, KoinComponent {
 
     private val authService by inject<AuthService>()
 
-    private val config by inject<ApplicationConfig>()
-
     private val spaceModificationDtoConverter by inject<DtoConverter<SpaceEntity, SpaceModification>>(DtoConverters.SpaceModificationDtoConverterQualifier)
 
     override fun Routing.apply() {
-        if (config.allowPublicSpaces) {
+        if (authService.arePublicSpacesAllowed()) {
             withRouteConfig {
                 process()
             }

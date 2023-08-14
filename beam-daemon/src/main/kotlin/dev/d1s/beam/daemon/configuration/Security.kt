@@ -82,6 +82,3 @@ val ApplicationConfig.jwtSecret
 
 val ApplicationConfig.jwtIssuer
     get() = property("security.jwt.issuer").getString()
-
-val ApplicationConfig.allowPublicSpaces
-    get() = property("security.allow-public-spaces").getString().toBooleanStrict()
