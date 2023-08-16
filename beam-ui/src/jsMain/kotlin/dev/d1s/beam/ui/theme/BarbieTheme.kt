@@ -43,6 +43,9 @@ object BarbieTheme : AbstractTheme(SpaceThemeDefinition.Barbie) {
     // https://colorpicker.me/#565656
     override val secondaryText = Color.hex(0x565656)
 
+    // https://colorpicker.me/#70adc7
+    override val secondaryBlue = Color.hex(0x70adc7)
+
     // https://colorpicker.me/#38ff6e
     override val green = Color.hex(0x38ff6e)
 

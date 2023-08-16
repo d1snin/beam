@@ -16,6 +16,8 @@
 
 package dev.d1s.beam.ui.util
 
+import dev.d1s.beam.commons.VERSION
+
 object Texts {
 
     object Heading {
@@ -74,5 +76,15 @@ object Texts {
                 const val TEXT = "This space seems to be empty."
             }
         }
+    }
+
+    object Footer {
+
+        const val TEXT_PART_1 = "Running"
+        const val TEXT_PART_2 = "Beam"
+        const val TEXT_PART_3 = "v$VERSION"
+
+        const val SOURCE_CODE_REFERENCE = "Source code on GitHub"
+        const val SOURCE_CODE_LINK = "https://github.com/d1snin/beam"
     }
 }

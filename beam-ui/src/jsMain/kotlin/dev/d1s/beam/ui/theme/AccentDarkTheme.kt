@@ -17,7 +17,6 @@
 package dev.d1s.beam.ui.theme
 
 import dev.d1s.beam.commons.SpaceThemeDefinition
-import dev.d1s.beam.commons.Url
 import dev.d1s.beam.ui.resource.ResourceLocation
 import io.kvision.core.Color
 
@@ -43,6 +42,9 @@ object AccentDarkTheme : AbstractTheme(SpaceThemeDefinition.AccentDark) {
 
     // https://colorpicker.me/#959595
     override val secondaryText = Color.hex(0x959595)
+
+    // https://colorpicker.me/#70adc7
+    override val secondaryBlue = Color.hex(0x70adc7)
 
     // https://colorpicker.me/#89ffa9
     override val green = Color.hex(0x89ffa9)

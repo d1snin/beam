@@ -34,11 +34,13 @@ import org.w3c.dom.css.CSSStyleDeclaration
 
 class RootComponent : Component.Root(), KoinComponent {
 
+    private val currentSpaceChangeObservable by inject<Observable<CurrentSpaceChange>>(Qualifier.CurrentSpaceChangeObservable)
+
     private val headingComponent by inject<Component<Unit>>(Qualifier.HeadingComponent)
 
     private val spaceContentComponent by inject<Component<Unit>>(Qualifier.SpaceContentComponent)
 
-    private val currentSpaceChangeObservable by inject<Observable<CurrentSpaceChange>>(Qualifier.CurrentSpaceChangeObservable)
+    private val footerComponent by inject<Component<Unit>>(Qualifier.FooterComponent)
 
     override fun SimplePanel.render() {
         title()
@@ -88,6 +90,7 @@ class RootComponent : Component.Root(), KoinComponent {
     private fun SimplePanel.components() {
         render(headingComponent)
         render(spaceContentComponent)
+        render(footerComponent)
     }
 
     private fun bodyStyle(block: CSSStyleDeclaration.() -> Unit) {

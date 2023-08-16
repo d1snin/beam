@@ -55,6 +55,7 @@ object Qualifier {
     val BlockComponent = named("block-component")
     val DisconnectedDaemonStatusBlankslateComponent = named("disconnected-daemon-status-blankslate-component")
     val SpaceSearchCardComponent = named("space-search-card-component")
+    val FooterComponent = named("footer-component")
 
     val VoidContentEntityRenderer = named("void-content-entity-renderer")
     val TextContentEntityRenderer = named("text-content-entity-renderer")
@@ -158,6 +159,10 @@ private fun Module.components() {
 
     singleOf<Component<SpaceSearchCardComponent.Config>>(::SpaceSearchCardComponent) {
         qualifier = Qualifier.SpaceSearchCardComponent
+    }
+
+    singleOf<Component<Unit>>(::FooterComponent) {
+        qualifier = Qualifier.FooterComponent
     }
 }
 
