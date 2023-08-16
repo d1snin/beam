@@ -45,7 +45,7 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
 
     private val disconnectedDaemonStatusBlankslateComponent by inject<Component<Unit>>(Qualifier.DisconnectedDaemonStatusBlankslateComponent)
 
-    private val spaceSearchCardComponent by inject<Component<SpaceSearchCardComponent.Config>>(Qualifier.SpaceSearchCardComponent)
+    private val spaceFailureCardComponent by inject<Component<SpaceFailureCardComponent.Config>>(Qualifier.SpaceFailureCardComponent)
 
     private val showBlockContainer = ObservableValue(true)
 
@@ -72,8 +72,8 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
             if (space == null) {
                 showBlockContainer.setState(false)
 
-                render(spaceSearchCardComponent) {
-                    mode.value = SpaceSearchCardComponent.Mode.NOT_FOUND
+                render(spaceFailureCardComponent) {
+                    mode.value = SpaceFailureCardComponent.Mode.NOT_FOUND
                 }
             } else {
                 showBlockContainer.setState(true)
@@ -94,8 +94,8 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
             if (blocks?.isEmpty() == true) {
                 showBlockContainer.setState(false)
 
-                render(spaceSearchCardComponent) {
-                    mode.value = SpaceSearchCardComponent.Mode.EMPTY_SPACE
+                render(spaceFailureCardComponent) {
+                    mode.value = SpaceFailureCardComponent.Mode.EMPTY_SPACE
                 }
             } else {
                 showBlockContainer.setState(true)

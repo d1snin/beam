@@ -54,14 +54,14 @@ object Qualifier {
     val BlockContainerComponent = named("block-container-component")
     val BlockComponent = named("block-component")
     val DisconnectedDaemonStatusBlankslateComponent = named("disconnected-daemon-status-blankslate-component")
-    val SpaceSearchCardComponent = named("space-search-card-component")
+    val SpaceFailureCardComponent = named("space-failure-card-component")
     val FooterComponent = named("footer-component")
 
     val VoidContentEntityRenderer = named("void-content-entity-renderer")
     val TextContentEntityRenderer = named("text-content-entity-renderer")
 
-    val NotFoundSpaceSearchCardContent = named("not-found-space-search-card-content")
-    val EmptySpaceSearchCardContent = named("empty-space-search-card-content")
+    val NotFoundSpaceFailureCardContent = named("not-found-space-failure-card-content")
+    val EmptySpaceFailureCardContent = named("empty-space-failure-card-content")
 }
 
 fun setupModule() {
@@ -77,7 +77,7 @@ private val mainModule = module {
     observables()
     components()
     contentEntityRenderers()
-    spaceSearchCardContents()
+    spaceFailureCardContents()
 }
 
 private fun Module.beamClient() {
@@ -153,8 +153,8 @@ private fun Module.components() {
         qualifier = Qualifier.DisconnectedDaemonStatusBlankslateComponent
     }
 
-    singleOf<Component<SpaceSearchCardComponent.Config>>(::SpaceSearchCardComponent) {
-        qualifier = Qualifier.SpaceSearchCardComponent
+    singleOf<Component<SpaceFailureCardComponent.Config>>(::SpaceFailureCardComponent) {
+        qualifier = Qualifier.SpaceFailureCardComponent
     }
 
     singleOf<Component<Unit>>(::FooterComponent) {
@@ -172,12 +172,12 @@ private fun Module.contentEntityRenderers() {
     }
 }
 
-private fun Module.spaceSearchCardContents() {
-    singleOf<SpaceSearchCardContent>(::NotFoundSpaceSearchCardContent) {
-        qualifier = Qualifier.NotFoundSpaceSearchCardContent
+private fun Module.spaceFailureCardContents() {
+    singleOf<SpaceFailureCardContent>(::NotFoundSpaceFailureCardContent) {
+        qualifier = Qualifier.NotFoundSpaceFailureCardContent
     }
 
-    singleOf<SpaceSearchCardContent>(::EmptySpaceSearchCardContent) {
-        qualifier = Qualifier.EmptySpaceSearchCardContent
+    singleOf<SpaceFailureCardContent>(::EmptySpaceFailureCardContent) {
+        qualifier = Qualifier.EmptySpaceFailureCardContent
     }
 }

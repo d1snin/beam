@@ -24,13 +24,13 @@ import io.kvision.utils.px
 import kotlinx.atomicfu.atomic
 import org.koin.core.component.KoinComponent
 
-class SpaceSearchCardComponent : Component<SpaceSearchCardComponent.Config>(::Config), KoinComponent {
+class SpaceFailureCardComponent : Component<SpaceFailureCardComponent.Config>(::Config), KoinComponent {
 
     private val contents by lazy {
-        getKoin().getAll<SpaceSearchCardContent>()
+        getKoin().getAll<SpaceFailureCardContent>()
     }
 
-    private val content: SpaceSearchCardContent
+    private val content: SpaceFailureCardContent
         get() {
             val mode = config.mode.value
 

@@ -21,26 +21,23 @@ import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.util.Texts
 import io.kvision.html.image
 import io.kvision.panel.SimplePanel
-import io.kvision.utils.perc
 import org.koin.core.component.KoinComponent
 
-class EmptySpaceSearchCardContent : SpaceSearchCardContent(), KoinComponent {
+class NotFoundSpaceFailureCardContent : SpaceFailureCardContent(), KoinComponent {
 
-    override val mode = SpaceSearchCardComponent.Mode.EMPTY_SPACE
+    override val mode = SpaceFailureCardComponent.Mode.NOT_FOUND
 
     override fun SimplePanel.image() {
         bindToCurrentTheme {
             image(
-                currentTheme.emptySpaceIcon,
-                alt = Texts.Body.SpaceSearchCard.EmptySpaceMode.ICON_ALT,
-                className = "mb-4 mb-lg-5 align-self-center"
-            ) {
-                width = 35.perc
-            }
+                currentTheme.notFoundIcon,
+                alt = Texts.Body.SpaceFailureCard.NotFoundMode.ICON_ALT,
+                className = "w-100 mb-4 mb-lg-5"
+            )
         }
     }
 
     override fun SimplePanel.text() {
-        spaceSearchCardText(Texts.Body.SpaceSearchCard.EmptySpaceMode.TEXT)
+        spaceFailureCardText(Texts.Body.SpaceFailureCard.NotFoundMode.TEXT)
     }
 }

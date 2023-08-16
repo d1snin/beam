@@ -50,17 +50,7 @@ object Texts {
             const val ALERT_SECOND_LINE = "Check back later."
         }
 
-        object SpaceSearchCard {
-
-            const val SEARCH_HINT = "Try searching for a space."
-
-            const val LATEST_SPACES_HINT = "Or visit recently created ones: "
-
-            const val ROOT_HINT = "You can also go to "
-
-            const val PLACEHOLDER = "Space slug or ID"
-
-            const val GO_BUTTON_VALUE = "Go!"
+        object SpaceFailureCard {
 
             object NotFoundMode {
 
