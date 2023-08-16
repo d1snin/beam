@@ -51,7 +51,9 @@ class FooterComponent : Component<Unit>(), KoinComponent {
 
             div {
                 link(Texts.Footer.SOURCE_CODE_REFERENCE, Texts.Footer.SOURCE_CODE_LINK) {
-                    color = currentTheme.secondaryText
+                    bindToCurrentTheme {
+                        color = currentTheme.secondaryText
+                    }
                 }
             }
         }
