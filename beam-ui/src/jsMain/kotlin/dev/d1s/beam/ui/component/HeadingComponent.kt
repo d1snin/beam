@@ -16,26 +16,29 @@
 
 package dev.d1s.beam.ui.component
 
+import dev.d1s.beam.commons.MetadataKeys
 import dev.d1s.beam.ui.Qualifier
+import dev.d1s.beam.ui.state.CurrentSpaceChange
+import dev.d1s.beam.ui.state.Observable
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.render
 import io.kvision.html.div
 import io.kvision.panel.SimplePanel
+import io.kvision.state.bind
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
 
 class HeadingComponent : Component<Unit>(), KoinComponent {
 
+    private val currentSpaceChangeObservable by inject<Observable<CurrentSpaceChange>>(Qualifier.CurrentSpaceChangeObservable)
+
     private val daemonStatusComponent by inject<Component<Unit>>(Qualifier.DaemonStatusComponent)
 
     override fun SimplePanel.render() {
         div(className = "container-fluid mt-3 mb-4 my-5 d-flex flex-column flex-lg-row justify-content-lg-between") {
             renderSpaceHeading()
-
-            div(className = "align-self-center mt-5 mt-lg-0") {
-                render(daemonStatusComponent)
-            }
+            renderDaemonStatus()
         }
     }
 
@@ -45,6 +48,20 @@ class HeadingComponent : Component<Unit>(), KoinComponent {
         render(spaceCard) {
             bare.value = true
             includeDescription.value = true
+        }
+    }
+
+    private fun SimplePanel.renderDaemonStatus() {
+        div().bind(currentSpaceChangeObservable.state) {
+            val space = it.space
+
+            val showStatus = space?.metadata?.get(MetadataKeys.UI_SPACE_SHOW_STATUS)?.toBooleanStrictOrNull()
+
+            if (showStatus != false) {
+                div(className = "align-self-center mt-5 mt-lg-0") {
+                    render(daemonStatusComponent)
+                }
+            }
         }
     }
 }

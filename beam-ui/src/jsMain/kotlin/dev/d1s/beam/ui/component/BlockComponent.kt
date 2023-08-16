@@ -43,7 +43,7 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
     }
 
     private fun SimplePanel.setOptionalBlockId(block: Block) {
-        val blockElementId = block.metadata[MetadataKeys.Ui.Block.ID]
+        val blockElementId = block.metadata[MetadataKeys.UI_BLOCK_ID]
 
         blockElementId?.let {
             if (it.isNotBlank() && !it.contains(" ")) {

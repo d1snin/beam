@@ -18,11 +18,7 @@ package dev.d1s.beam.commons
 
 public object MetadataKeys {
 
-    public object Ui {
+    public const val UI_SPACE_SHOW_STATUS: MetadataKey = "ui.space.show-status"
 
-        public object Block {
-
-            public const val ID: MetadataKey = "ui.block.id"
-        }
-    }
+    public const val UI_BLOCK_ID: MetadataKey = "ui.block.id"
 }
