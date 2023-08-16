@@ -33,6 +33,7 @@ import dev.d1s.beam.ui.theme.ThemeHolder
 import dev.d1s.exkt.kvision.component.Component
 import org.koin.core.context.GlobalContext.startKoin
 import org.koin.core.module.Module
+import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -47,8 +48,7 @@ object Qualifier {
     val MaxBlockSizeChangeObservable = named("max-block-size-change-observable")
 
     val HeadingComponent = named("heading-component")
-    val IconComponent = named("icon-component")
-    val SpaceInfoComponent = named("space-info-component")
+    val SpaceCardComponent = named("space-card-component")
     val DaemonStatusComponent = named("daemon-status-component")
     val SpaceContentComponent = named("space-content-component")
     val BlockContainerComponent = named("block-container-component")
@@ -129,12 +129,8 @@ private fun Module.components() {
         qualifier = Qualifier.HeadingComponent
     }
 
-    singleOf<Component<Unit>>(::IconComponent) {
-        qualifier = Qualifier.IconComponent
-    }
-
-    singleOf<Component<Unit>>(::SpaceInfoComponent) {
-        qualifier = Qualifier.SpaceInfoComponent
+    factoryOf<Component<SpaceCardComponent.Config>>(::SpaceCardComponent) {
+        qualifier = Qualifier.SpaceCardComponent
     }
 
     singleOf<Component<Unit>>(::DaemonStatusComponent) {
@@ -149,8 +145,8 @@ private fun Module.components() {
         qualifier = Qualifier.BlockContainerComponent
     }
 
-    factory<Component<BlockComponent.Config>>(qualifier = Qualifier.BlockComponent) {
-        BlockComponent()
+    factoryOf<Component<BlockComponent.Config>>(::BlockComponent) {
+        qualifier = Qualifier.BlockComponent
     }
 
     singleOf<Component<Unit>>(::DisconnectedDaemonStatusBlankslateComponent) {

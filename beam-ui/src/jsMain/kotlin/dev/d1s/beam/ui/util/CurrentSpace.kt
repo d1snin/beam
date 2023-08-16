@@ -18,14 +18,12 @@ package dev.d1s.beam.ui.util
 
 import dev.d1s.beam.client.PublicBeamClient
 import dev.d1s.beam.commons.Blocks
-import dev.d1s.beam.commons.Role
 import dev.d1s.beam.commons.Space
 import dev.d1s.beam.commons.SpaceIdentifier
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.client.DaemonStatusWithPing
 import dev.d1s.beam.ui.state.Observable
 import dev.d1s.beam.ui.theme.setTextColor
-import dev.d1s.exkt.common.pathname
 import io.kvision.html.div
 import io.kvision.html.link
 import io.kvision.panel.SimplePanel
@@ -81,14 +79,6 @@ fun setCurrentSpace(space: Space?) {
 
 fun setCurrentSpaceBlocks(blocks: Blocks?) {
     lateInitCurrentBlocks = blocks
-}
-
-fun isRootPath(): Boolean {
-    currentSpace?.let {
-        return it.role == Role.ROOT
-    }
-
-    return pathname == "/" || pathname == "/root"
 }
 
 fun SimplePanel.currentSpaceLink(block: SimplePanel.() -> Unit) {
