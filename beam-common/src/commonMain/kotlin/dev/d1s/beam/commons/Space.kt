@@ -26,14 +26,14 @@ public typealias SpaceToken = String
 
 public sealed interface ModifiedRootSpace {
 
+    public val metadata: Metadata
+
     public val view: ViewConfiguration
 }
 
 public sealed interface ModifiedSpace : ModifiedRootSpace {
 
     public val slug: SpaceSlug
-
-    public val metadata: Metadata
 }
 
 public sealed interface IdentifiedSpace : ModifiedSpace {
@@ -67,6 +67,7 @@ public data class SpaceModification(
 
 @Serializable
 public data class RootSpaceModification(
+    override val metadata: Metadata,
     override val view: ViewConfiguration
 ) : ModifiedRootSpace
 

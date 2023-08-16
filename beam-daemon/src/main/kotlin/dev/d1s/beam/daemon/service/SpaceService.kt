@@ -122,7 +122,7 @@ class DefaultSpaceService : SpaceService, KoinComponent {
 
             val rootSpace = SpaceEntity {
                 slug = SpaceEntity.ROOT_SPACE_SLUG
-                metadata = metadataOf()
+                metadata = space.metadata
                 view = space.view
                 role = Role.ROOT
             }
@@ -230,6 +230,7 @@ class DefaultSpaceService : SpaceService, KoinComponent {
             requireNotNull(originalSpaceDto)
 
             originalSpace.apply {
+                this.metadata = modification.metadata
                 this.view = modification.view
             }
 

@@ -25,6 +25,7 @@ class RootSpaceModificationDtoConverter : DtoConverter<SpaceEntity, RootSpaceMod
 
     override suspend fun convertToEntity(dto: RootSpaceModification) =
         SpaceEntity {
+            metadata = dto.metadata
             view = dto.view
         }
 }

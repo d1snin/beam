@@ -24,6 +24,8 @@ internal annotation class BuilderDsl
 @BuilderDsl
 public class RootSpaceModificationBuilder {
 
+    private var metadata: Metadata = metadataOf()
+
     private var view: ViewConfiguration? = null
 
     public fun view(build: ViewConfigurationBuilder.() -> Unit) {
@@ -32,6 +34,7 @@ public class RootSpaceModificationBuilder {
 
     internal fun build() =
         RootSpaceModification(
+            metadata,
             view ?: error("View is undefined")
         )
 }
@@ -41,7 +44,7 @@ public class SpaceModificationBuilder {
 
     public var slug: SpaceSlug? = null
 
-    public var metadata: Metadata? = null
+    public var metadata: Metadata = metadataOf()
 
     private var view: ViewConfiguration? = null
 
@@ -52,7 +55,7 @@ public class SpaceModificationBuilder {
     internal fun build() =
         SpaceModification(
             slug ?: error("Space slug is undefined"),
-            metadata ?: error("Space metadata is undefined"),
+            metadata,
             view ?: error("View is undefined")
         )
 }
