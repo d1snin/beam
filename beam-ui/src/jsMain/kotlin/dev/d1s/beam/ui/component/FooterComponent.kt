@@ -31,7 +31,7 @@ class FooterComponent : Component<Unit>(), KoinComponent {
 
     override fun SimplePanel.render() {
         div(className = "container-fluid pb-2 mt-auto d-flex flex-column align-items-start") {
-            fontSize = 0.9.rem
+            fontSize = 0.8.rem
 
             bindToCurrentTheme {
                 color = currentTheme.secondaryText
