@@ -19,6 +19,7 @@ package dev.d1s.beam.ui.component
 import dev.d1s.beam.commons.Space
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.resource.ResourceLocation
+import dev.d1s.beam.ui.state.CurrentSpaceChange
 import dev.d1s.beam.ui.state.Observable
 import dev.d1s.beam.ui.state.bindToCurrentTheme
 import dev.d1s.beam.ui.theme.currentTheme
@@ -41,7 +42,7 @@ import org.koin.core.component.inject
 
 class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinComponent {
 
-    private val currentSpaceChangeObservable by inject<Observable<Space?>>(Qualifier.CurrentSpaceChangeObservable)
+    private val currentSpaceChangeObservable by inject<Observable<CurrentSpaceChange>>(Qualifier.CurrentSpaceChangeObservable)
 
     override fun SimplePanel.render() {
         if (config.bare.value) {
@@ -67,8 +68,9 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
             if (space != null) {
                 renderImage(space)
             } else {
-                bind(currentSpaceChangeObservable.state) { space ->
-                    renderImage(space)
+                bind(currentSpaceChangeObservable.state) {
+                    val receivedSpace = it.space
+                    renderImage(receivedSpace)
                 }
             }
         }
@@ -86,8 +88,9 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
                 if (space != null) {
                     renderSpaceInfoContent(space)
                 } else {
-                    bind(currentSpaceChangeObservable.state) { space ->
-                        renderSpaceInfoContent(space)
+                    bind(currentSpaceChangeObservable.state) {
+                        val receivedSpace = it.space
+                        renderSpaceInfoContent(receivedSpace)
                     }
                 }
             }
