@@ -52,14 +52,17 @@ class HeadingComponent : Component<Unit>(), KoinComponent {
     }
 
     private fun SimplePanel.renderDaemonStatus() {
-        div().bind(currentSpaceChangeObservable.state) {
-            val space = it.space
+        div(className = "align-self-center mt-5 mt-lg-0") {
+            visible = false
 
-            val showStatus = space?.metadata?.get(MetadataKeys.UI_SPACE_SHOW_STATUS)?.toBooleanStrictOrNull()
+            bind(currentSpaceChangeObservable.state) {
+                val space = it.space
 
-            if (showStatus != false) {
-                div(className = "align-self-center mt-5 mt-lg-0") {
+                val showStatus = space?.metadata?.get(MetadataKeys.UI_SPACE_SHOW_STATUS)?.toBooleanStrictOrNull()
+
+                if (showStatus != false) {
                     render(daemonStatusComponent)
+                    visible = true
                 }
             }
         }
