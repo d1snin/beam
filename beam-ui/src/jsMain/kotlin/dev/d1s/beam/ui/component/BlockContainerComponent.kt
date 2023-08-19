@@ -23,7 +23,6 @@ import dev.d1s.beam.ui.state.Observable
 import dev.d1s.beam.ui.util.Size
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.render
-import io.kvision.core.AlignItems
 import io.kvision.core.JustifyContent
 import io.kvision.html.div
 import io.kvision.panel.SimplePanel
@@ -49,11 +48,11 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
 
     private fun SimplePanel.renderBlocks(blocks: Blocks) {
         div(className = "container-fluid d-flex justify-content-center mb-5") {
-            vPanel(justify = JustifyContent.CENTER, alignItems = AlignItems.CENTER) {
+            vPanel(className = "w-100") {
                 val batches = blocks.splitIntoBatches()
 
                 batches.forEachIndexed { batchIndex, blockBatch ->
-                    hPanel {
+                    hPanel(className = "w-100", justify = JustifyContent.CENTER) {
                         blockBatch.forEachIndexed { blockIndex, block ->
                             val lastBlock = blockIndex == blockBatch.lastIndex
                             val lastBatch = batchIndex == batches.lastIndex

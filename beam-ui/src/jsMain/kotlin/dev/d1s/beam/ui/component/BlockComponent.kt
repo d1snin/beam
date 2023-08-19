@@ -35,9 +35,9 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
             "Block isn't set"
         }
 
-        div {
+        div(className = "w-100") {
             val blockSize = sizeOf(block.size).px
-            width = blockSize
+            maxWidth = blockSize
 
             val applyPaddingEnd = config.applyPaddingEnd.value
 
@@ -49,8 +49,8 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
                 paddingBottom = cardPadding
             }
 
-            card("p-4 d-flex flex-column justify-content-start") {
-                width = if (applyPaddingEnd) blockSize.minus(cardPadding.first) else blockSize
+            card("w-100 p-4 d-flex flex-column justify-content-start") {
+                maxWidth = if (applyPaddingEnd) blockSize.minus(cardPadding.first) else blockSize
 
                 setOptionalBlockId(block)
                 renderEntities(block.entities)
