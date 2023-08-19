@@ -21,24 +21,40 @@ import dev.d1s.beam.commons.MetadataKeys
 import dev.d1s.beam.ui.contententity.renderEntities
 import dev.d1s.beam.ui.util.Size.sizeOf
 import dev.d1s.exkt.kvision.component.Component
+import io.kvision.html.div
 import io.kvision.panel.SimplePanel
+import io.kvision.utils.minus
 import io.kvision.utils.px
+import kotlinx.atomicfu.atomic
 import org.koin.core.component.KoinComponent
 
 class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent {
 
     override fun SimplePanel.render() {
-        val block = config.block
-
-        requireNotNull(block) {
+        val block = requireNotNull(config.block.value) {
             "Block isn't set"
         }
 
-        card("p-4 d-flex flex-column justify-content-start mb-${config.marginBottom} me-${config.marginEnd}") {
-            setOptionalBlockId(block)
+        div {
+            val blockSize = sizeOf(block.size).px
+            width = blockSize
 
-            maxWidth = sizeOf(block.size).px
-            renderEntities(block.entities)
+            val applyPaddingEnd = config.applyPaddingEnd.value
+
+            if (applyPaddingEnd) {
+                paddingRight = cardPadding
+            }
+
+            if (config.applyPaddingBottom.value) {
+                paddingBottom = cardPadding
+            }
+
+            card("p-4 d-flex flex-column justify-content-start") {
+                width = if (applyPaddingEnd) blockSize.minus(cardPadding.first) else blockSize
+
+                setOptionalBlockId(block)
+                renderEntities(block.entities)
+            }
         }
     }
 
@@ -54,9 +70,14 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
 
     class Config {
 
-        var block: Block? = null
+        val block = atomic<Block?>(null)
 
-        var marginBottom = 4
-        var marginEnd = 4
+        val applyPaddingEnd = atomic(true)
+        val applyPaddingBottom = atomic(true)
+    }
+
+    private companion object {
+
+        private val cardPadding = 20.px
     }
 }
