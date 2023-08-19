@@ -48,11 +48,17 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
         if (config.bare.value) {
             renderCardContent()
         } else {
-            card("p-${config.cardPaddingLevel.value} ps-${config.cardStartPaddingLevel.value}") {
+            card(
+                "p-${config.cardPaddingLevel.value} ps-${config.cardStartPaddingLevel.value}",
+                backgroundColor = { currentTheme.background }) {
                 renderCardContent()
             }
         }
     }
+
+    // Господи. Мне страшно. Я боюсь за все.
+    // За себя. За нее. За наше будущее.
+    // Что с нами будет?
 
     private fun SimplePanel.renderCardContent() {
         div(className = "d-flex align-items-center") {

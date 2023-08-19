@@ -23,20 +23,20 @@ import io.kvision.html.div
 import io.kvision.panel.SimplePanel
 import io.kvision.utils.px
 
-fun SimplePanel.card(className: String? = null, block: (SimplePanel.() -> Unit)? = null): SimplePanel {
+fun SimplePanel.card(
+    className: String? = null,
+    backgroundColor: (() -> Color)? = null,
+    block: (SimplePanel.() -> Unit)? = null
+): SimplePanel {
     val classes = "rounded shadow" + (className?.let { " $it" } ?: "")
 
     return div(className = classes) {
-        applyDefaultBackgroundAndOutline()
+        bindToCurrentTheme {
+            background = Background(color = backgroundColor?.invoke() ?: currentTheme.overlay)
+            setOutline(currentTheme.outline)
+        }
 
         block?.invoke(this)
-    }
-}
-
-fun SimplePanel.applyDefaultBackgroundAndOutline() {
-    bindToCurrentTheme {
-        background = Background(color = currentTheme.overlay)
-        setOutline(currentTheme.outline)
     }
 }
 
