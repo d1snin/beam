@@ -19,8 +19,9 @@ package dev.d1s.beam.ui.theme
 import dev.d1s.beam.commons.SpaceThemeDefinition
 import dev.d1s.beam.commons.Url
 import dev.d1s.beam.ui.state.bindToCurrentTheme
-import io.kvision.core.Color
-import io.kvision.core.Widget
+import io.kvision.core.*
+import io.kvision.utils.px
+import org.w3c.dom.css.CSSStyleDeclaration
 
 abstract class AbstractTheme(val definition: SpaceThemeDefinition) {
 
@@ -49,8 +50,44 @@ abstract class AbstractTheme(val definition: SpaceThemeDefinition) {
     abstract val red: Color
 }
 
-fun Widget.setTextColor() {
+fun StyledComponent.setBackground() {
+    bindToCurrentTheme {
+        background = Background(color = currentTheme.background)
+    }
+}
+
+fun CSSStyleDeclaration.setBackground() {
+    bindToCurrentTheme {
+        backgroundColor = currentTheme.background.asString()
+    }
+}
+
+fun StyledComponent.setOverlay() {
+    bindToCurrentTheme {
+        background = Background(color = currentTheme.overlay)
+    }
+}
+
+fun StyledComponent.setOutline() {
+    bindToCurrentTheme {
+        outline = Outline(width = 1.px, style = OutlineStyle.SOLID, currentTheme.outline)
+    }
+}
+
+fun StyledComponent.setTextColor() {
     bindToCurrentTheme {
         color = currentTheme.text
+    }
+}
+
+fun StyledComponent.setSecondaryText() {
+    bindToCurrentTheme {
+        color = currentTheme.secondaryText
+    }
+}
+
+fun StyledComponent.setSecondaryBlue() {
+    bindToCurrentTheme {
+        color = currentTheme.secondaryBlue
     }
 }

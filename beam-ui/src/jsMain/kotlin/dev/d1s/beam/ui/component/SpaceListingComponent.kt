@@ -21,9 +21,9 @@ import dev.d1s.beam.commons.Role
 import dev.d1s.beam.commons.Space
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.state.SpaceFetchingDelay
-import dev.d1s.beam.ui.state.bindToCurrentTheme
 import dev.d1s.beam.ui.state.launchMonitor
-import dev.d1s.beam.ui.theme.currentTheme
+import dev.d1s.beam.ui.theme.setSecondaryBlue
+import dev.d1s.beam.ui.theme.setSecondaryText
 import dev.d1s.beam.ui.util.Texts
 import dev.d1s.beam.ui.util.currentSpace
 import dev.d1s.exkt.common.pagination.Paginator
@@ -71,9 +71,7 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
                 p(Texts.SpaceListing.CALLOUT, className = "fs-bold") {
                     fontSize = 1.1.rem
 
-                    bindToCurrentTheme {
-                        color = currentTheme.secondaryText
-                    }
+                    setSecondaryText()
                 }
 
                 spaceRow(fetchedSpaces) {
@@ -169,9 +167,7 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
     private fun SimplePanel.fetchMoreButton() {
         div(className = "d-flex w-100 justify-content-center mt-2") {
             button(Texts.SpaceListing.FETCH_MORE_BUTTON, style = ButtonStyle.LINK) {
-                bindToCurrentTheme {
-                    color = currentTheme.secondaryBlue
-                }
+                setSecondaryBlue()
 
                 onClick {
                     fetchMoreSpaces()

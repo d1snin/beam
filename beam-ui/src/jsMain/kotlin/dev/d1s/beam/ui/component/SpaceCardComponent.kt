@@ -21,8 +21,7 @@ import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.resource.ResourceLocation
 import dev.d1s.beam.ui.state.CurrentSpaceChange
 import dev.d1s.beam.ui.state.Observable
-import dev.d1s.beam.ui.state.bindToCurrentTheme
-import dev.d1s.beam.ui.theme.currentTheme
+import dev.d1s.beam.ui.theme.setSecondaryText
 import dev.d1s.beam.ui.util.Texts
 import dev.d1s.beam.ui.util.currentSpaceLink
 import dev.d1s.exkt.kvision.component.Component
@@ -50,7 +49,8 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
         } else {
             card(
                 "p-${config.cardPaddingLevel.value} ps-${config.cardStartPaddingLevel.value}",
-                backgroundColor = { currentTheme.background }) {
+                usePageBackground = true
+            ) {
                 renderCardContent()
             }
         }
@@ -118,9 +118,7 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
             span {
                 fontSize = 0.8.rem
 
-                bindToCurrentTheme {
-                    color = currentTheme.secondaryText
-                }
+                setSecondaryText()
 
                 +it
             }

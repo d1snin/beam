@@ -16,30 +16,28 @@
 
 package dev.d1s.beam.ui.component
 
-import dev.d1s.beam.ui.state.bindToCurrentTheme
-import dev.d1s.beam.ui.theme.currentTheme
-import io.kvision.core.*
+import dev.d1s.beam.ui.theme.setBackground
+import dev.d1s.beam.ui.theme.setOutline
+import dev.d1s.beam.ui.theme.setOverlay
 import io.kvision.html.div
 import io.kvision.panel.SimplePanel
-import io.kvision.utils.px
 
 fun SimplePanel.card(
     className: String? = null,
-    backgroundColor: (() -> Color)? = null,
+    usePageBackground: Boolean = false,
     block: (SimplePanel.() -> Unit)? = null
 ): SimplePanel {
     val classes = "rounded shadow" + (className?.let { " $it" } ?: "")
 
     return div(className = classes) {
-        bindToCurrentTheme {
-            background = Background(color = backgroundColor?.invoke() ?: currentTheme.overlay)
-            setOutline(currentTheme.outline)
+        setOutline()
+
+        if (usePageBackground) {
+            setBackground()
+        } else {
+            setOverlay()
         }
 
         block?.invoke(this)
     }
-}
-
-fun StyledComponent.setOutline(color: Color) {
-    outline = Outline(width = 1.px, style = OutlineStyle.SOLID, color)
 }

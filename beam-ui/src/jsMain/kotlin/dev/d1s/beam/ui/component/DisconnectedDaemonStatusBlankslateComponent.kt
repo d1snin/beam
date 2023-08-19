@@ -16,8 +16,7 @@
 
 package dev.d1s.beam.ui.component
 
-import dev.d1s.beam.ui.state.bindToCurrentTheme
-import dev.d1s.beam.ui.theme.currentTheme
+import dev.d1s.beam.ui.theme.setSecondaryText
 import dev.d1s.beam.ui.util.Texts
 import dev.d1s.exkt.kvision.component.Component
 import io.kvision.core.AlignItems
@@ -34,9 +33,7 @@ class DisconnectedDaemonStatusBlankslateComponent : Component<Unit>(), KoinCompo
         div(className = "container-fluid d-flex justify-content-center") {
             marginTop = 20.vh
 
-            bindToCurrentTheme {
-                color = currentTheme.secondaryText
-            }
+            setSecondaryText()
 
             vPanel(alignItems = AlignItems.CENTER) {
                 h2(Texts.Body.DisconnectedDaemonStatusReporter.ALERT_FIRST_LINE)

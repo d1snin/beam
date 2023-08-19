@@ -16,8 +16,8 @@
 
 package dev.d1s.beam.ui.component
 
-import dev.d1s.beam.ui.state.bindToCurrentTheme
-import dev.d1s.beam.ui.theme.currentTheme
+import dev.d1s.beam.ui.theme.setSecondaryBlue
+import dev.d1s.beam.ui.theme.setSecondaryText
 import dev.d1s.beam.ui.util.Texts
 import dev.d1s.exkt.kvision.component.Component
 import io.kvision.html.div
@@ -33,17 +33,13 @@ class FooterComponent : Component<Unit>(), KoinComponent {
         div(className = "container-fluid pt-5 pb-2 mt-auto d-flex flex-column align-items-start") {
             fontSize = 0.85.rem
 
-            bindToCurrentTheme {
-                color = currentTheme.secondaryText
-            }
+            setSecondaryText()
 
             div {
                 span(Texts.Footer.TEXT_PART_1)
                 nbsp()
                 span(Texts.Footer.TEXT_PART_2) {
-                    bindToCurrentTheme {
-                        color = currentTheme.secondaryBlue
-                    }
+                    setSecondaryBlue()
                 }
                 nbsp()
                 span(Texts.Footer.TEXT_PART_3)
@@ -51,9 +47,7 @@ class FooterComponent : Component<Unit>(), KoinComponent {
 
             div {
                 link(Texts.Footer.SOURCE_CODE_REFERENCE, Texts.Footer.SOURCE_CODE_LINK) {
-                    bindToCurrentTheme {
-                        color = currentTheme.secondaryText
-                    }
+                    setSecondaryText()
                 }
             }
         }
