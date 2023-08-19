@@ -16,15 +16,20 @@
 
 package dev.d1s.beam.ui.component
 
+import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.util.Size
 import dev.d1s.exkt.kvision.component.Component
+import dev.d1s.exkt.kvision.component.render
 import io.kvision.html.div
 import io.kvision.panel.SimplePanel
 import io.kvision.utils.px
 import kotlinx.atomicfu.atomic
 import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 class SpaceFailureCardComponent : Component<SpaceFailureCardComponent.Config>(::Config), KoinComponent {
+
+    private val spaceListingComponent by inject<Component<Unit>>(Qualifier.SpaceListingComponent)
 
     private val contents by lazy {
         getKoin().getAll<SpaceFailureCardContent>()
@@ -46,6 +51,7 @@ class SpaceFailureCardComponent : Component<SpaceFailureCardComponent.Config>(::
             card(className = "d-flex flex-column justify-content-center w-100 p-5") {
                 image()
                 text()
+                spaceListing()
             }
         }
     }
@@ -60,6 +66,10 @@ class SpaceFailureCardComponent : Component<SpaceFailureCardComponent.Config>(::
         with(content) {
             text()
         }
+    }
+
+    private fun SimplePanel.spaceListing() {
+        render(spaceListingComponent)
     }
 
     enum class Mode {

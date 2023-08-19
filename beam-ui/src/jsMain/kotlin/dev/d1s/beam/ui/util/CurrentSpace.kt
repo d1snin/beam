@@ -83,7 +83,7 @@ fun setCurrentSpaceBlocks(blocks: Blocks?) {
 
 fun SimplePanel.currentSpaceLink(block: SimplePanel.() -> Unit) {
     div {
-        bind(daemonStatusObservable.state, runImmediately = false) { status ->
+        bind(daemonStatusObservable.state) { status ->
             if (status != null) {
                 link(label = "", currentSpaceUrl, className = "text-decoration-none") {
                     setTextColor()

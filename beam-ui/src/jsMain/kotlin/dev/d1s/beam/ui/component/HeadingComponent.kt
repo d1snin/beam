@@ -25,6 +25,7 @@ import dev.d1s.exkt.kvision.component.render
 import io.kvision.html.div
 import io.kvision.panel.SimplePanel
 import io.kvision.state.bind
+import io.kvision.utils.px
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
@@ -47,7 +48,9 @@ class HeadingComponent : Component<Unit>(), KoinComponent {
 
         render(spaceCard) {
             bare.value = true
-            includeDescription.value = true
+            cardPaddingLevel.value = 4
+            iconWidth.value = 45.px
+            enableHeading.value = true
         }
     }
 

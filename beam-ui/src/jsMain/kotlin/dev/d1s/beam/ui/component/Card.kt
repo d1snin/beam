@@ -18,9 +18,7 @@ package dev.d1s.beam.ui.component
 
 import dev.d1s.beam.ui.state.bindToCurrentTheme
 import dev.d1s.beam.ui.theme.currentTheme
-import io.kvision.core.Background
-import io.kvision.core.Outline
-import io.kvision.core.OutlineStyle
+import io.kvision.core.*
 import io.kvision.html.div
 import io.kvision.panel.SimplePanel
 import io.kvision.utils.px
@@ -38,6 +36,10 @@ fun SimplePanel.card(className: String? = null, block: (SimplePanel.() -> Unit)?
 fun SimplePanel.applyDefaultBackgroundAndOutline() {
     bindToCurrentTheme {
         background = Background(color = currentTheme.overlay)
-        outline = Outline(width = 1.px, style = OutlineStyle.SOLID, color = currentTheme.outline)
+        setOutline(currentTheme.outline)
     }
+}
+
+fun StyledComponent.setOutline(color: Color) {
+    outline = Outline(width = 1.px, style = OutlineStyle.SOLID, color)
 }

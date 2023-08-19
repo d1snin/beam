@@ -30,7 +30,7 @@ import org.koin.core.component.KoinComponent
 class FooterComponent : Component<Unit>(), KoinComponent {
 
     override fun SimplePanel.render() {
-        div(className = "container-fluid pb-2 mt-auto d-flex flex-column align-items-start") {
+        div(className = "container-fluid pt-5 pb-2 mt-auto d-flex flex-column align-items-start") {
             fontSize = 0.85.rem
 
             bindToCurrentTheme {
@@ -65,4 +65,11 @@ class FooterComponent : Component<Unit>(), KoinComponent {
                 getElement()?.innerHTML = "&nbsp;"
             }
         }
+
+    // Господи, ты просто пишешь и оставляешь меня без ответа на что-либо.
+    // Могу ли я отвечать тебе тем же? Нет.
+    // Я не знаю, что с тобой происходит. Я не хочу верить, что это то,
+    // о чем ты мне говорила. Нет, нельзя верить в систематизацию проблемы.
+    // Верь в обратное, но ты не можешь, я не понимаю и никогда не буду.
+    // Я с тобой. Я понимаю, что нужно время. Я жду. Все будет хорошо.
 }

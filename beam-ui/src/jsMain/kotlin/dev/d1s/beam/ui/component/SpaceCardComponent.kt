@@ -48,7 +48,7 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
         if (config.bare.value) {
             renderCardContent()
         } else {
-            card("p-4") {
+            card("p-${config.cardPaddingLevel.value} ps-${config.cardStartPaddingLevel.value}") {
                 renderCardContent()
             }
         }
@@ -78,13 +78,13 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
 
     private fun SimplePanel.renderImage(space: Space?) {
         image(space?.view?.icon ?: ResourceLocation.ICON, alt = Texts.Heading.Icon.ALT) {
-            width = 45.px
+            width = config.iconWidth.value
         }
     }
 
     private fun SimplePanel.renderSpaceInfo(space: Space?) {
         currentSpaceLink {
-            vPanel(justify = JustifyContent.CENTER, className = "ms-2 ms-lg-3") {
+            vPanel(justify = JustifyContent.CENTER, className = "ms-3") {
                 if (space != null) {
                     renderSpaceInfoContent(space)
                 } else {
@@ -98,31 +98,40 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
     }
 
     private fun SimplePanel.renderSpaceInfoContent(space: Space?) {
-        p(className = "h2 mb-0") {
+        p(className = "mb-0") {
+            if (config.enableHeading.value) {
+                addCssClass("h2")
+            } else {
+                addCssClass("fs-bold")
+            }
+
             +(space?.view?.title ?: Texts.Heading.SpaceInfo.DEFAULT_TITLE)
         }
 
-        if (config.includeDescription.value) {
-            space?.view?.description?.let {
-                span {
-                    fontSize = 0.8.rem
+        space?.view?.description?.let {
+            span {
+                fontSize = 0.8.rem
 
-                    bindToCurrentTheme {
-                        color = currentTheme.secondaryText
-                    }
-
-                    +it
+                bindToCurrentTheme {
+                    color = currentTheme.secondaryText
                 }
+
+                +it
             }
         }
     }
 
     class Config {
 
-        var space = atomic<Space?>(null)
+        val space = atomic<Space?>(null)
 
-        var bare = atomic(false)
+        val bare = atomic(false)
 
-        var includeDescription = atomic(false)
+        val cardPaddingLevel = atomic(2)
+        val cardStartPaddingLevel = atomic(3)
+
+        val iconWidth = atomic(30.px)
+
+        val enableHeading = atomic(false)
     }
 }

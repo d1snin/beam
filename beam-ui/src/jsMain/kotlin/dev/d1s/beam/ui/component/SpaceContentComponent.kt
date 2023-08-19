@@ -81,14 +81,6 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
         }
     }
 
-    private fun SimplePanel.spaceContent() {
-        div().bind(showBlockContainer) { show ->
-            if (show) {
-                render(blockContainerComponent)
-            }
-        }
-    }
-
     private fun SimplePanel.handleEmptySpace() {
         div().bind(currentSpaceContentChangeObservable.state) { blocks ->
             if (blocks?.isEmpty() == true) {
@@ -99,6 +91,14 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
                 }
             } else {
                 showBlockContainer.setState(true)
+            }
+        }
+    }
+
+    private fun SimplePanel.spaceContent() {
+        div().bind(showBlockContainer) { show ->
+            if (show) {
+                render(blockContainerComponent)
             }
         }
     }

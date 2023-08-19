@@ -19,7 +19,6 @@ package dev.d1s.beam.ui.state
 import dev.d1s.beam.commons.SpaceThemeDefinition
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.theme.ThemeHolder
-import dev.d1s.beam.ui.theme.currentTheme
 import io.kvision.state.ObservableValue
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -33,7 +32,7 @@ class CurrentSpaceThemeChangeObservable : Observable<SpaceThemeDefinition>, Koin
 
     private val currentSpaceChangeObservable by inject<Observable<CurrentSpaceChange>>(Qualifier.CurrentSpaceChangeObservable)
 
-    override fun monitor() = launchMonitor(loop = false) {
+    override fun monitor() = launchMonitor {
         currentSpaceChangeObservable.state.subscribe { _ ->
             themeHolder.actualizeTheme()
 

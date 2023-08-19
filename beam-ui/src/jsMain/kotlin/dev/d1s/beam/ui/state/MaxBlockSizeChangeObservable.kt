@@ -27,7 +27,7 @@ class MaxBlockSizeChangeObservable : Observable<BlockSize>, KoinComponent {
     override val state = ObservableValue(Size.MaxBlockSize)
 
     override fun monitor() =
-        launchMonitor(loop = false) {
+        launchMonitor {
             onResize {
                 val maxBlockSize = Size.MaxBlockSize
 

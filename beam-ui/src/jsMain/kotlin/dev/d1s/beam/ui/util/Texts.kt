@@ -77,4 +77,11 @@ object Texts {
         const val SOURCE_CODE_REFERENCE = "Source code on GitHub"
         const val SOURCE_CODE_LINK = "https://github.com/d1snin/beam"
     }
+
+    object SpaceListing {
+
+        const val CALLOUT = "Explore the spaces on this instance:"
+
+        const val FETCH_MORE_BUTTON = "Load more"
+    }
 }

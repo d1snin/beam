@@ -49,6 +49,7 @@ object Qualifier {
 
     val HeadingComponent = named("heading-component")
     val SpaceCardComponent = named("space-card-component")
+    val SpaceListingComponent = named("space-listing-component")
     val DaemonStatusComponent = named("daemon-status-component")
     val SpaceContentComponent = named("space-content-component")
     val BlockContainerComponent = named("block-container-component")
@@ -131,6 +132,10 @@ private fun Module.components() {
 
     factoryOf<Component<SpaceCardComponent.Config>>(::SpaceCardComponent) {
         qualifier = Qualifier.SpaceCardComponent
+    }
+
+    singleOf<Component<Unit>>(::SpaceListingComponent) {
+        qualifier = Qualifier.SpaceListingComponent
     }
 
     singleOf<Component<Unit>>(::DaemonStatusComponent) {

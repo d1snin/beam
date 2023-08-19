@@ -44,15 +44,17 @@ class DaemonStatusComponent : Component<Unit>(), KoinComponent {
     private val renderingScope = CoroutineScope(Dispatchers.Main)
 
     override fun SimplePanel.render() {
-        card(className = "d-flex align-items-center px-2").bind(
+        div().bind(
             daemonStatusWithPingObservable.state,
             runImmediately = false
         ) { status ->
-            renderingScope.launch {
-                if (status != null) {
-                    reportConnectedState(status)
-                } else {
-                    reportDisconnectedState()
+            card(className = "d-flex align-items-center px-2") {
+                renderingScope.launch {
+                    if (status != null) {
+                        reportConnectedState(status)
+                    } else {
+                        reportDisconnectedState()
+                    }
                 }
             }
         }
