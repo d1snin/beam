@@ -61,12 +61,12 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
 
     private val fetchingSpaces = atomic(false)
 
+    private val runImmediately = atomic(false)
+
     override fun SimplePanel.render() {
         fetchAllSpaces()
 
-        div().bind(spaces, runImmediately = false) { (fetchedSpaces, totalCount) ->
-            println("spaceListing render: fetchedSpaces: $fetchedSpaces")
-
+        div().bind(spaces, runImmediately = runImmediately.getAndSet(true)) { (fetchedSpaces, totalCount) ->
             if (fetchedSpaces.isNotEmpty()) {
                 p(Texts.SpaceListing.CALLOUT, className = "fs-bold") {
                     fontSize = 1.1.rem
@@ -79,8 +79,6 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
                 spaceRow(fetchedSpaces) {
                     renderRow(fetchedSpaces)
                 }
-
-                println("spaceListing render: totalCount: $totalCount, paginator.offset: ${paginator.offset}, paginator.limit: ${paginator.limit}")
 
                 if (totalCount !in (paginator.offset + 1)..paginator.limit) {
                     fetchMoreButton()
