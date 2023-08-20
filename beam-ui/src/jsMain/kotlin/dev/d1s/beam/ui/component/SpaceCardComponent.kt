@@ -25,6 +25,7 @@ import dev.d1s.beam.ui.theme.setSecondaryText
 import dev.d1s.beam.ui.util.Texts
 import dev.d1s.beam.ui.util.currentSpaceLink
 import dev.d1s.exkt.kvision.component.Component
+import dev.d1s.exkt.kvision.component.Effect
 import io.kvision.core.JustifyContent
 import io.kvision.html.div
 import io.kvision.html.image
@@ -43,7 +44,7 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
 
     private val currentSpaceChangeObservable by inject<Observable<CurrentSpaceChange>>(Qualifier.CurrentSpaceChangeObservable)
 
-    override fun SimplePanel.render() {
+    override fun SimplePanel.render(): Effect {
         if (config.bare.value) {
             renderCardContent()
         } else {
@@ -54,6 +55,8 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
                 renderCardContent()
             }
         }
+
+        return Effect.Success
     }
 
     // Господи. Мне страшно. Я боюсь за все.

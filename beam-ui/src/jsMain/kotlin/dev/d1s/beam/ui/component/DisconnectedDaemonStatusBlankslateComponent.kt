@@ -19,6 +19,7 @@ package dev.d1s.beam.ui.component
 import dev.d1s.beam.ui.theme.setSecondaryText
 import dev.d1s.beam.ui.util.Texts
 import dev.d1s.exkt.kvision.component.Component
+import dev.d1s.exkt.kvision.component.Effect
 import io.kvision.core.AlignItems
 import io.kvision.html.div
 import io.kvision.html.p
@@ -29,7 +30,7 @@ import org.koin.core.component.KoinComponent
 
 class DisconnectedDaemonStatusBlankslateComponent : Component<Unit>(), KoinComponent {
 
-    override fun SimplePanel.render() {
+    override fun SimplePanel.render(): Effect {
         div(className = "container-fluid d-flex justify-content-center") {
             marginTop = 20.vh
 
@@ -42,6 +43,8 @@ class DisconnectedDaemonStatusBlankslateComponent : Component<Unit>(), KoinCompo
 
             visible = true
         }
+
+        return Effect.Success
     }
 
     private fun SimplePanel.h2(text: String) {

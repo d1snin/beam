@@ -18,52 +18,75 @@ package dev.d1s.beam.ui.component
 
 import dev.d1s.beam.commons.BlockSize
 import dev.d1s.beam.ui.Qualifier
+import dev.d1s.beam.ui.client.DaemonStatusWithPing
+import dev.d1s.beam.ui.state.Observable
 import dev.d1s.beam.ui.state.bindToMaxBlockSize
 import dev.d1s.beam.ui.theme.setOutline
 import dev.d1s.beam.ui.theme.setOverlay
 import dev.d1s.beam.ui.util.Size.sizeOf
 import dev.d1s.beam.ui.util.Texts
 import dev.d1s.exkt.kvision.component.Component
+import dev.d1s.exkt.kvision.component.Effect
+import dev.d1s.exkt.kvision.component.LazyEffect
 import dev.d1s.exkt.kvision.component.render
 import io.kvision.html.ButtonStyle
 import io.kvision.html.button
 import io.kvision.html.div
 import io.kvision.panel.SimplePanel
+import io.kvision.state.bind
 import io.kvision.utils.px
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class ExploreDropdownComponent : Component<Unit>(), KoinComponent {
 
+    private val daemonStatusObservable by inject<Observable<DaemonStatusWithPing?>>(Qualifier.DaemonStatusObservable)
+
     private val spaceListingComponent by inject<Component<Unit>>(Qualifier.SpaceListingComponent)
 
-    override fun SimplePanel.render() {
-        div(className = "d-flex") {
-            div(className = "dropdown") {
-                button(
-                    Texts.Heading.ExploreDropdown.CALLOUT,
-                    style = ButtonStyle.OUTLINELIGHT,
-                    className = "btn-sm dropdown-toggle"
-                ) {
-                    setAttribute("data-bs-toggle", "dropdown")
-                    setAttribute("data-bs-auto-close", "outside")
-                    setAttribute("aria-expanded", "false")
+    override fun SimplePanel.render(): Effect {
+        div().bind(daemonStatusObservable.state, runImmediately = false) { status ->
+            if (status != null) {
+                renderDropdown()
+            }
+        }
+
+        return Effect.Success
+    }
+
+    private fun SimplePanel.renderDropdown() {
+        div(className = "dropdown") dropdown@{
+            visible = false
+
+            button(
+                Texts.Heading.ExploreDropdown.CALLOUT,
+                style = ButtonStyle.OUTLINELIGHT,
+                className = "btn-sm dropdown-toggle"
+            ) {
+                setAttribute("data-bs-toggle", "dropdown")
+                setAttribute("data-bs-auto-close", "outside")
+                setAttribute("data-bs-offset", "0,20")
+                setAttribute("aria-expanded", "false")
+            }
+
+            div(className = "dropdown-menu p-3") {
+                bindToMaxBlockSize { size ->
+                    val sizes = BlockSize.entries
+                    val previousSize = sizes.getOrNull(sizes.indexOf(size) - 1)
+
+                    previousSize?.let {
+                        width = sizeOf(it).px
+                    }
                 }
 
-                div(className = "dropdown-menu p-3") {
-                    bindToMaxBlockSize { size ->
-                        val sizes = BlockSize.entries
-                        val previousSize = sizes.getOrNull(sizes.indexOf(size) - 1)
+                setOutline()
+                setOverlay()
 
-                        previousSize?.let {
-                            width = sizeOf(it).px
-                        }
-                    }
+                val effect = render(spaceListingComponent)
 
-                    setOutline()
-                    setOverlay()
-
-                    render(spaceListingComponent)
+                (effect as? LazyEffect)?.state?.subscribe { success ->
+                    println("aboba: exploreDropdown: received state: $success")
+                    this@dropdown.visible = success
                 }
             }
         }

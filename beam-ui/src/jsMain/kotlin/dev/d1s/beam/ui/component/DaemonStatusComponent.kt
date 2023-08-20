@@ -24,6 +24,7 @@ import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.util.Texts
 import dev.d1s.beam.ui.util.iconWithMargin
 import dev.d1s.exkt.kvision.component.Component
+import dev.d1s.exkt.kvision.component.Effect
 import io.kvision.core.Color
 import io.kvision.html.div
 import io.kvision.html.span
@@ -43,7 +44,7 @@ class DaemonStatusComponent : Component<Unit>(), KoinComponent {
 
     private val renderingScope = CoroutineScope(Dispatchers.Main)
 
-    override fun SimplePanel.render() {
+    override fun SimplePanel.render(): Effect {
         div().bind(
             daemonStatusWithPingObservable.state,
             runImmediately = false
@@ -58,6 +59,8 @@ class DaemonStatusComponent : Component<Unit>(), KoinComponent {
                 }
             }
         }
+
+        return Effect.Success
     }
 
     private fun SimplePanel.reportConnectedState(status: DaemonStatusWithPing) {

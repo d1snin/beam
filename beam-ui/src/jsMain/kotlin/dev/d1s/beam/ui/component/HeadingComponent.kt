@@ -21,6 +21,7 @@ import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.state.CurrentSpaceChange
 import dev.d1s.beam.ui.state.Observable
 import dev.d1s.exkt.kvision.component.Component
+import dev.d1s.exkt.kvision.component.Effect
 import dev.d1s.exkt.kvision.component.render
 import io.kvision.html.div
 import io.kvision.panel.SimplePanel
@@ -38,11 +39,13 @@ class HeadingComponent : Component<Unit>(), KoinComponent {
 
     private val daemonStatusComponent by inject<Component<Unit>>(Qualifier.DaemonStatusComponent)
 
-    override fun SimplePanel.render() {
+    override fun SimplePanel.render(): Effect {
         div(className = "container-fluid mt-3 mb-4 my-5 d-flex flex-column flex-lg-row justify-content-lg-between") {
             renderSpaceHeading()
             renderDaemonStatus()
         }
+
+        return Effect.Success
     }
 
     private fun SimplePanel.renderSpaceHeading() {

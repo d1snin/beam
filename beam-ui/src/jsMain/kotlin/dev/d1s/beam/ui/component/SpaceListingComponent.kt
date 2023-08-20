@@ -28,6 +28,7 @@ import dev.d1s.beam.ui.util.Texts
 import dev.d1s.beam.ui.util.currentSpace
 import dev.d1s.exkt.common.pagination.Paginator
 import dev.d1s.exkt.kvision.component.Component
+import dev.d1s.exkt.kvision.component.Effect
 import dev.d1s.exkt.kvision.component.render
 import io.kvision.html.ButtonStyle
 import io.kvision.html.button
@@ -63,8 +64,10 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
 
     private val runImmediately = atomic(false)
 
-    override fun SimplePanel.render() {
+    override fun SimplePanel.render(): Effect {
         fetchAllSpaces()
+
+        val (state, effect) = Effect.lazy()
 
         div().bind(spaces, runImmediately = runImmediately.getAndSet(true)) { (fetchedSpaces, totalCount) ->
             if (fetchedSpaces.isNotEmpty()) {
@@ -81,8 +84,16 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
                 if (totalCount !in (paginator.offset + 1)..paginator.limit) {
                     fetchMoreButton()
                 }
+
+                state.value = true
+            } else {
+                println("aboba: spaceListing: setting false state")
+
+                state.value = false
             }
         }
+
+        return effect
     }
 
     private fun SimplePanel.renderRow(spaces: List<Space>) {

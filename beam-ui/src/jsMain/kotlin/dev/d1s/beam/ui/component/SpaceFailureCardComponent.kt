@@ -19,6 +19,7 @@ package dev.d1s.beam.ui.component
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.util.Size
 import dev.d1s.exkt.kvision.component.Component
+import dev.d1s.exkt.kvision.component.Effect
 import dev.d1s.exkt.kvision.component.render
 import io.kvision.html.div
 import io.kvision.panel.SimplePanel
@@ -44,7 +45,7 @@ class SpaceFailureCardComponent : Component<SpaceFailureCardComponent.Config>(::
             } ?: error("$mode is unsupported")
         }
 
-    override fun SimplePanel.render() {
+    override fun SimplePanel.render(): Effect {
         div(className = "container d-flex justify-content-center") {
             maxWidth = Size.Lg.px
 
@@ -54,6 +55,8 @@ class SpaceFailureCardComponent : Component<SpaceFailureCardComponent.Config>(::
                 spaceListing()
             }
         }
+
+        return Effect.Success
     }
 
     private fun SimplePanel.image() {

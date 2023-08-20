@@ -22,6 +22,7 @@ import dev.d1s.beam.ui.state.Observable
 import dev.d1s.beam.ui.theme.setBackground
 import dev.d1s.beam.ui.theme.setTextColor
 import dev.d1s.exkt.kvision.component.Component
+import dev.d1s.exkt.kvision.component.Effect
 import dev.d1s.exkt.kvision.component.render
 import io.kvision.panel.SimplePanel
 import io.kvision.utils.vh
@@ -41,13 +42,15 @@ class RootComponent : Component.Root(), KoinComponent {
 
     private val footerComponent by inject<Component<Unit>>(Qualifier.FooterComponent)
 
-    override fun SimplePanel.render() {
+    override fun SimplePanel.render(): Effect {
         title()
         sizing()
         display()
         font()
         background()
         components()
+
+        return Effect.Success
     }
 
     private fun title() {

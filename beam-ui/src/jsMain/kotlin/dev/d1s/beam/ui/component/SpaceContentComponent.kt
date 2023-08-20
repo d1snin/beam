@@ -23,6 +23,7 @@ import dev.d1s.beam.ui.client.DaemonStatusWithPing
 import dev.d1s.beam.ui.state.CurrentSpaceChange
 import dev.d1s.beam.ui.state.Observable
 import dev.d1s.exkt.kvision.component.Component
+import dev.d1s.exkt.kvision.component.Effect
 import dev.d1s.exkt.kvision.component.render
 import io.kvision.html.div
 import io.kvision.panel.SimplePanel
@@ -49,7 +50,7 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
 
     private val showBlockContainer = ObservableValue(true)
 
-    override fun SimplePanel.render() {
+    override fun SimplePanel.render(): Effect {
         div(className = "container-fluid mt-4") {
             bind(daemonStatusObservable.state, runImmediately = false) { status ->
                 div().bind(maxBlockSizeChangeObservable.state) {
@@ -63,6 +64,8 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
                 }
             }
         }
+
+        return Effect.Success
     }
 
     private fun SimplePanel.handleNotFound() {

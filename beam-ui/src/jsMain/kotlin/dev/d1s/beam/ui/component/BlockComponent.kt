@@ -21,6 +21,7 @@ import dev.d1s.beam.commons.MetadataKeys
 import dev.d1s.beam.ui.contententity.renderEntities
 import dev.d1s.beam.ui.util.Size.sizeOf
 import dev.d1s.exkt.kvision.component.Component
+import dev.d1s.exkt.kvision.component.Effect
 import io.kvision.html.div
 import io.kvision.panel.SimplePanel
 import io.kvision.utils.minus
@@ -30,7 +31,7 @@ import org.koin.core.component.KoinComponent
 
 class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent {
 
-    override fun SimplePanel.render() {
+    override fun SimplePanel.render(): Effect {
         val block = requireNotNull(config.block.value) {
             "Block isn't set"
         }
@@ -56,6 +57,8 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
                 renderEntities(block.entities)
             }
         }
+
+        return Effect.Success
     }
 
     private fun SimplePanel.setOptionalBlockId(block: Block) {

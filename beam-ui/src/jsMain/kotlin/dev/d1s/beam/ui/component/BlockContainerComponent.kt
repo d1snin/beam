@@ -22,6 +22,7 @@ import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.state.Observable
 import dev.d1s.beam.ui.util.Size
 import dev.d1s.exkt.kvision.component.Component
+import dev.d1s.exkt.kvision.component.Effect
 import dev.d1s.exkt.kvision.component.render
 import io.kvision.core.JustifyContent
 import io.kvision.html.div
@@ -38,12 +39,14 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
 
     private val currentSpaceContentChangeObservable by inject<Observable<Blocks?>>(Qualifier.CurrentSpaceContentChangeObservable)
 
-    override fun SimplePanel.render() {
+    override fun SimplePanel.render(): Effect {
         div(className = "mb-5").bind(currentSpaceContentChangeObservable.state) { change ->
             change?.let { blocks ->
                 renderBlocks(blocks)
             }
         }
+
+        return Effect.Success
     }
 
     private fun SimplePanel.renderBlocks(blocks: Blocks) {

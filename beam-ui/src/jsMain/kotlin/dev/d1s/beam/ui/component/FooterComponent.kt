@@ -20,6 +20,7 @@ import dev.d1s.beam.ui.theme.setSecondaryBlue
 import dev.d1s.beam.ui.theme.setSecondaryText
 import dev.d1s.beam.ui.util.Texts
 import dev.d1s.exkt.kvision.component.Component
+import dev.d1s.exkt.kvision.component.Effect
 import io.kvision.html.div
 import io.kvision.html.link
 import io.kvision.html.span
@@ -29,7 +30,7 @@ import org.koin.core.component.KoinComponent
 
 class FooterComponent : Component<Unit>(), KoinComponent {
 
-    override fun SimplePanel.render() {
+    override fun SimplePanel.render(): Effect {
         div(className = "container-fluid pt-5 pb-2 mt-auto d-flex flex-column align-items-start") {
             fontSize = 0.85.rem
 
@@ -51,6 +52,8 @@ class FooterComponent : Component<Unit>(), KoinComponent {
                 }
             }
         }
+
+        return Effect.Success
     }
 
     private fun SimplePanel.nbsp() =
