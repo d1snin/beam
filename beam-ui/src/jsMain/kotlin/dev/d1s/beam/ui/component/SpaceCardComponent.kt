@@ -23,7 +23,7 @@ import dev.d1s.beam.ui.state.CurrentSpaceChange
 import dev.d1s.beam.ui.state.Observable
 import dev.d1s.beam.ui.theme.setSecondaryText
 import dev.d1s.beam.ui.util.Texts
-import dev.d1s.beam.ui.util.currentSpaceLink
+import dev.d1s.beam.ui.util.spaceLink
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
 import io.kvision.core.JustifyContent
@@ -73,7 +73,7 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
     }
 
     private fun SimplePanel.renderIcon(space: Space?) {
-        currentSpaceLink {
+        spaceLink(space) {
             if (space != null) {
                 renderImage(space)
             } else {
@@ -92,7 +92,7 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
     }
 
     private fun SimplePanel.renderSpaceInfo(space: Space?) {
-        currentSpaceLink {
+        spaceLink(space) {
             vPanel(justify = JustifyContent.CENTER, className = "ms-3") {
                 if (space != null) {
                     renderSpaceInfoContent(space)

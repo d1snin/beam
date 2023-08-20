@@ -81,11 +81,14 @@ fun setCurrentSpaceBlocks(blocks: Blocks?) {
     lateInitCurrentBlocks = blocks
 }
 
-fun SimplePanel.currentSpaceLink(block: SimplePanel.() -> Unit) {
+fun SimplePanel.spaceLink(space: Space? = null, block: SimplePanel.() -> Unit) {
     div {
         bind(daemonStatusObservable.state) { status ->
             if (status != null) {
-                link(label = "", currentSpaceUrl, className = "text-decoration-none") {
+                link(
+                    label = "",
+                    space?.let { buildSpaceUrl(it.slug) } ?: currentSpaceUrl,
+                    className = "text-decoration-none") {
                     setTextColor()
                     block()
                 }
