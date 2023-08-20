@@ -85,7 +85,6 @@ class ExploreDropdownComponent : Component<Unit>(), KoinComponent {
                 val effect = render(spaceListingComponent)
 
                 (effect as? LazyEffect)?.state?.subscribe { success ->
-                    println("aboba: exploreDropdown: received state: $success")
                     this@dropdown.visible = success
                 }
             }

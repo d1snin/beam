@@ -87,8 +87,6 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
 
                 state.value = true
             } else {
-                println("aboba: spaceListing: setting false state")
-
                 state.value = false
             }
         }
