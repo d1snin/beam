@@ -17,6 +17,7 @@
 package dev.d1s.beam.bundle.html
 
 import kotlinx.html.HEAD
+import kotlinx.html.script
 import kotlinx.html.styleLink
 
 typealias Dependency = HEAD.() -> Unit
@@ -27,5 +28,10 @@ val dependencies = listOf<Dependency>(
     },
     {
         styleLink("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css")
+    },
+    {
+        script {
+            src = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        }
     }
 )

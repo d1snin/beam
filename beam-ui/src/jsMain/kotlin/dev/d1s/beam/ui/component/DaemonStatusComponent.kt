@@ -19,7 +19,7 @@ package dev.d1s.beam.ui.component
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.client.DaemonStatusWithPing
 import dev.d1s.beam.ui.state.Observable
-import dev.d1s.beam.ui.state.bindToCurrentTheme
+import dev.d1s.beam.ui.state.bindToMaxBlockSize
 import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.util.Texts
 import dev.d1s.beam.ui.util.iconWithMargin
@@ -63,7 +63,7 @@ class DaemonStatusComponent : Component<Unit>(), KoinComponent {
     private fun SimplePanel.reportConnectedState(status: DaemonStatusWithPing) {
         applyStyle()
 
-        bindToCurrentTheme {
+        bindToMaxBlockSize {
             cloudIcon(currentTheme.green)
         }
 
@@ -76,7 +76,7 @@ class DaemonStatusComponent : Component<Unit>(), KoinComponent {
         span {
             val ping = status.ping
 
-            bindToCurrentTheme {
+            bindToMaxBlockSize {
                 color = when {
                     ping < 150 -> currentTheme.green
                     ping in 150..<250 -> currentTheme.orange
@@ -91,7 +91,7 @@ class DaemonStatusComponent : Component<Unit>(), KoinComponent {
     private fun SimplePanel.reportDisconnectedState() {
         applyStyle()
 
-        bindToCurrentTheme {
+        bindToMaxBlockSize {
             cloudIcon(currentTheme.red)
         }
 

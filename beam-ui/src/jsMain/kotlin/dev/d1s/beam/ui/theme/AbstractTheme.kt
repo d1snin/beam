@@ -18,7 +18,7 @@ package dev.d1s.beam.ui.theme
 
 import dev.d1s.beam.commons.SpaceThemeDefinition
 import dev.d1s.beam.commons.Url
-import dev.d1s.beam.ui.state.bindToCurrentTheme
+import dev.d1s.beam.ui.state.bindToMaxBlockSize
 import io.kvision.core.*
 import io.kvision.utils.px
 import org.w3c.dom.css.CSSStyleDeclaration
@@ -51,43 +51,43 @@ abstract class AbstractTheme(val definition: SpaceThemeDefinition) {
 }
 
 fun StyledComponent.setBackground() {
-    bindToCurrentTheme {
+    bindToMaxBlockSize {
         background = Background(color = currentTheme.background)
     }
 }
 
 fun CSSStyleDeclaration.setBackground() {
-    bindToCurrentTheme {
+    bindToMaxBlockSize {
         backgroundColor = currentTheme.background.asString()
     }
 }
 
 fun StyledComponent.setOverlay() {
-    bindToCurrentTheme {
+    bindToMaxBlockSize {
         background = Background(color = currentTheme.overlay)
     }
 }
 
 fun StyledComponent.setOutline() {
-    bindToCurrentTheme {
+    bindToMaxBlockSize {
         outline = Outline(width = 1.px, style = OutlineStyle.SOLID, currentTheme.outline)
     }
 }
 
 fun StyledComponent.setTextColor() {
-    bindToCurrentTheme {
+    bindToMaxBlockSize {
         color = currentTheme.text
     }
 }
 
 fun StyledComponent.setSecondaryText() {
-    bindToCurrentTheme {
+    bindToMaxBlockSize {
         color = currentTheme.secondaryText
     }
 }
 
 fun StyledComponent.setSecondaryBlue() {
-    bindToCurrentTheme {
+    bindToMaxBlockSize {
         color = currentTheme.secondaryBlue
     }
 }

@@ -32,6 +32,11 @@ object Texts {
             const val DEFAULT_TITLE = "Beam"
         }
 
+        object ExploreDropdown {
+
+            const val CALLOUT = "Explore"
+        }
+
         object DaemonStatus {
 
             const val CONNECTED = "Connected to daemon."

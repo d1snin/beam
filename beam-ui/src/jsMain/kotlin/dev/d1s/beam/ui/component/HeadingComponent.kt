@@ -34,6 +34,8 @@ class HeadingComponent : Component<Unit>(), KoinComponent {
 
     private val currentSpaceChangeObservable by inject<Observable<CurrentSpaceChange>>(Qualifier.CurrentSpaceChangeObservable)
 
+    private val exploreDropdownComponent by inject<Component<Unit>>(Qualifier.ExploreDropdownComponent)
+
     private val daemonStatusComponent by inject<Component<Unit>>(Qualifier.DaemonStatusComponent)
 
     override fun SimplePanel.render() {
@@ -44,14 +46,27 @@ class HeadingComponent : Component<Unit>(), KoinComponent {
     }
 
     private fun SimplePanel.renderSpaceHeading() {
+        div(className = "d-flex align-items-center") {
+            renderSpaceCard()
+            renderExploreDropdown()
+        }
+    }
+
+    private fun SimplePanel.renderSpaceCard() {
         val spaceCard = get<Component<SpaceCardComponent.Config>>(Qualifier.SpaceCardComponent)
 
-        render(spaceCard) {
-            bare.value = true
-            cardPaddingLevel.value = 4
-            iconWidth.value = 45.px
-            enableHeading.value = true
+        div(className = "me-3") {
+            render(spaceCard) {
+                bare.value = true
+                cardPaddingLevel.value = 4
+                iconWidth.value = 45.px
+                enableHeading.value = true
+            }
         }
+    }
+
+    private fun SimplePanel.renderExploreDropdown() {
+        render(exploreDropdownComponent)
     }
 
     private fun SimplePanel.renderDaemonStatus() {
