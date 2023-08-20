@@ -19,6 +19,7 @@ package dev.d1s.beam.ui.theme
 import dev.d1s.beam.commons.SpaceThemeDefinition
 import dev.d1s.beam.ui.resource.ResourceLocation
 import io.kvision.core.Color
+import io.kvision.html.ButtonStyle
 
 object AccentDarkTheme : AbstractTheme(SpaceThemeDefinition.AccentDark) {
 
@@ -26,7 +27,7 @@ object AccentDarkTheme : AbstractTheme(SpaceThemeDefinition.AccentDark) {
 
     override val emptySpaceIcon = ResourceLocation.EMPTY_SPACE_LIGHT
 
-    override val buttonClass = "btn-outline-light"
+    override val buttonStyle = ButtonStyle.OUTLINELIGHT
 
     // https://colorpicker.me/#212121
     override val background = Color.hex(0x212121)

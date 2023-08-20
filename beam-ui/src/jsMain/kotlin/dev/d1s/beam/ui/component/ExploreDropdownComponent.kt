@@ -20,7 +20,9 @@ import dev.d1s.beam.commons.BlockSize
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.client.DaemonStatusWithPing
 import dev.d1s.beam.ui.state.Observable
+import dev.d1s.beam.ui.state.bindToCurrentTheme
 import dev.d1s.beam.ui.state.bindToMaxBlockSize
+import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.theme.setOutline
 import dev.d1s.beam.ui.theme.setOverlay
 import dev.d1s.beam.ui.util.Size.sizeOf
@@ -29,7 +31,6 @@ import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
 import dev.d1s.exkt.kvision.component.LazyEffect
 import dev.d1s.exkt.kvision.component.render
-import io.kvision.html.ButtonStyle
 import io.kvision.html.button
 import io.kvision.html.div
 import io.kvision.panel.SimplePanel
@@ -58,15 +59,17 @@ class ExploreDropdownComponent : Component<Unit>(), KoinComponent {
         div(className = "dropdown") dropdown@{
             visible = false
 
-            button(
-                Texts.Heading.ExploreDropdown.CALLOUT,
-                style = ButtonStyle.OUTLINELIGHT,
-                className = "btn-sm dropdown-toggle"
-            ) {
-                setAttribute("data-bs-toggle", "dropdown")
-                setAttribute("data-bs-auto-close", "outside")
-                setAttribute("data-bs-offset", "0,20")
-                setAttribute("aria-expanded", "false")
+            bindToCurrentTheme {
+                button(
+                    Texts.Heading.ExploreDropdown.CALLOUT,
+                    style = currentTheme.buttonStyle,
+                    className = "btn-sm dropdown-toggle"
+                ) {
+                    setAttribute("data-bs-toggle", "dropdown")
+                    setAttribute("data-bs-auto-close", "outside")
+                    setAttribute("data-bs-offset", "0,20")
+                    setAttribute("aria-expanded", "false")
+                }
             }
 
             div(className = "dropdown-menu p-3") {

@@ -16,7 +16,7 @@
 
 package dev.d1s.beam.ui.component
 
-import dev.d1s.beam.ui.state.bindToMaxBlockSize
+import dev.d1s.beam.ui.state.bindToCurrentTheme
 import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.util.Texts
 import io.kvision.html.image
@@ -28,7 +28,7 @@ class NotFoundSpaceFailureCardContent : SpaceFailureCardContent(), KoinComponent
     override val mode = SpaceFailureCardComponent.Mode.NOT_FOUND
 
     override fun SimplePanel.image() {
-        bindToMaxBlockSize {
+        bindToCurrentTheme {
             image(
                 currentTheme.notFoundIcon,
                 alt = Texts.Body.SpaceFailureCard.NotFoundMode.ICON_ALT,

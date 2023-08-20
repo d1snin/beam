@@ -17,11 +17,7 @@
 package dev.d1s.beam.daemon.configuration
 
 import dev.d1s.beam.commons.*
-import dev.d1s.beam.daemon.converter.BlockDtoConverter
-import dev.d1s.beam.daemon.converter.BlockModificationDtoConverter
-import dev.d1s.beam.daemon.converter.SpaceDtoConverter
-import dev.d1s.beam.daemon.converter.SpaceModificationDtoConverter
-import dev.d1s.beam.daemon.converter.RootSpaceModificationDtoConverter
+import dev.d1s.beam.daemon.converter.*
 import dev.d1s.beam.daemon.entity.BlockEntity
 import dev.d1s.beam.daemon.entity.SpaceEntity
 import dev.d1s.exkt.dto.DtoConverter
