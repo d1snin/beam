@@ -23,4 +23,9 @@ public object Regex {
     public val Slug: Regex = Regex("(([a-z0-9]{1,20})(-[a-z0-9]{0,20}){0,10})")
 
     public val Metadata: Regex = Regex("(([a-z0-9]{1,20})([-.][a-z0-9]{0,20}){0,10})")
+
+    public val TextLocation: Regex = Regex("(?<!\\\\)\\\$\\{([a-z0-9]{1,20})([-.][a-z0-9]{0,20}){0,10}\\}")
+    public val UnwrappedTextLocation: Regex = Regex("(?<!\\\\)(?<=\\\$\\{)([a-z0-9]{1,20})([-.][a-z0-9]{0,20}){0,10}(?=\\})")
+    public val EscapedTextLocation: Regex = Regex("\\\\\\\$\\{([a-z0-9]{1,20})([-.][a-z0-9]{0,20}){0,10}\\}")
+    public val TextLocationEscape: Regex = Regex("\\\\(?=\\\$\\{([a-z0-9]{1,20})([-.][a-z0-9]{0,20}){0,10}\\})")
 }

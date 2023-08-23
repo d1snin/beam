@@ -20,6 +20,8 @@ public object Paths {
 
     public const val ID_PARAMETER: String = "id"
 
+    public const val LOCATION_PARAMETER: String = "location"
+
     public const val LIMIT_QUERY_PARAMETER: String = "limit"
     public const val OFFSET_QUERY_PARAMETER: String = "offset"
 
@@ -39,4 +41,9 @@ public object Paths {
     public const val GET_BLOCKS: String = "/blocks"
     public const val PUT_BLOCK: String = "/blocks/{$ID_PARAMETER}"
     public const val DELETE_BLOCK: String = "/blocks/{$ID_PARAMETER}"
+
+    public const val POST_TRANSLATION: String = "/translations"
+    public const val GET_TRANSLATION: String = "/translations/${LOCATION_PARAMETER}"
+    public const val PUT_TRANSLATION: String = "/translations/${LOCATION_PARAMETER}"
+    public const val DELETE_TRANSLATION: String = "/translations/${LOCATION_PARAMETER}"
 }

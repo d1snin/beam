@@ -20,8 +20,6 @@ public typealias ContentEntityParameterDefinitions = List<ContentEntityParameter
 
 public class ContentEntityParameterDefinition(
     public val name: ContentEntityParameterName,
-    public val required: Boolean
+    public val required: Boolean,
+    public val translatable: Boolean
 )
-
-internal const val required = true
-internal const val notRequired = false

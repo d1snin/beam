@@ -24,9 +24,10 @@ public sealed class ContentEntityTypeDefinition(public val name: ContentEntityTy
 
     protected fun parameter(
         name: ContentEntityParameterName,
-        required: Boolean = notRequired
+        required: Boolean = false,
+        translatable: Boolean = false
     ): ContentEntityParameterDefinition =
-        ContentEntityParameterDefinition(name, required)
+        ContentEntityParameterDefinition(name, required, translatable)
 }
 
 public data object VoidContentEntityTypeDefinition : ContentEntityTypeDefinition(name = "void") {
@@ -36,7 +37,7 @@ public data object VoidContentEntityTypeDefinition : ContentEntityTypeDefinition
 
 public data object TextContentEntityTypeDefinition : ContentEntityTypeDefinition(name = "text") {
 
-    val value: ContentEntityParameterDefinition = parameter("value", required)
+    val value: ContentEntityParameterDefinition = parameter("value", required = true, translatable = true)
 
     val bold: ContentEntityParameterDefinition = parameter("bold")
 
@@ -54,7 +55,7 @@ public data object TextContentEntityTypeDefinition : ContentEntityTypeDefinition
 
     val secondary: ContentEntityParameterDefinition = parameter("secondary")
 
-    val url: ContentEntityParameterDefinition = parameter("url")
+    val url: ContentEntityParameterDefinition = parameter("url", translatable = true)
 
     public enum class Heading(public val key: String) {
         H1("h1"), H2("h2"), H3("h3");
