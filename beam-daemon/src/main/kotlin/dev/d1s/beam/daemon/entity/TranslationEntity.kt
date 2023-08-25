@@ -25,7 +25,7 @@ typealias TranslationEntities = List<TranslationEntity>
 
 interface TranslationEntity : Entity<TranslationEntity> {
 
-    var space: SpaceEntity?
+    var space: SpaceEntity
 
     var languageCode: LanguageCode
 
@@ -37,6 +37,4 @@ interface TranslationEntity : Entity<TranslationEntity> {
 }
 
 val TranslationEntity.asString
-    get() = "TranslationEntity{space = $space, languageCode = $languageCode, languageName = $languageName}"
-
-val TranslationEntity.isGlobal get() = space == null
+    get() = "TranslationEntity{space = ${space.id}, languageCode = $languageCode, languageName = $languageName}"
