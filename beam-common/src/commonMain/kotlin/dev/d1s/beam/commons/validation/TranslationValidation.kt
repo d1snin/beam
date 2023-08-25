@@ -21,10 +21,17 @@ import dev.d1s.beam.commons.TextLocation
 import dev.d1s.beam.commons.TranslatedText
 import dev.d1s.exkt.konform.matches
 import io.konform.validation.Validation
+import io.konform.validation.jsonschema.maxLength
+import io.konform.validation.jsonschema.minLength
 
 public val validateTranslation: Validation<AbstractTranslation> = Validation {
     AbstractTranslation::languageCode {
         matches(Regex.LanguageCode)
+    }
+
+    AbstractTranslation::languageName ifPresent {
+        minLength(2)
+        maxLength(30)
     }
 
     AbstractTranslation::translations onEach {

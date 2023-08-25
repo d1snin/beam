@@ -29,6 +29,8 @@ public sealed interface AbstractTranslation {
 
     public val languageCode: LanguageCode
 
+    public val languageName: LanguageName?
+
     public val translations: TranslationMap
 }
 
@@ -36,12 +38,13 @@ public sealed interface AbstractTranslation {
 public data class Translation(
     val space: SpaceId?,
     override val languageCode: LanguageCode,
-    val languageName: LanguageName,
+    override val languageName: LanguageName,
     override val translations: TranslationMap
 ) : AbstractTranslation
 
 @Serializable
 public data class TranslationModification(
     override val languageCode: LanguageCode,
+    override val languageName: LanguageName?,
     override val translations: TranslationMap
 ) : AbstractTranslation
