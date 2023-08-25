@@ -16,17 +16,16 @@
 
 package dev.d1s.beam.daemon.route
 
-import dev.d1s.beam.commons.BlockModification
 import dev.d1s.beam.commons.Paths
-import dev.d1s.beam.commons.validation.validateBlock
+import dev.d1s.beam.commons.TranslationModification
+import dev.d1s.beam.commons.validation.validateTranslation
 import dev.d1s.beam.daemon.configuration.DtoConverters
 import dev.d1s.beam.daemon.configuration.jwtSubject
-import dev.d1s.beam.daemon.entity.BlockEntity
+import dev.d1s.beam.daemon.entity.TranslationEntity
 import dev.d1s.beam.daemon.exception.ForbiddenException
 import dev.d1s.beam.daemon.service.AuthService
-import dev.d1s.beam.daemon.service.BlockService
-import dev.d1s.beam.daemon.util.languageCodeQueryParameter
-import dev.d1s.beam.daemon.validation.orThrow
+import dev.d1s.beam.daemon.service.TranslationService
+import dev.d1s.beam.daemon.util.requiredSpaceIdQueryParameter
 import dev.d1s.exkt.dto.DtoConverter
 import dev.d1s.exkt.dto.requiredDto
 import dev.d1s.exkt.ktor.server.koin.configuration.Route
@@ -40,32 +39,36 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 
-class PostBlockRoute : Route, KoinComponent {
+class PostTranslationRoute : Route, KoinComponent {
 
-    override val qualifier = named("post-block-route")
+    override val qualifier = named("post-translation-route")
 
-    private val blockService by inject<BlockService>()
+    private val translationService by inject<TranslationService>()
 
     private val authService by inject<AuthService>()
 
-    private val blockModificationDtoConverter by inject<DtoConverter<BlockEntity, BlockModification>>(DtoConverters.BlockModificationDtoConverterQualifier)
+    private val translationModificationDtoConverter by inject<DtoConverter<TranslationEntity, TranslationModification>>(
+        DtoConverters.TranslationModificationDtoConverterQualifier
+    )
 
     override fun Routing.apply() {
         authenticate {
-            post(Paths.POST_BLOCK) {
-                val body = call.receive<BlockModification>()
-                validateBlock(body).orThrow()
+            post(Paths.POST_TRANSLATION) {
+                val body = call.receive<TranslationModification>()
+                validateTranslation(body)
+
+                val spaceId = call.requiredSpaceIdQueryParameter
 
                 val spaceModificationAllowed =
-                    authService.isSpaceModificationAllowed(call.jwtSubject, body.spaceId).getOrThrow()
+                    authService.isSpaceModificationAllowed(call.jwtSubject, spaceId)
+                        .getOrThrow()
 
                 if (spaceModificationAllowed) {
-                    val block = blockModificationDtoConverter.convertToEntity(body)
+                    val translation = translationModificationDtoConverter.convertToEntity(body)
 
-                    val languageCode = call.languageCodeQueryParameter
-                    val createdBlock = blockService.createBlock(block, languageCode).getOrThrow()
+                    val createdTranslation = translationService.createTranslation(spaceId, translation).getOrThrow()
 
-                    call.respond(HttpStatusCode.Created, createdBlock.requiredDto)
+                    call.respond(HttpStatusCode.Created, createdTranslation.requiredDto)
                 } else {
                     throw ForbiddenException()
                 }

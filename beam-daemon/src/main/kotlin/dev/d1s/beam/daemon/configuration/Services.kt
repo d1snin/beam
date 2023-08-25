@@ -30,6 +30,7 @@ object Services : ApplicationConfigurer {
             singleOf<AuthService>(::DefaultAuthService)
             singleOf<BlockService>(::DefaultBlockService)
             singleOf<SpaceService>(::DefaultSpaceService)
+            singleOf<TranslationService>(::DefaultTranslationService)
         }
     }
 }

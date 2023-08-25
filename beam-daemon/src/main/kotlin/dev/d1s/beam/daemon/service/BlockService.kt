@@ -18,11 +18,13 @@ package dev.d1s.beam.daemon.service
 
 import dev.d1s.beam.commons.Block
 import dev.d1s.beam.commons.BlockId
+import dev.d1s.beam.commons.LanguageCode
 import dev.d1s.beam.commons.SpaceIdentifier
 import dev.d1s.beam.commons.event.EntityUpdate
 import dev.d1s.beam.commons.event.EventReferences
 import dev.d1s.beam.daemon.configuration.DtoConverters
 import dev.d1s.beam.daemon.database.BlockRepository
+import dev.d1s.beam.daemon.database.transaction
 import dev.d1s.beam.daemon.entity.BlockEntity
 import dev.d1s.beam.daemon.entity.SpaceEntity
 import dev.d1s.beam.daemon.entity.asString
@@ -38,21 +40,27 @@ import java.util.*
 
 interface BlockService {
 
-    suspend fun createBlock(block: BlockEntity): ResultingEntityWithOptionalDto<BlockEntity, Block>
+    suspend fun createBlock(
+        block: BlockEntity,
+        languageCode: LanguageCode? = null
+    ): ResultingEntityWithOptionalDto<BlockEntity, Block>
 
     suspend fun getBlock(
         id: BlockId,
+        languageCode: LanguageCode? = null,
         requireDto: Boolean = false
     ): ResultingEntityWithOptionalDto<BlockEntity, Block>
 
     suspend fun getBlocks(
         spaceIdentifier: SpaceIdentifier,
+        languageCode: LanguageCode? = null,
         requireDto: Boolean = false
     ): ResultingEntityWithOptionalDtoList<BlockEntity, Block>
 
     suspend fun updateBlock(
         id: BlockId,
-        modification: BlockEntity
+        modification: BlockEntity,
+        languageCode: LanguageCode? = null
     ): ResultingEntityWithOptionalDto<BlockEntity, Block>
 
     suspend fun removeBlock(id: BlockId): Result<Unit>
@@ -68,9 +76,14 @@ class DefaultBlockService : BlockService, KoinComponent {
 
     private val spaceService by inject<SpaceService>()
 
+    private val translationService by inject<TranslationService>()
+
     private val logger = logging()
 
-    override suspend fun createBlock(block: BlockEntity): ResultingEntityWithOptionalDto<BlockEntity, Block> =
+    override suspend fun createBlock(
+        block: BlockEntity,
+        languageCode: LanguageCode?
+    ): ResultingEntityWithOptionalDto<BlockEntity, Block> =
         runCatching {
             logger.d {
                 "Creating block ${block.asString}..."
@@ -80,16 +93,23 @@ class DefaultBlockService : BlockService, KoinComponent {
 
             processBlockIndex(block)
 
-            val addedBlock = blockRepository.addBlock(block).getOrThrow()
-            val addedBlockDto = blockDtoConverter.convertToDto(addedBlock)
+            val addedAndTranslatedBlock = transaction {
+                val addedBlock = blockRepository.addBlock(block).getOrThrow()
+                val translatedBlock = translateOptionally(addedBlock, languageCode)
+
+                translatedBlock
+            }
+
+            val addedBlockDto = blockDtoConverter.convertToDto(addedAndTranslatedBlock)
 
             sendBlockCreatedEvent(addedBlockDto)
 
-            addedBlock to addedBlockDto
+            addedAndTranslatedBlock to addedBlockDto
         }
 
     override suspend fun getBlock(
         id: BlockId,
+        languageCode: LanguageCode?,
         requireDto: Boolean
     ): ResultingEntityWithOptionalDto<BlockEntity, Block> =
         runCatching {
@@ -105,13 +125,16 @@ class DefaultBlockService : BlockService, KoinComponent {
                 blockRepository.findBlockById(id).getOrNull()
             } ?: throw NotFoundException("Block not found")
 
-            block to blockDtoConverter.convertToDtoIf(block) {
+            val translatedBlock = translateOptionally(block, languageCode)
+
+            translatedBlock to blockDtoConverter.convertToDtoIf(block) {
                 requireDto
             }
         }
 
     override suspend fun getBlocks(
         spaceIdentifier: SpaceIdentifier,
+        languageCode: LanguageCode?,
         requireDto: Boolean
     ): ResultingEntityWithOptionalDtoList<BlockEntity, Block> =
         runCatching {
@@ -123,14 +146,17 @@ class DefaultBlockService : BlockService, KoinComponent {
 
             val blocks = blockRepository.findBlocksInSpace(space).getOrThrow()
 
-            blocks to blockDtoConverter.convertToDtoListIf(blocks) {
+            val translatedBlocks = translateOptionally(blocks, languageCode)
+
+            translatedBlocks to blockDtoConverter.convertToDtoListIf(blocks) {
                 requireDto
             }
         }
 
     override suspend fun updateBlock(
         id: BlockId,
-        modification: BlockEntity
+        modification: BlockEntity,
+        languageCode: LanguageCode?
     ): ResultingEntityWithOptionalDto<BlockEntity, Block> =
         runCatching {
             logger.d {
@@ -148,12 +174,18 @@ class DefaultBlockService : BlockService, KoinComponent {
                 this.space = modification.space
             }
 
-            val updatedBlock = blockRepository.updateBlock(originalBlock).getOrThrow()
-            val updatedBlockDto = blockDtoConverter.convertToDto(updatedBlock)
+            val updatedAndTranslatedBlock = transaction {
+                val updatedBlock = blockRepository.updateBlock(originalBlock).getOrThrow()
+                val translatedBlock = translateOptionally(updatedBlock, languageCode)
+
+                translatedBlock
+            }
+
+            val updatedBlockDto = blockDtoConverter.convertToDto(updatedAndTranslatedBlock)
 
             sendBlockUpdatedEvent(originalBlockDto, updatedBlockDto)
 
-            updatedBlock to updatedBlockDto
+            updatedAndTranslatedBlock to updatedBlockDto
         }
 
     override suspend fun removeBlock(id: BlockId): Result<Unit> =
@@ -216,6 +248,18 @@ class DefaultBlockService : BlockService, KoinComponent {
             }
         }
     }
+
+    private suspend fun translateOptionally(block: BlockEntity, languageCode: LanguageCode?) =
+        block.copy().apply {
+            languageCode?.let {
+                translationService.translateEntities(block = this, languageCode = it)
+            }
+        }
+
+    private suspend fun translateOptionally(blocks: List<BlockEntity>, languageCode: LanguageCode?) =
+        blocks.map { block ->
+            translateOptionally(block, languageCode)
+        }
 
     private suspend fun sendBlockCreatedEvent(blockDto: Block) {
         val event = event(EventReferences.blockCreated, blockDto)

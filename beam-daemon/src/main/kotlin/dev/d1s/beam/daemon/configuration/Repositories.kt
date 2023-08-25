@@ -16,10 +16,7 @@
 
 package dev.d1s.beam.daemon.configuration
 
-import dev.d1s.beam.daemon.database.BlockRepository
-import dev.d1s.beam.daemon.database.DefaultBlockRepository
-import dev.d1s.beam.daemon.database.DefaultSpaceRepository
-import dev.d1s.beam.daemon.database.SpaceRepository
+import dev.d1s.beam.daemon.database.*
 import dev.d1s.exkt.ktor.server.koin.configuration.ApplicationConfigurer
 import io.ktor.server.application.*
 import io.ktor.server.config.*
@@ -32,6 +29,7 @@ object Repositories : ApplicationConfigurer {
         module.apply {
             singleOf<BlockRepository>(::DefaultBlockRepository)
             singleOf<SpaceRepository>(::DefaultSpaceRepository)
+            singleOf<TranslationRepository>(::DefaultTranslationRepository)
         }
     }
 }

@@ -21,8 +21,6 @@
                     "name": "id",
                     "type": "uuid",
                     "constraints": {
-                      "nullable": false,
-                      "notNullConstraintName": "nn_block_id",
                       "primaryKey": true,
                       "primaryKeyName": "pk_block_id"
                     }
@@ -90,8 +88,6 @@
                     "name": "id",
                     "type": "uuid",
                     "constraints": {
-                      "nullable": false,
-                      "notNullConstraintName": "nn_space_id",
                       "primaryKey": true,
                       "primaryKeyName": "pk_space_id"
                     }
@@ -156,6 +152,49 @@
                     "constraints": {
                       "nullable": false,
                       "notNullConstraintName": "nn_space_role"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "createTable": {
+              "tableName": "translation",
+              "columns": [
+                {
+                  "column": {
+                    "name": "space_id",
+                    "type": "uuid",
+                    "constraints": {
+                      "nullable": false,
+                      "notNullConstraintName": "nn_translation_space_id"
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "language_code",
+                    "type": "text",
+                    "constraints": {
+                      "nullable": false,
+                      "notNullConstraintName": "nn_translation_language_code"
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "language_name",
+                    "type": "text"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "translations",
+                    "type": "json",
+                    "constraints": {
+                      "nullable": false,
+                      "notNullConstraintName": "nn_translation_translations"
                     }
                   }
                 }

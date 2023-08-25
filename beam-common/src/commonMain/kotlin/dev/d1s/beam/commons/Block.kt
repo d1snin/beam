@@ -19,7 +19,7 @@ package dev.d1s.beam.commons
 import dev.d1s.beam.commons.contententity.ContentEntities
 import kotlinx.serialization.Serializable
 
-public typealias BlockId = SpaceIdentifier
+public typealias BlockId = String
 
 public typealias BlockIndex = Int
 

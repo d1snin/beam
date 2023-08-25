@@ -14,12 +14,22 @@
  * limitations under the License.
  */
 
-package dev.d1s.beam.daemon.exception
+package dev.d1s.beam.commons.validation
 
-import dev.d1s.exkt.ktor.server.statuspages.HttpStatusException
-import io.ktor.http.*
+import dev.d1s.beam.commons.AbstractTranslation
+import dev.d1s.beam.commons.TextLocation
+import dev.d1s.beam.commons.TranslatedText
+import dev.d1s.exkt.konform.matches
+import io.konform.validation.Validation
 
-class UnprocessableEntityException(message: String) : HttpStatusException(HttpStatusCode.UnprocessableEntity, message)
+public val validateTranslation: Validation<AbstractTranslation> = Validation {
+    AbstractTranslation::languageCode {
+        matches(Regex.LanguageCode)
+    }
 
-class ForbiddenException(message: String = "Insufficient access") :
-    HttpStatusException(HttpStatusCode.Forbidden, message)
+    AbstractTranslation::translations onEach {
+        Map.Entry<TextLocation, TranslatedText>::key {
+            matches(Regex.UnwrappedTextLocation)
+        }
+    }
+}

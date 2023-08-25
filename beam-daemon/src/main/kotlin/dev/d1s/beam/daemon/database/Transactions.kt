@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-package dev.d1s.beam.daemon.exception
+package dev.d1s.beam.daemon.database
 
-import dev.d1s.exkt.ktor.server.statuspages.HttpStatusException
-import io.ktor.http.*
+import org.koin.core.context.GlobalContext
+import org.ktorm.database.Database
+import org.ktorm.database.Transaction
 
-class UnprocessableEntityException(message: String) : HttpStatusException(HttpStatusCode.UnprocessableEntity, message)
+private val database by lazy {
+    GlobalContext.get().get<Database>()
+}
 
-class ForbiddenException(message: String = "Insufficient access") :
-    HttpStatusException(HttpStatusCode.Forbidden, message)
+suspend fun <T> transaction(block: suspend (Transaction) -> T): T =
+    database.useTransaction { transaction ->
+        block(transaction)
+    }

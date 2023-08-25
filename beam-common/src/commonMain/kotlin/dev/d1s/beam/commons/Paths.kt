@@ -20,12 +20,14 @@ public object Paths {
 
     public const val ID_PARAMETER: String = "id"
 
-    public const val LOCATION_PARAMETER: String = "location"
+    public const val LANGUAGE_CODE_PARAMETER: String = "languageCode"
 
     public const val LIMIT_QUERY_PARAMETER: String = "limit"
     public const val OFFSET_QUERY_PARAMETER: String = "offset"
 
     public const val SPACE_ID_QUERY_PARAMETER: String = "space"
+
+    public const val LANGUAGE_CODE_QUERY_PARAMETER: String = "language"
 
     public const val GET_DAEMON_STATUS_ROUTE: String = "/status"
 
@@ -43,7 +45,8 @@ public object Paths {
     public const val DELETE_BLOCK: String = "/blocks/{$ID_PARAMETER}"
 
     public const val POST_TRANSLATION: String = "/translations"
-    public const val GET_TRANSLATION: String = "/translations/${LOCATION_PARAMETER}"
-    public const val PUT_TRANSLATION: String = "/translations/${LOCATION_PARAMETER}"
-    public const val DELETE_TRANSLATION: String = "/translations/${LOCATION_PARAMETER}"
+    public const val GET_TRANSLATION: String = "/translations/${LANGUAGE_CODE_PARAMETER}"
+    public const val GET_TRANSLATIONS: String = "/translations"
+    public const val PUT_TRANSLATION: String = "/translations/${LANGUAGE_CODE_PARAMETER}"
+    public const val DELETE_TRANSLATION: String = "/translations/${LANGUAGE_CODE_PARAMETER}"
 }

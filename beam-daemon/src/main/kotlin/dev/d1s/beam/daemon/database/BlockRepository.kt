@@ -19,7 +19,7 @@ package dev.d1s.beam.daemon.database
 import dev.d1s.beam.daemon.entity.BlockEntities
 import dev.d1s.beam.daemon.entity.BlockEntity
 import dev.d1s.beam.daemon.entity.SpaceEntity
-import dispatch.core.withIO
+import dev.d1s.beam.daemon.util.withIoCatching
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.ktorm.database.Database
@@ -54,90 +54,72 @@ class DefaultBlockRepository : BlockRepository, KoinComponent {
     private val database by inject<Database>()
 
     override suspend fun addBlock(block: BlockEntity): Result<BlockEntity> =
-        withIO {
-            runCatching {
-                block.apply {
-                    setId()
-                    database.blocks.add(block)
-                }
+        withIoCatching {
+            block.apply {
+                setId()
+                database.blocks.add(block)
             }
         }
 
     override suspend fun findBlockById(id: UUID): Result<BlockEntity> =
-        withIO {
-            runCatching {
-                database.blocks.find {
-                    it.id eq id
-                } ?: error("Block not found by ID $id")
-            }
+        withIoCatching {
+            database.blocks.find {
+                it.id eq id
+            } ?: error("Block not found by ID $id")
         }
 
     override suspend fun countBlocksInSpace(space: SpaceEntity): Result<Int> =
-        withIO {
-            runCatching {
-                findBlocksInSpaceAsSequence(space).count()
-            }
+        withIoCatching {
+            findBlocksInSpaceAsSequence(space).count()
         }
 
     override suspend fun findLatestBlockIndexInSpace(space: SpaceEntity): Result<Int> =
-        withIO {
-            runCatching {
-                findBlocksInSpaceAsSequence(space).sortedByDescending {
-                    it.index
-                }.first().index
-            }
+        withIoCatching {
+            findBlocksInSpaceAsSequence(space).sortedByDescending {
+                it.index
+            }.first().index
         }
 
     override suspend fun findBlocksInSpaceWhichIndexIsGreaterOrEqualTo(
         space: SpaceEntity,
         index: Int
     ): Result<BlockEntities> =
-        withIO {
-            runCatching {
-                findBlocksInSpaceAsSequence(space).sortedByDescending {
-                    it.index
-                }.filter {
-                    it.index greaterEq index
-                }.toList()
-            }
+        withIoCatching {
+            findBlocksInSpaceAsSequence(space).sortedByDescending {
+                it.index
+            }.filter {
+                it.index greaterEq index
+            }.toList()
         }
 
     override suspend fun findBlocksInSpace(space: SpaceEntity): Result<BlockEntities> =
-        withIO {
-            runCatching {
-                findBlocksInSpaceAsSequence(space).sortedBy {
-                    it.index
-                }.toList()
-            }
+        withIoCatching {
+            findBlocksInSpaceAsSequence(space).sortedBy {
+                it.index
+            }.toList()
         }
 
     override suspend fun updateBlock(block: BlockEntity): Result<BlockEntity> =
-        withIO {
-            runCatching {
-                block.apply {
-                    flushChanges()
-                }
+        withIoCatching {
+            block.apply {
+                flushChanges()
             }
         }
 
     override suspend fun updateBlocks(blocks: BlockEntities): Result<BlockEntities> =
-        withIO {
-            runCatching {
-                database.useTransaction {
-                    blocks.map {
-                        it.flushChanges()
-                        it
-                    }
+        withIoCatching {
+            database.useTransaction {
+                blocks.map {
+                    it.flushChanges()
+                    it
                 }
             }
         }
 
     override suspend fun removeBlock(block: BlockEntity): Result<Unit> =
-        withIO {
-            runCatching {
-                block.delete()
-                Unit
-            }
+        withIoCatching {
+            block.delete()
+            Unit
         }
 
     private fun findBlocksInSpaceAsSequence(space: SpaceEntity) =

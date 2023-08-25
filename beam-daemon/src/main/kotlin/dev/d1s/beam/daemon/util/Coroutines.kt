@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package dev.d1s.beam.daemon.exception
+package dev.d1s.beam.daemon.util
 
-import dev.d1s.exkt.ktor.server.statuspages.HttpStatusException
-import io.ktor.http.*
+import dispatch.core.withIO
+import kotlinx.coroutines.CoroutineScope
 
-class UnprocessableEntityException(message: String) : HttpStatusException(HttpStatusCode.UnprocessableEntity, message)
-
-class ForbiddenException(message: String = "Insufficient access") :
-    HttpStatusException(HttpStatusCode.Forbidden, message)
+suspend fun <R> withIoCatching(block: suspend CoroutineScope.() -> R): Result<R> =
+    withIO {
+        runCatching {
+            block()
+        }
+    }

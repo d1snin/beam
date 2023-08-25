@@ -18,9 +18,9 @@ package dev.d1s.beam.daemon.database
 
 import dev.d1s.beam.commons.SpaceSlug
 import dev.d1s.beam.daemon.entity.SpaceEntity
+import dev.d1s.beam.daemon.util.withIoCatching
 import dev.d1s.exkt.ktorm.ExportedSequence
 import dev.d1s.exkt.ktorm.export
-import dispatch.core.withIO
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.ktorm.database.Database
@@ -50,57 +50,45 @@ class DefaultSpaceRepository : SpaceRepository, KoinComponent {
     private val database by inject<Database>()
 
     override suspend fun addSpace(space: SpaceEntity): Result<SpaceEntity> =
-        withIO {
-            runCatching {
-                space.apply {
-                    setId()
-                    setCreatedAt()
-                    setUpdatedAt()
-                    database.spaces.add(space)
-                }
+        withIoCatching {
+            space.apply {
+                setId()
+                setCreatedAt()
+                setUpdatedAt()
+                database.spaces.add(space)
             }
         }
 
     override suspend fun findSpaceById(id: UUID): Result<SpaceEntity> =
-        withIO {
-            runCatching {
-                database.spaces.find {
-                    it.id eq id
-                } ?: error("Space not found by ID $id")
-            }
+        withIoCatching {
+            database.spaces.find {
+                it.id eq id
+            } ?: error("Space not found by ID $id")
         }
 
     override suspend fun findSpaceBySlug(slug: SpaceSlug): Result<SpaceEntity> =
-        withIO {
-            runCatching {
-                database.spaces.find {
-                    it.slug eq slug
-                } ?: error("Space not found by slug $slug")
-            }
+        withIoCatching {
+            database.spaces.find {
+                it.slug eq slug
+            } ?: error("Space not found by slug $slug")
         }
 
     override suspend fun findAllSpaces(limit: Int, offset: Int): Result<ExportedSequence<SpaceEntity>> =
-        withIO {
-            runCatching {
-                database.spaces.export(limit, offset, sort = { it.createdAt.desc() })
-            }
+        withIoCatching {
+            database.spaces.export(limit, offset, sort = { it.createdAt.desc() })
         }
 
     override suspend fun updateSpace(space: SpaceEntity): Result<SpaceEntity> =
-        withIO {
-            runCatching {
-                space.apply {
-                    setUpdatedAt()
-                    flushChanges()
-                }
+        withIoCatching {
+            space.apply {
+                setUpdatedAt()
+                flushChanges()
             }
         }
 
     override suspend fun removeSpace(space: SpaceEntity): Result<Unit> =
-        withIO {
-            runCatching {
-                space.delete()
-                Unit
-            }
+        withIoCatching {
+            space.delete()
+            Unit
         }
 }

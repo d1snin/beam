@@ -20,6 +20,7 @@ import dev.d1s.beam.commons.*
 import dev.d1s.beam.daemon.converter.*
 import dev.d1s.beam.daemon.entity.BlockEntity
 import dev.d1s.beam.daemon.entity.SpaceEntity
+import dev.d1s.beam.daemon.entity.TranslationEntity
 import dev.d1s.exkt.dto.DtoConverter
 import dev.d1s.exkt.ktor.server.koin.configuration.ApplicationConfigurer
 import io.ktor.server.application.*
@@ -37,25 +38,38 @@ object DtoConverters : ApplicationConfigurer {
     val SpaceModificationDtoConverterQualifier = named("space-modification-dto-converter")
     val RootSpaceModificationDtoConverterQualifier = named("root-space-modification-dto-converter")
 
+    val TranslationDtoConverterQualifier = named("translation-dto-converter")
+    val TranslationModificationDtoConverterQualifier = named("translation-modification-dto-converter")
+
     override fun Application.configure(module: Module, config: ApplicationConfig) {
-        module.singleOf<DtoConverter<BlockEntity, Block>>(::BlockDtoConverter) {
-            qualifier = BlockDtoConverterQualifier
-        }
+        module.apply {
+            singleOf<DtoConverter<BlockEntity, Block>>(::BlockDtoConverter) {
+                qualifier = BlockDtoConverterQualifier
+            }
 
-        module.singleOf<DtoConverter<BlockEntity, BlockModification>>(::BlockModificationDtoConverter) {
-            qualifier = BlockModificationDtoConverterQualifier
-        }
+            singleOf<DtoConverter<BlockEntity, BlockModification>>(::BlockModificationDtoConverter) {
+                qualifier = BlockModificationDtoConverterQualifier
+            }
 
-        module.singleOf<DtoConverter<SpaceEntity, Space>>(::SpaceDtoConverter) {
-            qualifier = SpaceDtoConverterQualifier
-        }
+            singleOf<DtoConverter<SpaceEntity, Space>>(::SpaceDtoConverter) {
+                qualifier = SpaceDtoConverterQualifier
+            }
 
-        module.singleOf<DtoConverter<SpaceEntity, SpaceModification>>(::SpaceModificationDtoConverter) {
-            qualifier = SpaceModificationDtoConverterQualifier
-        }
+            singleOf<DtoConverter<SpaceEntity, SpaceModification>>(::SpaceModificationDtoConverter) {
+                qualifier = SpaceModificationDtoConverterQualifier
+            }
 
-        module.singleOf<DtoConverter<SpaceEntity, RootSpaceModification>>(::RootSpaceModificationDtoConverter) {
-            qualifier = RootSpaceModificationDtoConverterQualifier
+            singleOf<DtoConverter<SpaceEntity, RootSpaceModification>>(::RootSpaceModificationDtoConverter) {
+                qualifier = RootSpaceModificationDtoConverterQualifier
+            }
+
+            singleOf<DtoConverter<TranslationEntity, Translation>>(::TranslationDtoConverter) {
+                qualifier = TranslationDtoConverterQualifier
+            }
+
+            singleOf<DtoConverter<TranslationEntity, TranslationModification>>(::TranslationModificationDtoConverter) {
+                qualifier = TranslationModificationDtoConverterQualifier
+            }
         }
     }
 }

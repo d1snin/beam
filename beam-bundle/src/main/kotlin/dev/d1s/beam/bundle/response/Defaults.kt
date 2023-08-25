@@ -33,7 +33,7 @@ object Defaults {
     const val FAVICON_ICO = "/favicon.ico"
     const val BROWSERCONFIG = "/browserconfig.xml"
     const val MASK_ICON = "/safari-pinned-tab.svg"
-    const val MASK_ICON_COLOR= "#5bbad5"
+    const val MASK_ICON_COLOR = "#5bbad5"
 
     const val SCRIPT = "/main.bundle.js"
 }

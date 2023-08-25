@@ -25,6 +25,7 @@ import dev.d1s.beam.daemon.entity.BlockEntity
 import dev.d1s.beam.daemon.exception.ForbiddenException
 import dev.d1s.beam.daemon.service.AuthService
 import dev.d1s.beam.daemon.service.BlockService
+import dev.d1s.beam.daemon.util.languageCodeQueryParameter
 import dev.d1s.beam.daemon.util.requiredIdParameter
 import dev.d1s.beam.daemon.validation.orThrow
 import dev.d1s.exkt.dto.DtoConverter
@@ -63,7 +64,8 @@ class PutBlockRoute : Route, KoinComponent {
                     val block = blockModificationDtoConverter.convertToEntity(body)
 
                     val blockId = call.requiredIdParameter
-                    val updatedBlock = blockService.updateBlock(blockId, block).getOrThrow()
+                    val languageCode = call.languageCodeQueryParameter
+                    val updatedBlock = blockService.updateBlock(blockId, block, languageCode).getOrThrow()
 
                     call.respond(updatedBlock.requiredDto)
                 } else {

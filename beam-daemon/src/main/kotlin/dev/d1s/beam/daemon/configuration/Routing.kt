@@ -41,6 +41,12 @@ object Routing : ApplicationConfigurer {
             +GetBlocksRoute()
             +PutBlockRoute()
             +DeleteBlockRoute()
+
+            +PostTranslationRoute()
+            +GetTranslationRoute()
+            +GetTranslationsRoute()
+            +PutTranslationRoute()
+            +DeleteTranslationRoute()
         }
     }
 }

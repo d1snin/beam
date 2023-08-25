@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-package dev.d1s.beam.daemon.util
+package dev.d1s.beam.daemon.converter
 
-import dev.d1s.beam.commons.Paths
-import io.ktor.server.application.*
-import io.ktor.server.plugins.*
+import dev.d1s.beam.commons.TranslationModification
+import dev.d1s.beam.daemon.entity.TranslationEntity
+import dev.d1s.exkt.dto.DtoConverter
 
-val ApplicationCall.requiredIdParameter: String
-    get() = parameters[Paths.ID_PARAMETER]
-        ?: throw BadRequestException("Parameter ${Paths.ID_PARAMETER} not found")
+class TranslationModificationDtoConverter : DtoConverter<TranslationEntity, TranslationModification> {
+
+    override suspend fun convertToEntity(dto: TranslationModification) =
+        TranslationEntity {
+            languageCode = dto.languageCode
+            translations = dto.translations
+        }
+}

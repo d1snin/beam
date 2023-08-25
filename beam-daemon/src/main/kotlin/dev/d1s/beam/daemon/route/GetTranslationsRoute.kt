@@ -17,9 +17,8 @@
 package dev.d1s.beam.daemon.route
 
 import dev.d1s.beam.commons.Paths
-import dev.d1s.beam.daemon.service.BlockService
-import dev.d1s.beam.daemon.util.languageCodeQueryParameter
-import dev.d1s.beam.daemon.util.requiredSpaceIdQueryParameter
+import dev.d1s.beam.daemon.service.TranslationService
+import dev.d1s.beam.daemon.util.spaceIdQueryParameter
 import dev.d1s.exkt.dto.requiredDtoList
 import dev.d1s.exkt.ktor.server.koin.configuration.Route
 import io.ktor.server.application.*
@@ -29,19 +28,19 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 
-class GetBlocksRoute : Route, KoinComponent {
+class GetTranslationsRoute : Route, KoinComponent {
 
-    override val qualifier = named("get-blocks-route")
+    override val qualifier = named("get-translations-route")
 
-    private val blockService by inject<BlockService>()
+    private val translationService by inject<TranslationService>()
 
     override fun Routing.apply() {
-        get(Paths.GET_BLOCKS) {
-            val spaceIdentifier = call.requiredSpaceIdQueryParameter
-            val languageCode = call.languageCodeQueryParameter
-            val foundBlocks = blockService.getBlocks(spaceIdentifier, languageCode, requireDto = true).getOrThrow()
+        get(Paths.GET_TRANSLATIONS) {
+            val spaceId = call.spaceIdQueryParameter
 
-            call.respond(foundBlocks.requiredDtoList)
+            val foundTranslations = translationService.getTranslations(spaceId, requireDto = true).getOrThrow()
+
+            call.respond(foundTranslations.requiredDtoList)
         }
     }
 }

@@ -16,11 +16,28 @@
 
 package dev.d1s.beam.daemon.database
 
-import org.ktorm.database.Database
-import org.ktorm.entity.sequenceOf
+import dev.d1s.beam.commons.TranslationMap
+import dev.d1s.beam.daemon.entity.TranslationEntity
+import org.ktorm.jackson.json
+import org.ktorm.schema.Table
+import org.ktorm.schema.text
+import org.ktorm.schema.uuid
 
-val Database.spaces get() = sequenceOf(Spaces)
+object Translations : Table<TranslationEntity>(tableName = "translation") {
 
-val Database.blocks get() = sequenceOf(Blocks)
+    val spaceId = uuid("space_id").references(Spaces) {
+        it.space
+    }
 
-val Database.translations get() = sequenceOf(Translations)
+    val languageCode = text("language_code").bindTo {
+        it.languageCode
+    }
+
+    val languageName = text("language_name").bindTo {
+        it.languageName
+    }
+
+    val translations = json<TranslationMap>("translations").bindTo {
+        it.translations
+    }
+}

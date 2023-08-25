@@ -66,7 +66,7 @@ public interface PublicBeamClient {
 
     public suspend fun getSpaces(limit: Int, offset: Int): Result<Spaces>
 
-    public suspend fun getBlocks(spaceId: SpaceIdentifier): Result<Blocks>
+    public suspend fun getBlocks(spaceId: SpaceIdentifier, languageCode: LanguageCode? = null): Result<Blocks>
 
     public suspend fun onSpaceCreated(block: suspend (WebSocketEvent<Space>) -> Unit): Result<Job>
 
@@ -172,10 +172,14 @@ public class DefaultPublicBeamClient(
     override suspend fun getSpaces(limit: Int, offset: Int): Result<Spaces> =
         getSpaces(LimitAndOffset(limit, offset))
 
-    override suspend fun getBlocks(spaceId: SpaceIdentifier): Result<Blocks> =
+    public override suspend fun getBlocks(spaceId: SpaceIdentifier, languageCode: LanguageCode?): Result<Blocks> =
         runCatching {
             httpClient.get(Paths.GET_BLOCKS) {
                 parameter(Paths.SPACE_ID_QUERY_PARAMETER, spaceId)
+
+                languageCode?.let {
+                    parameter(Paths.LANGUAGE_CODE_QUERY_PARAMETER, it)
+                }
             }.body()
         }
 
