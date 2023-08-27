@@ -18,6 +18,7 @@ package dev.d1s.beam.commons.validation
 
 import dev.d1s.beam.commons.ModifiedRootSpace
 import dev.d1s.beam.commons.ModifiedSpace
+import dev.d1s.beam.commons.Regex
 import dev.d1s.beam.commons.SpaceSlug
 import dev.d1s.exkt.konform.matches
 import io.konform.validation.Validation

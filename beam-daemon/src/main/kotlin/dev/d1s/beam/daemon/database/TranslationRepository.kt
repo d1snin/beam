@@ -26,6 +26,7 @@ import org.koin.core.component.inject
 import org.ktorm.database.Database
 import org.ktorm.dsl.and
 import org.ktorm.dsl.eq
+import org.ktorm.dsl.isNull
 import org.ktorm.entity.add
 import org.ktorm.entity.filter
 import org.ktorm.entity.find
@@ -35,10 +36,10 @@ interface TranslationRepository {
 
     suspend fun addTranslation(translation: TranslationEntity): Result<TranslationEntity>
 
-    suspend fun findTranslationsBySpace(space: SpaceEntity): Result<TranslationEntities>
+    suspend fun findTranslationsBySpace(space: SpaceEntity?): Result<TranslationEntities>
 
     suspend fun findTranslationBySpaceAndLanguageCode(
-        space: SpaceEntity,
+        space: SpaceEntity?,
         languageCode: LanguageCode
     ): Result<TranslationEntity>
 
@@ -54,25 +55,28 @@ class DefaultTranslationRepository : TranslationRepository, KoinComponent {
     override suspend fun addTranslation(translation: TranslationEntity): Result<TranslationEntity> =
         withIoCatching {
             translation.apply {
+                setId()
                 database.translations.add(this)
             }
         }
 
-    override suspend fun findTranslationsBySpace(space: SpaceEntity): Result<TranslationEntities> =
+    override suspend fun findTranslationsBySpace(space: SpaceEntity?): Result<TranslationEntities> =
         withIoCatching {
-            database.translations.filter {
-                it.spaceId eq space.id
+            database.translations.filter { translation ->
+                makeBinaryExpression(translation, space)
             }.toList()
         }
 
     override suspend fun findTranslationBySpaceAndLanguageCode(
-        space: SpaceEntity,
+        space: SpaceEntity?,
         languageCode: LanguageCode
     ): Result<TranslationEntity> =
         withIoCatching {
-            database.translations.find {
-                (it.spaceId eq space.id) and (it.languageCode eq languageCode)
-            } ?: error("Translation not found by space ${space.id} and language code '$languageCode'")
+            database.translations.find { translation ->
+                val spaceMatches = makeBinaryExpression(translation, space)
+
+                spaceMatches and (translation.languageCode eq languageCode)
+            } ?: error("Translation not found by space ${space?.id} and language code '$languageCode'")
         }
 
     override suspend fun updateTranslation(translation: TranslationEntity): Result<TranslationEntity> =
@@ -87,4 +91,9 @@ class DefaultTranslationRepository : TranslationRepository, KoinComponent {
             translation.delete()
             Unit
         }
+
+    private fun makeBinaryExpression(translation: Translations, space: SpaceEntity?) =
+        space?.let {
+            translation.spaceId eq it.id
+        } ?: translation.spaceId.isNull()
 }

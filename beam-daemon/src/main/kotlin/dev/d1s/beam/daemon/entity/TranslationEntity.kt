@@ -19,13 +19,14 @@ package dev.d1s.beam.daemon.entity
 import dev.d1s.beam.commons.LanguageCode
 import dev.d1s.beam.commons.LanguageName
 import dev.d1s.beam.commons.TranslationMap
+import dev.d1s.exkt.ktorm.UuidIdentified
 import org.ktorm.entity.Entity
 
 typealias TranslationEntities = List<TranslationEntity>
 
-interface TranslationEntity : Entity<TranslationEntity> {
+interface TranslationEntity : UuidIdentified<TranslationEntity> {
 
-    var space: SpaceEntity
+    var space: SpaceEntity?
 
     var languageCode: LanguageCode
 
@@ -37,4 +38,4 @@ interface TranslationEntity : Entity<TranslationEntity> {
 }
 
 val TranslationEntity.asString
-    get() = "TranslationEntity{space = ${space.id}, languageCode = $languageCode, languageName = $languageName}"
+    get() = "TranslationEntity{languageCode = $languageCode, languageName = $languageName}"

@@ -63,7 +63,7 @@ class PutTranslationRoute : Route, KoinComponent {
                 val spaceModificationAllowed =
                     authService.isSpaceModificationAllowed(
                         call.jwtSubject,
-                        spaceId ?: TranslationService.GLOBAL_SPACE_IDENTIFIER
+                        spaceId ?: TranslationService.GLOBAL_TRANSLATION_PERMITTED_SPACE
                     ).getOrThrow()
 
                 if (spaceModificationAllowed) {

@@ -25,7 +25,7 @@ import dev.d1s.beam.daemon.entity.TranslationEntity
 import dev.d1s.beam.daemon.exception.ForbiddenException
 import dev.d1s.beam.daemon.service.AuthService
 import dev.d1s.beam.daemon.service.TranslationService
-import dev.d1s.beam.daemon.util.requiredSpaceIdQueryParameter
+import dev.d1s.beam.daemon.util.spaceIdQueryParameter
 import dev.d1s.exkt.dto.DtoConverter
 import dev.d1s.exkt.dto.requiredDto
 import dev.d1s.exkt.ktor.server.koin.configuration.Route
@@ -57,11 +57,13 @@ class PostTranslationRoute : Route, KoinComponent {
                 val body = call.receive<TranslationModification>()
                 validateTranslation(body)
 
-                val spaceId = call.requiredSpaceIdQueryParameter
+                val spaceId = call.spaceIdQueryParameter
 
                 val spaceModificationAllowed =
-                    authService.isSpaceModificationAllowed(call.jwtSubject, spaceId)
-                        .getOrThrow()
+                    authService.isSpaceModificationAllowed(
+                        call.jwtSubject,
+                        spaceId ?: TranslationService.GLOBAL_TRANSLATION_PERMITTED_SPACE
+                    ).getOrThrow()
 
                 if (spaceModificationAllowed) {
                     val translation = translationModificationDtoConverter.convertToEntity(body)

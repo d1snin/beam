@@ -26,7 +26,7 @@ class TranslationDtoConverter : DtoConverter<TranslationEntity, Translation>, Ko
     override suspend fun convertToDto(entity: TranslationEntity) =
         entity.run {
             Translation(
-                space.id.toString(),
+                space?.id?.toString(),
                 languageCode,
                 requireNotNull(languageName) { "Language name is required in DTO" },
                 translations

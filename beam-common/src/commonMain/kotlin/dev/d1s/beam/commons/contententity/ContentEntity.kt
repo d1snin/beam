@@ -25,6 +25,7 @@ public typealias ContentEntityTypeName = String
 public typealias ContentEntityParameterName = String
 public typealias ContentEntityParameterValue = String
 public typealias ContentEntityParameters = Map<ContentEntityParameterName, ContentEntityParameterValue>
+public typealias ContentEntityParameter = Map.Entry<ContentEntityParameterName, ContentEntityParameterValue>
 
 @Serializable
 public data class ContentEntity(

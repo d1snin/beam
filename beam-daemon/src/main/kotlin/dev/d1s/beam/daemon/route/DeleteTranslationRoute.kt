@@ -22,7 +22,7 @@ import dev.d1s.beam.daemon.exception.ForbiddenException
 import dev.d1s.beam.daemon.service.AuthService
 import dev.d1s.beam.daemon.service.TranslationService
 import dev.d1s.beam.daemon.util.requiredLanguageCodeParameter
-import dev.d1s.beam.daemon.util.requiredSpaceIdQueryParameter
+import dev.d1s.beam.daemon.util.spaceIdQueryParameter
 import dev.d1s.exkt.ktor.server.koin.configuration.Route
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -44,11 +44,13 @@ class DeleteTranslationRoute : Route, KoinComponent {
     override fun Routing.apply() {
         authenticate {
             delete(Paths.DELETE_TRANSLATION) {
-                val spaceId = call.requiredSpaceIdQueryParameter
+                val spaceId = call.spaceIdQueryParameter
                 val languageCode = call.requiredLanguageCodeParameter
 
-                val spaceModificationAllowed = authService.isSpaceModificationAllowed(call.jwtSubject, spaceId)
-                    .getOrThrow()
+                val spaceModificationAllowed = authService.isSpaceModificationAllowed(
+                    call.jwtSubject,
+                    spaceId ?: TranslationService.GLOBAL_TRANSLATION_PERMITTED_SPACE
+                ).getOrThrow()
 
                 if (spaceModificationAllowed) {
                     translationService.removeTranslation(spaceId, languageCode).getOrThrow()

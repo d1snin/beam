@@ -27,7 +27,9 @@ public sealed class ContentEntityTypeDefinition(public val name: ContentEntityTy
         required: Boolean = false,
         translatable: Boolean = false
     ): ContentEntityParameterDefinition =
-        ContentEntityParameterDefinition(name, required, translatable)
+        ContentEntityParameterDefinition(name, required, translatable).also {
+            internalParameters += it
+        }
 }
 
 public data object VoidContentEntityTypeDefinition : ContentEntityTypeDefinition(name = "void") {

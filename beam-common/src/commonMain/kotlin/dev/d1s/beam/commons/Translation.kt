@@ -18,12 +18,21 @@ package dev.d1s.beam.commons
 
 import kotlinx.serialization.Serializable
 
+public typealias TranslationQualifier = String
+
 public typealias Template = String
+
 public typealias LanguageCode = String
 public typealias LanguageName = String
+
 public typealias TextLocation = String
+
 public typealias TranslatedText = String
+
 public typealias TranslationMap = Map<TextLocation, TranslatedText>
+
+public fun TranslationQualifier(spaceId: SpaceId?, languageCode: LanguageCode): TranslationQualifier =
+    (spaceId?.let { "$it-" } ?: "") + languageCode
 
 public sealed interface AbstractTranslation {
 
@@ -36,7 +45,7 @@ public sealed interface AbstractTranslation {
 
 @Serializable
 public data class Translation(
-    val space: SpaceId,
+    val space: SpaceId?,
     override val languageCode: LanguageCode,
     override val languageName: LanguageName,
     override val translations: TranslationMap

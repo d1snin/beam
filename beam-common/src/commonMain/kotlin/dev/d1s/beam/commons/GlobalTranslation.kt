@@ -14,17 +14,20 @@
  * limitations under the License.
  */
 
-package dev.d1s.beam.daemon.database
+package dev.d1s.beam.commons
 
-import org.koin.core.context.GlobalContext
-import org.ktorm.database.Database
-import org.ktorm.database.Transaction
+public object GlobalTranslation {
 
-private val database by lazy {
-    GlobalContext.get().get<Database>()
+    public const val TEST_LOCATION: TextLocation = "test"
+
+    public val Locations: List<TextLocation> = listOf(TEST_LOCATION)
+
+    public val Default: Translation = Translation(
+        space = null,
+        languageCode = "en",
+        languageName = "English",
+        translations = mapOf(
+            TEST_LOCATION to "test translation"
+        )
+    )
 }
-
-suspend fun <T> transaction(block: suspend (Transaction) -> T): T =
-    database.useTransaction { transaction ->
-        block(transaction)
-    }

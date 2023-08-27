@@ -18,6 +18,7 @@ package dev.d1s.beam.commons.validation
 
 import dev.d1s.beam.commons.Metadata
 import dev.d1s.beam.commons.MetadataEntry
+import dev.d1s.beam.commons.Regex
 import dev.d1s.exkt.konform.matches
 import io.konform.validation.Validation
 import io.konform.validation.jsonschema.maxItems

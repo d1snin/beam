@@ -78,7 +78,7 @@ class DefaultSpaceService : SpaceService, KoinComponent {
 
     private val spaceRepository by inject<SpaceRepository>()
 
-    private val spaceDtoConverter by inject<DtoConverter<SpaceEntity, Space>>(qualifier = DtoConverters.SpaceDtoConverterQualifier)
+    private val spaceDtoConverter by inject<DtoConverter<SpaceEntity, Space>>(DtoConverters.SpaceDtoConverterQualifier)
 
     private val eventChannel by inject<WebSocketEventChannel>()
 
@@ -91,11 +91,10 @@ class DefaultSpaceService : SpaceService, KoinComponent {
     ): ResultingEntityWithOptionalDto<SpaceEntity, SpaceWithToken> =
         runCatching {
             logger.d {
-                "Creating space ${space.asString}"
+                "Creating space ${space.asString}..."
             }
 
             checkRootCreation(space, allowRootCreation)
-
             checkRootSpaceCreated(space)
 
             if (!space.isRoot) {

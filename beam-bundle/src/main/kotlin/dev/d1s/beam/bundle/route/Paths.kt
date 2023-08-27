@@ -16,7 +16,7 @@
 
 package dev.d1s.beam.bundle.route
 
-import dev.d1s.beam.commons.validation.Regex as CommonRegex
+import dev.d1s.beam.commons.Regex as CommonRegex
 
 object Paths {
 

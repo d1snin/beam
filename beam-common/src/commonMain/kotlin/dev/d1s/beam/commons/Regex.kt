@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dev.d1s.beam.commons.validation
+package dev.d1s.beam.commons
 
 import kotlin.text.Regex
 

@@ -18,12 +18,13 @@ package dev.d1s.beam.daemon.database
 
 import dev.d1s.beam.commons.TranslationMap
 import dev.d1s.beam.daemon.entity.TranslationEntity
+import dev.d1s.exkt.ktorm.UuidIdentifiedEntities
 import org.ktorm.jackson.json
-import org.ktorm.schema.Table
 import org.ktorm.schema.text
 import org.ktorm.schema.uuid
 
-object Translations : Table<TranslationEntity>(tableName = "translation") {
+@Suppress("unused")
+object Translations : UuidIdentifiedEntities<TranslationEntity>(tableName = "translation") {
 
     val spaceId = uuid("space_id").references(Spaces) {
         it.space

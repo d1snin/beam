@@ -26,14 +26,14 @@ val ApplicationCall.requiredIdParameter: String
 val ApplicationCall.requiredLanguageCodeParameter: String
     get() = requiredParameter(Paths.LANGUAGE_CODE_PARAMETER)
 
+val ApplicationCall.spaceIdQueryParameter: String?
+    get() = request.queryParameters[Paths.SPACE_ID_QUERY_PARAMETER]
+
 val ApplicationCall.requiredSpaceIdQueryParameter: String
     get() = requiredQueryParameter(Paths.SPACE_ID_QUERY_PARAMETER)
 
-val ApplicationCall.spaceIdQueryParameter: String?
-    get() = parameters[Paths.SPACE_ID_QUERY_PARAMETER]
-
 val ApplicationCall.languageCodeQueryParameter: String?
-    get() = parameters[Paths.LANGUAGE_CODE_QUERY_PARAMETER]
+    get() = request.queryParameters[Paths.LANGUAGE_CODE_QUERY_PARAMETER]
 
 private fun ApplicationCall.requiredParameter(parameter: String) =
     requiredValue(parameters[parameter], message = "Parameter '$parameter' not found")

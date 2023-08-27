@@ -24,7 +24,6 @@ import dev.d1s.beam.commons.event.EntityUpdate
 import dev.d1s.beam.commons.event.EventReferences
 import dev.d1s.beam.daemon.configuration.DtoConverters
 import dev.d1s.beam.daemon.database.BlockRepository
-import dev.d1s.beam.daemon.database.transaction
 import dev.d1s.beam.daemon.entity.BlockEntity
 import dev.d1s.beam.daemon.entity.SpaceEntity
 import dev.d1s.beam.daemon.entity.asString
@@ -70,7 +69,7 @@ class DefaultBlockService : BlockService, KoinComponent {
 
     private val blockRepository by inject<BlockRepository>()
 
-    private val blockDtoConverter by inject<DtoConverter<BlockEntity, Block>>(qualifier = DtoConverters.BlockDtoConverterQualifier)
+    private val blockDtoConverter by inject<DtoConverter<BlockEntity, Block>>(DtoConverters.BlockDtoConverterQualifier)
 
     private val eventChannel by inject<WebSocketEventChannel>()
 
@@ -91,20 +90,17 @@ class DefaultBlockService : BlockService, KoinComponent {
 
             checkBlockLimit(block)
 
+            translationService.verifyLocationsExist(block).getOrThrow()
+
             processBlockIndex(block)
 
-            val addedAndTranslatedBlock = transaction {
-                val addedBlock = blockRepository.addBlock(block).getOrThrow()
-                val translatedBlock = translateOptionally(addedBlock, languageCode)
+            val addedBlock = blockRepository.addBlock(block).getOrThrow()
+            val translatedBlock = translateOptionally(addedBlock, languageCode)
+            val translatedBlockDto = blockDtoConverter.convertToDto(translatedBlock)
 
-                translatedBlock
-            }
+            sendBlockCreatedEvent(translatedBlockDto)
 
-            val addedBlockDto = blockDtoConverter.convertToDto(addedAndTranslatedBlock)
-
-            sendBlockCreatedEvent(addedBlockDto)
-
-            addedAndTranslatedBlock to addedBlockDto
+            translatedBlock to translatedBlockDto
         }
 
     override suspend fun getBlock(
@@ -166,6 +162,8 @@ class DefaultBlockService : BlockService, KoinComponent {
             val (originalBlock, originalBlockDto) = getBlock(id, requireDto = true).getOrThrow()
             requireNotNull(originalBlockDto)
 
+            translationService.verifyLocationsExist(modification).getOrThrow()
+
             originalBlock.apply {
                 this.index = modification.index
                 this.size = modification.size
@@ -174,18 +172,13 @@ class DefaultBlockService : BlockService, KoinComponent {
                 this.space = modification.space
             }
 
-            val updatedAndTranslatedBlock = transaction {
-                val updatedBlock = blockRepository.updateBlock(originalBlock).getOrThrow()
-                val translatedBlock = translateOptionally(updatedBlock, languageCode)
+            val updatedBlock = blockRepository.updateBlock(originalBlock).getOrThrow()
+            val translatedBlock = translateOptionally(updatedBlock, languageCode)
+            val translatedBlockDto = blockDtoConverter.convertToDto(translatedBlock)
 
-                translatedBlock
-            }
+            sendBlockUpdatedEvent(originalBlockDto, translatedBlockDto)
 
-            val updatedBlockDto = blockDtoConverter.convertToDto(updatedAndTranslatedBlock)
-
-            sendBlockUpdatedEvent(originalBlockDto, updatedBlockDto)
-
-            updatedAndTranslatedBlock to updatedBlockDto
+            updatedBlock to translatedBlockDto
         }
 
     override suspend fun removeBlock(id: BlockId): Result<Unit> =
@@ -250,9 +243,9 @@ class DefaultBlockService : BlockService, KoinComponent {
     }
 
     private suspend fun translateOptionally(block: BlockEntity, languageCode: LanguageCode?) =
-        block.copy().apply {
+        block.apply {
             languageCode?.let {
-                translationService.translateEntities(block = this, languageCode = it)
+                translationService.translateBlock(block = this, languageCode = it)
             }
         }
 

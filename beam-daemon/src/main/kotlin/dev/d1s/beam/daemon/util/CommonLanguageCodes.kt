@@ -207,5 +207,10 @@ val CommonLanguageCodes = listOf(
     "zu" named "Zulu"
 )
 
+fun List<CommonLanguageCode>.byCode(code: LanguageCode) =
+    find {
+        it.code == code
+    }
+
 private infix fun LanguageName.named(name: LanguageName) =
     CommonLanguageCode(this, name)

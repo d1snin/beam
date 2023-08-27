@@ -17,6 +17,7 @@
 package dev.d1s.beam.commons.validation
 
 import dev.d1s.beam.commons.AbstractTranslation
+import dev.d1s.beam.commons.Regex
 import dev.d1s.beam.commons.TextLocation
 import dev.d1s.beam.commons.TranslatedText
 import dev.d1s.exkt.konform.matches
