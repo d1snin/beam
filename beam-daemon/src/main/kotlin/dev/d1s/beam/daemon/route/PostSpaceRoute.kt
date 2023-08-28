@@ -25,6 +25,7 @@ import dev.d1s.beam.daemon.entity.SpaceEntity
 import dev.d1s.beam.daemon.exception.ForbiddenException
 import dev.d1s.beam.daemon.service.AuthService
 import dev.d1s.beam.daemon.service.SpaceService
+import dev.d1s.beam.daemon.util.languageCodeQueryParameter
 import dev.d1s.beam.daemon.validation.orThrow
 import dev.d1s.exkt.dto.DtoConverter
 import dev.d1s.exkt.dto.requiredDto
@@ -83,7 +84,9 @@ class PostSpaceRoute : Route, KoinComponent {
 
         val space = spaceModificationDtoConverter.convertToEntity(body)
 
-        val createdSpace = spaceService.createSpace(space).getOrThrow()
+        val languageCode = call.languageCodeQueryParameter
+
+        val createdSpace = spaceService.createSpace(space, languageCode = languageCode).getOrThrow()
 
         call.respond(HttpStatusCode.Created, createdSpace.requiredDto)
     }

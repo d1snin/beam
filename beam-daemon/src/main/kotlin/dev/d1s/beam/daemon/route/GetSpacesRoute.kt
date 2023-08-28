@@ -18,6 +18,7 @@ package dev.d1s.beam.daemon.route
 
 import dev.d1s.beam.commons.Paths
 import dev.d1s.beam.daemon.service.SpaceService
+import dev.d1s.beam.daemon.util.languageCodeQueryParameter
 import dev.d1s.beam.daemon.util.requiredLimitAndOffsetQueryParameters
 import dev.d1s.exkt.dto.requiredDto
 import dev.d1s.exkt.ktor.server.koin.configuration.Route
@@ -37,8 +38,9 @@ class GetSpacesRoute : Route, KoinComponent {
     override fun Routing.apply() {
         get(Paths.GET_SPACES) {
             val (limit, offset) = call.requiredLimitAndOffsetQueryParameters
+            val languageCode = call.languageCodeQueryParameter
 
-            val foundSpaces = spaceService.getSpaces(limit, offset, requireDto = true).getOrThrow()
+            val foundSpaces = spaceService.getSpaces(limit, offset, languageCode, requireDto = true).getOrThrow()
 
             call.respond(foundSpaces.requiredDto)
         }

@@ -30,6 +30,7 @@ import dev.d1s.exkt.dto.DtoConverter
 import dev.d1s.exkt.dto.ResultingEntityWithOptionalDto
 import dev.d1s.exkt.dto.convertToDtoIf
 import dev.d1s.exkt.ktor.server.postgres.handlePsqlUniqueViolationThrowingConflictStatusException
+import dev.d1s.exkt.ktorm.ExportedSequence
 import dev.d1s.exkt.ktorm.dto.ResultingExportedSequenceWithOptionalDto
 import dev.d1s.exkt.ktorm.dto.convertExportedSequenceToDtoIf
 import dev.d1s.ktor.events.commons.event
@@ -44,13 +45,15 @@ interface SpaceService {
 
     suspend fun createSpace(
         space: SpaceEntity,
-        allowRootCreation: Boolean = false
+        allowRootCreation: Boolean = false,
+        languageCode: LanguageCode? = null
     ): ResultingEntityWithOptionalDto<SpaceEntity, SpaceWithToken>
 
     suspend fun createRootSpace(space: SpaceEntity): ResultingEntityWithOptionalDto<SpaceEntity, SpaceWithToken>
 
     suspend fun getSpace(
         uniqueIdentifier: SpaceIdentifier,
+        languageCode: LanguageCode? = null,
         requireDto: Boolean = false
     ): ResultingEntityWithOptionalDto<SpaceEntity, Space>
 
@@ -59,16 +62,19 @@ interface SpaceService {
     suspend fun getSpaces(
         limit: Int,
         offset: Int,
+        languageCode: LanguageCode? = null,
         requireDto: Boolean = false
     ): ResultingExportedSequenceWithOptionalDto<SpaceEntity, Space>
 
     suspend fun updateSpace(
         uniqueIdentifier: SpaceIdentifier,
-        modification: SpaceEntity
+        modification: SpaceEntity,
+        languageCode: LanguageCode? = null
     ): ResultingEntityWithOptionalDto<SpaceEntity, Space>
 
     suspend fun updateRootSpace(
-        modification: SpaceEntity
+        modification: SpaceEntity,
+        languageCode: LanguageCode? = null
     ): ResultingEntityWithOptionalDto<SpaceEntity, Space>
 
     suspend fun removeSpace(uniqueIdentifier: SpaceIdentifier): Result<Unit>
@@ -84,10 +90,13 @@ class DefaultSpaceService : SpaceService, KoinComponent {
 
     private val authService by inject<AuthService>()
 
+    private val translationService by inject<TranslationService>()
+
     private val logger = logging()
     override suspend fun createSpace(
         space: SpaceEntity,
-        allowRootCreation: Boolean
+        allowRootCreation: Boolean,
+        languageCode: LanguageCode?
     ): ResultingEntityWithOptionalDto<SpaceEntity, SpaceWithToken> =
         runCatching {
             logger.d {
@@ -97,6 +106,8 @@ class DefaultSpaceService : SpaceService, KoinComponent {
             checkRootCreation(space, allowRootCreation)
             checkRootSpaceCreated(space)
 
+            translationService.verifyLocationsNotUsed(space).getOrThrow()
+
             if (!space.isRoot) {
                 space.role = Role.DEFAULT
             }
@@ -104,13 +115,14 @@ class DefaultSpaceService : SpaceService, KoinComponent {
             val addedSpace = handleUniqueSlugViolation {
                 spaceRepository.addSpace(space).getOrThrow()
             }
+            val translatedSpace = translateOptionally(addedSpace, languageCode)
+            val translatedSpaceDto = spaceDtoConverter.convertToDto(translatedSpace)
 
-            val addedSpaceDto = spaceDtoConverter.convertToDto(addedSpace)
-            sendSpaceCreatedEvent(addedSpaceDto)
+            sendSpaceCreatedEvent(translatedSpaceDto)
 
             val token = authService.createToken(space)
 
-            addedSpace to addedSpace.toSpaceWithToken(token)
+            translatedSpace to translatedSpace.toSpaceWithToken(token)
         }
 
     override suspend fun createRootSpace(space: SpaceEntity): ResultingEntityWithOptionalDto<SpaceEntity, SpaceWithToken> =
@@ -131,6 +143,7 @@ class DefaultSpaceService : SpaceService, KoinComponent {
 
     override suspend fun getSpace(
         uniqueIdentifier: SpaceIdentifier,
+        languageCode: LanguageCode?,
         requireDto: Boolean
     ): ResultingEntityWithOptionalDto<SpaceEntity, Space> =
         runCatching {
@@ -148,7 +161,9 @@ class DefaultSpaceService : SpaceService, KoinComponent {
                 throw NotFoundException("Space not found")
             }
 
-            space to spaceDtoConverter.convertToDtoIf(space) {
+            val translatedSpace = translateOptionally(space, languageCode)
+
+            translatedSpace to spaceDtoConverter.convertToDtoIf(translatedSpace) {
                 requireDto
             }
         }
@@ -169,6 +184,7 @@ class DefaultSpaceService : SpaceService, KoinComponent {
     override suspend fun getSpaces(
         limit: Int,
         offset: Int,
+        languageCode: LanguageCode?,
         requireDto: Boolean
     ): ResultingExportedSequenceWithOptionalDto<SpaceEntity, Space> =
         runCatching {
@@ -178,14 +194,17 @@ class DefaultSpaceService : SpaceService, KoinComponent {
 
             val spaces = spaceRepository.findAllSpaces(limit, offset).getOrThrow()
 
-            spaces to spaceDtoConverter.convertExportedSequenceToDtoIf(spaces) {
+            val translatedSpaces = translateOptionally(spaces, languageCode)
+
+            translatedSpaces to spaceDtoConverter.convertExportedSequenceToDtoIf(translatedSpaces) {
                 requireDto
             }
         }
 
     override suspend fun updateSpace(
         uniqueIdentifier: SpaceIdentifier,
-        modification: SpaceEntity
+        modification: SpaceEntity,
+        languageCode: LanguageCode?
     ): ResultingEntityWithOptionalDto<SpaceEntity, Space> =
         runCatching {
             logger.d {
@@ -197,6 +216,8 @@ class DefaultSpaceService : SpaceService, KoinComponent {
 
             checkRootSpaceModification(originalSpace)
 
+            translationService.verifyLocationsExist(modification, explicitId = originalSpace.id.toString()).getOrThrow()
+
             originalSpace.apply {
                 this.slug = modification.slug
                 this.metadata = modification.metadata
@@ -206,15 +227,18 @@ class DefaultSpaceService : SpaceService, KoinComponent {
             val updatedSpace = handleUniqueSlugViolation {
                 spaceRepository.updateSpace(originalSpace).getOrThrow()
             }
+            val translatedSpace = translateOptionally(updatedSpace, languageCode)
+            val translatedSpaceDto = spaceDtoConverter.convertToDto(translatedSpace)
 
-            val updatedSpaceDto = spaceDtoConverter.convertToDto(updatedSpace)
+            sendSpaceUpdatedEvent(originalSpaceDto, translatedSpaceDto)
 
-            sendSpaceUpdatedEvent(originalSpaceDto, updatedSpaceDto)
-
-            updatedSpace to updatedSpaceDto
+            translatedSpace to translatedSpaceDto
         }
 
-    override suspend fun updateRootSpace(modification: SpaceEntity): ResultingEntityWithOptionalDto<SpaceEntity, Space> =
+    override suspend fun updateRootSpace(
+        modification: SpaceEntity,
+        languageCode: LanguageCode?
+    ): ResultingEntityWithOptionalDto<SpaceEntity, Space> =
         runCatching {
             logger.d {
                 "Updating root space with data ${modification.asString}..."
@@ -228,17 +252,20 @@ class DefaultSpaceService : SpaceService, KoinComponent {
             ).getOrThrow()
             requireNotNull(originalSpaceDto)
 
+            translationService.verifyLocationsExist(modification, explicitId = originalSpace.id.toString()).getOrThrow()
+
             originalSpace.apply {
                 this.metadata = modification.metadata
                 this.view = modification.view
             }
 
             val updatedSpace = spaceRepository.updateSpace(originalSpace).getOrThrow()
-            val updatedSpaceDto = spaceDtoConverter.convertToDto(updatedSpace)
+            val translatedSpace = translateOptionally(updatedSpace, languageCode)
+            val translatedSpaceDto = spaceDtoConverter.convertToDto(translatedSpace)
 
-            sendSpaceUpdatedEvent(originalSpaceDto, updatedSpaceDto)
+            sendSpaceUpdatedEvent(originalSpaceDto, translatedSpaceDto)
 
-            updatedSpace to updatedSpaceDto
+            translatedSpace to translatedSpaceDto
         }
 
     override suspend fun removeSpace(uniqueIdentifier: SpaceIdentifier): Result<Unit> =
@@ -288,6 +315,21 @@ class DefaultSpaceService : SpaceService, KoinComponent {
             throw UnprocessableEntityException("Unable to modify root space")
         }
     }
+
+    private suspend fun translateOptionally(space: SpaceEntity, languageCode: LanguageCode?) =
+        space.apply {
+            languageCode?.let {
+                translationService.translateSpace(space = this, languageCode = it)
+            }
+        }
+
+    private suspend fun translateOptionally(spaces: ExportedSequence<SpaceEntity>, languageCode: LanguageCode?) =
+        spaces.copy(
+            elements = spaces.elements.map { space ->
+                translateOptionally(space, languageCode)
+            }
+        )
+
 
     private suspend fun sendSpaceCreatedEvent(spaceDto: Space) {
         val event = event(EventReferences.spaceCreated, spaceDto)

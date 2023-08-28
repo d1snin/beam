@@ -123,7 +123,7 @@ class DefaultBlockService : BlockService, KoinComponent {
 
             val translatedBlock = translateOptionally(block, languageCode)
 
-            translatedBlock to blockDtoConverter.convertToDtoIf(block) {
+            translatedBlock to blockDtoConverter.convertToDtoIf(translatedBlock) {
                 requireDto
             }
         }

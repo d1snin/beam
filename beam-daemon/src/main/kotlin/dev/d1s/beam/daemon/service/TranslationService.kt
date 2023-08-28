@@ -64,7 +64,13 @@ interface TranslationService {
 
     suspend fun translateBlock(block: BlockEntity, languageCode: LanguageCode): Result<Unit>
 
+    suspend fun translateSpace(space: SpaceEntity, languageCode: LanguageCode): Result<Unit>
+
     suspend fun verifyLocationsExist(block: BlockEntity): Result<Unit>
+
+    suspend fun verifyLocationsExist(space: SpaceEntity, explicitId: SpaceId? = null): Result<Unit>
+
+    suspend fun verifyLocationsNotUsed(space: SpaceEntity): Result<Unit>
 
     companion object {
 
@@ -143,6 +149,14 @@ class DefaultTranslationService : TranslationService, KoinComponent {
                 requireDto
             }
         }
+
+    // Боже, да что с ней происходит?
+    // Она же... кто она вообще?
+    // Разве это тот, кого я полюбил?
+    // Почему то, что было в прошлом так сильно отзывается в настоящем?
+    // Ты не можешь отпустить это, ты будто живешь только этим.
+    // Да, мы - результат сложения событий прошлого.
+    // Но...
 
     override suspend fun getTranslations(
         spaceIdentifier: SpaceIdentifier?,
@@ -238,6 +252,18 @@ class DefaultTranslationService : TranslationService, KoinComponent {
             block.entities = modifiedEntities
         }
 
+    override suspend fun translateSpace(space: SpaceEntity, languageCode: LanguageCode): Result<Unit> =
+        runCatching {
+            logger.d {
+                "Translating information of space '${space.id}' in language '$languageCode'..."
+            }
+
+            val (translation, _) = getTranslation(space.id.toString(), languageCode).getOrThrow()
+
+            val modifiedView = space.translateView(translation)
+            space.view = modifiedView
+        }
+
     override suspend fun verifyLocationsExist(block: BlockEntity): Result<Unit> =
         runCatching {
             logger.v {
@@ -250,24 +276,64 @@ class DefaultTranslationService : TranslationService, KoinComponent {
                 "Used locations: $usedLocations"
             }
 
-            val availableLocations = getAvailableSpaceLocations(block.space.id.toString())
+            verifyUsedLocationsExist(usedLocations, block.space)
+        }
+
+    override suspend fun verifyLocationsExist(space: SpaceEntity, explicitId: SpaceId?): Result<Unit> =
+        runCatching {
+            logger.v {
+                "Verifying locations exist on space view configuration"
+            }
+
+            val usedLocations = space.extractLocations()
 
             logger.v {
-                "Available locations: $availableLocations"
+                "Used locations: $usedLocations"
             }
 
-            val unavailableLocations = mutableListOf<TextLocation>()
+            verifyUsedLocationsExist(usedLocations, space, explicitId)
+        }
 
-            usedLocations.forEach { usedLocation ->
-                if (usedLocation !in availableLocations) {
-                    unavailableLocations += usedLocation
-                }
+    override suspend fun verifyLocationsNotUsed(space: SpaceEntity): Result<Unit> =
+        runCatching {
+            logger.v {
+                "Verifying locations not used on space view configuration"
             }
 
-            if (unavailableLocations.isNotEmpty()) {
-                throw BadRequestException("The following locations are not available: $unavailableLocations")
+            val usedLocations = space.extractLocations()
+
+            logger.v {
+                "Used locations: $usedLocations"
+            }
+
+            if (usedLocations.isNotEmpty()) {
+                throw BadRequestException("Unable to process locations on newly creating space")
             }
         }
+
+    private suspend fun verifyUsedLocationsExist(
+        usedLocations: List<TextLocation>,
+        space: SpaceEntity,
+        explicitId: SpaceId? = null
+    ) {
+        val availableLocations = getAvailableSpaceLocations(explicitId ?: space.id.toString())
+
+        logger.v {
+            "Available locations: $availableLocations"
+        }
+
+        val unavailableLocations = mutableListOf<TextLocation>()
+
+        usedLocations.forEach { usedLocation ->
+            if (usedLocation !in availableLocations) {
+                unavailableLocations += usedLocation
+            }
+        }
+
+        if (unavailableLocations.isNotEmpty()) {
+            throw BadRequestException("The following locations are not available: $unavailableLocations")
+        }
+    }
 
     private fun BlockEntity.translateEntities(translation: TranslationEntity): List<ContentEntity> {
         val modifiedEntities = mutableListOf<ContentEntity>()
@@ -287,7 +353,7 @@ class DefaultTranslationService : TranslationService, KoinComponent {
             val isTranslatable = parameter.isTranslatable(contentEntity = this)
 
             if (isTranslatable) {
-                val translatedValue = parameter.value.translateParameterValue(translation)
+                val translatedValue = parameter.value.translateValue(translation)
 
                 modifiedParameters[parameter.key] = translatedValue
             } else {
@@ -298,7 +364,28 @@ class DefaultTranslationService : TranslationService, KoinComponent {
         return modifiedParameters
     }
 
-    private fun ContentEntityParameterValue.translateParameterValue(translation: TranslationEntity) =
+    private fun SpaceEntity.translateView(translation: TranslationEntity) =
+        with(view) {
+            ViewConfiguration(
+                theme = theme,
+                icon = icon?.translateValue(translation),
+                favicon = favicon?.let { fav ->
+                    SpaceFavicon(
+                        appleTouch = fav.appleTouch?.translateValue(translation),
+                        favicon16 = fav.favicon16?.translateValue(translation),
+                        favicon32 = fav.favicon32?.translateValue(translation),
+                        faviconIco = fav.faviconIco?.translateValue(translation),
+                        browserconfig = fav.browserconfig?.translateValue(translation),
+                        maskIcon = fav.maskIcon?.translateValue(translation),
+                        maskIconColor = fav.maskIconColor
+                    )
+                },
+                title = title?.translateValue(translation),
+                description = description?.translateValue(translation),
+            )
+        }
+
+    private fun String.translateValue(translation: TranslationEntity) =
         foldTemplates { initial, template ->
             val location = template.extractTextLocation()
             val translatedText = translation.translations[location]
@@ -400,7 +487,7 @@ class DefaultTranslationService : TranslationService, KoinComponent {
 
     private fun BlockEntity.extractLocations(): List<TextLocation> {
         logger.v {
-            "Extracting used locations"
+            "Extracting used locations from block"
         }
 
         val locations = mutableSetOf<TextLocation>()
@@ -413,13 +500,7 @@ class DefaultTranslationService : TranslationService, KoinComponent {
             }
 
             parameters.forEach { (_, value) ->
-                value.foldTemplates { initial, template ->
-                    val location = template.extractTextLocation()
-
-                    locations += location
-
-                    initial
-                }
+                locations += value.extractLocations()
             }
         }
 
@@ -429,6 +510,50 @@ class DefaultTranslationService : TranslationService, KoinComponent {
 
         return locations.toList()
     }
+
+    private fun SpaceEntity.extractLocations(): List<TextLocation> {
+        logger.v {
+            "Extracting used locations from space"
+        }
+
+        val locations = mutableSetOf<TextLocation>()
+
+        fun String?.extractAndAddLocations() {
+            this?.let {
+                locations += it.extractLocations()
+            }
+        }
+
+        with(view) {
+            icon.extractAndAddLocations()
+
+            favicon?.run {
+                appleTouch.extractAndAddLocations()
+                favicon16.extractAndAddLocations()
+                favicon32.extractAndAddLocations()
+                faviconIco.extractAndAddLocations()
+                browserconfig.extractAndAddLocations()
+                maskIcon.extractAndAddLocations()
+                maskIconColor.extractAndAddLocations()
+            }
+
+            title.extractAndAddLocations()
+            description.extractAndAddLocations()
+        }
+
+        return locations.toList()
+    }
+
+    private fun String.extractLocations(): List<TextLocation> =
+        buildList {
+            foldTemplates { initial, template ->
+                val location = template.extractTextLocation()
+
+                add(location)
+
+                initial
+            }
+        }
 
     private fun ContentEntityParameters.filterTranslatableContentEntityParameters(contentEntity: ContentEntity): ContentEntityParameters =
         filter { parameter ->
