@@ -60,11 +60,11 @@ public interface PublicBeamClient {
 
     public suspend fun postRootSpace(build: RootSpaceModificationBuilder.() -> Unit): Result<SpaceWithToken>
 
-    public suspend fun getSpace(id: SpaceIdentifier): Result<Space>
+    public suspend fun getSpace(id: SpaceIdentifier, languageCode: LanguageCode? = null): Result<Space>
 
-    public suspend fun getSpaces(limitAndOffset: LimitAndOffset): Result<Spaces>
+    public suspend fun getSpaces(limitAndOffset: LimitAndOffset, languageCode: LanguageCode? = null): Result<Spaces>
 
-    public suspend fun getSpaces(limit: Int, offset: Int): Result<Spaces>
+    public suspend fun getSpaces(limit: Int, offset: Int, languageCode: LanguageCode? = null): Result<Spaces>
 
     public suspend fun getBlocks(spaceId: SpaceIdentifier, languageCode: LanguageCode? = null): Result<Blocks>
 
@@ -154,32 +154,32 @@ public class DefaultPublicBeamClient(
     override suspend fun postRootSpace(build: RootSpaceModificationBuilder.() -> Unit): Result<SpaceWithToken> =
         postRootSpace(RootSpaceModificationBuilder().apply(build).build())
 
-    override suspend fun getSpace(id: SpaceIdentifier): Result<Space> =
+    public override suspend fun getSpace(id: SpaceIdentifier, languageCode: LanguageCode?): Result<Space> =
         runCatching {
             val path = Paths.GET_SPACE.replaceIdPlaceholder(id)
 
-            httpClient.get(path).body()
+            httpClient.get(path) {
+                setOptionalLanguageCode(languageCode)
+            }.body()
         }
 
-    override suspend fun getSpaces(limitAndOffset: LimitAndOffset): Result<Spaces> =
+    public override suspend fun getSpaces(limitAndOffset: LimitAndOffset, languageCode: LanguageCode?): Result<Spaces> =
         runCatching {
             httpClient.get(Paths.GET_SPACES) {
                 parameter(Paths.LIMIT_QUERY_PARAMETER, limitAndOffset.limit)
                 parameter(Paths.OFFSET_QUERY_PARAMETER, limitAndOffset.offset)
+                setOptionalLanguageCode(languageCode)
             }.body()
         }
 
-    override suspend fun getSpaces(limit: Int, offset: Int): Result<Spaces> =
+    public override suspend fun getSpaces(limit: Int, offset: Int, languageCode: LanguageCode?): Result<Spaces> =
         getSpaces(LimitAndOffset(limit, offset))
 
     public override suspend fun getBlocks(spaceId: SpaceIdentifier, languageCode: LanguageCode?): Result<Blocks> =
         runCatching {
             httpClient.get(Paths.GET_BLOCKS) {
                 parameter(Paths.SPACE_ID_QUERY_PARAMETER, spaceId)
-
-                languageCode?.let {
-                    parameter(Paths.LANGUAGE_CODE_QUERY_PARAMETER, it)
-                }
+                setOptionalLanguageCode(languageCode)
             }.body()
         }
 
@@ -228,6 +228,12 @@ public class DefaultPublicBeamClient(
 
     override fun isCompatible(daemonVersion: Version): Boolean =
         daemonVersion == VERSION
+
+    private fun HttpRequestBuilder.setOptionalLanguageCode(languageCode: LanguageCode?) {
+        languageCode?.let {
+            parameter(Paths.LANGUAGE_CODE_QUERY_PARAMETER, it)
+        }
+    }
 
     private inline fun <reified T> handleWsEvents(
         reference: EventReference,
