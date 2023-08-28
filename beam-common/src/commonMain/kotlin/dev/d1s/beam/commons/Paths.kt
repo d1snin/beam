@@ -46,6 +46,7 @@ public object Paths {
 
     public const val POST_TRANSLATION: String = "/translations"
     public const val GET_TRANSLATION: String = "/translations/{$LANGUAGE_CODE_PARAMETER}"
+    public const val GET_RESOLVED_TRANSLATION: String = "/translation"
     public const val GET_TRANSLATIONS: String = "/translations"
     public const val PUT_TRANSLATION: String = "/translations/{$LANGUAGE_CODE_PARAMETER}"
     public const val DELETE_TRANSLATION: String = "/translations/{$LANGUAGE_CODE_PARAMETER}"

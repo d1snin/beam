@@ -26,6 +26,7 @@ public object GlobalTranslation {
         space = null,
         languageCode = "en",
         languageName = "English",
+        default = false,
         translations = mapOf(
             TEST_LOCATION to "test translation"
         )

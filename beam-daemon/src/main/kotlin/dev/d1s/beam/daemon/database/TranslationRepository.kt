@@ -43,6 +43,8 @@ interface TranslationRepository {
         languageCode: LanguageCode
     ): Result<TranslationEntity>
 
+    suspend fun findDefaultTranslation(space: SpaceEntity?): Result<TranslationEntity>
+
     suspend fun updateTranslation(translation: TranslationEntity): Result<TranslationEntity>
 
     suspend fun removeTranslation(translation: TranslationEntity): Result<Unit>
@@ -77,6 +79,15 @@ class DefaultTranslationRepository : TranslationRepository, KoinComponent {
 
                 spaceMatches and (translation.languageCode eq languageCode)
             } ?: error("Translation not found by space ${space?.id} and language code '$languageCode'")
+        }
+
+    override suspend fun findDefaultTranslation(space: SpaceEntity?): Result<TranslationEntity> =
+        withIoCatching {
+            database.translations.find { translation ->
+                val spaceMatches = makeBinaryExpression(translation, space)
+
+                spaceMatches and translation.default
+            } ?: error("Default translation not found")
         }
 
     override suspend fun updateTranslation(translation: TranslationEntity): Result<TranslationEntity> =

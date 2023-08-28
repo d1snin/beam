@@ -29,6 +29,7 @@ class TranslationDtoConverter : DtoConverter<TranslationEntity, Translation>, Ko
                 space?.id?.toString(),
                 languageCode,
                 requireNotNull(languageName) { "Language name is required in DTO" },
+                default,
                 translations
             )
         }

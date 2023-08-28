@@ -40,6 +40,8 @@ public sealed interface AbstractTranslation {
 
     public val languageName: LanguageName?
 
+    public val default: Boolean
+
     public val translations: TranslationMap
 }
 
@@ -48,6 +50,7 @@ public data class Translation(
     val space: SpaceId?,
     override val languageCode: LanguageCode,
     override val languageName: LanguageName,
+    override val default: Boolean,
     override val translations: TranslationMap
 ) : AbstractTranslation
 
@@ -55,5 +58,6 @@ public data class Translation(
 public data class TranslationModification(
     override val languageCode: LanguageCode,
     override val languageName: LanguageName?,
+    override val default: Boolean,
     override val translations: TranslationMap
 ) : AbstractTranslation

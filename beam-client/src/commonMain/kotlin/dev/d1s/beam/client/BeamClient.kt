@@ -68,6 +68,8 @@ public interface PublicBeamClient {
 
     public suspend fun getBlocks(spaceId: SpaceIdentifier, languageCode: LanguageCode? = null): Result<Blocks>
 
+    public suspend fun resolveTranslation(spaceId: SpaceIdentifier?, languageCode: LanguageCode): Result<Translation>
+
     public suspend fun onSpaceCreated(block: suspend (WebSocketEvent<Space>) -> Unit): Result<Job>
 
     public suspend fun onSpaceUpdated(
@@ -180,6 +182,19 @@ public class DefaultPublicBeamClient(
             httpClient.get(Paths.GET_BLOCKS) {
                 parameter(Paths.SPACE_ID_QUERY_PARAMETER, spaceId)
                 setOptionalLanguageCode(languageCode)
+            }.body()
+        }
+
+    override suspend fun resolveTranslation(
+        spaceId: SpaceIdentifier?,
+        languageCode: LanguageCode
+    ): Result<Translation> =
+        runCatching {
+            httpClient.get(Paths.GET_RESOLVED_TRANSLATION) {
+                spaceId?.let {
+                    parameter(Paths.SPACE_ID_QUERY_PARAMETER, it)
+                }
+                parameter(Paths.LANGUAGE_CODE_QUERY_PARAMETER, languageCode)
             }.body()
         }
 

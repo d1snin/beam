@@ -32,10 +32,12 @@ interface TranslationEntity : UuidIdentified<TranslationEntity> {
 
     var languageName: LanguageName?
 
+    var default: Boolean
+
     var translations: TranslationMap
 
     companion object : Entity.Factory<TranslationEntity>()
 }
 
 val TranslationEntity.asString
-    get() = "TranslationEntity{languageCode = $languageCode, languageName = $languageName}"
+    get() = "TranslationEntity{languageCode = $languageCode, languageName = $languageName, default = $default}"

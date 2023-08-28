@@ -44,6 +44,7 @@ object Routing : ApplicationConfigurer {
 
             +PostTranslationRoute()
             +GetTranslationRoute()
+            +GetResolvedTranslationRoute()
             +GetTranslationsRoute()
             +PutTranslationRoute()
             +DeleteTranslationRoute()

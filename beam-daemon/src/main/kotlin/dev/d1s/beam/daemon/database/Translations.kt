@@ -20,6 +20,7 @@ import dev.d1s.beam.commons.TranslationMap
 import dev.d1s.beam.daemon.entity.TranslationEntity
 import dev.d1s.exkt.ktorm.UuidIdentifiedEntities
 import org.ktorm.jackson.json
+import org.ktorm.schema.boolean
 import org.ktorm.schema.text
 import org.ktorm.schema.uuid
 
@@ -36,6 +37,10 @@ object Translations : UuidIdentifiedEntities<TranslationEntity>(tableName = "tra
 
     val languageName = text("language_name").bindTo {
         it.languageName
+    }
+
+    val default = boolean("default_flag").bindTo {
+        it.default
     }
 
     val translations = json<TranslationMap>("translations").bindTo {

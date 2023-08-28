@@ -196,6 +196,16 @@
                 },
                 {
                   "column": {
+                    "name": "default_flag",
+                    "type": "boolean",
+                    "constraints": {
+                      "nullable": false,
+                      "notNullConstraintName": "nn_translation_default_flag"
+                    }
+                  }
+                },
+                {
+                  "column": {
                     "name": "translations",
                     "type": "json",
                     "constraints": {

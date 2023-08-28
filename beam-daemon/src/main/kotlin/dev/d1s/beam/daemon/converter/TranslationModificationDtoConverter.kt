@@ -26,6 +26,7 @@ class TranslationModificationDtoConverter : DtoConverter<TranslationEntity, Tran
         TranslationEntity {
             languageCode = dto.languageCode
             languageName = dto.languageName
+            default = dto.default
             translations = dto.translations
         }
 }
