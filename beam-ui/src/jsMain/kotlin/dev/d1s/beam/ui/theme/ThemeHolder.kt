@@ -35,7 +35,8 @@ class DefaultThemeHolder : ThemeHolder, KoinComponent {
 
     private val themes = listOf(
         AccentDarkTheme,
-        BarbieTheme
+        BarbieTheme,
+        CatppuccinMochaTheme
     )
 
     private val currentThemeDefinition = atomic(SpaceThemeDefinition.Fallback)

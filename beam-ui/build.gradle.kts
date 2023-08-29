@@ -62,6 +62,8 @@ kotlin {
                 implementation("io.kvision:kvision:$kvisionVersion")
                 implementation("io.kvision:kvision-state:$kvisionVersion")
 
+                implementation("com.catppuccin:catppuccin-kotlin:$catppuccinKotlinVersion")
+
                 implementation("io.insert-koin:koin-core:$koinVersion")
 
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion")
