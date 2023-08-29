@@ -29,5 +29,5 @@ public object Regex {
     public val TemplateEscape: Regex = Regex("\\\\(?=\\\$\\{([a-z0-9]{1,20})([-.][a-z0-9]{0,20}){0,10}\\})")
     public val TextLocation: Regex = Regex("(?<!\\\\)(?<=\\\$\\{)([a-z0-9]{1,20})([-.][a-z0-9]{0,20}){0,10}(?=\\})")
     public val UnwrappedTextLocation: Regex = Regex("([a-z0-9]{1,20})([-.][a-z0-9]{0,20}){0,10}")
-    public val LanguageCode: Regex = Regex("[a-z]{2,4}")
+    public val LanguageCode: Regex = Regex("[a-z]{2}")
 }
