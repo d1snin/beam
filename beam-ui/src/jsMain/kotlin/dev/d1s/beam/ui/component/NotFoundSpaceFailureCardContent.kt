@@ -18,7 +18,9 @@ package dev.d1s.beam.ui.component
 
 import dev.d1s.beam.ui.state.bindToCurrentTheme
 import dev.d1s.beam.ui.theme.currentTheme
-import dev.d1s.beam.ui.util.Texts
+import dev.d1s.beam.ui.util.currentTranslation
+import dev.d1s.beam.ui.util.spaceFailureCardNotFoundIconAlt
+import dev.d1s.beam.ui.util.spaceFailureCardNotFoundMessage
 import io.kvision.html.image
 import io.kvision.panel.SimplePanel
 import org.koin.core.component.KoinComponent
@@ -31,13 +33,13 @@ class NotFoundSpaceFailureCardContent : SpaceFailureCardContent(), KoinComponent
         bindToCurrentTheme {
             image(
                 currentTheme.notFoundIcon,
-                alt = Texts.Body.SpaceFailureCard.NotFoundMode.ICON_ALT,
+                alt = currentTranslation.spaceFailureCardNotFoundIconAlt,
                 className = "w-100 mb-4 mb-lg-5"
             )
         }
     }
 
     override fun SimplePanel.text() {
-        spaceFailureCardText(Texts.Body.SpaceFailureCard.NotFoundMode.TEXT)
+        spaceFailureCardText(currentTranslation.spaceFailureCardNotFoundMessage)
     }
 }

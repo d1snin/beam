@@ -17,7 +17,9 @@
 package dev.d1s.beam.ui.component
 
 import dev.d1s.beam.ui.theme.setSecondaryText
-import dev.d1s.beam.ui.util.Texts
+import dev.d1s.beam.ui.util.currentTranslation
+import dev.d1s.beam.ui.util.disconnectedDaemonStatusReporterFirstLine
+import dev.d1s.beam.ui.util.disconnectedDaemonStatusReporterSecondLine
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
 import io.kvision.core.AlignItems
@@ -37,8 +39,8 @@ class DisconnectedDaemonStatusBlankslateComponent : Component<Unit>(), KoinCompo
             setSecondaryText()
 
             vPanel(alignItems = AlignItems.CENTER) {
-                h2(Texts.Body.DisconnectedDaemonStatusReporter.ALERT_FIRST_LINE)
-                h2(Texts.Body.DisconnectedDaemonStatusReporter.ALERT_SECOND_LINE)
+                h2(currentTranslation.disconnectedDaemonStatusReporterFirstLine)
+                h2(currentTranslation.disconnectedDaemonStatusReporterSecondLine)
             }
 
             visible = true

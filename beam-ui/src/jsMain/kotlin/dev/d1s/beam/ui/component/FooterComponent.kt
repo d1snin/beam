@@ -16,9 +16,10 @@
 
 package dev.d1s.beam.ui.component
 
+import dev.d1s.beam.commons.VERSION
 import dev.d1s.beam.ui.theme.setSecondaryBlue
 import dev.d1s.beam.ui.theme.setSecondaryText
-import dev.d1s.beam.ui.util.Texts
+import dev.d1s.beam.ui.util.*
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
 import io.kvision.html.div
@@ -37,17 +38,17 @@ class FooterComponent : Component<Unit>(), KoinComponent {
             setSecondaryText()
 
             div {
-                span(Texts.Footer.TEXT_PART_1)
+                span(currentTranslation.footerMessageFirstPart)
                 nbsp()
-                span(Texts.Footer.TEXT_PART_2) {
+                span(currentTranslation.footerMessageSecondPart) {
                     setSecondaryBlue()
                 }
                 nbsp()
-                span(Texts.Footer.TEXT_PART_3)
+                span("v$VERSION")
             }
 
             div {
-                link(Texts.Footer.SOURCE_CODE_REFERENCE, Texts.Footer.SOURCE_CODE_LINK) {
+                link(currentTranslation.footerSourceCodeLinkMessage, currentTranslation.footerSourceCodeLinkUrl) {
                     setSecondaryText()
                 }
             }

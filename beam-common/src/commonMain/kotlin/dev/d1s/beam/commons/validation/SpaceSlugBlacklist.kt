@@ -17,7 +17,6 @@
 package dev.d1s.beam.commons.validation
 
 import dev.d1s.beam.commons.SpaceSlug
-import kotlin.text.Regex
 
 private val blackList = mutableListOf<Regex>()
 

@@ -21,8 +21,7 @@ import dev.d1s.beam.ui.client.DaemonStatusWithPing
 import dev.d1s.beam.ui.state.Observable
 import dev.d1s.beam.ui.state.bindToCurrentTheme
 import dev.d1s.beam.ui.theme.currentTheme
-import dev.d1s.beam.ui.util.Texts
-import dev.d1s.beam.ui.util.iconWithMargin
+import dev.d1s.beam.ui.util.*
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
 import io.kvision.core.Color
@@ -70,7 +69,7 @@ class DaemonStatusComponent : Component<Unit>(), KoinComponent {
             cloudIcon(currentTheme.green)
         }
 
-        text(Texts.Heading.DaemonStatus.CONNECTED)
+        text(currentTranslation.daemonStatusConnected)
 
         reportPing(status)
     }
@@ -87,7 +86,7 @@ class DaemonStatusComponent : Component<Unit>(), KoinComponent {
                 }
             }
 
-            +(ping.toString() + Texts.Heading.DaemonStatus.MS_UNIT)
+            +(ping.toString() + currentTranslation.daemonStatusMsUnit)
         }
     }
 
@@ -98,7 +97,7 @@ class DaemonStatusComponent : Component<Unit>(), KoinComponent {
             cloudIcon(currentTheme.red)
         }
 
-        text(Texts.Heading.DaemonStatus.DISCONNECTED)
+        text(currentTranslation.daemonStatusDisconnected)
     }
 
     private fun SimplePanel.applyStyle() {

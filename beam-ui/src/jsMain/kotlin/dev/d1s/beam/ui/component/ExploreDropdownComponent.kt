@@ -26,7 +26,8 @@ import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.theme.setOutline
 import dev.d1s.beam.ui.theme.setOverlay
 import dev.d1s.beam.ui.util.Size.sizeOf
-import dev.d1s.beam.ui.util.Texts
+import dev.d1s.beam.ui.util.currentTranslation
+import dev.d1s.beam.ui.util.exploreDropdownCallout
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
 import dev.d1s.exkt.kvision.component.LazyEffect
@@ -61,7 +62,7 @@ class ExploreDropdownComponent : Component<Unit>(), KoinComponent {
 
             bindToCurrentTheme {
                 button(
-                    Texts.Heading.ExploreDropdown.CALLOUT,
+                    currentTranslation.exploreDropdownCallout,
                     style = currentTheme.buttonStyle,
                     className = "btn-sm dropdown-toggle"
                 ) {

@@ -22,7 +22,9 @@ import dev.d1s.beam.ui.resource.ResourceLocation
 import dev.d1s.beam.ui.state.CurrentSpaceChange
 import dev.d1s.beam.ui.state.Observable
 import dev.d1s.beam.ui.theme.setSecondaryText
-import dev.d1s.beam.ui.util.Texts
+import dev.d1s.beam.ui.util.currentTranslation
+import dev.d1s.beam.ui.util.iconAlt
+import dev.d1s.beam.ui.util.spaceInfoDefaultTitle
 import dev.d1s.beam.ui.util.spaceLink
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
@@ -86,7 +88,7 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
     }
 
     private fun SimplePanel.renderImage(space: Space?) {
-        image(space?.view?.icon ?: ResourceLocation.ICON, alt = Texts.Heading.Icon.ALT) {
+        image(space?.view?.icon ?: ResourceLocation.ICON, alt = currentTranslation.iconAlt) {
             width = config.iconWidth.value
         }
     }
@@ -114,7 +116,7 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
                 addCssClass("fs-bold")
             }
 
-            +(space?.view?.title ?: Texts.Heading.SpaceInfo.DEFAULT_TITLE)
+            +(space?.view?.title ?: currentTranslation.spaceInfoDefaultTitle)
         }
 
         space?.view?.description?.let {

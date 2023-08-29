@@ -24,8 +24,10 @@ import dev.d1s.beam.ui.state.SpaceFetchingDelay
 import dev.d1s.beam.ui.state.launchMonitor
 import dev.d1s.beam.ui.theme.setSecondaryBlue
 import dev.d1s.beam.ui.theme.setSecondaryText
-import dev.d1s.beam.ui.util.Texts
 import dev.d1s.beam.ui.util.currentSpace
+import dev.d1s.beam.ui.util.currentTranslation
+import dev.d1s.beam.ui.util.spaceListingFetchMoreButton
+import dev.d1s.beam.ui.util.spaceListingMessage
 import dev.d1s.exkt.common.pagination.Paginator
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
@@ -71,7 +73,7 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
 
         div().bind(spaces, runImmediately = runImmediately.getAndSet(true)) { (fetchedSpaces, totalCount) ->
             if (fetchedSpaces.isNotEmpty()) {
-                p(Texts.SpaceListing.CALLOUT, className = "fs-bold") {
+                p(currentTranslation.spaceListingMessage, className = "fs-bold") {
                     fontSize = 1.1.rem
 
                     setSecondaryText()
@@ -175,7 +177,7 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
 
     private fun SimplePanel.fetchMoreButton() {
         div(className = "d-flex w-100 justify-content-center mt-2") {
-            button(Texts.SpaceListing.FETCH_MORE_BUTTON, style = ButtonStyle.LINK) {
+            button(currentTranslation.spaceListingFetchMoreButton, style = ButtonStyle.LINK) {
                 setSecondaryBlue()
 
                 onClick {

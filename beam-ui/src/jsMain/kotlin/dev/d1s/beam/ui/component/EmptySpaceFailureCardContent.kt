@@ -18,7 +18,9 @@ package dev.d1s.beam.ui.component
 
 import dev.d1s.beam.ui.state.bindToCurrentTheme
 import dev.d1s.beam.ui.theme.currentTheme
-import dev.d1s.beam.ui.util.Texts
+import dev.d1s.beam.ui.util.currentTranslation
+import dev.d1s.beam.ui.util.spaceFailureCardEmptySpaceIconAlt
+import dev.d1s.beam.ui.util.spaceFailureCardEmptySpaceMessage
 import io.kvision.html.image
 import io.kvision.panel.SimplePanel
 import io.kvision.utils.perc
@@ -32,7 +34,7 @@ class EmptySpaceFailureCardContent : SpaceFailureCardContent(), KoinComponent {
         bindToCurrentTheme {
             image(
                 currentTheme.emptySpaceIcon,
-                alt = Texts.Body.SpaceFailureCard.EmptySpaceMode.ICON_ALT,
+                alt = currentTranslation.spaceFailureCardEmptySpaceIconAlt,
                 className = "mb-4 mb-lg-5 align-self-center"
             ) {
                 width = 35.perc
@@ -41,6 +43,6 @@ class EmptySpaceFailureCardContent : SpaceFailureCardContent(), KoinComponent {
     }
 
     override fun SimplePanel.text() {
-        spaceFailureCardText(Texts.Body.SpaceFailureCard.EmptySpaceMode.TEXT)
+        spaceFailureCardText(currentTranslation.spaceFailureCardEmptySpaceMessage)
     }
 }
