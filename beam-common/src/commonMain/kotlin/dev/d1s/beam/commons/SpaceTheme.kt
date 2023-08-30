@@ -25,6 +25,12 @@ public sealed class SpaceThemeDefinition(public val name: SpaceThemeName) {
 
     public data object Barbie : SpaceThemeDefinition("barbie")
 
+    public data object CatppuccinLatte : SpaceThemeDefinition("catppuccin-latte")
+
+    public data object CatppuccinFrappe : SpaceThemeDefinition("catppuccin-frappe")
+
+    public data object CatppuccinMacchiato : SpaceThemeDefinition("catppuccin-macchiato")
+
     public data object CatppuccinMocha : SpaceThemeDefinition("catppuccin-mocha")
 
     public companion object {
@@ -32,7 +38,14 @@ public sealed class SpaceThemeDefinition(public val name: SpaceThemeName) {
         public val Fallback: SpaceThemeDefinition = AccentDark
 
         public val definitions: List<SpaceThemeDefinition> =
-            listOf(AccentDark, Barbie, CatppuccinMocha)
+            listOf(
+                AccentDark,
+                Barbie,
+                CatppuccinLatte,
+                CatppuccinFrappe,
+                CatppuccinMacchiato,
+                CatppuccinMocha
+            )
 
         public fun byName(name: SpaceThemeName): SpaceThemeDefinition? =
             definitions.find {

@@ -16,12 +16,12 @@
 
 package dev.d1s.beam.ui.theme
 
-import com.catppuccin.kotlin.mocha
+import com.catppuccin.kotlin.frappe
 import dev.d1s.beam.commons.SpaceThemeDefinition
 import dev.d1s.beam.ui.resource.ResourceLocation
 import io.kvision.html.ButtonStyle
 
-object CatppuccinMochaTheme : CatppuccinTheme(SpaceThemeDefinition.CatppuccinMocha, mocha) {
+object CatppuccinFrappeTheme : CatppuccinTheme(SpaceThemeDefinition.CatppuccinFrappe, frappe) {
 
     override val notFoundIcon = ResourceLocation.NOT_FOUND_LIGHT
 

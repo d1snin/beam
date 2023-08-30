@@ -16,16 +16,16 @@
 
 package dev.d1s.beam.ui.theme
 
-import com.catppuccin.kotlin.mocha
+import com.catppuccin.kotlin.latte
 import dev.d1s.beam.commons.SpaceThemeDefinition
 import dev.d1s.beam.ui.resource.ResourceLocation
 import io.kvision.html.ButtonStyle
 
-object CatppuccinMochaTheme : CatppuccinTheme(SpaceThemeDefinition.CatppuccinMocha, mocha) {
+object CatppuccinLatteTheme : CatppuccinTheme(SpaceThemeDefinition.CatppuccinLatte, latte) {
 
-    override val notFoundIcon = ResourceLocation.NOT_FOUND_LIGHT
+    override val notFoundIcon = ResourceLocation.NOT_FOUND_DARK
 
-    override val emptySpaceIcon = ResourceLocation.EMPTY_SPACE_LIGHT
+    override val emptySpaceIcon = ResourceLocation.EMPTY_SPACE_DARK
 
-    override val buttonStyle = ButtonStyle.OUTLINELIGHT
+    override val buttonStyle = ButtonStyle.OUTLINEDARK
 }

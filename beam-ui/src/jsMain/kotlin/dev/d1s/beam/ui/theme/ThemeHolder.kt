@@ -36,6 +36,9 @@ class DefaultThemeHolder : ThemeHolder, KoinComponent {
     private val themes = listOf(
         AccentDarkTheme,
         BarbieTheme,
+        CatppuccinLatteTheme,
+        CatppuccinFrappeTheme,
+        CatppuccinMacchiatoTheme,
         CatppuccinMochaTheme
     )
 
