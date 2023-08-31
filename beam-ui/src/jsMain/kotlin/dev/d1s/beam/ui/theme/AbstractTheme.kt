@@ -18,7 +18,6 @@ package dev.d1s.beam.ui.theme
 
 import dev.d1s.beam.commons.SpaceThemeDefinition
 import dev.d1s.beam.commons.Url
-import dev.d1s.beam.ui.state.bindToCurrentTheme
 import io.kvision.core.*
 import io.kvision.html.ButtonStyle
 import io.kvision.utils.px
@@ -52,43 +51,29 @@ abstract class AbstractTheme(val definition: SpaceThemeDefinition) {
 }
 
 fun StyledComponent.setBackground() {
-    bindToCurrentTheme {
-        background = Background(color = currentTheme.background)
-    }
+    background = Background(color = currentTheme.background)
 }
 
 fun CSSStyleDeclaration.setBackground() {
-    bindToCurrentTheme {
-        backgroundColor = currentTheme.background.asString()
-    }
+    backgroundColor = currentTheme.background.asString()
 }
 
 fun StyledComponent.setOverlay() {
-    bindToCurrentTheme {
-        background = Background(color = currentTheme.overlay)
-    }
+    background = Background(color = currentTheme.overlay)
 }
 
 fun StyledComponent.setOutline() {
-    bindToCurrentTheme {
-        outline = Outline(width = 1.px, style = OutlineStyle.SOLID, currentTheme.outline)
-    }
+    outline = Outline(width = 1.px, style = OutlineStyle.SOLID, currentTheme.outline)
 }
 
 fun StyledComponent.setTextColor() {
-    bindToCurrentTheme {
-        color = currentTheme.text
-    }
+    color = currentTheme.text
 }
 
 fun StyledComponent.setSecondaryText() {
-    bindToCurrentTheme {
-        color = currentTheme.secondaryText
-    }
+    color = currentTheme.secondaryText
 }
 
 fun StyledComponent.setSecondaryBlue() {
-    bindToCurrentTheme {
-        color = currentTheme.secondaryBlue
-    }
+    color = currentTheme.secondaryBlue
 }

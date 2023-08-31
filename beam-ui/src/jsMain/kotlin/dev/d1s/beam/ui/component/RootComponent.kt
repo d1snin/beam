@@ -16,6 +16,7 @@
 
 package dev.d1s.beam.ui.component
 
+import dev.d1s.beam.commons.SpaceThemeDefinition
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.state.CurrentSpaceChange
 import dev.d1s.beam.ui.state.Observable
@@ -25,6 +26,7 @@ import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
 import dev.d1s.exkt.kvision.component.render
 import io.kvision.panel.SimplePanel
+import io.kvision.state.bind
 import io.kvision.utils.vh
 import kotlinx.browser.document
 import kotlinx.browser.window
@@ -36,6 +38,8 @@ class RootComponent : Component.Root(), KoinComponent {
 
     private val currentSpaceChangeObservable by inject<Observable<CurrentSpaceChange>>(Qualifier.CurrentSpaceChangeObservable)
 
+    private val currentSpaceThemeChangeObservable by inject<Observable<SpaceThemeDefinition>>(Qualifier.CurrentSpaceThemeChangeObservable)
+
     private val headingComponent by inject<Component<Unit>>(Qualifier.HeadingComponent)
 
     private val spaceContentComponent by inject<Component<Unit>>(Qualifier.SpaceContentComponent)
@@ -43,12 +47,14 @@ class RootComponent : Component.Root(), KoinComponent {
     private val footerComponent by inject<Component<Unit>>(Qualifier.FooterComponent)
 
     override fun SimplePanel.render(): Effect {
-        title()
-        sizing()
-        display()
-        font()
-        background()
-        components()
+        bind(currentSpaceThemeChangeObservable.state) {
+            title()
+            sizing()
+            display()
+            font()
+            background()
+            components()
+        }
 
         return Effect.Success
     }

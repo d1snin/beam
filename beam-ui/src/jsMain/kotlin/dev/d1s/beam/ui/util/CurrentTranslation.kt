@@ -16,14 +16,39 @@
 
 package dev.d1s.beam.ui.util
 
+import dev.d1s.beam.client.PublicBeamClient
 import dev.d1s.beam.commons.GlobalTranslation
 import dev.d1s.beam.commons.TextLocation
 import dev.d1s.beam.commons.TranslatedText
 import dev.d1s.beam.commons.Translation
+import io.kvision.state.ObservableValue
+import kotlinx.browser.window
+import org.koin.core.context.GlobalContext
 
-private var lateInitCurrentTranslation = GlobalTranslation.Default
+private val client by lazy {
+    GlobalContext.get().get<PublicBeamClient>()
+}
 
-val currentTranslation get() = lateInitCurrentTranslation
+val currentTranslationObservable = ObservableValue(GlobalTranslation.Default)
+val currentTranslation get() = currentTranslationObservable.value
+
+private val browserLanguage
+    get() = window.navigator.language.take(2).lowercase()
+
+suspend fun initCurrentTranslation() {
+    val currentSpaceId = currentSpace?.id
+
+    val resolvedTranslation =
+        client.resolveTranslation(spaceId = currentSpaceId, languageCode = browserLanguage).getOrNull()
+
+    resolvedTranslation?.let {
+        currentTranslationObservable.value = resolvedTranslation
+    }
+}
+
+fun setCurrentTranslation(translation: Translation) {
+    currentTranslationObservable.value = translation
+}
 
 val Translation.iconAlt: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_ICON_ALT)
 val Translation.spaceInfoDefaultTitle: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_SPACE_INFO_DEFAULT_TITLE)
@@ -47,6 +72,7 @@ val Translation.footerMessageFirstPart: TranslatedText get() = requiredTranslati
 val Translation.footerMessageSecondPart: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_FOOTER_MESSAGE_SECOND_PART)
 val Translation.footerSourceCodeLinkMessage: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_FOOTER_SOURCE_CODE_LINK_MESSAGE)
 val Translation.footerSourceCodeLinkUrl: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_FOOTER_SOURCE_CODE_LINK_URL)
+val Translation.footerLanguageSwitcherMessage: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_FOOTER_LANGUAGE_SWITCHER_MESSAGE)
 val Translation.spaceListingMessage: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_SPACE_LISTING_MESSAGE)
 val Translation.spaceListingFetchMoreButton: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_SPACE_LISTING_FETCH_MORE_BUTTON)
 

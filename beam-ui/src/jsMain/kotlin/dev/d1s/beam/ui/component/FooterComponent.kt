@@ -17,22 +17,36 @@
 package dev.d1s.beam.ui.component
 
 import dev.d1s.beam.commons.VERSION
+import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.theme.setSecondaryBlue
 import dev.d1s.beam.ui.theme.setSecondaryText
 import dev.d1s.beam.ui.util.*
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
+import dev.d1s.exkt.kvision.component.render
 import io.kvision.html.div
 import io.kvision.html.link
 import io.kvision.html.span
 import io.kvision.panel.SimplePanel
 import io.kvision.utils.rem
 import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 class FooterComponent : Component<Unit>(), KoinComponent {
 
+    private val languageSwitcherComponent by inject<Component<Unit>>(Qualifier.LanguageSwitcherComponent)
+
     override fun SimplePanel.render(): Effect {
-        div(className = "container-fluid pt-5 pb-2 mt-auto d-flex flex-column align-items-start") {
+        div(className = "container-fluid pt-5 pb-2 mt-auto d-flex justify-content-between align-items-center") {
+            footerText()
+            languageSwitcher()
+        }
+
+        return Effect.Success
+    }
+
+    private fun SimplePanel.footerText() {
+        div {
             fontSize = 0.85.rem
 
             setSecondaryText()
@@ -53,8 +67,10 @@ class FooterComponent : Component<Unit>(), KoinComponent {
                 }
             }
         }
+    }
 
-        return Effect.Success
+    private fun SimplePanel.languageSwitcher() {
+        render(languageSwitcherComponent)
     }
 
     private fun SimplePanel.nbsp() =

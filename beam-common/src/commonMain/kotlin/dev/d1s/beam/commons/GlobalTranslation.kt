@@ -49,6 +49,8 @@ public object GlobalTranslation {
     public const val LOCATION_FOOTER_SOURCE_CODE_LINK_MESSAGE: TextLocation = "ui.footer.source-code-link.message"
     public const val LOCATION_FOOTER_SOURCE_CODE_LINK_URL: TextLocation = "ui.footer.source-code-link.url"
 
+    public const val LOCATION_FOOTER_LANGUAGE_SWITCHER_MESSAGE: TextLocation = "ui.footer.language-switcher.message"
+
     public const val LOCATION_SPACE_LISTING_MESSAGE: TextLocation = "ui.space-listing.message"
     public const val LOCATION_SPACE_LISTING_FETCH_MORE_BUTTON: TextLocation = "ui.space-listing.fetch-more-button"
 
@@ -69,6 +71,7 @@ public object GlobalTranslation {
         LOCATION_FOOTER_MESSAGE_SECOND_PART,
         LOCATION_FOOTER_SOURCE_CODE_LINK_MESSAGE,
         LOCATION_FOOTER_SOURCE_CODE_LINK_URL,
+        LOCATION_FOOTER_LANGUAGE_SWITCHER_MESSAGE,
         LOCATION_SPACE_LISTING_MESSAGE,
         LOCATION_SPACE_LISTING_FETCH_MORE_BUTTON
     )
@@ -95,6 +98,7 @@ public object GlobalTranslation {
             LOCATION_FOOTER_MESSAGE_SECOND_PART to "Beam",
             LOCATION_FOOTER_SOURCE_CODE_LINK_MESSAGE to "Source code on GitHub",
             LOCATION_FOOTER_SOURCE_CODE_LINK_URL to "https://github.com/d1snin/beam",
+            LOCATION_FOOTER_LANGUAGE_SWITCHER_MESSAGE to "Switch language...",
             LOCATION_SPACE_LISTING_MESSAGE to "Explore the spaces on this instance:",
             LOCATION_SPACE_LISTING_FETCH_MORE_BUTTON to "Load more"
         )

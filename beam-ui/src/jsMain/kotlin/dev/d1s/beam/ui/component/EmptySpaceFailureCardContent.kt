@@ -16,7 +16,6 @@
 
 package dev.d1s.beam.ui.component
 
-import dev.d1s.beam.ui.state.bindToCurrentTheme
 import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.util.currentTranslation
 import dev.d1s.beam.ui.util.spaceFailureCardEmptySpaceIconAlt
@@ -31,14 +30,12 @@ class EmptySpaceFailureCardContent : SpaceFailureCardContent(), KoinComponent {
     override val mode = SpaceFailureCardComponent.Mode.EMPTY_SPACE
 
     override fun SimplePanel.image() {
-        bindToCurrentTheme {
-            image(
-                currentTheme.emptySpaceIcon,
-                alt = currentTranslation.spaceFailureCardEmptySpaceIconAlt,
-                className = "mb-4 mb-lg-5 align-self-center"
-            ) {
-                width = 35.perc
-            }
+        image(
+            currentTheme.emptySpaceIcon,
+            alt = currentTranslation.spaceFailureCardEmptySpaceIconAlt,
+            className = "mb-4 mb-lg-5 align-self-center"
+        ) {
+            width = 35.perc
         }
     }
 

@@ -31,6 +31,8 @@ public typealias TranslatedText = String
 
 public typealias TranslationMap = Map<TextLocation, TranslatedText>
 
+public typealias Translations = List<Translation>
+
 public fun TranslationQualifier(spaceId: SpaceId?, languageCode: LanguageCode): TranslationQualifier =
     (spaceId?.let { "$it-" } ?: "") + languageCode
 

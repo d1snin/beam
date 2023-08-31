@@ -22,7 +22,6 @@ import dev.d1s.beam.ui.theme.ThemeHolder
 import io.kvision.state.ObservableValue
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import org.koin.core.context.GlobalContext
 
 class CurrentSpaceThemeChangeObservable : Observable<SpaceThemeDefinition>, KoinComponent {
 
@@ -40,15 +39,5 @@ class CurrentSpaceThemeChangeObservable : Observable<SpaceThemeDefinition>, Koin
 
             state.setState(currentTheme.definition)
         }
-    }
-}
-
-private val currentSpaceThemeChangeObservable by lazy {
-    GlobalContext.get().get<Observable<SpaceThemeDefinition>>(Qualifier.CurrentSpaceThemeChangeObservable)
-}
-
-fun bindToCurrentTheme(block: (SpaceThemeDefinition) -> Unit) {
-    currentSpaceThemeChangeObservable.state.subscribe { definition ->
-        block(definition)
     }
 }

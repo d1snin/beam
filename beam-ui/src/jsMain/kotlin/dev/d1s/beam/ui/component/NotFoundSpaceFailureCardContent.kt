@@ -16,7 +16,6 @@
 
 package dev.d1s.beam.ui.component
 
-import dev.d1s.beam.ui.state.bindToCurrentTheme
 import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.util.currentTranslation
 import dev.d1s.beam.ui.util.spaceFailureCardNotFoundIconAlt
@@ -30,13 +29,11 @@ class NotFoundSpaceFailureCardContent : SpaceFailureCardContent(), KoinComponent
     override val mode = SpaceFailureCardComponent.Mode.NOT_FOUND
 
     override fun SimplePanel.image() {
-        bindToCurrentTheme {
-            image(
-                currentTheme.notFoundIcon,
-                alt = currentTranslation.spaceFailureCardNotFoundIconAlt,
-                className = "w-100 mb-4 mb-lg-5"
-            )
-        }
+        image(
+            currentTheme.notFoundIcon,
+            alt = currentTranslation.spaceFailureCardNotFoundIconAlt,
+            className = "w-100 mb-4 mb-lg-5"
+        )
     }
 
     override fun SimplePanel.text() {

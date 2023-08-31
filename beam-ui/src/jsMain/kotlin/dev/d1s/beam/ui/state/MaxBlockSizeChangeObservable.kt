@@ -17,12 +17,10 @@
 package dev.d1s.beam.ui.state
 
 import dev.d1s.beam.commons.BlockSize
-import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.util.Size
 import io.kvision.state.ObservableValue
 import kotlinx.browser.window
 import org.koin.core.component.KoinComponent
-import org.koin.core.context.GlobalContext
 
 class MaxBlockSizeChangeObservable : Observable<BlockSize>, KoinComponent {
 
@@ -41,14 +39,4 @@ class MaxBlockSizeChangeObservable : Observable<BlockSize>, KoinComponent {
 
     private inline fun onResize(crossinline block: () -> Unit) =
         window.addEventListener("resize", { _ -> block() }, true)
-}
-
-private val maxBlockSizeChangeObservable by lazy {
-    GlobalContext.get().get<Observable<BlockSize>>(Qualifier.MaxBlockSizeChangeObservable)
-}
-
-fun bindToMaxBlockSize(block: (BlockSize) -> Unit) {
-    maxBlockSizeChangeObservable.state.subscribe { size ->
-        block(size)
-    }
 }

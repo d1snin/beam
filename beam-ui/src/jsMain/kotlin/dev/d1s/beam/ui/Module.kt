@@ -31,6 +31,7 @@ import dev.d1s.beam.ui.state.*
 import dev.d1s.beam.ui.theme.DefaultThemeHolder
 import dev.d1s.beam.ui.theme.ThemeHolder
 import dev.d1s.exkt.kvision.component.Component
+import org.intellij.lang.annotations.Language
 import org.koin.core.context.GlobalContext.startKoin
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
@@ -58,6 +59,7 @@ object Qualifier {
     val DisconnectedDaemonStatusBlankslateComponent = named("disconnected-daemon-status-blankslate-component")
     val SpaceFailureCardComponent = named("space-failure-card-component")
     val FooterComponent = named("footer-component")
+    val LanguageSwitcherComponent = named("language-switcher-component")
 
     val VoidContentEntityRenderer = named("void-content-entity-renderer")
     val TextContentEntityRenderer = named("text-content-entity-renderer")
@@ -169,6 +171,10 @@ private fun Module.components() {
 
     singleOf<Component<Unit>>(::FooterComponent) {
         qualifier = Qualifier.FooterComponent
+    }
+
+    singleOf<Component<Unit>>(::LanguageSwitcherComponent) {
+        qualifier = Qualifier.LanguageSwitcherComponent
     }
 }
 
