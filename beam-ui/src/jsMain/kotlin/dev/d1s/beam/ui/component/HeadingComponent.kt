@@ -18,22 +18,18 @@ package dev.d1s.beam.ui.component
 
 import dev.d1s.beam.commons.MetadataKeys
 import dev.d1s.beam.ui.Qualifier
-import dev.d1s.beam.ui.state.CurrentSpaceChange
-import dev.d1s.beam.ui.state.Observable
+import dev.d1s.beam.ui.util.currentSpace
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
 import dev.d1s.exkt.kvision.component.render
 import io.kvision.html.div
 import io.kvision.panel.SimplePanel
-import io.kvision.state.bind
 import io.kvision.utils.px
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
 
 class HeadingComponent : Component<Unit>(), KoinComponent {
-
-    private val currentSpaceChangeObservable by inject<Observable<CurrentSpaceChange>>(Qualifier.CurrentSpaceChangeObservable)
 
     private val exploreDropdownComponent by inject<Component<Unit>>(Qualifier.ExploreDropdownComponent)
 
@@ -76,15 +72,11 @@ class HeadingComponent : Component<Unit>(), KoinComponent {
         div(className = "align-self-center mt-5 mt-lg-0") {
             visible = false
 
-            bind(currentSpaceChangeObservable.state) {
-                val space = it.space
+            val showStatus = currentSpace?.metadata?.get(MetadataKeys.UI_SPACE_SHOW_STATUS)?.toBooleanStrictOrNull()
 
-                val showStatus = space?.metadata?.get(MetadataKeys.UI_SPACE_SHOW_STATUS)?.toBooleanStrictOrNull()
-
-                if (showStatus != false) {
-                    render(daemonStatusComponent)
-                    visible = true
-                }
+            if (showStatus != false) {
+                render(daemonStatusComponent)
+                visible = true
             }
         }
     }

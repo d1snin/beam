@@ -17,11 +17,8 @@
 package dev.d1s.beam.ui.component
 
 import dev.d1s.beam.client.PublicBeamClient
-import dev.d1s.beam.commons.SpaceThemeDefinition
 import dev.d1s.beam.commons.Translation
 import dev.d1s.beam.commons.Translations
-import dev.d1s.beam.ui.Qualifier
-import dev.d1s.beam.ui.state.Observable
 import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.theme.setOutline
 import dev.d1s.beam.ui.theme.setOverlay
@@ -32,7 +29,6 @@ import dev.d1s.exkt.kvision.component.Effect
 import io.kvision.core.onClick
 import io.kvision.html.*
 import io.kvision.panel.SimplePanel
-import io.kvision.state.bind
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,8 +36,6 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class LanguageSwitcherComponent : Component<Unit>(), KoinComponent {
-
-    private val currentSpaceThemeChangeObservable by inject<Observable<SpaceThemeDefinition>>(Qualifier.CurrentSpaceThemeChangeObservable)
 
     private val client by inject<PublicBeamClient>()
 
@@ -72,7 +66,7 @@ class LanguageSwitcherComponent : Component<Unit>(), KoinComponent {
     }
 
     private fun SimplePanel.renderDropup(translations: Translations) {
-        div(className = "dropup").bind(currentSpaceThemeChangeObservable.state) {
+        div(className = "dropup") {
             renderButton()
             renderDropdownMenu(translations)
         }
@@ -121,7 +115,7 @@ class LanguageSwitcherComponent : Component<Unit>(), KoinComponent {
             +translation.languageName
 
             onClick {
-                setCurrentLanguage(translation)
+                setCurrentTranslation(translation)
             }
         }
     }
@@ -139,9 +133,5 @@ class LanguageSwitcherComponent : Component<Unit>(), KoinComponent {
             addCssClass("disabled")
             setAttribute("aria-disabled", "true")
         }
-    }
-
-    private fun setCurrentLanguage(translation: Translation) {
-        setCurrentTranslation(translation)
     }
 }

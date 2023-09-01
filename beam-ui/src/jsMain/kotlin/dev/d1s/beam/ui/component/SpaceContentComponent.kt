@@ -19,9 +19,8 @@ package dev.d1s.beam.ui.component
 import dev.d1s.beam.commons.BlockSize
 import dev.d1s.beam.commons.Blocks
 import dev.d1s.beam.ui.Qualifier
-import dev.d1s.beam.ui.client.DaemonStatusWithPing
-import dev.d1s.beam.ui.state.CurrentSpaceChange
 import dev.d1s.beam.ui.state.Observable
+import dev.d1s.beam.ui.util.currentSpace
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
 import dev.d1s.exkt.kvision.component.render
@@ -34,17 +33,11 @@ import org.koin.core.component.inject
 
 class SpaceContentComponent : Component<Unit>(), KoinComponent {
 
-    private val daemonStatusObservable by inject<Observable<DaemonStatusWithPing?>>(Qualifier.DaemonStatusObservable)
-
-    private val currentSpaceChangeObservable by inject<Observable<CurrentSpaceChange>>(Qualifier.CurrentSpaceChangeObservable)
-
     private val currentSpaceContentChangeObservable by inject<Observable<Blocks?>>(Qualifier.CurrentSpaceContentChangeObservable)
 
     private val maxBlockSizeChangeObservable by inject<Observable<BlockSize>>(Qualifier.MaxBlockSizeChangeObservable)
 
     private val blockContainerComponent by inject<Component<Unit>>(Qualifier.BlockContainerComponent)
-
-    private val disconnectedDaemonStatusBlankslateComponent by inject<Component<Unit>>(Qualifier.DisconnectedDaemonStatusBlankslateComponent)
 
     private val spaceFailureCardComponent by inject<Component<SpaceFailureCardComponent.Config>>(Qualifier.SpaceFailureCardComponent)
 
@@ -52,37 +45,19 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
 
     override fun SimplePanel.render(): Effect {
         div(className = "container-fluid mt-4") {
-            bind(daemonStatusObservable.state, runImmediately = false) { status ->
-                div().bind(maxBlockSizeChangeObservable.state) {
-                    if (status != null) {
-                        handleNotFound()
-                        handleEmptySpace()
-                        spaceContent()
-                    } else {
-                        render(disconnectedDaemonStatusBlankslateComponent)
-                    }
-                }
+            div().bind(maxBlockSizeChangeObservable.state) {
+                handleNotFound()
+                handleEmptySpace()
+                renderSpaceContent()
             }
         }
 
         return Effect.Success
     }
 
-
-
     private fun SimplePanel.handleNotFound() {
-        div().bind(currentSpaceChangeObservable.state) {
-            val space = it.space
-
-            if (space == null) {
-                showBlockContainer.setState(false)
-
-                render(spaceFailureCardComponent) {
-                    mode.value = SpaceFailureCardComponent.Mode.NOT_FOUND
-                }
-            } else {
-                showBlockContainer.setState(true)
-            }
+        if (currentSpace == null) {
+            renderNotFoundCard()
         }
     }
 
@@ -91,16 +66,27 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
             if (blocks?.isEmpty() == true) {
                 showBlockContainer.setState(false)
 
-                render(spaceFailureCardComponent) {
-                    mode.value = SpaceFailureCardComponent.Mode.EMPTY_SPACE
-                }
+                renderEmptySpaceCard()
             } else {
                 showBlockContainer.setState(true)
             }
         }
     }
 
-    private fun SimplePanel.spaceContent() {
+
+    private fun SimplePanel.renderNotFoundCard() {
+        render(spaceFailureCardComponent) {
+            mode.value = SpaceFailureCardComponent.Mode.NOT_FOUND
+        }
+    }
+
+    private fun SimplePanel.renderEmptySpaceCard() {
+        render(spaceFailureCardComponent) {
+            mode.value = SpaceFailureCardComponent.Mode.EMPTY_SPACE
+        }
+    }
+
+    private fun SimplePanel.renderSpaceContent() {
         div().bind(showBlockContainer) { show ->
             if (show) {
                 render(blockContainerComponent)

@@ -22,16 +22,12 @@ import kotlinx.atomicfu.atomic
 import org.koin.core.component.KoinComponent
 import org.koin.core.context.GlobalContext
 
-interface ThemeHolder {
+interface CurrentTheme {
 
     val current: AbstractTheme
-
-    fun setCurrentTheme(theme: SpaceThemeDefinition)
-
-    fun actualizeTheme()
 }
 
-class DefaultThemeHolder : ThemeHolder, KoinComponent {
+class DefaultCurrentTheme : CurrentTheme, KoinComponent {
 
     private val themes = listOf(
         AccentDarkTheme,
@@ -44,25 +40,19 @@ class DefaultThemeHolder : ThemeHolder, KoinComponent {
 
     private val currentThemeDefinition = atomic(SpaceThemeDefinition.Fallback)
 
+    init {
+        currentSpace?.view?.theme?.let { themeName ->
+            SpaceThemeDefinition.byName(themeName)?.let { definition ->
+                currentThemeDefinition.value = definition
+            }
+        }
+    }
+
     override val current: AbstractTheme
         get() = themes.find {
             it.definition == currentThemeDefinition.value
         } ?: error("No theme for definition $currentThemeDefinition")
-
-    override fun setCurrentTheme(theme: SpaceThemeDefinition) {
-        this.currentThemeDefinition.value = theme
-    }
-
-    override fun actualizeTheme() {
-        val themeName = currentSpace?.view?.theme
-
-        val definition = themeName?.let {
-            SpaceThemeDefinition.byName(themeName)
-        } ?: SpaceThemeDefinition.Fallback
-
-        setCurrentTheme(definition)
-    }
 }
 
 val currentTheme: AbstractTheme
-    get() = GlobalContext.get().get<ThemeHolder>().current
+    get() = GlobalContext.get().get<CurrentTheme>().current

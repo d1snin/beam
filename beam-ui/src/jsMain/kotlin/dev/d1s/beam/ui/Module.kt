@@ -18,7 +18,6 @@ package dev.d1s.beam.ui
 
 import dev.d1s.beam.commons.BlockSize
 import dev.d1s.beam.commons.Blocks
-import dev.d1s.beam.commons.SpaceThemeDefinition
 import dev.d1s.beam.ui.client.DaemonConnector
 import dev.d1s.beam.ui.client.DaemonStatusWithPing
 import dev.d1s.beam.ui.client.DefaultDaemonConnector
@@ -28,10 +27,9 @@ import dev.d1s.beam.ui.contententity.ContentEntityRenderer
 import dev.d1s.beam.ui.contententity.TextContentEntityRenderer
 import dev.d1s.beam.ui.contententity.VoidContentEntityRenderer
 import dev.d1s.beam.ui.state.*
-import dev.d1s.beam.ui.theme.DefaultThemeHolder
-import dev.d1s.beam.ui.theme.ThemeHolder
+import dev.d1s.beam.ui.theme.DefaultCurrentTheme
+import dev.d1s.beam.ui.theme.CurrentTheme
 import dev.d1s.exkt.kvision.component.Component
-import org.intellij.lang.annotations.Language
 import org.koin.core.context.GlobalContext.startKoin
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
@@ -41,11 +39,8 @@ import org.koin.dsl.module
 
 object Qualifier {
 
-    val DaemonStatusObservable = named("daemon-status-observable")
     val DaemonStatusWithPingObservable = named("daemon-status-with-ping-observable")
-    val CurrentSpaceChangeObservable = named("current-space-change-observable")
     val CurrentSpaceContentChangeObservable = named("current-space-content-change-observable")
-    val CurrentSpaceThemeChangeObservable = named("current-space-theme-change-observable")
     val MaxBlockSizeChangeObservable = named("max-block-size-change-observable")
 
     val HeadingComponent = named("heading-component")
@@ -56,7 +51,6 @@ object Qualifier {
     val SpaceContentComponent = named("space-content-component")
     val BlockContainerComponent = named("block-container-component")
     val BlockComponent = named("block-component")
-    val DisconnectedDaemonStatusBlankslateComponent = named("disconnected-daemon-status-blankslate-component")
     val SpaceFailureCardComponent = named("space-failure-card-component")
     val FooterComponent = named("footer-component")
     val LanguageSwitcherComponent = named("language-switcher-component")
@@ -77,7 +71,7 @@ fun setupModule() {
 private val mainModule = module {
     beamClient()
     daemonConnector()
-    themeHolder()
+    currentTheme()
     observables()
     components()
     contentEntityRenderers()
@@ -94,31 +88,19 @@ private fun Module.daemonConnector() {
     singleOf<DaemonConnector>(::DefaultDaemonConnector)
 }
 
-private fun Module.themeHolder() {
-    singleOf<ThemeHolder>(::DefaultThemeHolder)
+private fun Module.currentTheme() {
+    singleOf<CurrentTheme>(::DefaultCurrentTheme)
 }
 
 private fun Module.observables() {
     singleOf<ObservableLauncher>(::DefaultObservableLauncher)
 
-    singleOf<Observable<DaemonStatusWithPing?>>(::DaemonStatusObservable) {
-        qualifier = Qualifier.DaemonStatusObservable
-    }
-
     singleOf<Observable<DaemonStatusWithPing?>>(::DaemonStatusWithPingObservable) {
         qualifier = Qualifier.DaemonStatusWithPingObservable
     }
 
-    singleOf<Observable<CurrentSpaceChange>>(::CurrentSpaceChangeObservable) {
-        qualifier = Qualifier.CurrentSpaceChangeObservable
-    }
-
     singleOf<Observable<Blocks?>>(::CurrentSpaceContentChangeObservable) {
         qualifier = Qualifier.CurrentSpaceContentChangeObservable
-    }
-
-    singleOf<Observable<SpaceThemeDefinition>>(::CurrentSpaceThemeChangeObservable) {
-        qualifier = Qualifier.CurrentSpaceThemeChangeObservable
     }
 
     singleOf<Observable<BlockSize>>(::MaxBlockSizeChangeObservable) {
@@ -159,10 +141,6 @@ private fun Module.components() {
 
     factoryOf<Component<BlockComponent.Config>>(::BlockComponent) {
         qualifier = Qualifier.BlockComponent
-    }
-
-    singleOf<Component<Unit>>(::DisconnectedDaemonStatusBlankslateComponent) {
-        qualifier = Qualifier.DisconnectedDaemonStatusBlankslateComponent
     }
 
     singleOf<Component<SpaceFailureCardComponent.Config>>(::SpaceFailureCardComponent) {

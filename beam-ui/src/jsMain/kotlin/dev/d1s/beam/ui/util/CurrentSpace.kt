@@ -20,14 +20,9 @@ import dev.d1s.beam.client.PublicBeamClient
 import dev.d1s.beam.commons.Blocks
 import dev.d1s.beam.commons.Space
 import dev.d1s.beam.commons.SpaceIdentifier
-import dev.d1s.beam.ui.Qualifier
-import dev.d1s.beam.ui.client.DaemonStatusWithPing
-import dev.d1s.beam.ui.state.Observable
 import dev.d1s.beam.ui.theme.setTextColor
-import io.kvision.html.div
 import io.kvision.html.link
 import io.kvision.panel.SimplePanel
-import io.kvision.state.bind
 import kotlinx.browser.window
 import org.koin.core.context.GlobalContext
 
@@ -39,12 +34,7 @@ private val resolver by lazy {
     client.resolver
 }
 
-private val daemonStatusObservable by lazy {
-    GlobalContext.get().get<Observable<DaemonStatusWithPing?>>(Qualifier.DaemonStatusObservable)
-}
-
 private var lateInitCurrentSpaceIdentifier: SpaceIdentifier? = null
-val currentSpaceIdentifier: SpaceIdentifier? get() = lateInitCurrentSpaceIdentifier
 
 private var lateInitCurrentSpace: Space? = null
 val currentSpace get() = lateInitCurrentSpace
@@ -67,36 +57,16 @@ suspend fun initCurrentSpace() {
     }
 }
 
-fun setCurrentSpaceIdentifier(identifier: SpaceIdentifier) {
-    lateInitCurrentSpaceIdentifier = identifier
-
-    window.location.href = buildSpaceUrl(identifier)
-}
-
-fun setCurrentSpace(space: Space?) {
-    lateInitCurrentSpace = space
-}
-
 fun setCurrentSpaceBlocks(blocks: Blocks?) {
     lateInitCurrentBlocks = blocks
 }
 
-fun SimplePanel.renderSpaceLink(space: Space? = null, block: SimplePanel.() -> Unit) {
-    div {
-        bind(daemonStatusObservable.state) { status ->
-            if (status != null) {
-                link(
-                    label = "",
-                    space?.let { buildSpaceUrl(it.slug) } ?: currentSpaceUrl,
-                    className = "text-decoration-none") {
-                    setTextColor()
-                    block()
-                }
-            } else {
-                div {
-                    block()
-                }
-            }
-        }
+fun SimplePanel.renderCurrentSpaceLink(space: Space? = null, block: SimplePanel.() -> Unit) {
+    link(
+        label = "",
+        space?.let { buildSpaceUrl(it.slug) } ?: currentSpaceUrl,
+        className = "text-decoration-none") {
+        setTextColor()
+        block()
     }
 }

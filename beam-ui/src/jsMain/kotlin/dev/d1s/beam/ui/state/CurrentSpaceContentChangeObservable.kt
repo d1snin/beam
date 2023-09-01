@@ -20,8 +20,8 @@ import dev.d1s.beam.client.PublicBeamClient
 import dev.d1s.beam.commons.Block
 import dev.d1s.beam.commons.Blocks
 import dev.d1s.beam.commons.SpaceId
-import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.util.currentBlocks
+import dev.d1s.beam.ui.util.currentSpace
 import dev.d1s.beam.ui.util.setCurrentSpaceBlocks
 import io.kvision.state.ObservableValue
 import kotlinx.coroutines.CoroutineScope
@@ -36,21 +36,17 @@ class CurrentSpaceContentChangeObservable : Observable<Blocks?>, KoinComponent {
 
     private val client by inject<PublicBeamClient>()
 
-    private val currentSpaceChangeObservable by inject<Observable<CurrentSpaceChange>>(Qualifier.CurrentSpaceChangeObservable)
-
     private var handlerScope = CoroutineScope(Dispatchers.Main)
 
     override fun monitor() =
         launchMonitor {
-            currentSpaceChangeObservable.state.subscribe {
-                val space = it.space
+            val space = currentSpace
 
-                if (space != null) {
-                    actualizeCurrentSpaceContent(space.id)
-                    handleSpaceContentUpdates(space.id)
-                } else {
-                    setCurrentSpaceContent(blocks = null)
-                }
+            if (space != null) {
+                actualizeCurrentSpaceContent(space.id)
+                handleSpaceContentUpdates(space.id)
+            } else {
+                setCurrentSpaceContent(blocks = null)
             }
         }
 
@@ -89,35 +85,35 @@ class CurrentSpaceContentChangeObservable : Observable<Blocks?>, KoinComponent {
         }
     }
 
-    // - Ты хочешь со мной жить?
-    // - Не знаю...
-    //   . . .
-    //   Ты хочешь знать почему?
-    // - Ну... да.
-    // - Потому что я вообще жить не хочу
-    // ДА НЕПРАВДА ЭТО
-    // ГЛУПАЯ ЛОЖЬ
-    // Я ТЕБЯ ВИЖУ! ТЫ НЕ ТАКАЯ! НЕТ!
-    // Может быть, я просто не хочу принять факт?
-    // Возможно, я допустил ошибку?
-    // Последней сладости яд, который мучительно убивает.
-    // Отказаться невозможно.
-    // Должен ли я искать? Должен ли я решать, строить
-    // и видеть это будущее в свете?
-    // Не устану ли?
-    //
-    // Я тебя люблю. Я хочу, чтобы у нас все было хорошо.
-    // Да. У нас все хорошо. Мы молодцы. Но почему ты именно такая?
-    // Это ты. Я полюбил тебя именно такой. Ты мне нравишься всей.
-    // Я хочу тебя радовать, ценить и уважать. Хочу получать взамен.
-    // Хочу мечтать с тобой и смотреть правде в глаза не боясь трудностей.
-    // Жить на полную катушку и не смотреть вниз. Строить великое.
-    // Ты достойна большего. Ты достойна всего, о чем когда-либо мечтала.
-    // Нет какой-то конкретной причины. Просто есть ты и моя неугасающая любовь.
-    // Я говорю себе - время исправит. Мы через все пройдем.
-    // Не останавливаться. Не бежать назад.
-    //
-    // Я боюсь. Но я принимаю вызов. Я не сдамся.
+// - Ты хочешь со мной жить?
+// - Не знаю...
+//   . . .
+//   Ты хочешь знать почему?
+// - Ну... да.
+// - Потому что я вообще жить не хочу
+// ДА НЕПРАВДА ЭТО
+// ГЛУПАЯ ЛОЖЬ
+// Я ТЕБЯ ВИЖУ! ТЫ НЕ ТАКАЯ! НЕТ!
+// Может быть, я просто не хочу принять факт?
+// Возможно, я допустил ошибку?
+// Последней сладости яд, который мучительно убивает.
+// Отказаться невозможно.
+// Должен ли я искать? Должен ли я решать, строить
+// и видеть это будущее в свете?
+// Не устану ли?
+//
+// Я тебя люблю. Я хочу, чтобы у нас все было хорошо.
+// Да. У нас все хорошо. Мы молодцы. Но почему ты именно такая?
+// Это ты. Я полюбил тебя именно такой. Ты мне нравишься всей.
+// Я хочу тебя радовать, ценить и уважать. Хочу получать взамен.
+// Хочу мечтать с тобой и смотреть правде в глаза не боясь трудностей.
+// Жить на полную катушку и не смотреть вниз. Строить великое.
+// Ты достойна большего. Ты достойна всего, о чем когда-либо мечтала.
+// Нет какой-то конкретной причины. Просто есть ты и моя неугасающая любовь.
+// Я говорю себе - время исправит. Мы через все пройдем.
+// Не останавливаться. Не бежать назад.
+//
+// Я боюсь. Но я принимаю вызов. Я не сдамся.
 
     private suspend fun handleBlockRemoval(spaceId: SpaceId) {
         client.onBlockRemoved {

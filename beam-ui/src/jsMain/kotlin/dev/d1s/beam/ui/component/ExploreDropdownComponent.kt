@@ -18,7 +18,6 @@ package dev.d1s.beam.ui.component
 
 import dev.d1s.beam.commons.BlockSize
 import dev.d1s.beam.ui.Qualifier
-import dev.d1s.beam.ui.client.DaemonStatusWithPing
 import dev.d1s.beam.ui.state.Observable
 import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.theme.setOutline
@@ -40,29 +39,19 @@ import org.koin.core.component.inject
 
 class ExploreDropdownComponent : Component<Unit>(), KoinComponent {
 
-    private val daemonStatusObservable by inject<Observable<DaemonStatusWithPing?>>(Qualifier.DaemonStatusObservable)
-
     private val maxBlockSizeChangeObservable by inject<Observable<BlockSize>>(Qualifier.MaxBlockSizeChangeObservable)
 
     private val spaceListingComponent by inject<Component<Unit>>(Qualifier.SpaceListingComponent)
 
     override fun SimplePanel.render(): Effect {
-        div().bind(daemonStatusObservable.state, runImmediately = false) { status ->
-            if (status != null) {
-                renderDropdown()
-            }
-        }
-
-        return Effect.Success
-    }
-
-    private fun SimplePanel.renderDropdown() {
         div(className = "dropdown") {
             visible = false
 
             renderButton()
             renderMenu()
         }
+
+        return Effect.Success
     }
 
     private fun SimplePanel.renderButton() {

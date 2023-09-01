@@ -16,12 +16,10 @@
 
 package dev.d1s.beam.ui.component
 
-import dev.d1s.beam.commons.SpaceThemeDefinition
 import dev.d1s.beam.ui.Qualifier
-import dev.d1s.beam.ui.state.CurrentSpaceChange
-import dev.d1s.beam.ui.state.Observable
 import dev.d1s.beam.ui.theme.setBackground
 import dev.d1s.beam.ui.theme.setTextColor
+import dev.d1s.beam.ui.util.currentTranslationObservable
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
 import dev.d1s.exkt.kvision.component.render
@@ -29,16 +27,11 @@ import io.kvision.panel.SimplePanel
 import io.kvision.state.bind
 import io.kvision.utils.vh
 import kotlinx.browser.document
-import kotlinx.browser.window
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.w3c.dom.css.CSSStyleDeclaration
 
 class RootComponent : Component.Root(), KoinComponent {
-
-    private val currentSpaceChangeObservable by inject<Observable<CurrentSpaceChange>>(Qualifier.CurrentSpaceChangeObservable)
-
-    private val currentSpaceThemeChangeObservable by inject<Observable<SpaceThemeDefinition>>(Qualifier.CurrentSpaceThemeChangeObservable)
 
     private val headingComponent by inject<Component<Unit>>(Qualifier.HeadingComponent)
 
@@ -47,26 +40,19 @@ class RootComponent : Component.Root(), KoinComponent {
     private val footerComponent by inject<Component<Unit>>(Qualifier.FooterComponent)
 
     override fun SimplePanel.render(): Effect {
-        bind(currentSpaceThemeChangeObservable.state) {
-            title()
-            sizing()
-            display()
-            font()
-            background()
-            components()
+        bind(currentTranslationObservable) {
+            renderRoot()
         }
 
         return Effect.Success
     }
 
-    private fun title() {
-        val document = window.top.document
-
-        currentSpaceChangeObservable.state.subscribe {
-            val space = it.space
-
-            document.title = space?.view?.title ?: "Beam Space not available"
-        }
+    private fun SimplePanel.renderRoot() {
+        sizing()
+        display()
+        font()
+        background()
+        components()
     }
 
     private fun SimplePanel.sizing() {

@@ -21,8 +21,6 @@ import dev.d1s.beam.client.response.Spaces
 import dev.d1s.beam.commons.Role
 import dev.d1s.beam.commons.Space
 import dev.d1s.beam.ui.Qualifier
-import dev.d1s.beam.ui.state.SpaceFetchingDelay
-import dev.d1s.beam.ui.state.launchMonitor
 import dev.d1s.beam.ui.theme.setSecondaryBlue
 import dev.d1s.beam.ui.theme.setSecondaryText
 import dev.d1s.beam.ui.util.currentSpace
@@ -34,6 +32,7 @@ import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
 import dev.d1s.exkt.kvision.component.MutableLazyEffectState
 import dev.d1s.exkt.kvision.component.render
+import io.kvision.core.onClick
 import io.kvision.html.ButtonStyle
 import io.kvision.html.button
 import io.kvision.html.div
@@ -42,10 +41,8 @@ import io.kvision.panel.SimplePanel
 import io.kvision.state.ObservableValue
 import io.kvision.state.bind
 import io.kvision.utils.rem
-import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
@@ -60,19 +57,30 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
 
     private val spaces = ObservableValue(listOf<Space>() to 0)
 
-    private val paginator = Paginator(PAGE_LIMIT, currentPage = 1)
+    private val paginator = Paginator(PAGE_LIMIT, currentPage = 0)
 
     private val renderingScope = CoroutineScope(Dispatchers.Main)
 
-    private val fetchingSpaces = atomic(false)
-
-    private val runImmediately = atomic(false)
-
     override fun SimplePanel.render(): Effect {
-        launchGettingAllSpaces()
-
         val (state, effect) = Effect.lazy()
 
+        renderContainerAndLaunch {
+            getMoreSpaces()
+            renderSpaceContainer(state)
+        }
+
+        return effect
+    }
+
+    private fun SimplePanel.renderContainerAndLaunch(block: suspend SimplePanel.() -> Unit) {
+        div {
+            renderingScope.launch {
+                block()
+            }
+        }
+    }
+
+    private fun SimplePanel.renderSpaceContainer(state: MutableLazyEffectState) {
         renderBoundContainer(state) { (fetchedSpaces, totalCount) ->
             renderSpaceListingMessage()
 
@@ -84,15 +92,13 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
                 renderFetchMoreButton()
             }
         }
-
-        return effect
     }
 
     private fun SimplePanel.renderBoundContainer(
         effectState: MutableLazyEffectState,
         block: SimplePanel.(FetchedSpaces) -> Unit
     ) {
-        div().bind(spaces, runImmediately = runImmediately.getAndSet(true)) { fetchedSpaces ->
+        div().bind(spaces) { fetchedSpaces ->
             val (spaces, _) = fetchedSpaces
             val isNotEmpty = spaces.isNotEmpty()
 
@@ -138,28 +144,10 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
         }
     }
 
-    private fun launchGettingAllSpaces() {
-        if (!fetchingSpaces.value) {
-            launchMonitor(loop = true) {
-                getSpaces(offset = 0)?.let { fetchedSpaces ->
-                    if (spaces.value != fetchedSpaces) {
-                        spaces.value = fetchedSpaces
-                    }
-                }
-
-                delay(SpaceFetchingDelay)
-            }
-
-            fetchingSpaces.value = true
-        }
-    }
-
-    private fun getMoreSpaces() {
-        renderingScope.launch {
-            paginator.currentPage++
-            getSpaces()?.let { fetchedSpaces ->
-                spaces.value = FetchedSpaces(spaces.value.first + fetchedSpaces.first, fetchedSpaces.second)
-            }
+    private suspend fun getMoreSpaces() {
+        paginator.currentPage++
+        getSpaces()?.let { fetchedSpaces ->
+            spaces.value = FetchedSpaces(spaces.value.first + fetchedSpaces.first, fetchedSpaces.second)
         }
     }
 
@@ -202,10 +190,15 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
         div(className = "d-flex w-100 justify-content-center mt-2") {
             button(currentTranslation.spaceListingFetchMoreButton, style = ButtonStyle.LINK) {
                 setSecondaryBlue()
+                handleButtonClick()
+            }
+        }
+    }
 
-                onClick {
-                    getMoreSpaces()
-                }
+    private fun SimplePanel.handleButtonClick() {
+        onClick {
+            renderingScope.launch {
+                getMoreSpaces()
             }
         }
     }

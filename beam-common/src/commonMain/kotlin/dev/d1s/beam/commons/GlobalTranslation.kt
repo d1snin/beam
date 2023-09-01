@@ -28,11 +28,6 @@ public object GlobalTranslation {
     public const val LOCATION_DAEMON_STATUS_DISCONNECTED: TextLocation = "ui.daemon-status.disconnected"
     public const val LOCATION_DAEMON_STATUS_MS_UNIT: TextLocation = "ui.daemon-status.ms-unit"
 
-    public const val LOCATION_DISCONNECTED_DAEMON_STATUS_REPORTER_FIRST_LINE: TextLocation =
-        "ui.disconnected-daemon-status-reporter.first-line"
-    public const val LOCATION_DISCONNECTED_DAEMON_STATUS_REPORTER_SECOND_LINE: TextLocation =
-        "ui.disconnected-daemon-status-reporter.second-line"
-
     public const val LOCATION_SPACE_FAILURE_CARD_NOT_FOUND_ICON_ALT: TextLocation =
         "ui.space-failure-card.not-found.icon-alt"
     public const val LOCATION_SPACE_FAILURE_CARD_NOT_FOUND_MESSAGE: TextLocation =
@@ -61,8 +56,6 @@ public object GlobalTranslation {
         LOCATION_DAEMON_STATUS_CONNECTED,
         LOCATION_DAEMON_STATUS_DISCONNECTED,
         LOCATION_DAEMON_STATUS_MS_UNIT,
-        LOCATION_DISCONNECTED_DAEMON_STATUS_REPORTER_FIRST_LINE,
-        LOCATION_DISCONNECTED_DAEMON_STATUS_REPORTER_SECOND_LINE,
         LOCATION_SPACE_FAILURE_CARD_NOT_FOUND_ICON_ALT,
         LOCATION_SPACE_FAILURE_CARD_NOT_FOUND_MESSAGE,
         LOCATION_SPACE_FAILURE_CARD_EMPTY_SPACE_ICON_ALT,
@@ -88,8 +81,6 @@ public object GlobalTranslation {
             LOCATION_DAEMON_STATUS_CONNECTED to "Connected to daemon.",
             LOCATION_DAEMON_STATUS_DISCONNECTED to "Couldn't connect to daemon.",
             LOCATION_DAEMON_STATUS_MS_UNIT to "ms",
-            LOCATION_DISCONNECTED_DAEMON_STATUS_REPORTER_FIRST_LINE to "Beam is unavailable.",
-            LOCATION_DISCONNECTED_DAEMON_STATUS_REPORTER_SECOND_LINE to "Check back later.",
             LOCATION_SPACE_FAILURE_CARD_NOT_FOUND_ICON_ALT to "404 image",
             LOCATION_SPACE_FAILURE_CARD_NOT_FOUND_MESSAGE to "We couldn't find anything.",
             LOCATION_SPACE_FAILURE_CARD_EMPTY_SPACE_ICON_ALT to "Empty space icon",

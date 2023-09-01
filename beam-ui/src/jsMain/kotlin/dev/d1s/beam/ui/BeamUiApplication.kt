@@ -18,6 +18,7 @@ package dev.d1s.beam.ui
 
 import dev.d1s.beam.ui.state.ObservableLauncher
 import dev.d1s.beam.ui.util.initCurrentSpace
+import dev.d1s.beam.ui.util.initCurrentTranslation
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.render
 import io.kvision.Application
@@ -35,9 +36,12 @@ class BeamUiApplication : Application(), KoinComponent {
 
     private val observableLauncher by inject<ObservableLauncher>()
 
+    private val mainCoroutineScope = CoroutineScope(Dispatchers.Main)
+
     override fun start() {
-        CoroutineScope(Dispatchers.Main).launch {
+        mainCoroutineScope.launch {
             initCurrentSpace()
+            initCurrentTranslation()
 
             observableLauncher.launchMonitors()
 

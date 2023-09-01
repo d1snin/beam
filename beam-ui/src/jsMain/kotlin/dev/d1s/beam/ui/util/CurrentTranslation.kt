@@ -56,14 +56,6 @@ val Translation.exploreDropdownCallout: TranslatedText get() = requiredTranslati
 val Translation.daemonStatusConnected: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_DAEMON_STATUS_CONNECTED)
 val Translation.daemonStatusDisconnected: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_DAEMON_STATUS_DISCONNECTED)
 val Translation.daemonStatusMsUnit: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_DAEMON_STATUS_MS_UNIT)
-val Translation.disconnectedDaemonStatusReporterFirstLine: TranslatedText
-    get() = requiredTranslation(
-        GlobalTranslation.LOCATION_DISCONNECTED_DAEMON_STATUS_REPORTER_FIRST_LINE
-    )
-val Translation.disconnectedDaemonStatusReporterSecondLine: TranslatedText
-    get() = requiredTranslation(
-        GlobalTranslation.LOCATION_DISCONNECTED_DAEMON_STATUS_REPORTER_SECOND_LINE
-    )
 val Translation.spaceFailureCardNotFoundIconAlt: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_SPACE_FAILURE_CARD_NOT_FOUND_ICON_ALT)
 val Translation.spaceFailureCardNotFoundMessage: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_SPACE_FAILURE_CARD_NOT_FOUND_MESSAGE)
 val Translation.spaceFailureCardEmptySpaceIconAlt: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_SPACE_FAILURE_CARD_EMPTY_SPACE_ICON_ALT)
