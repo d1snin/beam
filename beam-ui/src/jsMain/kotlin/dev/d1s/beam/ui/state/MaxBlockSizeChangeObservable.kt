@@ -37,6 +37,6 @@ class MaxBlockSizeChangeObservable : Observable<BlockSize>, KoinComponent {
             }
         }
 
-    private inline fun onResize(crossinline block: () -> Unit) =
+    private fun onResize(block: () -> Unit) =
         window.addEventListener("resize", { _ -> block() }, true)
 }

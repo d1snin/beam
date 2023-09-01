@@ -24,9 +24,6 @@ import dev.d1s.beam.ui.util.currentBlocks
 import dev.d1s.beam.ui.util.currentSpace
 import dev.d1s.beam.ui.util.setCurrentSpaceBlocks
 import io.kvision.state.ObservableValue
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -36,33 +33,26 @@ class CurrentSpaceContentChangeObservable : Observable<Blocks?>, KoinComponent {
 
     private val client by inject<PublicBeamClient>()
 
-    private var handlerScope = CoroutineScope(Dispatchers.Main)
-
     override fun monitor() =
         launchMonitor {
             val space = currentSpace
 
             if (space != null) {
-                actualizeCurrentSpaceContent(space.id)
                 handleSpaceContentUpdates(space.id)
             } else {
                 setCurrentSpaceContent(blocks = null)
             }
         }
 
-    private fun actualizeCurrentSpaceContent(space: SpaceId) {
-        handlerScope.launch {
-            val blocks = client.getBlocks(space).getOrNull()
-            setCurrentSpaceContent(blocks)
-        }
+    private suspend fun handleSpaceContentUpdates(spaceId: SpaceId) {
+        handleBlockCreation(spaceId)
+        handleBlockUpdate(spaceId)
+        handleBlockRemoval(spaceId)
     }
 
-    private fun handleSpaceContentUpdates(spaceId: SpaceId) {
-        handlerScope.launch {
-            handleBlockCreation(spaceId)
-            handleBlockUpdate(spaceId)
-            handleBlockRemoval(spaceId)
-        }
+    private fun setCurrentSpaceContent(blocks: Blocks?) {
+        setCurrentSpaceBlocks(blocks)
+        state.setState(blocks)
     }
 
     private suspend fun handleBlockCreation(spaceId: SpaceId) {
@@ -125,14 +115,14 @@ class CurrentSpaceContentChangeObservable : Observable<Blocks?>, KoinComponent {
         }
     }
 
+    private suspend fun actualizeCurrentSpaceContent(space: SpaceId) {
+        val blocks = client.getBlocks(space).getOrNull()
+        setCurrentSpaceContent(blocks)
+    }
+
     private inline fun ifSpaceMatches(block: Block, spaceId: SpaceId, handler: () -> Unit) {
         if (block.spaceId == spaceId) {
             handler()
         }
-    }
-
-    private fun setCurrentSpaceContent(blocks: Blocks?) {
-        setCurrentSpaceBlocks(blocks)
-        state.setState(blocks)
     }
 }

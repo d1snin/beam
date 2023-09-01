@@ -130,7 +130,7 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
         }
     }
 
-    private inline fun SimplePanel.renderSpaceRow(spaces: List<Space>, crossinline block: SimplePanel.() -> Unit) {
+    private fun SimplePanel.renderSpaceRow(spaces: List<Space>, block: SimplePanel.() -> Unit) {
         val lgCols = if (spaces.size == 1) 1 else 2
 
         div(className = "row row-cols-1 row-cols-lg-$lgCols g-3") {
@@ -138,7 +138,7 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
         }
     }
 
-    private inline fun SimplePanel.renderCol(crossinline block: SimplePanel.() -> Unit) {
+    private fun SimplePanel.renderCol(block: SimplePanel.() -> Unit) {
         div(className = "col") {
             block()
         }

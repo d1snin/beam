@@ -26,7 +26,7 @@ interface Observable<TState> {
     fun monitor(): Job
 }
 
-inline fun launchMonitor(loop: Boolean = false, crossinline block: suspend () -> Unit) =
+fun launchMonitor(loop: Boolean = false, block: suspend () -> Unit) =
     CoroutineScope(Dispatchers.Main).launch {
         if (loop) {
             while (isActive) {

@@ -54,9 +54,9 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
         }
     }
 
-    private inline fun SimplePanel.optionalLink(
+    private fun SimplePanel.optionalLink(
         parameters: ContentEntityParameters,
-        crossinline block: SimplePanel.() -> Unit
+        block: SimplePanel.() -> Unit
     ) {
         parameters[definition.url]?.let { url ->
             link("", url) {
@@ -65,9 +65,9 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
         } ?: block()
     }
 
-    private inline fun SimplePanel.optionalCodeBlock(
+    private fun SimplePanel.optionalCodeBlock(
         parameters: ContentEntityParameters,
-        crossinline block: SimplePanel.() -> Unit
+        block: SimplePanel.() -> Unit
     ) {
         val monospace = parameters.getBoolean(definition.monospace)
 
@@ -82,11 +82,11 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
         }
     }
 
-    private inline fun SimplePanel.optionalHeading(
+    private fun SimplePanel.optionalHeading(
         parameters: ContentEntityParameters,
         first: Boolean,
         last: Boolean,
-        crossinline block: SimplePanel.() -> Unit
+        block: SimplePanel.() -> Unit
     ) {
         val heading = parameters[definition.heading]?.let {
             TextContentEntityTypeDefinition.Heading.byKey(it)
@@ -111,10 +111,10 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
         } ?: block()
     }
 
-    private inline fun SimplePanel.optionalParagraph(
+    private fun SimplePanel.optionalParagraph(
         parameters: ContentEntityParameters,
         last: Boolean,
-        crossinline block: SimplePanel.() -> Unit
+        block: SimplePanel.() -> Unit
     ) {
         val paragraph = parameters.getBoolean(definition.paragraph)
 

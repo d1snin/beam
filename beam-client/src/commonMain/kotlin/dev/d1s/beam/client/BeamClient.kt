@@ -79,7 +79,10 @@ public interface PublicBeamClient {
         block: suspend (ClientWebSocketEvent<EntityUpdate<Space>>) -> Unit
     ): Result<Job>
 
-    public suspend fun onSpaceRemoved(id: SpaceId? = null, block: suspend (ClientWebSocketEvent<Space>) -> Unit): Result<Job>
+    public suspend fun onSpaceRemoved(
+        id: SpaceId? = null,
+        block: suspend (ClientWebSocketEvent<Space>) -> Unit
+    ): Result<Job>
 
     public suspend fun onBlockCreated(block: suspend (ClientWebSocketEvent<Block>) -> Unit): Result<Job>
 
@@ -88,7 +91,10 @@ public interface PublicBeamClient {
         block: suspend (ClientWebSocketEvent<EntityUpdate<Block>>) -> Unit
     ): Result<Job>
 
-    public suspend fun onBlockRemoved(id: BlockId? = null, block: suspend (ClientWebSocketEvent<Block>) -> Unit): Result<Job>
+    public suspend fun onBlockRemoved(
+        id: BlockId? = null,
+        block: suspend (ClientWebSocketEvent<Block>) -> Unit
+    ): Result<Job>
 
     public suspend fun isCompatible(): Result<Boolean>
 
@@ -217,7 +223,10 @@ public class DefaultPublicBeamClient(
         return handleWsEvents(reference, block)
     }
 
-    override suspend fun onSpaceRemoved(id: SpaceId?, block: suspend (ClientWebSocketEvent<Space>) -> Unit): Result<Job> {
+    override suspend fun onSpaceRemoved(
+        id: SpaceId?,
+        block: suspend (ClientWebSocketEvent<Space>) -> Unit
+    ): Result<Job> {
         val reference = EventReferences.spaceRemoved(id)
 
         return handleWsEvents(reference, block)
@@ -235,7 +244,10 @@ public class DefaultPublicBeamClient(
         return handleWsEvents(reference, block)
     }
 
-    override suspend fun onBlockRemoved(id: BlockId?, block: suspend (ClientWebSocketEvent<Block>) -> Unit): Result<Job> {
+    override suspend fun onBlockRemoved(
+        id: BlockId?,
+        block: suspend (ClientWebSocketEvent<Block>) -> Unit
+    ): Result<Job> {
         val reference = EventReferences.blockRemoved(id)
 
         return handleWsEvents(reference, block)
