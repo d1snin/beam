@@ -38,39 +38,41 @@ class FooterComponent : Component<Unit>(), KoinComponent {
 
     override fun SimplePanel.render(): Effect {
         div(className = "container-fluid pt-5 pb-2 mt-auto d-flex justify-content-between align-items-center") {
-            footerText()
-            languageSwitcher()
+            renderText()
+            renderLanguageSwitcherComponent()
         }
 
         return Effect.Success
     }
 
-    private fun SimplePanel.footerText() {
+    private fun SimplePanel.renderText() {
         div {
             fontSize = 0.85.rem
-
             setSecondaryText()
 
-            div {
-                span(currentTranslation.footerMessageFirstPart)
-                nbsp()
-                span(currentTranslation.footerMessageSecondPart) {
-                    setSecondaryBlue()
-                }
-                nbsp()
-                span("v$VERSION")
-            }
-
-            div {
-                link(currentTranslation.footerSourceCodeLinkMessage, currentTranslation.footerSourceCodeLinkUrl) {
-                    setSecondaryText()
-                }
-            }
+            renderMessage()
+            renderSourceCodeLink()
         }
     }
 
-    private fun SimplePanel.languageSwitcher() {
-        render(languageSwitcherComponent)
+    private fun SimplePanel.renderMessage() {
+        div {
+            span(currentTranslation.footerMessageFirstPart)
+            nbsp()
+            span(currentTranslation.footerMessageSecondPart) {
+                setSecondaryBlue()
+            }
+            nbsp()
+            span("v$VERSION")
+        }
+    }
+
+    private fun SimplePanel.renderSourceCodeLink() {
+        div {
+            link(currentTranslation.footerSourceCodeLinkMessage, currentTranslation.footerSourceCodeLinkUrl) {
+                setSecondaryText()
+            }
+        }
     }
 
     private fun SimplePanel.nbsp() =
@@ -79,6 +81,10 @@ class FooterComponent : Component<Unit>(), KoinComponent {
                 getElement()?.innerHTML = "&nbsp;"
             }
         }
+
+    private fun SimplePanel.renderLanguageSwitcherComponent() {
+        render(languageSwitcherComponent)
+    }
 
     // Господи, ты просто пишешь и оставляешь меня без ответа на что-либо.
     // Могу ли я отвечать тебе тем же? Нет.

@@ -25,7 +25,7 @@ import dev.d1s.beam.ui.theme.setSecondaryText
 import dev.d1s.beam.ui.util.currentTranslation
 import dev.d1s.beam.ui.util.iconAlt
 import dev.d1s.beam.ui.util.spaceInfoDefaultTitle
-import dev.d1s.beam.ui.util.spaceLink
+import dev.d1s.beam.ui.util.renderSpaceLink
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
 import io.kvision.core.JustifyContent
@@ -50,15 +50,18 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
         if (config.bare.value) {
             renderCardContent()
         } else {
-            card(
-                "p-${config.cardPaddingLevel.value} ps-${config.cardStartPaddingLevel.value}",
-                usePageBackground = true
-            ) {
-                renderCardContent()
-            }
+            renderCardWithContent()
         }
 
         return Effect.Success
+    }
+
+    private fun SimplePanel.renderCardWithContent() {
+        val className = "p-${config.cardPaddingLevel.value} ps-${config.cardStartPaddingLevel.value}"
+
+        renderCard(className, usePageBackground = true) {
+            renderCardContent()
+        }
     }
 
     // Господи. Мне страшно. Я боюсь за все.
@@ -75,15 +78,19 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
     }
 
     private fun SimplePanel.renderIcon(space: Space?) {
-        spaceLink(space) {
+        renderSpaceLink(space) {
             if (space != null) {
                 renderImage(space)
             } else {
-                bind(currentSpaceChangeObservable.state) {
-                    val receivedSpace = it.space
-                    renderImage(receivedSpace)
-                }
+                renderCurrentSpaceBoundImage()
             }
+        }
+    }
+
+    private fun SimplePanel.renderCurrentSpaceBoundImage() {
+        bind(currentSpaceChangeObservable.state) {
+            val receivedSpace = it.space
+            renderImage(receivedSpace)
         }
     }
 
@@ -94,31 +101,52 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
     }
 
     private fun SimplePanel.renderSpaceInfo(space: Space?) {
-        spaceLink(space) {
-            vPanel(justify = JustifyContent.CENTER, className = "ms-3") {
-                if (space != null) {
-                    renderSpaceInfoContent(space)
-                } else {
-                    bind(currentSpaceChangeObservable.state) {
-                        val receivedSpace = it.space
-                        renderSpaceInfoContent(receivedSpace)
-                    }
-                }
+        renderLinkedContainer(space) {
+            if (space != null) {
+                renderSpaceInfoContent(space)
+            } else {
+                renderCurrentSpaceBoundSpaceInfoContent()
             }
         }
     }
 
+    private fun SimplePanel.renderLinkedContainer(space: Space?, block: SimplePanel.() -> Unit) {
+        renderSpaceLink(space) {
+            vPanel(justify = JustifyContent.CENTER, className = "ms-3") {
+                block()
+            }
+        }
+    }
+
+    private fun SimplePanel.renderCurrentSpaceBoundSpaceInfoContent() {
+        bind(currentSpaceChangeObservable.state) {
+            val receivedSpace = it.space
+            renderSpaceInfoContent(receivedSpace)
+        }
+    }
+
     private fun SimplePanel.renderSpaceInfoContent(space: Space?) {
+        renderTitle(space)
+        renderDescription(space)
+    }
+
+    private fun SimplePanel.renderTitle(space: Space?) {
         p(className = "mb-0") {
-            if (config.enableHeading.value) {
-                addCssClass("h2")
+            val headingClass = if (config.enableHeading.value) {
+                "h2"
             } else {
-                addCssClass("fs-bold")
+                "fs-bold"
             }
 
-            +(space?.view?.title ?: currentTranslation.spaceInfoDefaultTitle)
-        }
+            addCssClass(headingClass)
 
+            val title = space?.view?.title ?: currentTranslation.spaceInfoDefaultTitle
+
+            +title
+        }
+    }
+
+    private fun SimplePanel.renderDescription(space: Space?) {
         space?.view?.description?.let {
             span {
                 fontSize = 0.8.rem

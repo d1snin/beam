@@ -38,15 +38,17 @@ class DisconnectedDaemonStatusBlankslateComponent : Component<Unit>(), KoinCompo
 
             setSecondaryText()
 
-            vPanel(alignItems = AlignItems.CENTER) {
-                h2(currentTranslation.disconnectedDaemonStatusReporterFirstLine)
-                h2(currentTranslation.disconnectedDaemonStatusReporterSecondLine)
-            }
-
-            visible = true
+            renderTextPanel()
         }
 
         return Effect.Success
+    }
+
+    private fun SimplePanel.renderTextPanel() {
+        vPanel(alignItems = AlignItems.CENTER) {
+            h2(currentTranslation.disconnectedDaemonStatusReporterFirstLine)
+            h2(currentTranslation.disconnectedDaemonStatusReporterSecondLine)
+        }
     }
 
     private fun SimplePanel.h2(text: String) {

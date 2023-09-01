@@ -22,6 +22,7 @@ import dev.d1s.beam.ui.contententity.renderEntities
 import dev.d1s.beam.ui.util.Size.sizeOf
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
+import io.kvision.core.CssSize
 import io.kvision.html.div
 import io.kvision.panel.SimplePanel
 import io.kvision.utils.minus
@@ -36,29 +37,38 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
             "Block isn't set"
         }
 
+        renderBlock(block)
+
+        return Effect.Success
+    }
+
+    private fun SimplePanel.renderBlock(block: Block) {
         div(className = "w-100") {
             val blockSize = sizeOf(block.size).px
             maxWidth = blockSize
 
-            val applyPaddingEnd = config.applyPaddingEnd.value
+            applyPadding()
+            renderBlockCard(block, blockSize)
+        }
+    }
 
-            if (applyPaddingEnd) {
-                paddingRight = cardPadding
-            }
+    private fun SimplePanel.renderBlockCard(block: Block, blockSize: CssSize) {
+        renderCard("w-100 p-4 d-flex flex-column justify-content-start") {
+            maxWidth = if (config.applyPaddingEnd.value) blockSize.minus(cardPadding.first) else blockSize
 
-            if (config.applyPaddingBottom.value) {
-                paddingBottom = cardPadding
-            }
+            setOptionalBlockId(block)
+            renderEntities(block.entities)
+        }
+    }
 
-            card("w-100 p-4 d-flex flex-column justify-content-start") {
-                maxWidth = if (applyPaddingEnd) blockSize.minus(cardPadding.first) else blockSize
-
-                setOptionalBlockId(block)
-                renderEntities(block.entities)
-            }
+    private fun SimplePanel.applyPadding() {
+        if (config.applyPaddingEnd.value) {
+            paddingRight = cardPadding
         }
 
-        return Effect.Success
+        if (config.applyPaddingBottom.value) {
+            paddingBottom = cardPadding
+        }
     }
 
     private fun SimplePanel.setOptionalBlockId(block: Block) {

@@ -21,45 +21,51 @@ import dev.d1s.beam.commons.contententity.ContentEntity
 import io.kvision.panel.SimplePanel
 import org.koin.core.context.GlobalContext
 
+private typealias ContentEntitySequence = MutableList<ContentEntity>
+
 private val contentEntityRenderers by lazy {
     GlobalContext.get().getAll<ContentEntityRenderer>()
 }
 
 fun SimplePanel.renderEntities(entities: ContentEntities) {
     val sequence = mutableListOf<ContentEntity>()
-    fun lastEntity() = sequence.lastOrNull()
-
-    fun render() {
-        val lastEntity = lastEntity()
-
-        lastEntity?.let {
-            val renderer = getRenderer(entity = it)
-
-            with(renderer) {
-                render(sequence)
-            }
-
-            sequence.clear()
-        }
-    }
 
     entities.forEach { entity ->
-        val lastEntity = lastEntity()
-
-        when {
-            lastEntity == null || entity.type == lastEntity.type -> {
-                sequence.add(entity)
-            }
-
-            else -> {
-                render()
-
-                sequence.add(entity)
-            }
-        }
+        processEntity(entity, sequence)
     }
 
-    render()
+    // finalize
+    renderSequence(sequence)
+}
+
+private fun SimplePanel.processEntity(entity: ContentEntity, sequence: ContentEntitySequence) {
+    val lastEntity = sequence.lastOrNull()
+
+    when {
+        lastEntity == null || entity.type == lastEntity.type -> {
+            sequence.add(entity)
+        }
+
+        else -> {
+            renderSequence(sequence)
+
+            sequence.add(entity)
+        }
+    }
+}
+
+private fun SimplePanel.renderSequence(sequence: ContentEntitySequence) {
+    val lastEntity = sequence.lastOrNull()
+
+    lastEntity?.let {
+        val renderer = getRenderer(entity = it)
+
+        with(renderer) {
+            render(sequence)
+        }
+
+        sequence.clear()
+    }
 }
 
 private fun getRenderer(entity: ContentEntity): ContentEntityRenderer {

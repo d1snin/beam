@@ -30,9 +30,6 @@ import io.kvision.panel.SimplePanel
 import io.kvision.state.bind
 import io.kvision.utils.px
 import io.kvision.utils.rem
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -40,37 +37,40 @@ class DaemonStatusComponent : Component<Unit>(), KoinComponent {
 
     private val daemonStatusWithPingObservable by inject<Observable<DaemonStatusWithPing?>>(Qualifier.DaemonStatusWithPingObservable)
 
-    private val renderingScope = CoroutineScope(Dispatchers.Main)
-
     override fun SimplePanel.render(): Effect {
-        div().bind(
-            daemonStatusWithPingObservable.state,
-            runImmediately = false
-        ) { status ->
-            card(className = "d-flex align-items-center px-2") {
-                renderingScope.launch {
-                    if (status != null) {
-                        reportConnectedState(status)
-                    } else {
-                        reportDisconnectedState()
-                    }
-                }
-            }
+        renderContainer { status ->
+            renderStatusCard(status)
         }
 
         return Effect.Success
     }
 
-    private fun SimplePanel.reportConnectedState(status: DaemonStatusWithPing) {
-        applyStyle()
-
-        cloudIcon(currentTheme.green)
-        text(currentTranslation.daemonStatusConnected)
-
-        reportPing(status)
+    private fun SimplePanel.renderContainer(block: SimplePanel.(DaemonStatusWithPing?) -> Unit) {
+        div().bind(daemonStatusWithPingObservable.state, runImmediately = false) { status ->
+            block(status)
+        }
     }
 
-    private fun SimplePanel.reportPing(status: DaemonStatusWithPing) {
+    private fun SimplePanel.renderStatusCard(status: DaemonStatusWithPing?) {
+        renderCard(className = "d-flex align-items-center px-2") {
+            if (status != null) {
+                renderConnectedState(status)
+            } else {
+                renderDisconnectedState()
+            }
+        }
+    }
+
+    private fun SimplePanel.renderConnectedState(status: DaemonStatusWithPing) {
+        applyStyle()
+
+        renderCloudIcon(currentTheme.green)
+        renderText(currentTranslation.daemonStatusConnected)
+
+        renderPing(status)
+    }
+
+    private fun SimplePanel.renderPing(status: DaemonStatusWithPing) {
         span {
             val ping = status.ping
 
@@ -84,11 +84,11 @@ class DaemonStatusComponent : Component<Unit>(), KoinComponent {
         }
     }
 
-    private fun SimplePanel.reportDisconnectedState() {
+    private fun SimplePanel.renderDisconnectedState() {
         applyStyle()
 
-        cloudIcon(currentTheme.red)
-        text(currentTranslation.daemonStatusDisconnected)
+        renderCloudIcon(currentTheme.red)
+        renderText(currentTranslation.daemonStatusDisconnected)
     }
 
     private fun SimplePanel.applyStyle() {
@@ -96,7 +96,7 @@ class DaemonStatusComponent : Component<Unit>(), KoinComponent {
         fontSize = 0.8.rem
     }
 
-    private fun SimplePanel.cloudIcon(iconColor: Color) {
+    private fun SimplePanel.renderCloudIcon(iconColor: Color) {
         div {
             fontSize = 1.rem
             color = iconColor
@@ -104,7 +104,7 @@ class DaemonStatusComponent : Component<Unit>(), KoinComponent {
         }
     }
 
-    private fun SimplePanel.text(text: String) {
+    private fun SimplePanel.renderText(text: String) {
         span(text, className = "me-2")
     }
 }

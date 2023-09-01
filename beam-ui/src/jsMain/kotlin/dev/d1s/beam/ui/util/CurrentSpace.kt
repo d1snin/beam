@@ -81,7 +81,7 @@ fun setCurrentSpaceBlocks(blocks: Blocks?) {
     lateInitCurrentBlocks = blocks
 }
 
-fun SimplePanel.spaceLink(space: Space? = null, block: SimplePanel.() -> Unit) {
+fun SimplePanel.renderSpaceLink(space: Space? = null, block: SimplePanel.() -> Unit) {
     div {
         bind(daemonStatusObservable.state) { status ->
             if (status != null) {

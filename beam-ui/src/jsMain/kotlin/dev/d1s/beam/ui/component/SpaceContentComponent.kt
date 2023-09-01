@@ -68,6 +68,8 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
         return Effect.Success
     }
 
+
+
     private fun SimplePanel.handleNotFound() {
         div().bind(currentSpaceChangeObservable.state) {
             val space = it.space

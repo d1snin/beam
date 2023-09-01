@@ -57,37 +57,56 @@ class ExploreDropdownComponent : Component<Unit>(), KoinComponent {
     }
 
     private fun SimplePanel.renderDropdown() {
-        div(className = "dropdown") dropdown@{
+        div(className = "dropdown") {
             visible = false
 
-            button(
-                currentTranslation.exploreDropdownCallout,
-                style = currentTheme.buttonStyle,
-                className = "btn-sm dropdown-toggle"
-            ) {
-                setAttribute("data-bs-toggle", "dropdown")
-                setAttribute("data-bs-auto-close", "outside")
-                setAttribute("data-bs-offset", "0,20")
-                setAttribute("aria-expanded", "false")
-            }
+            renderButton()
+            renderMenu()
+        }
+    }
 
-            div(className = "dropdown-menu shadow p-3").bind(maxBlockSizeChangeObservable.state) { size ->
-                val sizes = BlockSize.entries
-                val previousSize = sizes.getOrNull(sizes.indexOf(size) - 1)
+    private fun SimplePanel.renderButton() {
+        button(
+            currentTranslation.exploreDropdownCallout,
+            style = currentTheme.buttonStyle,
+            className = "btn-sm dropdown-toggle"
+        ) {
+            setButtonAttributes()
+        }
+    }
 
-                previousSize?.let {
-                    width = sizeOf(it).px
-                }
+    private fun SimplePanel.setButtonAttributes() {
+        setAttribute("data-bs-toggle", "dropdown")
+        setAttribute("data-bs-auto-close", "outside")
+        setAttribute("data-bs-offset", "0,20")
+        setAttribute("aria-expanded", "false")
+    }
 
-                setOutline()
-                setOverlay()
+    private fun SimplePanel.renderMenu() {
+        div(className = "dropdown-menu shadow p-3").bind(maxBlockSizeChangeObservable.state) { maxBlockSize ->
+            setMenuSize(maxBlockSize)
 
-                val effect = render(spaceListingComponent)
+            setOutline()
+            setOverlay()
 
-                (effect as? LazyEffect)?.state?.subscribe { success ->
-                    this@dropdown.visible = success
-                }
-            }
+            renderSpaceListingComponent(componentToBeVisible = this@renderMenu)
+        }
+    }
+
+    private fun SimplePanel.setMenuSize(maxBlockSize: BlockSize) {
+        val sizes = BlockSize.entries
+        val previousSize = sizes.getOrNull(sizes.indexOf(maxBlockSize) - 1)
+
+        previousSize?.let {
+            width = sizeOf(it).px
+        }
+    }
+
+    private fun SimplePanel.renderSpaceListingComponent(componentToBeVisible: SimplePanel) {
+        val effect = render(spaceListingComponent)
+
+        (effect as? LazyEffect)?.state?.subscribe { visible ->
+            componentToBeVisible.visible = visible
         }
     }
 }

@@ -46,17 +46,23 @@ class SpaceFailureCardComponent : Component<SpaceFailureCardComponent.Config>(::
         }
 
     override fun SimplePanel.render(): Effect {
-        div(className = "container d-flex justify-content-center") {
-            maxWidth = Size.Lg.px
-
-            card(className = "d-flex flex-column justify-content-center w-100 p-5") {
-                image()
-                text()
-                spaceListing()
-            }
+        renderCardInContainer {
+            image()
+            text()
+            spaceListing()
         }
 
         return Effect.Success
+    }
+
+    private fun SimplePanel.renderCardInContainer(block: SimplePanel.() -> Unit) {
+        div(className = "container d-flex justify-content-center") {
+            maxWidth = Size.Lg.px
+
+            renderCard(className = "d-flex flex-column justify-content-center w-100 p-5") {
+                block()
+            }
+        }
     }
 
     private fun SimplePanel.image() {

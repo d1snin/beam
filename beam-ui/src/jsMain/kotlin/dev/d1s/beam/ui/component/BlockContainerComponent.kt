@@ -54,16 +54,7 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
             vPanel(className = "w-100") {
                 val batches = blocks.splitIntoBatches()
 
-                batches.forEachIndexed { batchIndex, blockBatch ->
-                    hPanel(className = "w-100", justify = JustifyContent.CENTER) {
-                        blockBatch.forEachIndexed { blockIndex, block ->
-                            val lastBlock = blockIndex == blockBatch.lastIndex
-                            val lastBatch = batchIndex == batches.lastIndex
-
-                            renderBlock(block, lastBlock, lastBatch)
-                        }
-                    }
-                }
+                processBatches(batches)
             }
         }
     }
@@ -98,6 +89,23 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
         processCurrentBatch()
 
         return batches
+    }
+
+    private fun SimplePanel.processBatches(batches: List<Blocks>) {
+        batches.forEachIndexed { batchIndex, blockBatch ->
+            renderBlockPanel(batchIndex, blockBatch, batches)
+        }
+    }
+
+    private fun SimplePanel.renderBlockPanel(index: Int, batch: Blocks, batches: List<Blocks>) {
+        hPanel(className = "w-100", justify = JustifyContent.CENTER) {
+            batch.forEachIndexed { blockIndex, block ->
+                val lastBlock = blockIndex == batch.lastIndex
+                val lastBatch = index == batches.lastIndex
+
+                renderBlock(block, lastBlock, lastBatch)
+            }
+        }
     }
 
     private fun SimplePanel.renderBlock(block: Block, lastBlock: Boolean, lastBatch: Boolean) {

@@ -29,12 +29,16 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
 
     override fun SimplePanel.render(sequence: ContentEntities) {
         p(className = "mb-0") {
-            sequence.forEach { entity ->
-                val isFirst = entity == sequence.first()
-                val isLast = entity == sequence.last()
+            renderSequence(sequence)
+        }
+    }
 
-                renderTextEntity(entity.parameters, isFirst, isLast)
-            }
+    private fun SimplePanel.renderSequence(sequence: ContentEntities) {
+        sequence.forEach { entity ->
+            val isFirst = entity == sequence.first()
+            val isLast = entity == sequence.last()
+
+            renderTextEntity(entity.parameters, isFirst, isLast)
         }
     }
 
@@ -43,14 +47,7 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
             optionalCodeBlock(parameters) {
                 optionalHeading(parameters, first, last) {
                     optionalParagraph(parameters, last) {
-                        val content = parameters[definition.value]
-                        requireNotNull(content)
-
-                        val classList = buildClasses(parameters)
-
-                        span(content, className = classList) {
-                            optionalSecondaryText(parameters)
-                        }
+                        renderText(parameters)
                     }
                 }
             }
@@ -114,13 +111,6 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
         } ?: block()
     }
 
-    private fun TextContentEntityTypeDefinition.Heading.toBootstrapHeadingClass() =
-        when (this) {
-            TextContentEntityTypeDefinition.Heading.H1 -> "h1"
-            TextContentEntityTypeDefinition.Heading.H2 -> "h3"
-            TextContentEntityTypeDefinition.Heading.H3 -> "h5"
-        }
-
     private inline fun SimplePanel.optionalParagraph(
         parameters: ContentEntityParameters,
         last: Boolean,
@@ -140,6 +130,24 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
             block()
         }
     }
+
+    private fun SimplePanel.renderText(parameters: ContentEntityParameters) {
+        val content = parameters[definition.value]
+        requireNotNull(content)
+
+        val classList = buildClasses(parameters)
+
+        span(content, className = classList) {
+            optionalSecondaryText(parameters)
+        }
+    }
+
+    private fun TextContentEntityTypeDefinition.Heading.toBootstrapHeadingClass() =
+        when (this) {
+            TextContentEntityTypeDefinition.Heading.H1 -> "h1"
+            TextContentEntityTypeDefinition.Heading.H2 -> "h3"
+            TextContentEntityTypeDefinition.Heading.H3 -> "h5"
+        }
 
     private fun buildClasses(parameters: ContentEntityParameters): String {
         val classNames = buildList {

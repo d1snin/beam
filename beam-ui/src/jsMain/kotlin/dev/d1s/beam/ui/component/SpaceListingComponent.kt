@@ -17,6 +17,7 @@
 package dev.d1s.beam.ui.component
 
 import dev.d1s.beam.client.PublicBeamClient
+import dev.d1s.beam.client.response.Spaces
 import dev.d1s.beam.commons.Role
 import dev.d1s.beam.commons.Space
 import dev.d1s.beam.ui.Qualifier
@@ -31,6 +32,7 @@ import dev.d1s.beam.ui.util.spaceListingMessage
 import dev.d1s.exkt.common.pagination.Paginator
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
+import dev.d1s.exkt.kvision.component.MutableLazyEffectState
 import dev.d1s.exkt.kvision.component.render
 import io.kvision.html.ButtonStyle
 import io.kvision.html.button
@@ -67,38 +69,52 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
     private val runImmediately = atomic(false)
 
     override fun SimplePanel.render(): Effect {
-        fetchAllSpaces()
+        launchGettingAllSpaces()
 
         val (state, effect) = Effect.lazy()
 
-        div().bind(spaces, runImmediately = runImmediately.getAndSet(true)) { (fetchedSpaces, totalCount) ->
-            if (fetchedSpaces.isNotEmpty()) {
-                p(currentTranslation.spaceListingMessage, className = "fs-bold") {
-                    fontSize = 1.1.rem
+        renderBoundContainer(state) { (fetchedSpaces, totalCount) ->
+            renderSpaceListingMessage()
 
-                    setSecondaryText()
-                }
+            renderSpaceRow(fetchedSpaces) {
+                renderRow(fetchedSpaces)
+            }
 
-                spaceRow(fetchedSpaces) {
-                    renderRow(fetchedSpaces)
-                }
-
-                if (totalCount !in (paginator.offset + 1)..paginator.limit) {
-                    fetchMoreButton()
-                }
-
-                state.value = true
-            } else {
-                state.value = false
+            if (totalCount !in (paginator.offset + 1)..paginator.limit) {
+                renderFetchMoreButton()
             }
         }
 
         return effect
     }
 
+    private fun SimplePanel.renderBoundContainer(
+        effectState: MutableLazyEffectState,
+        block: SimplePanel.(FetchedSpaces) -> Unit
+    ) {
+        div().bind(spaces, runImmediately = runImmediately.getAndSet(true)) { fetchedSpaces ->
+            val (spaces, _) = fetchedSpaces
+            val isNotEmpty = spaces.isNotEmpty()
+
+            if (isNotEmpty) {
+                block(fetchedSpaces)
+            }
+
+            effectState.value = isNotEmpty
+        }
+    }
+
+    private fun SimplePanel.renderSpaceListingMessage() {
+        p(currentTranslation.spaceListingMessage, className = "fs-bold") {
+            fontSize = 1.1.rem
+
+            setSecondaryText()
+        }
+    }
+
     private fun SimplePanel.renderRow(spaces: List<Space>) {
         spaces.forEach { space ->
-            col {
+            renderCol {
                 val spaceCard = get<Component<SpaceCardComponent.Config>>(Qualifier.SpaceCardComponent)
 
                 render(spaceCard) {
@@ -108,7 +124,7 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
         }
     }
 
-    private inline fun SimplePanel.spaceRow(spaces: List<Space>, crossinline block: SimplePanel.() -> Unit) {
+    private inline fun SimplePanel.renderSpaceRow(spaces: List<Space>, crossinline block: SimplePanel.() -> Unit) {
         val lgCols = if (spaces.size == 1) 1 else 2
 
         div(className = "row row-cols-1 row-cols-lg-$lgCols g-3") {
@@ -116,13 +132,13 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
         }
     }
 
-    private inline fun SimplePanel.col(crossinline block: SimplePanel.() -> Unit) {
+    private inline fun SimplePanel.renderCol(crossinline block: SimplePanel.() -> Unit) {
         div(className = "col") {
             block()
         }
     }
 
-    private fun fetchAllSpaces() {
+    private fun launchGettingAllSpaces() {
         if (!fetchingSpaces.value) {
             launchMonitor(loop = true) {
                 getSpaces(offset = 0)?.let { fetchedSpaces ->
@@ -138,7 +154,7 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
         }
     }
 
-    private fun fetchMoreSpaces() {
+    private fun getMoreSpaces() {
         renderingScope.launch {
             paginator.currentPage++
             getSpaces()?.let { fetchedSpaces ->
@@ -150,38 +166,45 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
     private suspend fun getSpaces(offset: Int = paginator.offset): FetchedSpaces? =
         beamClient.getSpaces(paginator.limit, offset).getOrNull()?.let { page ->
             val spaces = page.elements
-
-            val rootSpace = spaces.find {
-                it.role == Role.ROOT
-            }
-
-            val filteredSpaces = spaces.toMutableList().apply {
-                rootSpace?.let {
-                    remove(it)
-                    add(0, it)
-                }
-            }.filter {
-                it.id != currentSpace?.id
-            }
-
-            val totalCount = page.totalCount.let {
-                if (currentSpace != null) {
-                    it - 1
-                } else {
-                    it
-                }
-            }
+            val filteredSpaces = spaces.filterSpaces()
+            val totalCount = page.count()
 
             filteredSpaces to totalCount
         }
 
-    private fun SimplePanel.fetchMoreButton() {
+    private fun List<Space>.filterSpaces() =
+        toMutableList().apply {
+            val rootSpace = getRoot()
+
+            rootSpace?.let {
+                remove(it)
+                add(0, it)
+            }
+        }.filter {
+            it.id != currentSpace?.id
+        }
+
+    private fun List<Space>.getRoot() =
+        find {
+            it.role == Role.ROOT
+        }
+
+    private fun Spaces.count() =
+        totalCount.let {
+            if (currentSpace != null) {
+                it - 1
+            } else {
+                it
+            }
+        }
+
+    private fun SimplePanel.renderFetchMoreButton() {
         div(className = "d-flex w-100 justify-content-center mt-2") {
             button(currentTranslation.spaceListingFetchMoreButton, style = ButtonStyle.LINK) {
                 setSecondaryBlue()
 
                 onClick {
-                    fetchMoreSpaces()
+                    getMoreSpaces()
                 }
             }
         }

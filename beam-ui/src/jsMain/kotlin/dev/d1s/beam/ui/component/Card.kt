@@ -22,7 +22,7 @@ import dev.d1s.beam.ui.theme.setOverlay
 import io.kvision.html.div
 import io.kvision.panel.SimplePanel
 
-fun SimplePanel.card(
+fun SimplePanel.renderCard(
     className: String? = null,
     usePageBackground: Boolean = false,
     block: (SimplePanel.() -> Unit)? = null
@@ -31,13 +31,16 @@ fun SimplePanel.card(
 
     return div(className = classes) {
         setOutline()
-
-        if (usePageBackground) {
-            setBackground()
-        } else {
-            setOverlay()
-        }
+        setBackground(usePageBackground)
 
         block?.invoke(this)
+    }
+}
+
+private fun SimplePanel.setBackground(usePageBackground: Boolean) {
+    if (usePageBackground) {
+        setBackground()
+    } else {
+        setOverlay()
     }
 }

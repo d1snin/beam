@@ -19,6 +19,7 @@ package dev.d1s.beam.ui.component
 import dev.d1s.beam.client.PublicBeamClient
 import dev.d1s.beam.commons.SpaceThemeDefinition
 import dev.d1s.beam.commons.Translation
+import dev.d1s.beam.commons.Translations
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.state.Observable
 import dev.d1s.beam.ui.theme.currentTheme
@@ -49,66 +50,94 @@ class LanguageSwitcherComponent : Component<Unit>(), KoinComponent {
     override fun SimplePanel.render(): Effect {
         val (effectState, effect) = Effect.lazy()
 
-        div {
-            renderingScope.launch {
-                val translations = client.getTranslations(currentSpace?.id).getOrNull()
-                if (translations == null || translations.size <= 1) {
-                    effectState.value = false
-                    return@launch
-                }
-
-                div(className = "dropup").bind(currentSpaceThemeChangeObservable.state) dropup@{
-                    dropupButton()
-
-                    ul(className = "dropdown-menu shadow") {
-                        setOutline()
-                        setOverlay()
-
-                        translations.forEach { translation ->
-                            dropdownItem(translation)
-                        }
-
-                    }
-                }
+        launchDiv {
+            val translations = client.getTranslations(currentSpace?.id).getOrNull()
+            if (translations == null || translations.size <= 1) {
+                effectState.value = false
+                return@launchDiv
             }
+
+            renderDropup(translations)
         }
 
         return effect
     }
 
-    private fun SimplePanel.dropupButton() {
+    private fun SimplePanel.launchDiv(block: suspend SimplePanel.() -> Unit) {
+        div {
+            renderingScope.launch {
+                block()
+            }
+        }
+    }
+
+    private fun SimplePanel.renderDropup(translations: Translations) {
+        div(className = "dropup").bind(currentSpaceThemeChangeObservable.state) {
+            renderButton()
+            renderDropdownMenu(translations)
+        }
+    }
+
+    private fun SimplePanel.renderButton() {
         button(
             text = "",
             style = currentTheme.buttonStyle,
             className = "btn-sm dropdown-toggle"
         ) {
-            setAttribute("data-bs-toggle", "dropdown")
-            setAttribute("data-bs-offset", "0,10")
-            setAttribute("aria-expanded", "false")
+            setButtonAttributes()
 
             iconWithMargin("bi bi-translate")
             +currentTranslation.footerLanguageSwitcherMessage
         }
     }
 
-    private fun SimplePanel.dropdownItem(translation: Translation) {
+    private fun SimplePanel.renderDropdownMenu(translations: Translations) {
+        ul(className = "dropdown-menu shadow") {
+            setOutline()
+            setOverlay()
+
+            translations.forEach { translation ->
+                renderDropdownItem(translation)
+            }
+        }
+    }
+
+    private fun SimplePanel.setButtonAttributes() {
+        setAttribute("data-bs-toggle", "dropdown")
+        setAttribute("data-bs-offset", "0,10")
+        setAttribute("aria-expanded", "false")
+    }
+
+    private fun SimplePanel.renderDropdownItem(translation: Translation) {
+        renderDropdownItem {
+            optionallySetItemAsDisabled(translation)
+
+            setStyle("--bs-dropdown-link-hover-bg", currentTheme.background.asString())
+            setTextColor()
+
+            setAttribute("type", "button")
+
+            iconWithMargin("bi bi-globe-americas")
+            +translation.languageName
+
+            onClick {
+                setCurrentLanguage(translation)
+            }
+        }
+    }
+
+    private fun SimplePanel.renderDropdownItem(block: SimplePanel. () -> Unit) {
         li {
             tag(TAG.BUTTON, className = "dropdown-item") {
-                if (currentTranslation == translation) {
-                    addCssClass("disabled")
-                    setAttribute("aria-disabled", "true")
-                }
-
-                setStyle("--bs-dropdown-link-hover-bg", currentTheme.background.asString())
-                setTextColor()
-                setAttribute("type", "button")
-                iconWithMargin("bi bi-globe-americas")
-                +translation.languageName
-
-                onClick {
-                    setCurrentLanguage(translation)
-                }
+                block()
             }
+        }
+    }
+
+    private fun SimplePanel.optionallySetItemAsDisabled(translation: Translation) {
+        if (currentTranslation == translation) {
+            addCssClass("disabled")
+            setAttribute("aria-disabled", "true")
         }
     }
 
