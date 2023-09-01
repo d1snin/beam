@@ -29,8 +29,8 @@ import dev.d1s.beam.daemon.entity.SpaceEntity
 import dev.d1s.beam.daemon.entity.asString
 import dev.d1s.beam.daemon.exception.UnprocessableEntityException
 import dev.d1s.exkt.dto.*
-import dev.d1s.ktor.events.commons.event
 import dev.d1s.ktor.events.server.WebSocketEventChannel
+import dev.d1s.ktor.events.server.event
 import io.ktor.server.plugins.*
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -255,20 +255,26 @@ class DefaultBlockService : BlockService, KoinComponent {
         }
 
     private suspend fun sendBlockCreatedEvent(blockDto: Block) {
-        val event = event(EventReferences.blockCreated, blockDto)
+        val event = event(EventReferences.blockCreated) {
+            blockDto
+        }
         eventChannel.send(event)
     }
 
     private suspend fun sendBlockUpdatedEvent(oldBlockDto: Block, newBlockDto: Block) {
         val eventRef = EventReferences.blockUpdated(newBlockDto.id)
         val update = EntityUpdate(oldBlockDto, newBlockDto)
-        val event = event(eventRef, update)
+        val event = event(eventRef) {
+            update
+        }
         eventChannel.send(event)
     }
 
     private suspend fun sendBlockRemovedEvent(blockDto: Block) {
         val eventRef = EventReferences.blockRemoved(blockDto.id)
-        val event = event(eventRef, blockDto)
+        val event = event(eventRef) {
+            blockDto
+        }
         eventChannel.send(event)
     }
 }

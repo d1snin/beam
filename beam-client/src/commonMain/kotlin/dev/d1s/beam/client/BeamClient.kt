@@ -22,11 +22,11 @@ import dev.d1s.beam.commons.event.EntityUpdate
 import dev.d1s.beam.commons.event.EventReferences
 import dev.d1s.exkt.common.pagination.LimitAndOffset
 import dev.d1s.exkt.common.replaceIdPlaceholder
+import dev.d1s.ktor.events.client.ClientWebSocketEvent
 import dev.d1s.ktor.events.client.WebSocketEvents
 import dev.d1s.ktor.events.client.receiveWebSocketEvent
 import dev.d1s.ktor.events.client.webSocketEvents
 import dev.d1s.ktor.events.commons.EventReference
-import dev.d1s.ktor.events.commons.WebSocketEvent
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*
@@ -72,23 +72,23 @@ public interface PublicBeamClient {
 
     public suspend fun getTranslations(spaceId: SpaceIdentifier?): Result<Translations>
 
-    public suspend fun onSpaceCreated(block: suspend (WebSocketEvent<Space>) -> Unit): Result<Job>
+    public suspend fun onSpaceCreated(block: suspend (ClientWebSocketEvent<Space>) -> Unit): Result<Job>
 
     public suspend fun onSpaceUpdated(
         id: SpaceId? = null,
-        block: suspend (WebSocketEvent<EntityUpdate<Space>>) -> Unit
+        block: suspend (ClientWebSocketEvent<EntityUpdate<Space>>) -> Unit
     ): Result<Job>
 
-    public suspend fun onSpaceRemoved(id: SpaceId? = null, block: suspend (WebSocketEvent<Space>) -> Unit): Result<Job>
+    public suspend fun onSpaceRemoved(id: SpaceId? = null, block: suspend (ClientWebSocketEvent<Space>) -> Unit): Result<Job>
 
-    public suspend fun onBlockCreated(block: suspend (WebSocketEvent<Block>) -> Unit): Result<Job>
+    public suspend fun onBlockCreated(block: suspend (ClientWebSocketEvent<Block>) -> Unit): Result<Job>
 
     public suspend fun onBlockUpdated(
         id: BlockId? = null,
-        block: suspend (WebSocketEvent<EntityUpdate<Block>>) -> Unit
+        block: suspend (ClientWebSocketEvent<EntityUpdate<Block>>) -> Unit
     ): Result<Job>
 
-    public suspend fun onBlockRemoved(id: BlockId? = null, block: suspend (WebSocketEvent<Block>) -> Unit): Result<Job>
+    public suspend fun onBlockRemoved(id: BlockId? = null, block: suspend (ClientWebSocketEvent<Block>) -> Unit): Result<Job>
 
     public suspend fun isCompatible(): Result<Boolean>
 
@@ -205,37 +205,37 @@ public class DefaultPublicBeamClient(
             }.body()
         }
 
-    override suspend fun onSpaceCreated(block: suspend (WebSocketEvent<Space>) -> Unit): Result<Job> =
+    override suspend fun onSpaceCreated(block: suspend (ClientWebSocketEvent<Space>) -> Unit): Result<Job> =
         handleWsEvents(EventReferences.spaceCreated, block)
 
     override suspend fun onSpaceUpdated(
         id: SpaceId?,
-        block: suspend (WebSocketEvent<EntityUpdate<Space>>) -> Unit
+        block: suspend (ClientWebSocketEvent<EntityUpdate<Space>>) -> Unit
     ): Result<Job> {
         val reference = EventReferences.spaceUpdated(id)
 
         return handleWsEvents(reference, block)
     }
 
-    override suspend fun onSpaceRemoved(id: SpaceId?, block: suspend (WebSocketEvent<Space>) -> Unit): Result<Job> {
+    override suspend fun onSpaceRemoved(id: SpaceId?, block: suspend (ClientWebSocketEvent<Space>) -> Unit): Result<Job> {
         val reference = EventReferences.spaceRemoved(id)
 
         return handleWsEvents(reference, block)
     }
 
-    override suspend fun onBlockCreated(block: suspend (WebSocketEvent<Block>) -> Unit): Result<Job> =
+    override suspend fun onBlockCreated(block: suspend (ClientWebSocketEvent<Block>) -> Unit): Result<Job> =
         handleWsEvents(EventReferences.blockCreated, block)
 
     override suspend fun onBlockUpdated(
         id: BlockId?,
-        block: suspend (WebSocketEvent<EntityUpdate<Block>>) -> Unit
+        block: suspend (ClientWebSocketEvent<EntityUpdate<Block>>) -> Unit
     ): Result<Job> {
         val reference = EventReferences.blockUpdated(id)
 
         return handleWsEvents(reference, block)
     }
 
-    override suspend fun onBlockRemoved(id: BlockId?, block: suspend (WebSocketEvent<Block>) -> Unit): Result<Job> {
+    override suspend fun onBlockRemoved(id: BlockId?, block: suspend (ClientWebSocketEvent<Block>) -> Unit): Result<Job> {
         val reference = EventReferences.blockRemoved(id)
 
         return handleWsEvents(reference, block)
@@ -259,7 +259,7 @@ public class DefaultPublicBeamClient(
 
     private inline fun <reified T> handleWsEvents(
         reference: EventReference,
-        crossinline handler: suspend (WebSocketEvent<T>) -> Unit
+        crossinline handler: suspend (ClientWebSocketEvent<T>) -> Unit
     ) = runCatching {
         requireWsBaseUrl()
 

@@ -28,8 +28,8 @@ import dev.d1s.beam.daemon.util.CommonLanguageCodes
 import dev.d1s.beam.daemon.util.byCode
 import dev.d1s.exkt.dto.*
 import dev.d1s.exkt.ktor.server.statuspages.HttpStatusException
-import dev.d1s.ktor.events.commons.event
 import dev.d1s.ktor.events.server.WebSocketEventChannel
+import dev.d1s.ktor.events.server.event
 import io.ktor.http.*
 import io.ktor.server.plugins.*
 import org.koin.core.component.KoinComponent
@@ -683,7 +683,9 @@ class DefaultTranslationService : TranslationService, KoinComponent {
     }
 
     private suspend fun sendTranslationCreatedEvent(translationDto: Translation) {
-        val event = event(EventReferences.translationCreated, translationDto)
+        val event = event(EventReferences.translationCreated) {
+            translationDto
+        }
         eventChannel.send(event)
     }
 
@@ -691,14 +693,18 @@ class DefaultTranslationService : TranslationService, KoinComponent {
         val qualifier = newTranslationDto.qualifier()
         val eventRef = EventReferences.translationUpdated(qualifier)
         val update = EntityUpdate(oldTranslationDto, newTranslationDto)
-        val event = event(eventRef, update)
+        val event = event(eventRef) {
+            update
+        }
         eventChannel.send(event)
     }
 
     private suspend fun sendTranslationRemovedEvent(translationDto: Translation) {
         val qualifier = translationDto.qualifier()
         val eventRef = EventReferences.translationRemoved(qualifier)
-        val event = event(eventRef, translationDto)
+        val event = event(eventRef) {
+            translationDto
+        }
         eventChannel.send(event)
     }
 

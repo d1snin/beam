@@ -33,8 +33,8 @@ import dev.d1s.exkt.ktor.server.postgres.handlePsqlUniqueViolationThrowingConfli
 import dev.d1s.exkt.ktorm.ExportedSequence
 import dev.d1s.exkt.ktorm.dto.ResultingExportedSequenceWithOptionalDto
 import dev.d1s.exkt.ktorm.dto.convertExportedSequenceToDtoIf
-import dev.d1s.ktor.events.commons.event
 import dev.d1s.ktor.events.server.WebSocketEventChannel
+import dev.d1s.ktor.events.server.event
 import io.ktor.server.plugins.*
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -332,20 +332,26 @@ class DefaultSpaceService : SpaceService, KoinComponent {
 
 
     private suspend fun sendSpaceCreatedEvent(spaceDto: Space) {
-        val event = event(EventReferences.spaceCreated, spaceDto)
+        val event = event(EventReferences.spaceCreated) {
+            spaceDto
+        }
         eventChannel.send(event)
     }
 
     private suspend fun sendSpaceUpdatedEvent(oldSpaceDto: Space, newSpaceDto: Space) {
         val eventRef = EventReferences.spaceUpdated(newSpaceDto.id)
         val update = EntityUpdate(oldSpaceDto, newSpaceDto)
-        val event = event(eventRef, update)
+        val event = event(eventRef) {
+            update
+        }
         eventChannel.send(event)
     }
 
     private suspend fun sendSpaceRemovedEvent(spaceDto: Space) {
         val eventRef = EventReferences.spaceRemoved(spaceDto.id)
-        val event = event(eventRef, spaceDto)
+        val event = event(eventRef) {
+            spaceDto
+        }
         eventChannel.send(event)
     }
 
