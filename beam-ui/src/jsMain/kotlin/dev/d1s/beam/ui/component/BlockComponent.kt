@@ -22,10 +22,8 @@ import dev.d1s.beam.ui.contententity.renderEntities
 import dev.d1s.beam.ui.util.Size.sizeOf
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
-import io.kvision.core.CssSize
-import io.kvision.html.div
 import io.kvision.panel.SimplePanel
-import io.kvision.utils.minus
+import io.kvision.utils.plus
 import io.kvision.utils.px
 import kotlinx.atomicfu.atomic
 import org.koin.core.component.KoinComponent
@@ -37,38 +35,37 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
             "Block isn't set"
         }
 
-        renderBlock(block)
+        renderBlockCard(block)
 
         return Effect.Success
     }
 
-    private fun SimplePanel.renderBlock(block: Block) {
-        div(className = "w-100") {
+    private fun SimplePanel.renderBlockCard(block: Block) {
+        renderCard("w-100 p-4 d-flex flex-column justify-content-start") {
             val blockSize = sizeOf(block.size).px
             maxWidth = blockSize
 
-            applyPadding()
-            renderBlockCard(block, blockSize)
-        }
-    }
-
-    private fun SimplePanel.renderBlockCard(block: Block, blockSize: CssSize) {
-        renderCard("w-100 p-4 d-flex flex-column justify-content-start") {
-            maxWidth = if (config.applyPaddingEnd.value) blockSize.minus(cardPadding.first) else blockSize
+            applyMargin()
+            applyCompensator()
 
             setOptionalBlockId(block)
+
             renderEntities(block.entities)
         }
     }
 
-    private fun SimplePanel.applyPadding() {
-        if (config.applyPaddingEnd.value) {
-            paddingRight = cardPadding
+    private fun SimplePanel.applyMargin() {
+        if (config.applyMarginEnd.value) {
+            marginRight = blockMargin
         }
 
-        if (config.applyPaddingBottom.value) {
-            paddingBottom = cardPadding
+        if (config.applyMarginBottom.value) {
+            marginBottom = blockMargin
         }
+    }
+
+    private fun SimplePanel.applyCompensator() {
+        maxWidth += config.widthCompensator.value
     }
 
     private fun SimplePanel.setOptionalBlockId(block: Block) {
@@ -85,12 +82,16 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
 
         val block = atomic<Block?>(null)
 
-        val applyPaddingEnd = atomic(true)
-        val applyPaddingBottom = atomic(true)
+        val applyMarginEnd = atomic(true)
+        val applyMarginBottom = atomic(true)
+
+        val widthCompensator = atomic(.0)
     }
 
-    private companion object {
+    companion object {
 
-        private val cardPadding = 20.px
+        const val BLOCK_MARGIN_VALUE = 20
+
+        private val blockMargin = BLOCK_MARGIN_VALUE.px
     }
 }

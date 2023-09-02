@@ -36,7 +36,7 @@ class HeadingComponent : Component<Unit>(), KoinComponent {
     private val daemonStatusComponent by inject<Component<Unit>>(Qualifier.DaemonStatusComponent)
 
     override fun SimplePanel.render(): Effect {
-        div(className = "container-fluid mt-3 mb-4 my-5 d-flex flex-column flex-lg-row justify-content-lg-between") {
+        div(className = "container-fluid px-3 mt-3 mb-5 d-flex flex-column flex-lg-row justify-content-lg-between") {
             renderSpaceHeading()
             renderDaemonStatus()
         }

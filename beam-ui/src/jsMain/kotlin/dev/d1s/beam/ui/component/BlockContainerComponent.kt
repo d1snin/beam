@@ -40,7 +40,7 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
     private val currentSpaceContentChangeObservable by inject<Observable<Blocks?>>(Qualifier.CurrentSpaceContentChangeObservable)
 
     override fun SimplePanel.render(): Effect {
-        div(className = "mb-5").bind(currentSpaceContentChangeObservable.state) { change ->
+        div().bind(currentSpaceContentChangeObservable.state) { change ->
             change?.let { blocks ->
                 renderBlocks(blocks)
             }
@@ -50,7 +50,7 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
     }
 
     private fun SimplePanel.renderBlocks(blocks: Blocks) {
-        div(className = "container-fluid d-flex justify-content-center mb-5") {
+        div(className = "container-fluid d-flex justify-content-center") {
             vPanel(className = "w-100") {
                 val batches = blocks.splitIntoBatches()
 
@@ -92,35 +92,61 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
     }
 
     private fun SimplePanel.processBatches(batches: List<Blocks>) {
+        val maxPaddingCount = batches.getMaxPaddingCount()
+
         batches.forEachIndexed { batchIndex, blockBatch ->
-            renderBlockPanel(batchIndex, blockBatch, batches)
+            val widthCompensator = blockBatch.getWidthCompensator(maxPaddingCount)
+
+            renderBlockPanel(batchIndex, blockBatch, batches, widthCompensator)
         }
     }
 
-    private fun SimplePanel.renderBlockPanel(index: Int, batch: Blocks, batches: List<Blocks>) {
+    private fun List<Blocks>.getMaxPaddingCount() =
+        maxOf {
+            it.getPaddingCount()
+        }
+
+    private fun Blocks.getPaddingCount() =
+        size - 1
+
+    private fun Blocks.getWidthCompensator(maxPaddingCount: Int): Double {
+        val paddingCount = getPaddingCount()
+
+        return if (paddingCount < maxPaddingCount) {
+            val compensatorMultiplier = maxPaddingCount - paddingCount
+            val totalCompensator = BlockComponent.BLOCK_MARGIN_VALUE * compensatorMultiplier
+            totalCompensator.toDouble() / size
+        } else {
+            .0
+        }
+    }
+
+    private fun SimplePanel.renderBlockPanel(index: Int, batch: Blocks, batches: List<Blocks>, compensator: Double) {
         hPanel(className = "w-100", justify = JustifyContent.CENTER) {
             batch.forEachIndexed { blockIndex, block ->
                 val lastBlock = blockIndex == batch.lastIndex
                 val lastBatch = index == batches.lastIndex
 
-                renderBlock(block, lastBlock, lastBatch)
+                renderBlock(block, lastBlock, lastBatch, compensator)
             }
         }
     }
 
-    private fun SimplePanel.renderBlock(block: Block, lastBlock: Boolean, lastBatch: Boolean) {
+    private fun SimplePanel.renderBlock(block: Block, lastBlock: Boolean, lastBatch: Boolean, compensator: Double) {
         val blockComponent = get<Component<BlockComponent.Config>>(Qualifier.BlockComponent)
 
         render(blockComponent) {
             this.block.value = block
 
             if (lastBlock) {
-                this.applyPaddingEnd.value = false
+                this.applyMarginEnd.value = false
             }
 
             if (lastBatch) {
-                this.applyPaddingBottom.value = false
+                this.applyMarginBottom.value = false
             }
+
+            this.widthCompensator.value = compensator
         }
     }
 }

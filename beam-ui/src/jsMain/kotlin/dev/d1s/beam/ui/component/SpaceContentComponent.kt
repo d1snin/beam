@@ -44,7 +44,7 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
     private val showBlockContainer = ObservableValue(true)
 
     override fun SimplePanel.render(): Effect {
-        div(className = "container-fluid mt-4") {
+        div(className = "container-fluid") {
             div().bind(maxBlockSizeChangeObservable.state) {
                 handleNotFound()
                 handleEmptySpace()
