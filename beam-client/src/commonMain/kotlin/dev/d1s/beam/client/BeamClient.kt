@@ -284,7 +284,7 @@ public class DefaultPublicBeamClient(
                         e.printStackTrace()
                         delay(5.seconds)
 
-                        return@webSocketEvents
+                        continue
                     }
 
                     handler(event)
