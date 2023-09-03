@@ -90,7 +90,7 @@ class LanguageSwitcherComponent : Component<Unit>(), KoinComponent {
             setOutline()
             setOverlay()
 
-            translations.forEach { translation ->
+            translations.filter { it != currentTranslation }.forEach { translation ->
                 renderDropdownItem(translation)
             }
         }
@@ -104,8 +104,6 @@ class LanguageSwitcherComponent : Component<Unit>(), KoinComponent {
 
     private fun SimplePanel.renderDropdownItem(translation: Translation) {
         renderDropdownItem {
-            optionallySetItemAsDisabled(translation)
-
             setStyle("--bs-dropdown-link-hover-bg", currentTheme.background.asString())
             setTextColor()
 
@@ -125,13 +123,6 @@ class LanguageSwitcherComponent : Component<Unit>(), KoinComponent {
             tag(TAG.BUTTON, className = "dropdown-item") {
                 block()
             }
-        }
-    }
-
-    private fun SimplePanel.optionallySetItemAsDisabled(translation: Translation) {
-        if (currentTranslation == translation) {
-            addCssClass("disabled")
-            setAttribute("aria-disabled", "true")
         }
     }
 }
