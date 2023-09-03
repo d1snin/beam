@@ -23,12 +23,16 @@ import dev.d1s.beam.ui.util.*
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
 import io.kvision.core.JustifyContent
+import io.kvision.core.TextDecoration
+import io.kvision.core.TextDecorationLine
+import io.kvision.core.onEvent
 import io.kvision.html.div
 import io.kvision.html.image
 import io.kvision.html.p
 import io.kvision.html.span
 import io.kvision.panel.SimplePanel
 import io.kvision.panel.vPanel
+import io.kvision.utils.event
 import io.kvision.utils.px
 import io.kvision.utils.rem
 import kotlinx.atomicfu.atomic
@@ -40,21 +44,23 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
         config.space.value ?: currentSpace
     }
 
+    private var linkedContainer: SimplePanel? = null
+
     override fun SimplePanel.render(): Effect {
         if (config.bare.value) {
-            renderCardContent()
+            renderContent()
         } else {
-            renderCardWithContent()
+            renderCard()
         }
 
         return Effect.Success
     }
 
-    private fun SimplePanel.renderCardWithContent() {
+    private fun SimplePanel.renderCard() {
         val className = "p-${config.cardPaddingLevel.value} ps-${config.cardStartPaddingLevel.value}"
 
-        renderCard(className, usePageBackground = true) {
-            renderCardContent()
+        this@renderCard.renderCard(className, usePageBackground = true) {
+            renderContent()
         }
     }
 
@@ -62,15 +68,25 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
     // За себя. За нее. За наше будущее.
     // Что с нами будет?
 
-    private fun SimplePanel.renderCardContent() {
-        div(className = "d-flex align-items-center") {
+    private fun SimplePanel.renderContent() {
+        renderLinkedContainer {
             renderIcon()
             renderSpaceInfo()
         }
     }
 
+    private fun SimplePanel.renderLinkedContainer(block: SimplePanel.() -> Unit) {
+        renderSpaceLink {
+            div(className = "d-flex align-items-center") {
+                linkedContainer = this
+
+                block()
+            }
+        }
+    }
+
     private fun SimplePanel.renderIcon() {
-        renderCurrentSpaceLink(space) {
+        renderSpaceLink(space) {
             renderImage()
         }
     }
@@ -82,22 +98,16 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
     }
 
     private fun SimplePanel.renderSpaceInfo() {
-        renderLinkedContainer {
-            renderSpaceInfoContent()
+        renderVPanel {
+            renderTitle()
+            renderDescription()
         }
     }
 
-    private fun SimplePanel.renderLinkedContainer(block: SimplePanel.() -> Unit) {
-        renderCurrentSpaceLink(space) {
-            vPanel(justify = JustifyContent.CENTER, className = "ms-3") {
-                block()
-            }
+    private fun SimplePanel.renderVPanel(block: SimplePanel.() -> Unit) {
+        vPanel(justify = JustifyContent.CENTER, className = "ms-3") {
+            block()
         }
-    }
-
-    private fun SimplePanel.renderSpaceInfoContent() {
-        renderTitle()
-        renderDescription()
     }
 
     private fun SimplePanel.renderTitle() {
@@ -111,8 +121,9 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
             addCssClass(headingClass)
 
             val title = space?.view?.title ?: currentTranslation.spaceInfoDefaultTitle
-
             +title
+
+            underlineOnHover()
         }
     }
 
@@ -124,6 +135,18 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
                 setSecondaryText()
 
                 +it
+            }
+        }
+    }
+
+    private fun SimplePanel.underlineOnHover() {
+        linkedContainer?.onEvent {
+            event("mouseenter") {
+                textDecoration = TextDecoration(TextDecorationLine.UNDERLINE)
+            }
+
+            event("mouseleave") {
+                textDecoration = TextDecoration(TextDecorationLine.NONE)
             }
         }
     }

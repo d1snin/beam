@@ -61,7 +61,7 @@ fun setCurrentSpaceBlocks(blocks: Blocks?) {
     lateInitCurrentBlocks = blocks
 }
 
-fun SimplePanel.renderCurrentSpaceLink(space: Space? = null, block: SimplePanel.() -> Unit) {
+fun SimplePanel.renderSpaceLink(space: Space? = null, block: SimplePanel.() -> Unit) {
     link(
         label = "",
         space?.let { buildSpaceUrl(it.slug) } ?: currentSpaceUrl,
