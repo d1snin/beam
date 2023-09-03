@@ -19,7 +19,7 @@ package dev.d1s.beam.commons
 public typealias Version = String
 
 public const val VERSION_MAJOR: Int = 0
-public const val VERSION_MINOR: Int = 2
+public const val VERSION_MINOR: Int = 3
 public const val VERSION_PATCH: Int = 0
 
 public const val VERSION: Version = "$VERSION_MAJOR.$VERSION_MINOR.$VERSION_PATCH"
