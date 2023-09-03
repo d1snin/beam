@@ -41,6 +41,7 @@ import io.kvision.panel.SimplePanel
 import io.kvision.state.ObservableValue
 import io.kvision.state.bind
 import io.kvision.utils.rem
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -61,22 +62,22 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
 
     private val renderingScope = CoroutineScope(Dispatchers.Main)
 
+    private val initialized = atomic(false)
+
     override fun SimplePanel.render(): Effect {
         val (state, effect) = Effect.lazy()
 
-        renderContainerAndLaunch {
-            getMoreSpaces()
+        renderingScope.launch {
+            initialize()
             renderSpaceContainer(state)
         }
 
         return effect
     }
 
-    private fun SimplePanel.renderContainerAndLaunch(block: suspend SimplePanel.() -> Unit) {
-        div {
-            renderingScope.launch {
-                block()
-            }
+    private suspend fun initialize() {
+        if (!initialized.getAndSet(true)) {
+            getMoreSpaces()
         }
     }
 
@@ -130,6 +131,10 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
         }
     }
 
+    // Что было раньше? Раньше было горячо или холодно?
+    // Почему это переносит меня в то время с такой силой и болью в груди?
+    // Было плохо или хорошо? Стало хуже или лучше?
+
     private fun SimplePanel.renderSpaceRow(spaces: List<Space>, block: SimplePanel.() -> Unit) {
         val lgCols = if (spaces.size == 1) 1 else 2
 
@@ -146,6 +151,7 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
 
     private suspend fun getMoreSpaces() {
         paginator.currentPage++
+
         getSpaces()?.let { fetchedSpaces ->
             spaces.value = FetchedSpaces(spaces.value.first + fetchedSpaces.first, fetchedSpaces.second)
         }
@@ -205,6 +211,6 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
 
     private companion object {
 
-        private const val PAGE_LIMIT = 4
+        private const val PAGE_LIMIT = 2
     }
 }
