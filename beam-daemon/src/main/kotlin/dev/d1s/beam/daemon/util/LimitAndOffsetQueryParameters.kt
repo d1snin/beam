@@ -29,12 +29,12 @@ val ApplicationCall.requiredLimitAndOffsetQueryParameters: LimitAndOffsetQueryPa
     get() {
         val query = request.queryParameters
 
-        val limit = query[Paths.LIMIT_QUERY_PARAMETER]?.toIntOrNull()
-        val offset = query[Paths.OFFSET_QUERY_PARAMETER]?.toIntOrNull()
+        val limit = query[Paths.LIMIT_QUERY_PARAMETER]?.toUIntOrNull()
+        val offset = query[Paths.OFFSET_QUERY_PARAMETER]?.toUIntOrNull()
 
         if (limit == null || offset == null) {
             throw BadRequestException("Valid ${Paths.LIMIT_QUERY_PARAMETER} and ${Paths.OFFSET_QUERY_PARAMETER} query parameters required. Got limit: $limit, offset: $offset")
         }
 
-        return LimitAndOffsetQueryParameters(limit, offset)
+        return LimitAndOffsetQueryParameters(limit.toInt(), offset.toInt())
     }
