@@ -36,9 +36,8 @@ internal object ContentEntityParametersValidator : ContentEntityValidator<Nothin
     private fun ValidationBuilder<ContentEntity>.requireParameters() {
         addConstraint("missing parameters") { entity ->
             val definition = entity.definition()
-            requireNotNull(definition)
 
-            definition.parameters.forEach { parameterDefinition ->
+            definition?.parameters?.forEach { parameterDefinition ->
                 if (parameterDefinition.required) {
                     val name = parameterDefinition.name
                     entity.parameters[name] ?: return@addConstraint false

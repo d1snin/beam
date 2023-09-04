@@ -46,9 +46,8 @@ internal object TextContentEntityValidator :
     private fun ValidationBuilder<ContentEntity>.requireNotBlankValue() {
         addTypedConstraint("parameter \"${definition.value.name}\" must not be blank") { entity ->
             val value = entity.parameters[definition.value]
-            requireNotNull(value)
 
-            value.isNotBlank()
+            value?.isBlank() != true
         }
     }
 
