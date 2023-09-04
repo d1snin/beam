@@ -73,8 +73,7 @@ class ExploreDropdownComponent : Component<Unit>(), KoinComponent {
 
     private fun SimplePanel.renderMenu() {
         div(className = "dropdown-menu shadow p-3").bind(maxBlockSizeChangeObservable.state) { maxBlockSize ->
-            setMenuSize(maxBlockSize)
-
+            setMenuWidth(maxBlockSize)
             setOutline()
             setOverlay()
 
@@ -82,13 +81,11 @@ class ExploreDropdownComponent : Component<Unit>(), KoinComponent {
         }
     }
 
-    private fun SimplePanel.setMenuSize(maxBlockSize: BlockSize) {
-        val sizes = BlockSize.entries
-        val previousSize = sizes.getOrNull(sizes.indexOf(maxBlockSize) - 1)
+    private fun SimplePanel.setMenuWidth(maxBlockSize: BlockSize) {
+        val maxBlockSizeValue = sizeOf(maxBlockSize)
+        val minimizedMaxBlockSize = (maxBlockSizeValue * 0.70).toInt()
 
-        previousSize?.let {
-            width = sizeOf(it).px
-        }
+        width = minimizedMaxBlockSize.px
     }
 
     private fun SimplePanel.renderSpaceListingComponent(componentToBeVisible: SimplePanel) {
