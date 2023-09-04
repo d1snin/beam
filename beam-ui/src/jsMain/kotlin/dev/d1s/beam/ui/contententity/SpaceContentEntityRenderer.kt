@@ -19,10 +19,7 @@ package dev.d1s.beam.ui.contententity
 import dev.d1s.beam.client.PublicBeamClient
 import dev.d1s.beam.commons.Block
 import dev.d1s.beam.commons.BlockSize
-import dev.d1s.beam.commons.contententity.ContentEntities
-import dev.d1s.beam.commons.contententity.ContentEntity
-import dev.d1s.beam.commons.contententity.SpaceContentEntityTypeDefinition
-import dev.d1s.beam.commons.contententity.get
+import dev.d1s.beam.commons.contententity.*
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.component.SpaceCardComponent
 import dev.d1s.exkt.kvision.component.Component
@@ -46,14 +43,19 @@ class SpaceContentEntityRenderer : ContentEntityRenderer, KoinComponent {
 
     override fun SimplePanel.render(sequence: ContentEntities, block: Block) {
         val lgCols = if (block.size >= BlockSize.LARGE) 2 else 1
+        val isLast = sequence.isLastIn(block)
 
-        renderRow(lgCols) {
+        renderRow(lgCols, isLast) {
             renderSequence(sequence)
         }
     }
 
-    private fun SimplePanel.renderRow(lgCols: Int, block: SimplePanel.() -> Unit) {
+    private fun SimplePanel.renderRow(lgCols: Int, last: Boolean, block: SimplePanel.() -> Unit) {
         div(className = "w-100 row row-cols-1 row-cols-lg-$lgCols g-3") {
+            if (!last) {
+                addCssClass("mb-3")
+            }
+
             block()
         }
     }
