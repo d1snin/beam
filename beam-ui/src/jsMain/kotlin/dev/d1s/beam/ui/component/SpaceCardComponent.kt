@@ -22,14 +22,8 @@ import dev.d1s.beam.ui.theme.setSecondaryText
 import dev.d1s.beam.ui.util.*
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
-import io.kvision.core.JustifyContent
-import io.kvision.core.TextDecoration
-import io.kvision.core.TextDecorationLine
-import io.kvision.core.onEvent
-import io.kvision.html.div
-import io.kvision.html.image
-import io.kvision.html.p
-import io.kvision.html.span
+import io.kvision.core.*
+import io.kvision.html.*
 import io.kvision.panel.SimplePanel
 import io.kvision.panel.vPanel
 import io.kvision.utils.event
@@ -72,6 +66,10 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
         renderLinkedContainer {
             renderIcon()
             renderSpaceInfo()
+
+            if (!config.bare.value) {
+                renderOpenIcon()
+            }
         }
     }
 
@@ -82,6 +80,14 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
 
                 block()
             }
+        }
+    }
+
+    private fun SimplePanel.renderOpenIcon() {
+        div(className = "ms-auto me-2") {
+            fontSize = 1.2.rem
+
+            icon("bi bi-box-arrow-up-right")
         }
     }
 
