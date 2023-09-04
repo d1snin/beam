@@ -16,6 +16,7 @@
 
 package dev.d1s.beam.ui.contententity
 
+import dev.d1s.beam.commons.Block
 import dev.d1s.beam.commons.contententity.*
 import dev.d1s.beam.ui.theme.setSecondaryText
 import io.kvision.html.*
@@ -27,7 +28,7 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
 
     override val definition = TextContentEntityTypeDefinition
 
-    override fun SimplePanel.render(sequence: ContentEntities) {
+    override fun SimplePanel.render(sequence: ContentEntities, block: Block) {
         p(className = "mb-0") {
             renderSequence(sequence)
         }

@@ -16,7 +16,7 @@
 
 package dev.d1s.beam.ui.contententity
 
-import dev.d1s.beam.commons.contententity.ContentEntities
+import dev.d1s.beam.commons.Block
 import dev.d1s.beam.commons.contententity.ContentEntity
 import io.kvision.panel.SimplePanel
 import org.koin.core.context.GlobalContext
@@ -27,18 +27,18 @@ private val contentEntityRenderers by lazy {
     GlobalContext.get().getAll<ContentEntityRenderer>()
 }
 
-fun SimplePanel.renderEntities(entities: ContentEntities) {
+fun SimplePanel.renderEntities(block: Block) {
     val sequence = mutableListOf<ContentEntity>()
 
-    entities.forEach { entity ->
-        processEntity(entity, sequence)
+    block.entities.forEach { entity ->
+        processEntity(entity, sequence, block)
     }
 
     // finalize
-    renderSequence(sequence)
+    renderSequence(sequence, block)
 }
 
-private fun SimplePanel.processEntity(entity: ContentEntity, sequence: ContentEntitySequence) {
+private fun SimplePanel.processEntity(entity: ContentEntity, sequence: ContentEntitySequence, block: Block) {
     val lastEntity = sequence.lastOrNull()
 
     when {
@@ -47,21 +47,21 @@ private fun SimplePanel.processEntity(entity: ContentEntity, sequence: ContentEn
         }
 
         else -> {
-            renderSequence(sequence)
+            renderSequence(sequence, block)
 
             sequence.add(entity)
         }
     }
 }
 
-private fun SimplePanel.renderSequence(sequence: ContentEntitySequence) {
+private fun SimplePanel.renderSequence(sequence: ContentEntitySequence, block: Block) {
     val lastEntity = sequence.lastOrNull()
 
     lastEntity?.let {
         val renderer = getRenderer(entity = it)
 
         with(renderer) {
-            render(sequence)
+            render(sequence, block)
         }
 
         sequence.clear()

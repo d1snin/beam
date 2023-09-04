@@ -50,7 +50,7 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
 
             setOptionalBlockId(block)
 
-            renderEntities(block.entities)
+            renderEntities(block)
         }
     }
 

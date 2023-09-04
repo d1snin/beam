@@ -72,9 +72,15 @@ public data object TextContentEntityTypeDefinition : ContentEntityTypeDefinition
     }
 }
 
+public data object SpaceContentEntityTypeDefinition : ContentEntityTypeDefinition(name = "space") {
+
+    val identifier: ContentEntityParameterDefinition = parameter("identifier", required = true, translatable = true)
+}
+
 private val definitions = listOf(
     VoidContentEntityTypeDefinition,
-    TextContentEntityTypeDefinition
+    TextContentEntityTypeDefinition,
+    SpaceContentEntityTypeDefinition
 )
 
 public fun definition(name: ContentEntityTypeName): ContentEntityTypeDefinition? =

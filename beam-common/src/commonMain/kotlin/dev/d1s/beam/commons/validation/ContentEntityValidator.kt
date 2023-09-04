@@ -45,7 +45,8 @@ internal abstract class ContentEntityValidator<in D : ContentEntityTypeDefinitio
         val validators = listOf(
             ContentEntityParametersValidator,
             VoidContentEntityValidator,
-            TextContentEntityValidator
+            TextContentEntityValidator,
+            SpaceContentEntityValidator
         )
     }
 }
