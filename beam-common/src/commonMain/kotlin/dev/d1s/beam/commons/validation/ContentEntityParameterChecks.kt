@@ -19,53 +19,100 @@ package dev.d1s.beam.commons.validation
 import dev.d1s.beam.commons.contententity.ContentEntity
 import dev.d1s.beam.commons.contententity.ContentEntityParameterDefinition
 import dev.d1s.beam.commons.contententity.get
-import dev.d1s.beam.commons.validation.ButtonLinkContentEntityValidator.addTypedConstraint
 import io.konform.validation.ValidationBuilder
 
 private val widthBoundary = 1..100
 private val heightBoundary = 1..1200
 
-internal fun ValidationBuilder<ContentEntity>.requireCorrectWidth(parameterDefinition: ContentEntityParameterDefinition) {
-    requireCorrectInt(parameterDefinition)
-    requireCorrectBoundary(parameterDefinition, widthBoundary)
+internal fun ValidationBuilder<ContentEntity>.requireCorrectWidth(
+    validator: ContentEntityValidator<*>,
+    parameterDefinition: ContentEntityParameterDefinition
+) {
+    requireCorrectInt(validator, parameterDefinition)
+    requireCorrectBoundary(validator, parameterDefinition, widthBoundary)
 }
 
-internal fun ValidationBuilder<ContentEntity>.requireCorrectHeight(parameterDefinition: ContentEntityParameterDefinition) {
-    requireCorrectInt(parameterDefinition)
-    requireCorrectBoundary(parameterDefinition, heightBoundary)
+internal fun ValidationBuilder<ContentEntity>.requireCorrectHeight(
+    validator: ContentEntityValidator<*>,
+    parameterDefinition: ContentEntityParameterDefinition
+) {
+    requireCorrectInt(validator, parameterDefinition)
+    requireCorrectBoundary(validator, parameterDefinition, heightBoundary)
 }
 
-internal fun ValidationBuilder<ContentEntity>.requireCorrectUrl(parameterDefinition: ContentEntityParameterDefinition) =
-    addTypedConstraint("parameter '${parameterDefinition.name}' must be a correct url") { entity ->
-        entity.parameters[parameterDefinition]?.let { url ->
-            return@addTypedConstraint isUrl(url)
+internal fun ValidationBuilder<ContentEntity>.requireCorrectUrl(
+    validator: ContentEntityValidator<*>,
+    parameterDefinition: ContentEntityParameterDefinition
+) {
+    with(validator) {
+        addTypedConstraint("parameter '${parameterDefinition.name}' must be a correct url") { entity ->
+            entity.parameters[parameterDefinition]?.let { url ->
+                return@addTypedConstraint isUrl(url)
+            }
+
+            true
         }
-
-        true
     }
+}
 
-internal fun ValidationBuilder<ContentEntity>.requireCorrectInt(parameterDefinition: ContentEntityParameterDefinition) {
-    addTypedConstraint("parameter '${parameterDefinition.name}' is not an integer") { entity ->
-        entity.parameters[parameterDefinition]?.let {
-            it.toIntOrNull() != null
-        } ?: true
+internal fun ValidationBuilder<ContentEntity>.requireCorrectInt(
+    validator: ContentEntityValidator<*>,
+    parameterDefinition: ContentEntityParameterDefinition
+) {
+    with(validator) {
+        addTypedConstraint("parameter '${parameterDefinition.name}' is not an integer") { entity ->
+            entity.parameters[parameterDefinition]?.let {
+                it.toIntOrNull() != null
+            } ?: true
+        }
     }
 }
 
 internal fun ValidationBuilder<ContentEntity>.requireCorrectBoundary(
+    validator: ContentEntityValidator<*>,
     parameterDefinition: ContentEntityParameterDefinition,
     boundary: IntRange,
     stringLengthMode: Boolean = false
 ) {
-    addTypedConstraint("parameter '${parameterDefinition.name}' is not within its boundary $boundary") { entity ->
-        entity.parameters[parameterDefinition]?.let {
-            val value = if (stringLengthMode) {
-                it.length
-            } else {
-                it.toIntOrNull()
+    with(validator) {
+        addTypedConstraint("parameter '${parameterDefinition.name}' is not within its boundary $boundary") { entity ->
+            entity.parameters[parameterDefinition]?.let {
+                val value = if (stringLengthMode) {
+                    it.length
+                } else {
+                    it.toIntOrNull()
+                }
+
+                value in boundary
+            } ?: true
+        }
+    }
+}
+
+internal fun ValidationBuilder<ContentEntity>.requireNotBlankText(
+    validator: ContentEntityValidator<*>,
+    parameterDefinition: ContentEntityParameterDefinition
+) {
+    with(validator) {
+        addTypedConstraint("parameter '${parameterDefinition.name}' must not be blank") { entity ->
+            val value = entity.parameters[parameterDefinition]
+
+            value?.isBlank() != true
+        }
+    }
+}
+
+internal fun ValidationBuilder<ContentEntity>.requireCorrectBoolean(
+    validator: ContentEntityValidator<*>,
+    parameterDefinition: ContentEntityParameterDefinition
+) {
+    with(validator) {
+        addTypedConstraint("parameter '${parameterDefinition.name} must be 'true' or 'false'") { entity ->
+            entity.parameters[parameterDefinition]?.let {
+                it.toBooleanStrictOrNull() ?: return@addTypedConstraint false
             }
 
-            value in boundary
-        } ?: true
+            true
+        }
     }
 }

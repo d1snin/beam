@@ -44,28 +44,41 @@ class SpaceContentEntityRenderer : ContentEntityRenderer, KoinComponent {
 
     private val renderingScope = CoroutineScope(Dispatchers.Main)
 
+    private val ContentEntity.fullWidth get() = parameters[definition.fullWidth]?.toBooleanStrict() ?: false
+
     override fun SimplePanel.render(sequence: ContentEntities, block: Block) {
         val lgCols = if (block.size >= BlockSize.LARGE) 2 else 1
 
-        renderRow(lgCols) {
-            renderSequence(sequence, block)
+        sequence.split(condition = { it.fullWidth }) { entities, fullWidth ->
+            println("spaceContentEntity: entities: $entities fullWidth: $fullWidth")
+
+            fun SimplePanel.renderSequence() {
+                renderSequence(entities, block, fullWidth)
+            }
+
+            if (fullWidth) {
+                renderSequence()
+            } else {
+                renderRow(lgCols) {
+                    renderSequence()
+                    separateContentEntities(sequence, block)
+                }
+            }
         }
     }
 
     private fun SimplePanel.renderRow(lgCols: Int, block: SimplePanel.() -> Unit) {
-        div(className = "w-100 row row-cols-1 row-cols-lg-$lgCols g-3") {
+        div(className = "w-100 row row-cols-1 row-cols-lg-$lgCols") {
             block()
         }
     }
 
-    private fun SimplePanel.renderSequence(sequence: ContentEntities, block: Block) {
+    private fun SimplePanel.renderSequence(sequence: ContentEntities, block: Block, fullWidth: Boolean) {
         sequence.forEach { entity ->
             asyncDiv {
-                renderSpaceCard(entity)
+                renderSpaceCard(entity, block, fullWidth)
             }
         }
-
-        separateContentEntities(sequence, block)
     }
 
     private fun SimplePanel.asyncDiv(block: suspend SimplePanel.() -> Unit) {
@@ -76,7 +89,7 @@ class SpaceContentEntityRenderer : ContentEntityRenderer, KoinComponent {
         }
     }
 
-    private suspend fun SimplePanel.renderSpaceCard(entity: ContentEntity) {
+    private suspend fun SimplePanel.renderSpaceCard(entity: ContentEntity, block: Block, fullWidth: Boolean) {
         val spaceIdentifier = entity.parameters[definition.identifier]
         requireNotNull(spaceIdentifier)
 
@@ -84,8 +97,13 @@ class SpaceContentEntityRenderer : ContentEntityRenderer, KoinComponent {
 
         val spaceCard = get<Component<SpaceCardComponent.Config>>(Qualifier.SpaceCardComponent)
 
+        if (fullWidth) {
+            separateContentEntity(entity, block)
+        }
+
         render(spaceCard) {
             this.space.value = space
+            this.cardFullWidth.value = fullWidth
         }
     }
 }

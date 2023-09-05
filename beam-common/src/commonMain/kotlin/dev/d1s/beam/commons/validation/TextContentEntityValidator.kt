@@ -26,39 +26,23 @@ internal object TextContentEntityValidator :
     ContentEntityValidator<TextContentEntityTypeDefinition>(TextContentEntityTypeDefinition) {
 
     override fun ValidationBuilder<ContentEntity>.validate() {
-        requireNotBlankValue()
+        val validator = this@TextContentEntityValidator
 
-        requireBoolean(definition.bold)
-        requireBoolean(definition.italic)
-        requireBoolean(definition.underline)
-        requireBoolean(definition.strikethrough)
-        requireBoolean(definition.monospace)
-        requireBoolean(definition.paragraph)
-        requireBoolean(definition.secondary)
+        requireNotBlankText(validator, definition.value)
+
+        requireCorrectBoolean(validator, definition.bold)
+        requireCorrectBoolean(validator, definition.italic)
+        requireCorrectBoolean(validator, definition.underline)
+        requireCorrectBoolean(validator, definition.strikethrough)
+        requireCorrectBoolean(validator, definition.monospace)
+        requireCorrectBoolean(validator, definition.paragraph)
+        requireCorrectBoolean(validator, definition.secondary)
 
         requireHeading()
 
-        requireCorrectUrl(definition.url)
+        requireCorrectUrl(validator, definition.url)
 
         requireNoCollision(definition.heading, definition.paragraph)
-    }
-
-    private fun ValidationBuilder<ContentEntity>.requireNotBlankValue() {
-        addTypedConstraint("parameter '${definition.value.name}' must not be blank") { entity ->
-            val value = entity.parameters[definition.value]
-
-            value?.isBlank() != true
-        }
-    }
-
-    private fun ValidationBuilder<ContentEntity>.requireBoolean(parameterDefinition: ContentEntityParameterDefinition) {
-        addTypedConstraint("parameter '${parameterDefinition.name}' must be 'true' or 'false'") { entity ->
-            entity.parameters[parameterDefinition]?.let {
-                it.toBooleanStrictOrNull() ?: return@addTypedConstraint false
-            }
-
-            true
-        }
     }
 
     private fun ValidationBuilder<ContentEntity>.requireHeading() {

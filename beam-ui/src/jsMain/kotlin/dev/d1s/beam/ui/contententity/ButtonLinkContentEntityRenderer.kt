@@ -35,7 +35,7 @@ class ButtonLinkContentEntityRenderer : ContentEntityRenderer, KoinComponent {
     private val ContentEntity.width get() = parameters[definition.width]
 
     override fun SimplePanel.render(sequence: ContentEntities, block: Block) {
-        sequence.split { entities, sized ->
+        sequence.split(condition = { it.width != null }) { entities, sized ->
             renderButtons(entities, block, sized)
         }
     }
@@ -101,33 +101,5 @@ class ButtonLinkContentEntityRenderer : ContentEntityRenderer, KoinComponent {
         } else {
             render()
         }
-    }
-
-    private fun ContentEntities.split(block: (ContentEntities, Boolean) -> Unit) {
-        val entities = this
-        val buffer = mutableListOf<ContentEntity>()
-
-        fun ContentEntity.sized() = width != null
-
-        var bufferSized = entities.first().sized()
-
-        fun executeBuffer() {
-            block(buffer, bufferSized)
-            buffer.clear()
-        }
-
-        entities.forEach { entity ->
-            val entitySized = entity.sized()
-
-            if ((bufferSized && entitySized) || (!bufferSized && !entitySized)) {
-                buffer.add(entity)
-            } else {
-                executeBuffer()
-                bufferSized = entitySized
-                buffer.add(entity)
-            }
-        }
-
-        executeBuffer()
     }
 }

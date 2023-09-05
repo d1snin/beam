@@ -22,7 +22,10 @@ import dev.d1s.beam.ui.theme.setSecondaryText
 import dev.d1s.beam.ui.util.*
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
-import io.kvision.core.*
+import io.kvision.core.JustifyContent
+import io.kvision.core.TextDecoration
+import io.kvision.core.TextDecorationLine
+import io.kvision.core.onEvent
 import io.kvision.html.*
 import io.kvision.panel.SimplePanel
 import io.kvision.panel.vPanel
@@ -51,7 +54,12 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
     }
 
     private fun SimplePanel.renderCard() {
-        val className = "p-${config.cardPaddingLevel.value} ps-${config.cardStartPaddingLevel.value}"
+        val className =
+            "p-${config.cardPaddingLevel.value} ps-${config.cardStartPaddingLevel.value}" + if (config.cardFullWidth.value) {
+                " w-100"
+            } else {
+                ""
+            }
 
         this@renderCard.renderCard(className, usePageBackground = true) {
             renderContent()
@@ -169,5 +177,7 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
         val iconWidth = atomic(30.px)
 
         val enableHeading = atomic(false)
+
+        val cardFullWidth = atomic(false)
     }
 }

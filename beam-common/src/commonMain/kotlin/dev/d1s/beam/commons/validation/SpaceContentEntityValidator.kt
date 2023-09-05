@@ -18,15 +18,15 @@ package dev.d1s.beam.commons.validation
 
 import dev.d1s.beam.commons.contententity.ContentEntity
 import dev.d1s.beam.commons.contententity.SpaceContentEntityTypeDefinition
-import dev.d1s.beam.commons.contententity.get
 import io.konform.validation.ValidationBuilder
 
 internal object SpaceContentEntityValidator :
     ContentEntityValidator<SpaceContentEntityTypeDefinition>(SpaceContentEntityTypeDefinition) {
 
     override fun ValidationBuilder<ContentEntity>.validate() {
-        addTypedConstraint("parameter '${definition.identifier.name}' is blank") { entity ->
-            entity.parameters[definition.identifier]?.isBlank() != true
-        }
+        val validator = this@SpaceContentEntityValidator
+
+        requireNotBlankText(validator, definition.identifier)
+        requireCorrectBoolean(validator, definition.fullWidth)
     }
 }

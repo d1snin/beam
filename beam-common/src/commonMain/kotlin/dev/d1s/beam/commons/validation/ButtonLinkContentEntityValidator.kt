@@ -27,11 +27,13 @@ internal object ButtonLinkContentEntityValidator :
     private val textBoundary = 1..30
 
     override fun ValidationBuilder<ContentEntity>.validate() {
-        requireCorrectBoundary(definition.text, textBoundary, stringLengthMode = true)
-        requireCorrectUrl(definition.url)
+        val validator = this@ButtonLinkContentEntityValidator
+
+        requireCorrectBoundary(validator, definition.text, textBoundary, stringLengthMode = true)
+        requireCorrectUrl(validator, definition.url)
         requireCorrectStyle()
-        requireCorrectWidth(definition.width)
-        requireCorrectHeight(definition.height)
+        requireCorrectWidth(validator, definition.width)
+        requireCorrectHeight(validator, definition.height)
     }
 
     private fun ValidationBuilder<ContentEntity>.requireCorrectStyle() {

@@ -138,7 +138,7 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
     private fun SimplePanel.renderSpaceRow(spaces: List<Space>, block: SimplePanel.() -> Unit) {
         val lgCols = if (spaces.size == 1) 1 else 2
 
-        div(className = "row row-cols-1 row-cols-lg-$lgCols g-3") {
+        div(className = "row row-cols-1 row-cols-lg-$lgCols g-3 mt-0") {
             block()
         }
     }

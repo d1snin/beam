@@ -19,4 +19,6 @@ package dev.d1s.beam.commons.contententity
 public data object SpaceContentEntityTypeDefinition : ContentEntityTypeDefinition(name = "space") {
 
     val identifier: ContentEntityParameterDefinition = parameter("identifier", required = true, translatable = true)
+
+    val fullWidth: ContentEntityParameterDefinition = parameter("full_width")
 }
