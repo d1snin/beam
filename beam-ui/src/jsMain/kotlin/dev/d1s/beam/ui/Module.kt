@@ -23,10 +23,7 @@ import dev.d1s.beam.ui.client.DaemonStatusWithPing
 import dev.d1s.beam.ui.client.DefaultDaemonConnector
 import dev.d1s.beam.ui.client.buildBeamClient
 import dev.d1s.beam.ui.component.*
-import dev.d1s.beam.ui.contententity.ContentEntityRenderer
-import dev.d1s.beam.ui.contententity.SpaceContentEntityRenderer
-import dev.d1s.beam.ui.contententity.TextContentEntityRenderer
-import dev.d1s.beam.ui.contententity.VoidContentEntityRenderer
+import dev.d1s.beam.ui.contententity.*
 import dev.d1s.beam.ui.state.*
 import dev.d1s.beam.ui.theme.CurrentTheme
 import dev.d1s.beam.ui.theme.DefaultCurrentTheme
@@ -58,6 +55,7 @@ object Qualifier {
 
     val VoidContentEntityRenderer = named("void-content-entity-renderer")
     val TextContentEntityRenderer = named("text-content-entity-renderer")
+    val ButtonLinkContentEntityRenderer = named("button-link-content-entity-renderer")
     val SpaceContentEntityRenderer = named("space-content-entity-renderer")
 
     val NotFoundSpaceFailureCardContent = named("not-found-space-failure-card-content")
@@ -165,6 +163,10 @@ private fun Module.contentEntityRenderers() {
 
     singleOf<ContentEntityRenderer>(::TextContentEntityRenderer) {
         qualifier = Qualifier.TextContentEntityRenderer
+    }
+
+    singleOf<ContentEntityRenderer>(::ButtonLinkContentEntityRenderer) {
+        qualifier = Qualifier.ButtonLinkContentEntityRenderer
     }
 
     singleOf<ContentEntityRenderer>(::SpaceContentEntityRenderer) {

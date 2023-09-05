@@ -38,13 +38,13 @@ internal object TextContentEntityValidator :
 
         requireHeading()
 
-        requireUrl()
+        requireCorrectUrl(definition.url)
 
         requireNoCollision(definition.heading, definition.paragraph)
     }
 
     private fun ValidationBuilder<ContentEntity>.requireNotBlankValue() {
-        addTypedConstraint("parameter \"${definition.value.name}\" must not be blank") { entity ->
+        addTypedConstraint("parameter '${definition.value.name}' must not be blank") { entity ->
             val value = entity.parameters[definition.value]
 
             value?.isBlank() != true
@@ -52,7 +52,7 @@ internal object TextContentEntityValidator :
     }
 
     private fun ValidationBuilder<ContentEntity>.requireBoolean(parameterDefinition: ContentEntityParameterDefinition) {
-        addTypedConstraint("parameter \"${parameterDefinition.name}\" must be \"true\" or \"false\"") { entity ->
+        addTypedConstraint("parameter '${parameterDefinition.name}' must be 'true' or 'false'") { entity ->
             entity.parameters[parameterDefinition]?.let {
                 it.toBooleanStrictOrNull() ?: return@addTypedConstraint false
             }
@@ -64,7 +64,7 @@ internal object TextContentEntityValidator :
     private fun ValidationBuilder<ContentEntity>.requireHeading() {
         val headings = TextContentEntityTypeDefinition.Heading.entries.joinToString(", ") { it.key }
 
-        addTypedConstraint("parameter \"${definition.heading.name}\" must be one of the following: $headings") { entity ->
+        addTypedConstraint("parameter '${definition.heading.name}' must be one of the following: $headings") { entity ->
             entity.parameters[definition.heading]?.let { heading ->
                 return@addTypedConstraint TextContentEntityTypeDefinition.Heading.byKey(heading) != null
             }
@@ -73,19 +73,9 @@ internal object TextContentEntityValidator :
         }
     }
 
-    private fun ValidationBuilder<ContentEntity>.requireUrl() {
-        addTypedConstraint("parameter \"${definition.url.name}\" must be a correct url") { entity ->
-            entity.parameters[definition.url]?.let { url ->
-                return@addTypedConstraint isUrl(url)
-            }
-
-            true
-        }
-    }
-
     private fun ValidationBuilder<ContentEntity>.requireNoCollision(vararg collidingParameters: ContentEntityParameterDefinition) {
         val parameterNames = collidingParameters.joinToString(", ") {
-            "\"${it.name}\""
+            "'${it.name}'"
         }
 
         addTypedConstraint("parameters $parameterNames are colliding") { entity ->

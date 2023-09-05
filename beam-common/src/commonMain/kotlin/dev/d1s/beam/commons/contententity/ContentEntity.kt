@@ -37,6 +37,9 @@ public data class ContentEntity(
 public operator fun ContentEntityParameters.get(definition: ContentEntityParameterDefinition): ContentEntityParameterValue? =
     this[definition.name]
 
+public fun ContentEntity.isFirstIn(block: Block): Boolean =
+    this == block.entities.firstOrNull()
+
 public fun ContentEntity.isLastIn(block: Block): Boolean =
     this == block.entities.lastOrNull()
 

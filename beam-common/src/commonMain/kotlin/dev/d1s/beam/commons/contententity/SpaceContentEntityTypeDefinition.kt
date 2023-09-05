@@ -14,16 +14,9 @@
  * limitations under the License.
  */
 
-package dev.d1s.beam.commons.validation
+package dev.d1s.beam.commons.contententity
 
-import dev.d1s.beam.commons.contententity.ContentEntity
-import dev.d1s.beam.commons.contententity.VoidContentEntityTypeDefinition
-import io.konform.validation.ValidationBuilder
+public data object SpaceContentEntityTypeDefinition : ContentEntityTypeDefinition(name = "space") {
 
-internal object VoidContentEntityValidator :
-    ContentEntityValidator<VoidContentEntityTypeDefinition>(VoidContentEntityTypeDefinition) {
-
-    override fun ValidationBuilder<ContentEntity>.validate() {
-        requireCorrectHeight(definition.height)
-    }
+    val identifier: ContentEntityParameterDefinition = parameter("identifier", required = true, translatable = true)
 }

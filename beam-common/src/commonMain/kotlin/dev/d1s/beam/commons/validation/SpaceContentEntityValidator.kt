@@ -25,7 +25,7 @@ internal object SpaceContentEntityValidator :
     ContentEntityValidator<SpaceContentEntityTypeDefinition>(SpaceContentEntityTypeDefinition) {
 
     override fun ValidationBuilder<ContentEntity>.validate() {
-        addTypedConstraint("parameter ${definition.identifier.name} is invalid") { entity ->
+        addTypedConstraint("parameter '${definition.identifier.name}' is blank") { entity ->
             entity.parameters[definition.identifier]?.isBlank() != true
         }
     }

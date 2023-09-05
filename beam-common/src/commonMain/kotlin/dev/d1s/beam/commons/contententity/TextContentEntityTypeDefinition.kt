@@ -16,28 +16,7 @@
 
 package dev.d1s.beam.commons.contententity
 
-public sealed class ContentEntityTypeDefinition(public val name: ContentEntityTypeName) {
-
-    private val internalParameters = mutableListOf<ContentEntityParameterDefinition>()
-
-    public val parameters: ContentEntityParameterDefinitions = internalParameters
-
-    protected fun parameter(
-        name: ContentEntityParameterName,
-        required: Boolean = false,
-        translatable: Boolean = false
-    ): ContentEntityParameterDefinition =
-        ContentEntityParameterDefinition(name, required, translatable).also {
-            internalParameters += it
-        }
-}
-
-public data object VoidContentEntityTypeDefinition : ContentEntityTypeDefinition(name = "void") {
-
-    val height: ContentEntityParameterDefinition = parameter("height")
-}
-
-public data object TextContentEntityTypeDefinition : ContentEntityTypeDefinition(name = "text") {
+public data object TextContentEntityTypeDefinition : CommonContentEntityTypeDefinition(name = "text") {
 
     val value: ContentEntityParameterDefinition = parameter("value", required = true, translatable = true)
 
@@ -57,7 +36,7 @@ public data object TextContentEntityTypeDefinition : ContentEntityTypeDefinition
 
     val secondary: ContentEntityParameterDefinition = parameter("secondary")
 
-    val url: ContentEntityParameterDefinition = parameter("url", translatable = true)
+    val url: ContentEntityParameterDefinition = urlParameter(translatable = true)
 
     public enum class Heading(public val key: String) {
         H1("h1"), H2("h2"), H3("h3");
@@ -71,19 +50,3 @@ public data object TextContentEntityTypeDefinition : ContentEntityTypeDefinition
         }
     }
 }
-
-public data object SpaceContentEntityTypeDefinition : ContentEntityTypeDefinition(name = "space") {
-
-    val identifier: ContentEntityParameterDefinition = parameter("identifier", required = true, translatable = true)
-}
-
-private val definitions = listOf(
-    VoidContentEntityTypeDefinition,
-    TextContentEntityTypeDefinition,
-    SpaceContentEntityTypeDefinition
-)
-
-public fun definition(name: ContentEntityTypeName): ContentEntityTypeDefinition? =
-    definitions.find {
-        it.name == name
-    }

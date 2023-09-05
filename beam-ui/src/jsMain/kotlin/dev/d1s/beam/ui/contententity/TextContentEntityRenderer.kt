@@ -29,25 +29,27 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
     override val definition = TextContentEntityTypeDefinition
 
     override fun SimplePanel.render(sequence: ContentEntities, block: Block) {
-        p(className = "mb-0") {
-            renderSequence(sequence)
+        p {
+            renderSequence(sequence, block)
+            separateContentEntities(sequence, block)
         }
     }
 
-    private fun SimplePanel.renderSequence(sequence: ContentEntities) {
+    private fun SimplePanel.renderSequence(sequence: ContentEntities, block: Block) {
         sequence.forEach { entity ->
-            val isFirst = entity == sequence.first()
-            val isLast = entity == sequence.last()
-
-            renderTextEntity(entity.parameters, isFirst, isLast)
+            renderTextEntity(entity.parameters, entity, block)
         }
     }
 
-    private fun SimplePanel.renderTextEntity(parameters: ContentEntityParameters, first: Boolean, last: Boolean) {
+    private fun SimplePanel.renderTextEntity(
+        parameters: ContentEntityParameters,
+        contentEntity: ContentEntity,
+        block: Block
+    ) {
         optionalLink(parameters) {
             optionalCodeBlock(parameters) {
-                optionalHeading(parameters, first, last) {
-                    optionalParagraph(parameters, last) {
+                optionalHeading(parameters, contentEntity, block) {
+                    optionalParagraph(parameters) {
                         renderText(parameters)
                     }
                 }
@@ -85,9 +87,9 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
 
     private fun SimplePanel.optionalHeading(
         parameters: ContentEntityParameters,
-        first: Boolean,
-        last: Boolean,
-        block: SimplePanel.() -> Unit
+        contentEntity: ContentEntity,
+        block: Block,
+        init: SimplePanel.() -> Unit
     ) {
         val heading = parameters[definition.heading]?.let {
             TextContentEntityTypeDefinition.Heading.byKey(it)
@@ -97,34 +99,20 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
             val className = it.toBootstrapHeadingClass()
 
             p(className = className) {
-                if (!first) {
-                    addCssClass("mt-3")
-                }
-
-                if (!last) {
-                    addCssClass("mb-2")
-                } else {
-                    addCssClass("mb-0")
-                }
-
-                block()
+                init()
+                separateContentEntity(contentEntity, block, topMargin = 3, bottomMargin = 2)
             }
-        } ?: block()
+        } ?: init()
     }
 
     private fun SimplePanel.optionalParagraph(
         parameters: ContentEntityParameters,
-        last: Boolean,
         block: SimplePanel.() -> Unit
     ) {
         val paragraph = parameters.getBoolean(definition.paragraph)
 
         if (paragraph) {
-            p {
-                if (last) {
-                    addCssClass("mb-0")
-                }
-
+            p("mb-0") {
                 block()
             }
         } else {
