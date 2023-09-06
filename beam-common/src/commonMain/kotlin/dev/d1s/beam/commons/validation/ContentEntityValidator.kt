@@ -48,7 +48,8 @@ internal abstract class ContentEntityValidator<in D : ContentEntityTypeDefinitio
             TextContentEntityValidator,
             ButtonLinkContentEntityValidator,
             SpaceContentEntityValidator,
-            ImageContentEntityValidator
+            ImageContentEntityValidator,
+            EmbedContentEntityValidator
         )
     }
 }

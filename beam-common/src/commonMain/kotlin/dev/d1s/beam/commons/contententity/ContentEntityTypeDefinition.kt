@@ -37,7 +37,8 @@ private val definitions = listOf(
     TextContentEntityTypeDefinition,
     ButtonLinkContentEntityTypeDefinition,
     SpaceContentEntityTypeDefinition,
-    ImageContentEntityTypeDefinition
+    ImageContentEntityTypeDefinition,
+    EmbedContentEntityTypeDefinition
 )
 
 public fun definition(name: ContentEntityTypeName): ContentEntityTypeDefinition? =
