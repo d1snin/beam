@@ -1,0 +1,265 @@
+# Beam Daemon
+
+### POST Space
+POST http://localhost:8573/spaces
+Content-Type: application/json
+
+{
+    "slug": "test-1",
+    "metadata": {},
+    "view": {
+        "theme": "catppuccin-mocha",
+        "icon": null,
+        "favicon": null,
+        "title": "Test space",
+        "description": "Test space instance."
+    }
+}
+
+### POST Root Space
+POST http://localhost:8573/spaces/root
+Content-Type: application/json
+
+{
+    "metadata": {
+    },
+    "view": {
+        "theme": "catppuccin-mocha",
+        "icon": null,
+        "favicon": null,
+        "title": "Test space",
+        "description": "Test space instance."
+    }
+}
+
+### GET Space
+GET http://localhost:8573/spaces/root?language=en
+
+### GET Spaces
+GET http://localhost:8573/spaces?limit=10&offset=0
+
+### PUT Space
+PUT http://localhost:8573/spaces/root
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "metadata": {
+    },
+    "view": {
+        "theme": "catppuccin-mocha",
+        "icon": null,
+        "favicon": null,
+        "title": "Test space",
+        "description": "Test space instance."
+    }
+}
+
+### DELETE Space
+DELETE http://localhost:8573/spaces/test-1
+Authorization: Bearer {{token}}
+
+### POST Block
+POST http://localhost:8573/blocks
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "index": 0,
+    "size": "EXTRA_LARGE",
+    "entities": [
+        {
+            "type": "text",
+            "parameters": {
+                "value": "Hello, World!",
+                "italic": "true",
+                "heading": "h1"
+            }
+        },
+        {
+            "type": "text",
+            "parameters": {
+                "value": "An .http file stored in the service1 directory will use the myKey1 value for the key variable when you select the dev environment. An .http file stored in the service2 directory will use the myKey2 value for the key variable.",
+                "paragraph": "true"
+            }
+        },
+        {
+            "type": "text",
+            "parameters": {
+                "value": "Yet another heading",
+                "heading": "h2"
+            }
+        },
+        {
+            "type": "text",
+            "parameters": {
+                "value": "Check out these cool button:",
+                "paragraph": "true"
+            }
+        },
+        {
+            "type": "button-link",
+            "parameters": {
+                "text": "Click me!",
+                "url": "https://ya.ru",
+                "width": "100"
+            }
+        },
+        {
+            "type": "text",
+            "parameters": {
+                "value": "Images!",
+                "heading": "h2"
+            }
+        },
+        {
+            "type": "text",
+            "parameters": {
+                "value": "Check them out...",
+                "paragraph": "true"
+            }
+        },
+        {
+            "type": "image",
+            "parameters": {
+                "url": "https://http.cat/images/204.jpg",
+                "width": "30"
+            }
+        },
+        {
+            "type": "image",
+            "parameters": {
+                "url": "https://http.cat/images/500.jpg",
+                "width": "30"
+            }
+        },
+        {
+            "type": "text",
+            "parameters": {
+                "value": "We have embeds here as well...",
+                "heading": "h2"
+            }
+        },
+        {
+            "type": "embed",
+            "parameters": {
+                "url": "https://www.openstreetmap.org/export/embed.html?bbox=-0.004017949104309083%2C51.47612752641776%2C0.00030577182769775396%2C51.478569861898606&layer=mapnik",
+                "height": "400"
+            }
+        },
+        {
+            "type": "text",
+            "parameters": {
+                "value": "The void!!",
+                "heading": "h2"
+            }
+        },
+        {
+            "type": "void",
+            "parameters": {
+                "height": "400"
+            }
+        },
+        {
+            "type": "text",
+            "parameters": {
+                "value": "Truly amazing.",
+                "secondary": "true"
+            }
+        }
+    ],
+    "metadata": {
+    },
+    "spaceId": "root"
+}
+
+### GET Blocks
+GET http://localhost:8573/blocks?space=root&language=ru
+
+### PUT Block
+PUT http://localhost:8573/blocks/5883fe73-29a6-46b5-9c7e-d907727bf530
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "index": 0,
+    "size": "EXTRA_LARGE",
+    "entities": [
+        {
+            "type": "space",
+            "parameters": {
+                "identifier": "root"
+            }
+        },
+        {
+            "type": "button-link",
+            "parameters": {
+                "text": "Does it work?",
+                "url": "https://github.com/d1snin/beam"
+            }
+        }
+    ],
+    "metadata": {
+    },
+    "spaceId": "root"
+}
+
+### DELETE Block
+DELETE http://localhost:8573/blocks/3afa62d1-2a4e-45c8-b173-b211b2b7fb52
+Authorization: Bearer {{token}}
+
+### POST Translation
+POST http://localhost:8573/translations?
+    space=root
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "languageCode": "en",
+    "languageName": null,
+    "default": false,
+    "translations": {
+        "ui.icon-alt": "Beam space icon",
+        "ui.space-info.default-title": "Beam",
+        "ui.explore-dropdown.callout": "Explore (tr: en)",
+        "ui.daemon-status.connected": "Connected to daemon.",
+        "ui.daemon-status.disconnected": "Couldn't connect to daemon.",
+        "ui.daemon-status.ms-unit": "ms",
+        "ui.space-failure-card.not-found.icon-alt": "404 image",
+        "ui.space-failure-card.not-found.message": "We couldn't find anything.",
+        "ui.space-failure-card.empty-space.icon-alt": "Empty space icon",
+        "ui.space-failure-card.empty-space.message": "This space seems to be empty.",
+        "ui.footer.message.first-part": "Running",
+        "ui.footer.message.second-part": "Beam",
+        "ui.footer.source-code-link.message": "Source code on GitHub",
+        "ui.footer.source-code-link.url": "https://github.com/d1snin/beam",
+        "ui.footer.language-switcher.message": "Switch language...",
+        "ui.space-listing.message": "Explore the spaces on this instance:",
+        "ui.space-listing.fetch-more-button": "Load more"
+    }
+}
+
+### GET Translation
+GET http://localhost:8573/translations/en?space=
+
+### GET Resolved Translation
+GET http://localhost:8573/translation?language=al&space=root
+
+### GET Translations
+GET http://localhost:8573/translations?space=test-1
+
+### PUT Translation
+PUT http://localhost:8573/translations/ru?space=root
+Content-Type: application/json
+
+{
+    "languageCode": "ru",
+    "languageName": null,
+    "translations": {
+        "test": "переведенный текст (ru)"
+    }
+}
+
+### DELETE Translation
+DELETE http://localhost:8573/translations/ru?space=root
+Authorization: Bearer {{token}}
