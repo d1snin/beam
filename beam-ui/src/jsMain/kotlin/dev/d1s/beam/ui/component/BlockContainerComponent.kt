@@ -127,12 +127,20 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
                 val lastBlock = blockIndex == batch.lastIndex
                 val lastBatch = index == batches.lastIndex
 
-                renderBlock(block, lastBlock, lastBatch, compensator)
+                val single = batch.size == 1
+
+                renderBlock(block, lastBlock, lastBatch, compensator, single)
             }
         }
     }
 
-    private fun SimplePanel.renderBlock(block: Block, lastBlock: Boolean, lastBatch: Boolean, compensator: Double) {
+    private fun SimplePanel.renderBlock(
+        block: Block,
+        lastBlock: Boolean,
+        lastBatch: Boolean,
+        compensator: Double,
+        single: Boolean
+    ) {
         val blockComponent = get<Component<BlockComponent.Config>>(Qualifier.BlockComponent)
 
         render(blockComponent) {
@@ -147,6 +155,8 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
             }
 
             this.widthCompensator.value = compensator
+
+            this.single.value = single
         }
     }
 }

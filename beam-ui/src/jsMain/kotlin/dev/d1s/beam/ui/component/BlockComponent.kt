@@ -19,6 +19,7 @@ package dev.d1s.beam.ui.component
 import dev.d1s.beam.commons.Block
 import dev.d1s.beam.commons.MetadataKeys
 import dev.d1s.beam.ui.contententity.renderEntities
+import dev.d1s.beam.ui.util.Size.MaxBlockSize
 import dev.d1s.beam.ui.util.Size.sizeOf
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
@@ -42,7 +43,12 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
 
     private fun SimplePanel.renderBlockCard(block: Block) {
         renderCard("w-100 p-4 d-flex flex-column justify-content-start") {
-            val blockSize = sizeOf(block.size).px
+            val blockSize = if (config.single.value) {
+                sizeOf(MaxBlockSize).px
+            } else {
+                sizeOf(block.size).px
+            }
+
             maxWidth = blockSize
 
             applyMargin()
@@ -86,6 +92,8 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
         val applyMarginBottom = atomic(true)
 
         val widthCompensator = atomic(.0)
+
+        val single = atomic(false)
     }
 
     companion object {
