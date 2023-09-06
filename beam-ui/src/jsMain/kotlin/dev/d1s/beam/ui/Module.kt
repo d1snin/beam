@@ -57,6 +57,7 @@ object Qualifier {
     val TextContentEntityRenderer = named("text-content-entity-renderer")
     val ButtonLinkContentEntityRenderer = named("button-link-content-entity-renderer")
     val SpaceContentEntityRenderer = named("space-content-entity-renderer")
+    val ImageContentEntityRenderer = named("image-content-entity-renderer")
 
     val NotFoundSpaceFailureCardContent = named("not-found-space-failure-card-content")
     val EmptySpaceFailureCardContent = named("empty-space-failure-card-content")
@@ -171,6 +172,10 @@ private fun Module.contentEntityRenderers() {
 
     singleOf<ContentEntityRenderer>(::SpaceContentEntityRenderer) {
         qualifier = Qualifier.SpaceContentEntityRenderer
+    }
+
+    singleOf<ContentEntityRenderer>(::ImageContentEntityRenderer) {
+        qualifier = Qualifier.ImageContentEntityRenderer
     }
 }
 

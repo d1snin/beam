@@ -30,6 +30,6 @@ public abstract class CommonContentEntityTypeDefinition(name: String) : ContentE
 
     protected fun urlParameter(
         required: Boolean = false,
-        translatable: Boolean = false
+        translatable: Boolean = true
     ): ContentEntityParameterDefinition = parameter("url", required, translatable)
 }

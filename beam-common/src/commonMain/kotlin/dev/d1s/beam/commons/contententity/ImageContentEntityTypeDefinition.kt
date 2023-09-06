@@ -16,34 +16,13 @@
 
 package dev.d1s.beam.commons.contententity
 
-public data object ButtonLinkContentEntityTypeDefinition : CommonContentEntityTypeDefinition(name = "button-link") {
-
-    val text: ContentEntityParameterDefinition = parameter("text", required = true, translatable = true)
+public data object ImageContentEntityTypeDefinition : CommonContentEntityTypeDefinition(name = "image") {
 
     val url: ContentEntityParameterDefinition = urlParameter(required = true)
 
-    val style: ContentEntityParameterDefinition = parameter("style")
+    val description: ContentEntityParameterDefinition = parameter("description", translatable = true)
 
     val width: ContentEntityParameterDefinition = widthParameter()
 
     val height: ContentEntityParameterDefinition = heightParameter()
-
-    public enum class Style(public val identifier: String) {
-        PRIMARY("primary"),
-        SUCCESS("success"),
-        DANGER("danger"),
-        WARNING("warning"),
-        INFO("info"),
-        LIGHT("light");
-
-        public companion object {
-
-            public val Default: Style = LIGHT
-
-            public fun byIdentifier(identifier: String?): Style? =
-                entries.find {
-                    it.identifier == identifier
-                }
-        }
-    }
 }

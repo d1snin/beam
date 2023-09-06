@@ -36,7 +36,7 @@ public data object TextContentEntityTypeDefinition : CommonContentEntityTypeDefi
 
     val secondary: ContentEntityParameterDefinition = parameter("secondary")
 
-    val url: ContentEntityParameterDefinition = urlParameter(translatable = true)
+    val url: ContentEntityParameterDefinition = urlParameter()
 
     public enum class Heading(public val key: String) {
         H1("h1"), H2("h2"), H3("h3");
