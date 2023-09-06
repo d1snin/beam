@@ -100,7 +100,7 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
 
             p(className = className) {
                 init()
-                separateContentEntity(contentEntity, block, topMargin = 3, bottomMargin = 2)
+                separateContentEntity(contentEntity, block, topMargin = 4, bottomMargin = 2)
             }
         } ?: init()
     }
@@ -112,7 +112,7 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
         val paragraph = parameters.getBoolean(definition.paragraph)
 
         if (paragraph) {
-            p("mb-0") {
+            p(className = "mb-0") {
                 block()
             }
         } else {
