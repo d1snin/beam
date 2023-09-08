@@ -21,6 +21,10 @@ plugins {
 }
 
 allprojects {
+    ext {
+        set("publishingScript", "${rootProject.projectDir.absolutePath}/publishing.gradle.kts")
+    }
+
     val projectGroup: String by project
     val projectVersion: String by project
 

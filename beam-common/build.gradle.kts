@@ -19,6 +19,12 @@ plugins {
     kotlin("plugin.serialization")
 }
 
+apply {
+    val publishingScript: String by project
+
+    from(publishingScript)
+}
+
 kotlin {
     jvm {
         compilations.all {
