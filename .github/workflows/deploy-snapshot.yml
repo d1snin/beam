@@ -24,10 +24,14 @@ jobs:
         env:
           MAVEN_D1S_DEV_USERNAME: ${{ secrets.MAVEN_D1S_DEV_USERNAME }}
           MAVEN_D1S_DEV_PASSWORD: ${{ secrets.MAVEN_D1S_DEV_PASSWORD }}
-        run: ./gradlew beam-client:publishAllPublicationsToMavenD1sDevRepositoryRepository
+        run: |
+          ./gradlew beam-client:publishAllPublicationsToMavenD1sDevRepositoryRepository &&
+          ./gradlew beam-common:publishAllPublicationsToMavenD1sDevRepositoryRepository
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
           name: build_artifacts
-          path: ./beam-client/build/libs
+          path: |
+            ./beam-client/build/libs
+            ./beam-common/build/libs
