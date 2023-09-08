@@ -17,6 +17,7 @@
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
+    id("maven-publish")
 }
 
 kotlin {
@@ -86,3 +87,38 @@ kotlin {
 
     explicitApi()
 }
+
+publishing {
+    repositories {
+        maven {
+            name = "mavenD1sDevRepository"
+
+            val channel = if (isDevVersion) {
+                "snapshots"
+            } else {
+                "releases"
+            }
+
+            url = uri("https://maven.d1s.dev/${channel}")
+
+            credentials {
+                username = System.getenv("MAVEN_D1S_DEV_USERNAME")
+                password = System.getenv("MAVEN_D1S_DEV_PASSWORD")
+            }
+        }
+    }
+
+    publications {
+        create<MavenPublication>("maven") {
+            if (isDevVersion) {
+                val commitShortSha = System.getenv("GIT_SHORT_COMMIT_SHA")
+
+                commitShortSha?.let {
+                    version = "$version-$it"
+                }
+            }
+        }
+    }
+}
+
+val isDevVersion get() = version.toString().endsWith("-dev")
