@@ -157,7 +157,7 @@ Content-Type: application/json
         {
             "type": "void",
             "parameters": {
-                "height": "400"
+                "height": "200"
             }
         },
         {
