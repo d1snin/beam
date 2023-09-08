@@ -16,9 +16,8 @@
 
 package dev.d1s.beam.bundle.entity
 
+import dev.d1s.beam.commons.Html
 import dev.d1s.beam.commons.Space
-
-typealias Html = String
 
 data class ResolvedSpace(
     val space: Space?,

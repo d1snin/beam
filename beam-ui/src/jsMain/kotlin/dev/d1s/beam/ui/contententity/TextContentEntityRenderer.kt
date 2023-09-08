@@ -18,15 +18,16 @@ package dev.d1s.beam.ui.contententity
 
 import dev.d1s.beam.commons.Block
 import dev.d1s.beam.commons.contententity.*
-import dev.d1s.beam.ui.theme.setSecondaryText
-import io.kvision.html.*
+import io.kvision.html.p
 import io.kvision.panel.SimplePanel
-import io.kvision.utils.rem
 import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
 
     override val definition = TextContentEntityTypeDefinition
+
+    private val styledTextRenderer by inject<StyledTextRenderer>()
 
     override fun SimplePanel.render(sequence: ContentEntities, block: Block) {
         p {
@@ -46,42 +47,10 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
         contentEntity: ContentEntity,
         block: Block
     ) {
-        optionalLink(parameters) {
-            optionalCodeBlock(parameters) {
-                optionalHeading(parameters, contentEntity, block) {
-                    optionalParagraph(parameters) {
-                        renderText(parameters)
-                    }
-                }
+        optionalHeading(parameters, contentEntity, block) {
+            paragraph {
+                renderText(parameters)
             }
-        }
-    }
-
-    private fun SimplePanel.optionalLink(
-        parameters: ContentEntityParameters,
-        block: SimplePanel.() -> Unit
-    ) {
-        parameters[definition.url]?.let { url ->
-            link("", url) {
-                block()
-            }
-        } ?: block()
-    }
-
-    private fun SimplePanel.optionalCodeBlock(
-        parameters: ContentEntityParameters,
-        block: SimplePanel.() -> Unit
-    ) {
-        val monospace = parameters.getBoolean(definition.monospace)
-
-        if (monospace) {
-            tag(TAG.PRE) {
-                code {
-                    block()
-                }
-            }
-        } else {
-            block()
         }
     }
 
@@ -105,17 +74,8 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
         } ?: init()
     }
 
-    private fun SimplePanel.optionalParagraph(
-        parameters: ContentEntityParameters,
-        block: SimplePanel.() -> Unit
-    ) {
-        val paragraph = parameters.getBoolean(definition.paragraph)
-
-        if (paragraph) {
-            p(className = "mb-0") {
-                block()
-            }
-        } else {
+    private fun SimplePanel.paragraph(block: SimplePanel.() -> Unit) {
+        p(className = "mb-0") {
             block()
         }
     }
@@ -124,10 +84,10 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
         val content = parameters[definition.value]
         requireNotNull(content)
 
-        val classList = buildClasses(parameters)
+        val renderedContent = styledTextRenderer.render(content)
 
-        span(content, className = classList) {
-            optionalSecondaryText(parameters)
+        addAfterInsertHook {
+            getElement()?.innerHTML = renderedContent
         }
     }
 
@@ -137,51 +97,4 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
             TextContentEntityTypeDefinition.Heading.H2 -> "h3"
             TextContentEntityTypeDefinition.Heading.H3 -> "h5"
         }
-
-    private fun buildClasses(parameters: ContentEntityParameters): String {
-        val classNames = buildList {
-            parameters.ifTrue(definition.bold) {
-                add("fw-bold")
-            }
-
-            parameters.ifTrue(definition.italic) {
-                add("fst-italic")
-            }
-
-            parameters.ifTrue(definition.underline) {
-                add("text-decoration-underline")
-            }
-
-            parameters.ifTrue(definition.strikethrough) {
-                add("text-decoration-line-through")
-            }
-        }
-
-        return classNames.joinToString(" ")
-    }
-
-    private fun SimplePanel.optionalSecondaryText(parameters: ContentEntityParameters) {
-        parameters.ifTrue(definition.secondary) {
-            fontSize = 0.9.rem
-
-            setSecondaryText()
-        }
-    }
-
-    private inline fun ContentEntityParameters.ifTrue(
-        booleanParameter: ContentEntityParameterDefinition,
-        block: () -> Unit
-    ) {
-        val parameterValue = this[booleanParameter] ?: return
-        val parameter = parameterValue.toBooleanStrict()
-
-        if (parameter) {
-            block()
-        }
-    }
-
-    private fun ContentEntityParameters.getBoolean(booleanParameter: ContentEntityParameterDefinition): Boolean {
-        val parameterValue = this[booleanParameter] ?: return false
-        return parameterValue.toBooleanStrict()
-    }
 }

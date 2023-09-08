@@ -20,23 +20,7 @@ public data object TextContentEntityTypeDefinition : CommonContentEntityTypeDefi
 
     val value: ContentEntityParameterDefinition = parameter("value", required = true, translatable = true)
 
-    val bold: ContentEntityParameterDefinition = parameter("bold")
-
-    val italic: ContentEntityParameterDefinition = parameter("italic")
-
-    val underline: ContentEntityParameterDefinition = parameter("underline")
-
-    val strikethrough: ContentEntityParameterDefinition = parameter("strikethrough")
-
-    val monospace: ContentEntityParameterDefinition = parameter("monospace")
-
     val heading: ContentEntityParameterDefinition = parameter("heading")
-
-    val paragraph: ContentEntityParameterDefinition = parameter("paragraph")
-
-    val secondary: ContentEntityParameterDefinition = parameter("secondary")
-
-    val url: ContentEntityParameterDefinition = urlParameter()
 
     public enum class Heading(public val key: String) {
         H1("h1"), H2("h2"), H3("h3");

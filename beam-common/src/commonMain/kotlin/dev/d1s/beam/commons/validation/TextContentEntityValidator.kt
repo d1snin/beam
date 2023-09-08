@@ -17,7 +17,6 @@
 package dev.d1s.beam.commons.validation
 
 import dev.d1s.beam.commons.contententity.ContentEntity
-import dev.d1s.beam.commons.contententity.ContentEntityParameterDefinition
 import dev.d1s.beam.commons.contententity.TextContentEntityTypeDefinition
 import dev.d1s.beam.commons.contententity.get
 import io.konform.validation.ValidationBuilder
@@ -30,19 +29,7 @@ internal object TextContentEntityValidator :
 
         requireNotBlankText(validator, definition.value)
 
-        requireCorrectBoolean(validator, definition.bold)
-        requireCorrectBoolean(validator, definition.italic)
-        requireCorrectBoolean(validator, definition.underline)
-        requireCorrectBoolean(validator, definition.strikethrough)
-        requireCorrectBoolean(validator, definition.monospace)
-        requireCorrectBoolean(validator, definition.paragraph)
-        requireCorrectBoolean(validator, definition.secondary)
-
         requireHeading()
-
-        requireCorrectUrl(validator, definition.url)
-
-        requireNoCollision(definition.heading, definition.paragraph)
     }
 
     private fun ValidationBuilder<ContentEntity>.requireHeading() {
@@ -54,30 +41,6 @@ internal object TextContentEntityValidator :
             }
 
             true
-        }
-    }
-
-    private fun ValidationBuilder<ContentEntity>.requireNoCollision(vararg collidingParameters: ContentEntityParameterDefinition) {
-        val parameterNames = collidingParameters.joinToString(", ") {
-            "'${it.name}'"
-        }
-
-        addTypedConstraint("parameters $parameterNames are colliding") { entity ->
-            var oneSpecified = false
-
-            collidingParameters.forEach { collidingParameter ->
-                val value = entity.parameters[collidingParameter]
-
-                value?.let {
-                    if (oneSpecified) {
-                        return@addTypedConstraint false
-                    } else {
-                        oneSpecified = true
-                    }
-                }
-            }
-
-            return@addTypedConstraint true
         }
     }
 }

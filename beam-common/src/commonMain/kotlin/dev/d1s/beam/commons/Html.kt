@@ -14,9 +14,6 @@
  * limitations under the License.
  */
 
-package dev.d1s.beam.commons.textstyle
+package dev.d1s.beam.commons
 
-public interface StyledTextParser {
-
-    public fun parse(text: String)
-}
+public typealias Html = String

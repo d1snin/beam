@@ -77,6 +77,7 @@ private val mainModule = module {
     observables()
     components()
     contentEntityRenderers()
+    styledTextRenderer()
     spaceFailureCardContents()
 }
 
@@ -182,6 +183,10 @@ private fun Module.contentEntityRenderers() {
     singleOf<ContentEntityRenderer>(::EmbedContentEntityRenderer) {
         qualifier = Qualifier.EmbedContentEntityRenderer
     }
+}
+
+private fun Module.styledTextRenderer() {
+    singleOf<StyledTextRenderer>(::DefaultStyledTextRenderer)
 }
 
 private fun Module.spaceFailureCardContents() {

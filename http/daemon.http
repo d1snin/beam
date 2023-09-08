@@ -71,16 +71,14 @@ Content-Type: application/json
         {
             "type": "text",
             "parameters": {
-                "value": "Hello, World!",
-                "italic": "true",
+                "value": "*Hello, World!*",
                 "heading": "h1"
             }
         },
         {
             "type": "text",
             "parameters": {
-                "value": "An .http file stored in the service1 directory will use the myKey1 value for the key variable when you select the dev environment. An .http file stored in the service2 directory will use the myKey2 value for the key variable.",
-                "paragraph": "true"
+                "value": "An .http file stored in the service1 directory will use the myKey1 value for the key variable when you select the `\\[dev environment](https://ya.ru)`. An .http file stored in the service2 directory will use the myKey2 value for the key variable."
             }
         },
         {
@@ -93,8 +91,7 @@ Content-Type: application/json
         {
             "type": "text",
             "parameters": {
-                "value": "Check out these cool button:",
-                "paragraph": "true"
+                "value": "Check out these cool button:"
             }
         },
         {
@@ -115,8 +112,7 @@ Content-Type: application/json
         {
             "type": "text",
             "parameters": {
-                "value": "Check them out...",
-                "paragraph": "true"
+                "value": "Check them out..."
             }
         },
         {
@@ -163,8 +159,7 @@ Content-Type: application/json
         {
             "type": "text",
             "parameters": {
-                "value": "Truly amazing.",
-                "secondary": "true"
+                "value": "%Truly amazing.%"
             }
         }
     ],

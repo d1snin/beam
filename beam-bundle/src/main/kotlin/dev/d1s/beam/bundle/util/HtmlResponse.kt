@@ -16,7 +16,7 @@
 
 package dev.d1s.beam.bundle.util
 
-import dev.d1s.beam.bundle.entity.Html
+import dev.d1s.beam.commons.Html
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
