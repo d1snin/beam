@@ -71,95 +71,14 @@ Content-Type: application/json
         {
             "type": "text",
             "parameters": {
-                "value": "*Hello, World!*",
+                "value": "#balloon# Icons!",
                 "heading": "h1"
             }
         },
         {
             "type": "text",
             "parameters": {
-                "value": "An .http file stored in the service1 directory will use the myKey1 value for the key variable when you select the `\\[dev environment](https://ya.ru)`. An .http file stored in the service2 directory will use the myKey2 value for the key variable."
-            }
-        },
-        {
-            "type": "text",
-            "parameters": {
-                "value": "Yet another heading",
-                "heading": "h2"
-            }
-        },
-        {
-            "type": "text",
-            "parameters": {
-                "value": "Check out these cool button:"
-            }
-        },
-        {
-            "type": "button-link",
-            "parameters": {
-                "text": "Click me!",
-                "url": "https://ya.ru",
-                "width": "100"
-            }
-        },
-        {
-            "type": "text",
-            "parameters": {
-                "value": "Images!",
-                "heading": "h2"
-            }
-        },
-        {
-            "type": "text",
-            "parameters": {
-                "value": "Check them out..."
-            }
-        },
-        {
-            "type": "image",
-            "parameters": {
-                "url": "https://http.cat/images/204.jpg",
-                "width": "30"
-            }
-        },
-        {
-            "type": "image",
-            "parameters": {
-                "url": "https://http.cat/images/500.jpg",
-                "width": "30"
-            }
-        },
-        {
-            "type": "text",
-            "parameters": {
-                "value": "We have embeds here as well...",
-                "heading": "h2"
-            }
-        },
-        {
-            "type": "embed",
-            "parameters": {
-                "url": "https://www.openstreetmap.org/export/embed.html?bbox=-0.004017949104309083%2C51.47612752641776%2C0.00030577182769775396%2C51.478569861898606&layer=mapnik",
-                "height": "400"
-            }
-        },
-        {
-            "type": "text",
-            "parameters": {
-                "value": "The void!!",
-                "heading": "h2"
-            }
-        },
-        {
-            "type": "void",
-            "parameters": {
-                "height": "200"
-            }
-        },
-        {
-            "type": "text",
-            "parameters": {
-                "value": "%Truly amazing.%"
+                "value": "It is now possible to use [Bootstrap Icon library](https://icons.getbootstrap.com)! #emoji-smile#"
             }
         }
     ],

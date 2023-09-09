@@ -35,7 +35,8 @@ class DefaultStyledTextRenderer : StyledTextRenderer {
         ItalicEscape,
         UnderlineEscape,
         StrikethroughEscape,
-        SecondaryEscape
+        SecondaryEscape,
+        IconEscape
     )
 
     override fun render(text: String): Html =
@@ -47,6 +48,7 @@ class DefaultStyledTextRenderer : StyledTextRenderer {
             .transformUnderline()
             .transformStrikethrough()
             .transformSecondary()
+            .transformIcon()
             .removeEscapes()
 
     private fun String.transformUrl() =
@@ -79,6 +81,11 @@ class DefaultStyledTextRenderer : StyledTextRenderer {
     private fun String.transformSecondary() =
         transformMatchedTextGroup(Secondary) { text ->
             "<span style=\"font-size: 0.9rem; color: ${currentTheme.secondaryText.asString()}\">$text</span>"
+        }
+
+    private fun String.transformIcon() =
+        transformMatchedTextGroup(Icon) { text ->
+            "<i class=\"bi bi-$text\"></i>"
         }
 
     private fun String.transformWithClass(regex: Regex, className: String) =
@@ -130,5 +137,8 @@ class DefaultStyledTextRenderer : StyledTextRenderer {
 
         private val Secondary = Regex("(?<!\\\\)%([\\s\\S]+)%")
         private val SecondaryEscape = Regex("\\\\(?=%([\\s\\S]+)%)")
+
+        private val Icon = Regex("(?<!\\\\)#(.+)#")
+        private val IconEscape = Regex("\\\\(?=#(.+)#)")
     }
 }
