@@ -25,7 +25,6 @@ import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
 import dev.d1s.exkt.kvision.component.render
 import io.kvision.html.div
-import io.kvision.html.link
 import io.kvision.html.span
 import io.kvision.panel.SimplePanel
 import io.kvision.utils.rem
@@ -69,7 +68,7 @@ class FooterComponent : Component<Unit>(), KoinComponent {
 
     private fun SimplePanel.renderSourceCodeLink() {
         div {
-            link(currentTranslation.footerSourceCodeLinkMessage, currentTranslation.footerSourceCodeLinkUrl) {
+            renderFriendlyLink(currentTranslation.footerSourceCodeLinkMessage, currentTranslation.footerSourceCodeLinkUrl) {
                 setSecondaryText()
             }
         }

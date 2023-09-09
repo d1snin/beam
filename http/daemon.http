@@ -5,7 +5,7 @@ POST http://localhost:8573/spaces
 Content-Type: application/json
 
 {
-    "slug": "test-1",
+    "slug": "test-2",
     "metadata": {},
     "view": {
         "theme": "catppuccin-mocha",

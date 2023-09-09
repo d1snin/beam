@@ -21,8 +21,8 @@ import dev.d1s.beam.commons.contententity.ButtonLinkContentEntityTypeDefinition
 import dev.d1s.beam.commons.contententity.ContentEntities
 import dev.d1s.beam.commons.contententity.ContentEntity
 import dev.d1s.beam.commons.contententity.get
+import dev.d1s.beam.ui.util.renderFriendlyLink
 import io.kvision.html.div
-import io.kvision.html.link
 import io.kvision.panel.SimplePanel
 import io.kvision.utils.perc
 import io.kvision.utils.px
@@ -84,7 +84,7 @@ class ButtonLinkContentEntityRenderer : ContentEntityRenderer, KoinComponent {
                     this.height = height.px
                 }
 
-                link(text, url, className = "w-100 h-100 btn btn-outline-${style.identifier}") {
+                renderFriendlyLink(text, url, className = "w-100 h-100 btn btn-outline-${style.identifier}") {
                     role = "button"
                 }
 

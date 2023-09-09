@@ -21,7 +21,6 @@ import dev.d1s.beam.commons.Blocks
 import dev.d1s.beam.commons.Space
 import dev.d1s.beam.commons.SpaceIdentifier
 import dev.d1s.beam.ui.theme.setTextColor
-import io.kvision.html.link
 import io.kvision.panel.SimplePanel
 import kotlinx.browser.window
 import org.koin.core.context.GlobalContext
@@ -62,10 +61,9 @@ fun setCurrentSpaceBlocks(blocks: Blocks?) {
 }
 
 fun SimplePanel.renderSpaceLink(space: Space? = null, block: SimplePanel.() -> Unit) {
-    link(
-        label = "",
-        space?.let { buildSpaceUrl(it.slug) } ?: currentSpaceUrl,
-        className = "text-decoration-none") {
+    val url = space?.let { buildSpaceUrl(it.slug) } ?: currentSpaceUrl
+
+    renderFriendlyLink(url = url, className = "text-decoration-none") {
         setTextColor()
         block()
     }
