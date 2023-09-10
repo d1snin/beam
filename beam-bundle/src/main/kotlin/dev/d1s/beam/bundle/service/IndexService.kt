@@ -22,7 +22,7 @@ import dev.d1s.beam.bundle.html.IndexHtmlRenderer
 import dev.d1s.beam.bundle.html.RenderParameters
 import dev.d1s.beam.bundle.html.SpaceUrlPreview
 import dev.d1s.beam.bundle.response.Defaults
-import dev.d1s.beam.client.PublicBeamClient
+import dev.d1s.beam.client.BeamClient
 import dev.d1s.beam.commons.Space
 import dev.d1s.beam.commons.SpaceFavicon
 import io.ktor.client.plugins.*
@@ -39,7 +39,7 @@ interface IndexService {
 
 class DefaultIndexService : IndexService, KoinComponent {
 
-    private val beamClient by inject<PublicBeamClient>()
+    private val beamClient by inject<BeamClient>()
 
     private val renderer by inject<IndexHtmlRenderer>()
 

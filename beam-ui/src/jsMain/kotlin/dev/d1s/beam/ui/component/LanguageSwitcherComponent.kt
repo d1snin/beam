@@ -16,7 +16,7 @@
 
 package dev.d1s.beam.ui.component
 
-import dev.d1s.beam.client.PublicBeamClient
+import dev.d1s.beam.client.BeamClient
 import dev.d1s.beam.commons.Translation
 import dev.d1s.beam.commons.Translations
 import dev.d1s.beam.ui.theme.currentTheme
@@ -37,7 +37,7 @@ import org.koin.core.component.inject
 
 class LanguageSwitcherComponent : Component<Unit>(), KoinComponent {
 
-    private val client by inject<PublicBeamClient>()
+    private val client by inject<BeamClient>()
 
     private val renderingScope = CoroutineScope(Dispatchers.Default)
 

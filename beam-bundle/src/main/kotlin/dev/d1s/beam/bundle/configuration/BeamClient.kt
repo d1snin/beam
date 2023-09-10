@@ -16,7 +16,7 @@
 
 package dev.d1s.beam.bundle.configuration
 
-import dev.d1s.beam.client.PublicBeamClient
+import dev.d1s.beam.client.BeamClient
 import dev.d1s.beam.commons.DaemonState
 import dev.d1s.beam.commons.DaemonStatus
 import dev.d1s.beam.commons.VERSION
@@ -39,7 +39,7 @@ object BeamClient : ApplicationConfigurer {
         val httpAddress = config.daemonHttpAddress
         val wsAddress = config.daemonWsAddress
 
-        val client = PublicBeamClient(httpAddress, wsAddress)
+        val client = BeamClient(httpAddress, wsAddress)
 
         waitDaemonStartup()
 
@@ -62,7 +62,7 @@ object BeamClient : ApplicationConfigurer {
         }
     }
 
-    private fun PublicBeamClient.launchDaemonChecks() {
+    private fun BeamClient.launchDaemonChecks() {
         ioScope.launch {
             logger.d {
                 "Launched daemon checks..."
@@ -84,7 +84,7 @@ object BeamClient : ApplicationConfigurer {
         }
     }
 
-    private suspend fun PublicBeamClient.checkState(status: DaemonStatus) {
+    private suspend fun BeamClient.checkState(status: DaemonStatus) {
         val (version, state) = status
 
         if (state == DaemonState.UP) {
@@ -98,7 +98,7 @@ object BeamClient : ApplicationConfigurer {
         }
     }
 
-    private suspend fun PublicBeamClient.checkCompatibility(daemonVersion: Version) {
+    private suspend fun BeamClient.checkCompatibility(daemonVersion: Version) {
         val compatible = isCompatible().getOrThrow()
 
         if (!compatible) {

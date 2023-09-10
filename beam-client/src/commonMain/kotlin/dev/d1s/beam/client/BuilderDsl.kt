@@ -14,15 +14,7 @@
  * limitations under the License.
  */
 
-package dev.d1s.beam.ui.client
+package dev.d1s.beam.client
 
-import dev.d1s.beam.client.BeamClient
-import dev.d1s.beam.commons.DaemonConnectorMeta
-import dev.d1s.beam.ui.util.getMetaOrThrow
-
-fun buildBeamClient(): BeamClient {
-    val connectorHttp = getMetaOrThrow(DaemonConnectorMeta.HTTP)
-    val connectorWs = getMetaOrThrow(DaemonConnectorMeta.WS)
-
-    return BeamClient(connectorHttp, connectorWs)
-}
+@DslMarker
+internal annotation class BuilderDsl

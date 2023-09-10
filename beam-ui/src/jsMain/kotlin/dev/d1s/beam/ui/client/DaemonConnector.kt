@@ -16,7 +16,7 @@
 
 package dev.d1s.beam.ui.client
 
-import dev.d1s.beam.client.PublicBeamClient
+import dev.d1s.beam.client.BeamClient
 import dev.d1s.beam.commons.DaemonStatus
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -34,7 +34,7 @@ interface DaemonConnector {
 
 class DefaultDaemonConnector : DaemonConnector, KoinComponent {
 
-    private val client by inject<PublicBeamClient>()
+    private val client by inject<BeamClient>()
 
     override suspend fun getDaemonStatus(): DaemonStatusWithPing? {
         var status: DaemonStatus? = null

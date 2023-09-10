@@ -19,46 +19,40 @@ package dev.d1s.beam.client
 import dev.d1s.beam.client.response.Spaces
 import dev.d1s.beam.commons.*
 import dev.d1s.beam.commons.event.EntityUpdate
-import dev.d1s.beam.commons.event.EventReferences
 import dev.d1s.exkt.common.pagination.LimitAndOffset
-import dev.d1s.exkt.common.replaceIdPlaceholder
 import dev.d1s.ktor.events.client.ClientWebSocketEvent
-import dev.d1s.ktor.events.client.WebSocketEvents
-import dev.d1s.ktor.events.client.receiveWebSocketEvent
-import dev.d1s.ktor.events.client.webSocketEvents
-import dev.d1s.ktor.events.commons.EventReference
-import io.ktor.client.*
-import io.ktor.client.call.*
-import io.ktor.client.plugins.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.client.plugins.websocket.*
-import io.ktor.client.request.*
-import io.ktor.http.*
-import io.ktor.serialization.kotlinx.*
-import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.*
-import kotlinx.serialization.json.Json
-import kotlin.time.Duration.Companion.seconds
 
 public typealias BeamDaemonBaseUrl = String
 
-public interface PublicBeamClient {
+public interface BeamClient {
 
     public val httpBaseUrl: BeamDaemonBaseUrl
 
     public val wsBaseUrl: BeamDaemonBaseUrl?
 
+    public val token: SpaceToken?
+
     public val resolver: SpaceResolver
 
     public suspend fun getDaemonStatus(): Result<DaemonStatus>
 
-    public suspend fun postSpace(space: SpaceModification): Result<SpaceWithToken>
+    public suspend fun postSpace(space: SpaceModification, languageCode: LanguageCode? = null): Result<SpaceWithToken>
 
-    public suspend fun postSpace(build: SpaceModificationBuilder.() -> Unit): Result<SpaceWithToken>
+    public suspend fun postSpace(
+        languageCode: LanguageCode? = null,
+        build: SpaceModificationBuilder.() -> Unit
+    ): Result<SpaceWithToken>
 
-    public suspend fun postRootSpace(space: RootSpaceModification): Result<SpaceWithToken>
+    public suspend fun postRootSpace(
+        space: RootSpaceModification,
+        languageCode: LanguageCode? = null
+    ): Result<SpaceWithToken>
 
-    public suspend fun postRootSpace(build: RootSpaceModificationBuilder.() -> Unit): Result<SpaceWithToken>
+    public suspend fun postRootSpace(
+        languageCode: LanguageCode? = null,
+        build: RootSpaceModificationBuilder.() -> Unit
+    ): Result<SpaceWithToken>
 
     public suspend fun getSpace(id: SpaceIdentifier, languageCode: LanguageCode? = null): Result<Space>
 
@@ -66,11 +60,54 @@ public interface PublicBeamClient {
 
     public suspend fun getSpaces(limit: Int, offset: Int, languageCode: LanguageCode? = null): Result<Spaces>
 
+    public suspend fun putSpace(
+        id: SpaceIdentifier,
+        space: SpaceModification,
+        languageCode: LanguageCode? = null
+    ): Result<Space>
+
+    public suspend fun putSpace(
+        id: SpaceIdentifier,
+        languageCode: LanguageCode? = null,
+        build: SpaceModificationBuilder.() -> Unit
+    ): Result<Space>
+
+    public suspend fun putRootSpace(space: RootSpaceModification, languageCode: LanguageCode? = null): Result<Space>
+
+    public suspend fun putRootSpace(
+        languageCode: LanguageCode? = null,
+        build: RootSpaceModificationBuilder.() -> Unit
+    ): Result<Space>
+
+    public suspend fun deleteSpace(id: SpaceIdentifier): Result<Unit>
+
+    public suspend fun postBlock(block: BlockModification, languageCode: LanguageCode? = null): Result<Block>
+
+    public suspend fun postBlock(languageCode: LanguageCode? = null, build: BlockModificationBuilder.() -> Unit): Result<Block>
+
     public suspend fun getBlocks(spaceId: SpaceIdentifier, languageCode: LanguageCode? = null): Result<Blocks>
 
-    public suspend fun resolveTranslation(spaceId: SpaceIdentifier?, languageCode: LanguageCode): Result<Translation>
+    public suspend fun putBlock(id: BlockId, block: BlockModification, languageCode: LanguageCode? = null): Result<Block>
 
-    public suspend fun getTranslations(spaceId: SpaceIdentifier?): Result<Translations>
+    public suspend fun putBlock(id: BlockId, languageCode: LanguageCode? = null, build: BlockModificationBuilder.() -> Unit): Result<Block>
+
+    public suspend fun deleteBlock(id: BlockId): Result<Unit>
+
+    public suspend fun postTranslation(spaceId: SpaceIdentifier? = null, translation: TranslationModification): Result<Translation>
+
+    public suspend fun postTranslation(spaceId: SpaceIdentifier? = null, build: TranslationModificationBuilder.() -> Unit): Result<Translation>
+
+    public suspend fun getTranslation(spaceId: SpaceIdentifier? = null, languageCode: LanguageCode): Result<Translation>
+
+    public suspend fun getResolvedTranslation(spaceId: SpaceIdentifier? = null, languageCode: LanguageCode): Result<Translation>
+
+    public suspend fun getTranslations(spaceId: SpaceIdentifier? = null): Result<Translations>
+
+    public suspend fun putTranslation(spaceId: SpaceIdentifier? = null, languageCode: LanguageCode, translation: TranslationModification): Result<Translation>
+
+    public suspend fun putTranslation(spaceId: SpaceIdentifier? = null, languageCode: LanguageCode, build: TranslationModificationBuilder.() -> Unit): Result<Translation>
+
+    public suspend fun deleteTranslation(spaceId: SpaceIdentifier? = null, languageCode: LanguageCode): Result<Unit>
 
     public suspend fun onSpaceCreated(block: suspend (ClientWebSocketEvent<Space>) -> Unit): Result<Job>
 
@@ -101,200 +138,5 @@ public interface PublicBeamClient {
     public fun isCompatible(daemonVersion: Version): Boolean
 }
 
-public fun PublicBeamClient(httpBaseUrl: BeamDaemonBaseUrl, wsBaseUrl: BeamDaemonBaseUrl? = null): PublicBeamClient =
-    DefaultPublicBeamClient(httpBaseUrl, wsBaseUrl)
-
-public class DefaultPublicBeamClient(
-    override val httpBaseUrl: BeamDaemonBaseUrl,
-    override val wsBaseUrl: BeamDaemonBaseUrl?
-) : PublicBeamClient {
-
-    override val resolver: SpaceResolver by lazy {
-        DefaultSpaceResolver(this)
-    }
-
-    private val httpClient = HttpClient {
-        install(ContentNegotiation) {
-            json()
-        }
-
-        if (wsBaseUrl != null) {
-            install(WebSockets) {
-                contentConverter = KotlinxWebsocketSerializationConverter(Json)
-            }
-
-            install(WebSocketEvents) {
-                url = wsBaseUrl
-            }
-        }
-
-        defaultRequest {
-            url(httpBaseUrl)
-        }
-
-        expectSuccess = true
-    }
-
-    private val eventHandlingScope = CoroutineScope(Dispatchers.Main)
-
-    override suspend fun getDaemonStatus(): Result<DaemonStatus> =
-        runCatching {
-            httpClient.get(Paths.GET_DAEMON_STATUS_ROUTE).body()
-        }
-
-    override suspend fun postSpace(space: SpaceModification): Result<SpaceWithToken> =
-        runCatching {
-            httpClient.post(Paths.POST_SPACE) {
-                contentType(ContentType.Application.Json)
-                setBody(space)
-            }.body()
-        }
-
-    override suspend fun postSpace(build: SpaceModificationBuilder.() -> Unit): Result<SpaceWithToken> =
-        postSpace(SpaceModificationBuilder().apply(build).build())
-
-    override suspend fun postRootSpace(space: RootSpaceModification): Result<SpaceWithToken> =
-        runCatching {
-            httpClient.post(Paths.POST_ROOT_SPACE) {
-                contentType(ContentType.Application.Json)
-                setBody(space)
-            }.body()
-        }
-
-    override suspend fun postRootSpace(build: RootSpaceModificationBuilder.() -> Unit): Result<SpaceWithToken> =
-        postRootSpace(RootSpaceModificationBuilder().apply(build).build())
-
-    public override suspend fun getSpace(id: SpaceIdentifier, languageCode: LanguageCode?): Result<Space> =
-        runCatching {
-            val path = Paths.GET_SPACE.replaceIdPlaceholder(id)
-
-            httpClient.get(path) {
-                setOptionalLanguageCode(languageCode)
-            }.body()
-        }
-
-    public override suspend fun getSpaces(limitAndOffset: LimitAndOffset, languageCode: LanguageCode?): Result<Spaces> =
-        runCatching {
-            httpClient.get(Paths.GET_SPACES) {
-                parameter(Paths.LIMIT_QUERY_PARAMETER, limitAndOffset.limit)
-                parameter(Paths.OFFSET_QUERY_PARAMETER, limitAndOffset.offset)
-                setOptionalLanguageCode(languageCode)
-            }.body()
-        }
-
-    public override suspend fun getSpaces(limit: Int, offset: Int, languageCode: LanguageCode?): Result<Spaces> =
-        getSpaces(LimitAndOffset(limit, offset))
-
-    public override suspend fun getBlocks(spaceId: SpaceIdentifier, languageCode: LanguageCode?): Result<Blocks> =
-        runCatching {
-            httpClient.get(Paths.GET_BLOCKS) {
-                parameter(Paths.SPACE_ID_QUERY_PARAMETER, spaceId)
-                setOptionalLanguageCode(languageCode)
-            }.body()
-        }
-
-    override suspend fun resolveTranslation(
-        spaceId: SpaceIdentifier?,
-        languageCode: LanguageCode
-    ): Result<Translation> =
-        runCatching {
-            httpClient.get(Paths.GET_RESOLVED_TRANSLATION) {
-                parameter(Paths.SPACE_ID_QUERY_PARAMETER, spaceId)
-                parameter(Paths.LANGUAGE_CODE_QUERY_PARAMETER, languageCode)
-            }.body()
-        }
-
-    override suspend fun getTranslations(spaceId: SpaceIdentifier?): Result<Translations> =
-        runCatching {
-            httpClient.get(Paths.GET_TRANSLATIONS) {
-                parameter(Paths.SPACE_ID_QUERY_PARAMETER, spaceId)
-            }.body()
-        }
-
-    override suspend fun onSpaceCreated(block: suspend (ClientWebSocketEvent<Space>) -> Unit): Result<Job> =
-        handleWsEvents(EventReferences.spaceCreated, block)
-
-    override suspend fun onSpaceUpdated(
-        id: SpaceId?,
-        block: suspend (ClientWebSocketEvent<EntityUpdate<Space>>) -> Unit
-    ): Result<Job> {
-        val reference = EventReferences.spaceUpdated(id)
-
-        return handleWsEvents(reference, block)
-    }
-
-    override suspend fun onSpaceRemoved(
-        id: SpaceId?,
-        block: suspend (ClientWebSocketEvent<Space>) -> Unit
-    ): Result<Job> {
-        val reference = EventReferences.spaceRemoved(id)
-
-        return handleWsEvents(reference, block)
-    }
-
-    override suspend fun onBlockCreated(block: suspend (ClientWebSocketEvent<Block>) -> Unit): Result<Job> =
-        handleWsEvents(EventReferences.blockCreated, block)
-
-    override suspend fun onBlockUpdated(
-        id: BlockId?,
-        block: suspend (ClientWebSocketEvent<EntityUpdate<Block>>) -> Unit
-    ): Result<Job> {
-        val reference = EventReferences.blockUpdated(id)
-
-        return handleWsEvents(reference, block)
-    }
-
-    override suspend fun onBlockRemoved(
-        id: BlockId?,
-        block: suspend (ClientWebSocketEvent<Block>) -> Unit
-    ): Result<Job> {
-        val reference = EventReferences.blockRemoved(id)
-
-        return handleWsEvents(reference, block)
-    }
-
-    override suspend fun isCompatible(): Result<Boolean> =
-        runCatching {
-            val status = getDaemonStatus().getOrThrow()
-
-            isCompatible(status.version)
-        }
-
-    override fun isCompatible(daemonVersion: Version): Boolean =
-        daemonVersion == VERSION
-
-    private fun HttpRequestBuilder.setOptionalLanguageCode(languageCode: LanguageCode?) {
-        languageCode?.let {
-            parameter(Paths.LANGUAGE_CODE_QUERY_PARAMETER, it)
-        }
-    }
-
-    private inline fun <reified T> handleWsEvents(
-        reference: EventReference,
-        crossinline handler: suspend (ClientWebSocketEvent<T>) -> Unit
-    ) = runCatching {
-        requireWsBaseUrl()
-
-        eventHandlingScope.launch {
-            httpClient.webSocketEvents(reference) {
-                while (true) {
-                    val event = try {
-                        receiveWebSocketEvent<T>()
-                    } catch (e: Throwable) {
-                        e.printStackTrace()
-                        delay(5.seconds)
-
-                        continue
-                    }
-
-                    handler(event)
-                }
-            }
-        }
-    }
-
-    private fun requireWsBaseUrl() =
-        requireNotNull(wsBaseUrl) {
-            "WebSocket base URL is required for this interaction."
-        }
-}
+public fun BeamClient(httpBaseUrl: BeamDaemonBaseUrl, wsBaseUrl: BeamDaemonBaseUrl? = null, token: SpaceToken? = null): BeamClient =
+    DefaultBeamClient(httpBaseUrl, wsBaseUrl, token)

@@ -16,7 +16,7 @@
 
 package dev.d1s.beam.ui.util
 
-import dev.d1s.beam.client.PublicBeamClient
+import dev.d1s.beam.client.BeamClient
 import dev.d1s.beam.commons.Blocks
 import dev.d1s.beam.commons.Space
 import dev.d1s.beam.commons.SpaceIdentifier
@@ -26,7 +26,7 @@ import kotlinx.browser.window
 import org.koin.core.context.GlobalContext
 
 private val client by lazy {
-    GlobalContext.get().get<PublicBeamClient>()
+    GlobalContext.get().get<BeamClient>()
 }
 
 private val resolver by lazy {

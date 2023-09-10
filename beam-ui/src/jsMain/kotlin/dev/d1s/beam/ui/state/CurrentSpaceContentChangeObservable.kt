@@ -16,7 +16,7 @@
 
 package dev.d1s.beam.ui.state
 
-import dev.d1s.beam.client.PublicBeamClient
+import dev.d1s.beam.client.BeamClient
 import dev.d1s.beam.commons.Block
 import dev.d1s.beam.commons.Blocks
 import dev.d1s.beam.commons.SpaceId
@@ -31,7 +31,7 @@ class CurrentSpaceContentChangeObservable : Observable<Blocks?>, KoinComponent {
 
     override val state = ObservableValue(currentBlocks)
 
-    private val client by inject<PublicBeamClient>()
+    private val client by inject<BeamClient>()
 
     override fun monitor() =
         launchMonitor {

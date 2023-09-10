@@ -20,7 +20,7 @@ import dev.d1s.beam.bundle.entity.ResolvedSpace
 import dev.d1s.beam.bundle.entity.SpaceRequest
 import dev.d1s.beam.bundle.service.IndexService
 import dev.d1s.beam.bundle.util.respondHtml
-import dev.d1s.beam.client.PublicBeamClient
+import dev.d1s.beam.client.BeamClient
 import dev.d1s.exkt.ktor.server.koin.configuration.Route
 import io.ktor.server.application.*
 import io.ktor.server.routing.*
@@ -36,7 +36,7 @@ class IndexRoute : Route, KoinComponent {
 
     private val indexService by inject<IndexService>()
 
-    private val client by inject<PublicBeamClient>()
+    private val client by inject<BeamClient>()
 
     private val logger = logging()
 

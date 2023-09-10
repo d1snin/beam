@@ -16,7 +16,7 @@
 
 package dev.d1s.beam.ui.util
 
-import dev.d1s.beam.client.PublicBeamClient
+import dev.d1s.beam.client.BeamClient
 import dev.d1s.beam.commons.GlobalTranslation
 import dev.d1s.beam.commons.TextLocation
 import dev.d1s.beam.commons.TranslatedText
@@ -26,7 +26,7 @@ import kotlinx.browser.window
 import org.koin.core.context.GlobalContext
 
 private val client by lazy {
-    GlobalContext.get().get<PublicBeamClient>()
+    GlobalContext.get().get<BeamClient>()
 }
 
 val currentTranslationObservable = ObservableValue(GlobalTranslation.Default)
@@ -39,7 +39,7 @@ suspend fun initCurrentTranslation() {
     val currentSpaceId = currentSpace?.id
 
     val resolvedTranslation =
-        client.resolveTranslation(spaceId = currentSpaceId, languageCode = browserLanguage).getOrNull()
+        client.getResolvedTranslation(spaceId = currentSpaceId, languageCode = browserLanguage).getOrNull()
 
     resolvedTranslation?.let {
         currentTranslationObservable.value = resolvedTranslation

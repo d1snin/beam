@@ -18,13 +18,10 @@ package dev.d1s.beam.client
 
 import dev.d1s.beam.commons.*
 
-@DslMarker
-internal annotation class BuilderDsl
-
 @BuilderDsl
 public class RootSpaceModificationBuilder {
 
-    private var metadata: Metadata = metadataOf()
+    public var metadata: Metadata = metadataOf()
 
     private var view: ViewConfiguration? = null
 
@@ -67,11 +64,11 @@ public class ViewConfigurationBuilder {
 
     public var icon: SpaceIconUrl? = null
 
-    private var favicon: SpaceFavicon? = null
-
     public var title: SpaceTitle? = null
 
     public var description: SpaceDescription? = null
+
+    private var favicon: SpaceFavicon? = null
 
     public fun favicon(build: SpaceFaviconBuilder.() -> Unit) {
         favicon = SpaceFaviconBuilder().apply(build).build()

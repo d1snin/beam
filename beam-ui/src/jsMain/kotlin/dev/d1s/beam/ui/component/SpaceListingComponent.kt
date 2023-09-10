@@ -16,7 +16,7 @@
 
 package dev.d1s.beam.ui.component
 
-import dev.d1s.beam.client.PublicBeamClient
+import dev.d1s.beam.client.BeamClient
 import dev.d1s.beam.client.response.Spaces
 import dev.d1s.beam.commons.Role
 import dev.d1s.beam.commons.Space
@@ -54,7 +54,7 @@ private typealias FetchedSpaces = Pair<List<Space>, TotalElements>
 
 class SpaceListingComponent : Component<Unit>(), KoinComponent {
 
-    private val beamClient by inject<PublicBeamClient>()
+    private val beamClient by inject<BeamClient>()
 
     private val spaces = ObservableValue(listOf<Space>() to 0)
 

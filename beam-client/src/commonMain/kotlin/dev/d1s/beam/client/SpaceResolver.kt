@@ -28,7 +28,7 @@ public interface SpaceResolver {
     public fun resolveIdentifier(url: UrlString): SpaceIdentifier?
 }
 
-public class DefaultSpaceResolver(private val client: PublicBeamClient) : SpaceResolver {
+public class DefaultSpaceResolver(private val client: BeamClient) : SpaceResolver {
 
     override suspend fun resolve(url: UrlString): Result<Space> =
         runCatching {

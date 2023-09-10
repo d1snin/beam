@@ -16,7 +16,7 @@
 
 package dev.d1s.beam.ui.contententity
 
-import dev.d1s.beam.client.PublicBeamClient
+import dev.d1s.beam.client.BeamClient
 import dev.d1s.beam.commons.Block
 import dev.d1s.beam.commons.BlockSize
 import dev.d1s.beam.commons.contententity.ContentEntities
@@ -40,7 +40,7 @@ class SpaceContentEntityRenderer : ContentEntityRenderer, KoinComponent {
 
     override val definition = SpaceContentEntityTypeDefinition
 
-    private val client by inject<PublicBeamClient>()
+    private val client by inject<BeamClient>()
 
     private val renderingScope = CoroutineScope(Dispatchers.Main)
 
