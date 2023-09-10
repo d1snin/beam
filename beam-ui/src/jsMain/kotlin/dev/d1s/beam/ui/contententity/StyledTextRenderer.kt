@@ -57,7 +57,7 @@ class DefaultStyledTextRenderer : StyledTextRenderer {
 
     private fun String.transformUrl() =
         transformMatchedParametrizedStyle(Url) { (text, link) ->
-            "<a href=\"$link\">$text</a>"
+            "<a href=\"$link\" target=\"_blank\" rel=\"noopener noreferrer\">$text</a>"
         }
 
     private fun String.transformColor() =
