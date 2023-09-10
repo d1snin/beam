@@ -22,6 +22,7 @@ import dev.d1s.beam.commons.validation.validateRootSpace
 import dev.d1s.beam.daemon.configuration.DtoConverters
 import dev.d1s.beam.daemon.entity.SpaceEntity
 import dev.d1s.beam.daemon.service.SpaceService
+import dev.d1s.beam.daemon.util.languageCodeQueryParameter
 import dev.d1s.beam.daemon.validation.orThrow
 import dev.d1s.exkt.dto.DtoConverter
 import dev.d1s.exkt.dto.requiredDto
@@ -51,7 +52,9 @@ class PostRootSpaceRoute : Route, KoinComponent {
 
             val rootSpace = rootSpaceModificationDtoConverter.convertToEntity(body)
 
-            val createdRootSpace = spaceService.createRootSpace(rootSpace).getOrThrow()
+            val languageCode = call.languageCodeQueryParameter
+
+            val createdRootSpace = spaceService.createRootSpace(rootSpace, languageCode).getOrThrow()
 
             call.respond(HttpStatusCode.Created, createdRootSpace.requiredDto)
         }

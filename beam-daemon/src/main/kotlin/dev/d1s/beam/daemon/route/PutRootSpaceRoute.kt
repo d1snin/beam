@@ -25,6 +25,7 @@ import dev.d1s.beam.daemon.entity.SpaceEntity
 import dev.d1s.beam.daemon.exception.ForbiddenException
 import dev.d1s.beam.daemon.service.AuthService
 import dev.d1s.beam.daemon.service.SpaceService
+import dev.d1s.beam.daemon.util.languageCodeQueryParameter
 import dev.d1s.beam.daemon.validation.orThrow
 import dev.d1s.exkt.dto.DtoConverter
 import dev.d1s.exkt.dto.requiredDto
@@ -61,7 +62,9 @@ class PutRootSpaceRoute : Route, KoinComponent {
 
                     val space = rootSpaceModificationDtoConverter.convertToEntity(body)
 
-                    val updatedSpace = spaceService.updateRootSpace(space).getOrThrow()
+                    val languageCode = call.languageCodeQueryParameter
+
+                    val updatedSpace = spaceService.updateRootSpace(space, languageCode).getOrThrow()
 
                     call.respond(updatedSpace.requiredDto)
                 } else {

@@ -49,7 +49,10 @@ interface SpaceService {
         languageCode: LanguageCode? = null
     ): ResultingEntityWithOptionalDto<SpaceEntity, SpaceWithToken>
 
-    suspend fun createRootSpace(space: SpaceEntity): ResultingEntityWithOptionalDto<SpaceEntity, SpaceWithToken>
+    suspend fun createRootSpace(
+        space: SpaceEntity,
+        languageCode: LanguageCode? = null
+    ): ResultingEntityWithOptionalDto<SpaceEntity, SpaceWithToken>
 
     suspend fun getSpace(
         uniqueIdentifier: SpaceIdentifier,
@@ -125,7 +128,10 @@ class DefaultSpaceService : SpaceService, KoinComponent {
             translatedSpace to translatedSpace.toSpaceWithToken(token)
         }
 
-    override suspend fun createRootSpace(space: SpaceEntity): ResultingEntityWithOptionalDto<SpaceEntity, SpaceWithToken> =
+    override suspend fun createRootSpace(
+        space: SpaceEntity,
+        languageCode: LanguageCode?
+    ): ResultingEntityWithOptionalDto<SpaceEntity, SpaceWithToken> =
         runCatching {
             logger.d {
                 "Creating root space..."
@@ -138,7 +144,7 @@ class DefaultSpaceService : SpaceService, KoinComponent {
                 role = Role.ROOT
             }
 
-            createSpace(rootSpace, allowRootCreation = true).getOrThrow()
+            createSpace(rootSpace, allowRootCreation = true, languageCode).getOrThrow()
         }
 
     override suspend fun getSpace(
