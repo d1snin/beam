@@ -43,11 +43,13 @@ abstract class AbstractTheme(val definition: SpaceThemeDefinition) {
 
     abstract val secondaryBlue: Color
 
-    abstract val green: Color
+    abstract val red: Color
 
     abstract val orange: Color
 
-    abstract val red: Color
+    abstract val green: Color
+
+    abstract val blue: Color
 }
 
 fun StyledComponent.setBackground() {

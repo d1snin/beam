@@ -50,8 +50,6 @@ class SpaceContentEntityRenderer : ContentEntityRenderer, KoinComponent {
         val lgCols = if (block.size >= BlockSize.LARGE) 2 else 1
 
         sequence.split(condition = { it.fullWidth }) { entities, fullWidth ->
-            println("spaceContentEntity: entities: $entities fullWidth: $fullWidth")
-
             fun SimplePanel.renderSequence() {
                 renderSequence(entities, block, fullWidth)
             }

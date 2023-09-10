@@ -47,12 +47,15 @@ object AccentDarkTheme : AbstractTheme(SpaceThemeDefinition.AccentDark) {
     // https://colorpicker.me/#70adc7
     override val secondaryBlue = Color.hex(0x70adc7)
 
-    // https://colorpicker.me/#89ffa9
-    override val green = Color.hex(0x89ffa9)
+    // https://colorpicker.me/#ff7878
+    override val red = Color.hex(0xff7878)
 
     // https://colorpicker.me/#ffbe5e
     override val orange = Color.hex(0xffbe5e)
 
-    // https://colorpicker.me/#ff7878
-    override val red = Color.hex(0xff7878)
+    // https://colorpicker.me/#89ffa9
+    override val green = Color.hex(0x89ffa9)
+
+    // https://colorpicker.me/#4dd3ff
+    override val blue = Color.hex(0x4dd3ff)
 }

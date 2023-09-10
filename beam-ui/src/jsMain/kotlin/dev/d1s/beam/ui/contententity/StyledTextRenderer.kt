@@ -19,6 +19,7 @@ package dev.d1s.beam.ui.contententity
 import dev.d1s.beam.commons.Html
 import dev.d1s.beam.ui.theme.currentTheme
 import io.ktor.util.*
+import io.kvision.core.Color
 
 interface StyledTextRenderer {
 
@@ -29,6 +30,7 @@ class DefaultStyledTextRenderer : StyledTextRenderer {
 
     private val escapes = listOf(
         UrlEscape,
+        ColorEscape,
         CodeBlockEscape,
         MonospaceEscape,
         BoldEscape,
@@ -40,7 +42,9 @@ class DefaultStyledTextRenderer : StyledTextRenderer {
     )
 
     override fun render(text: String): Html =
-        text.transformUrl()
+        text.escapeHTML()
+            .transformUrl()
+            .transformColor()
             .transformCodeBlock()
             .transformMonospace()
             .transformBold()
@@ -52,8 +56,17 @@ class DefaultStyledTextRenderer : StyledTextRenderer {
             .removeEscapes()
 
     private fun String.transformUrl() =
-        transformMatchedTextGroups(Url) { text, link ->
+        transformMatchedParametrizedStyle(Url) { (text, link) ->
             "<a href=\"$link\">$text</a>"
+        }
+
+    private fun String.transformColor() =
+        transformMatchedParametrizedStyle(Color) { (text, colorDefinition) ->
+            val textColor = TextColor.byDefinition(colorDefinition)
+
+            textColor?.let {
+                "<span style=\"color: ${textColor.color().asString()}\">$text</span>"
+            } ?: text
         }
 
     private fun String.transformCodeBlock() =
@@ -93,29 +106,88 @@ class DefaultStyledTextRenderer : StyledTextRenderer {
             "<span class=\"$className\">$text</span>"
         }
 
-    private fun String.transformMatchedTextGroup(regex: Regex, transformer: (String) -> String) =
-        replace(regex) { match ->
-            val text = match.groupValues[1].escapeHTML()
+    private fun String.transformMatchedTextGroup(regex: Regex, transformer: (String) -> String): String =
+        getDeepestMatch(regex)?.let { deepestMatch ->
+            val value = deepestMatch.value
+            val text = deepestMatch.groupValues[1]
+            val transformedText = transformer(text)
 
-            transformer(text)
+            return replace(value, transformedText)
+        } ?: this
+
+    private fun String.transformMatchedParametrizedStyle(
+        regex: Regex,
+        transformer: (Pair<String, String>) -> String
+    ): String {
+        fun MatchResult.textAndParameter() = groupValues[1] to groupValues[2]
+
+        fun String.transform(): String {
+            var currentResult = this
+            var currentDeepestMatch: MatchResult?
+
+            do {
+                currentDeepestMatch = currentResult.getDeepestMatch(regex)
+
+                currentDeepestMatch?.let {
+                    val value = it.value
+                    val textAndParameter = it.textAndParameter()
+                    val transformedValue = transformer(textAndParameter)
+
+                    currentResult = currentResult.replace(value, transformedValue)
+                }
+            } while (currentDeepestMatch != currentResult.getDeepestMatch(regex))
+
+            return currentResult
         }
 
-    private fun String.transformMatchedTextGroups(regex: Regex, transformer: (String, String) -> String) =
-        replace(regex) { match ->
-            val (firstText, secondText) = match.groupValues[1].escapeHTML() to match.groupValues[2].escapeHTML()
-
-            transformer(firstText, secondText)
-        }
+        return transform()
+    }
 
     private fun String.removeEscapes() =
         escapes.fold(this) { acc, regex ->
             acc.replace(regex, "")
         }
 
+    private fun String.getDeepestMatch(regex: Regex): MatchResult? {
+        fun String.deeperMatch() = regex.find(this, startIndex = 1)
+
+        var currentMatch = regex.find(this)
+        var deeperMatch: MatchResult?
+
+        do {
+            deeperMatch = currentMatch?.value?.deeperMatch()
+
+            deeperMatch?.let {
+                currentMatch = it
+            }
+        } while (deeperMatch != null)
+
+        return currentMatch
+    }
+
+
+    private enum class TextColor(val definition: String, val color: () -> Color) {
+        RED("red", { currentTheme.red }),
+        ORANGE("orange", { currentTheme.orange }),
+        GREEN("green", { currentTheme.green }),
+        BLUE("blue", { currentTheme.blue });
+
+        companion object {
+
+            fun byDefinition(definition: String) =
+                entries.find {
+                    it.definition == definition
+                }
+        }
+    }
+
     private companion object {
 
-        private val Url = Regex("(?<!\\\\)\\[([\\s\\S]+)\\]\\((.+)\\)")
-        private val UrlEscape = Regex("\\\\(?=\\[([\\s\\S]+)\\]\\((.+)\\))")
+        private val Url = Regex("(?<!\\\\)\\[([\\s\\S]+)\\]\\[(.+)\\]")
+        private val UrlEscape = Regex("\\\\(?=\\[([\\s\\S]+)\\]\\[(.+)\\])")
+
+        private val Color = Regex("(?<!\\\\)\\(([\\s\\S]+)\\)\\((.+)\\)")
+        private val ColorEscape = Regex("\\\\(?=\\(([\\s\\S]+)\\)\\((.+)\\))")
 
         private val Monospace = Regex("(?<!\\\\)`([\\s\\S]+)`")
         private val MonospaceEscape = Regex("\\\\(?=`([\\s\\S]+)`)")

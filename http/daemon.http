@@ -71,14 +71,14 @@ Content-Type: application/json
         {
             "type": "text",
             "parameters": {
-                "value": "#balloon# Icons!",
+                "value": "(#balloon# Colored text with icons!)(blue)",
                 "heading": "h1"
             }
         },
         {
             "type": "text",
             "parameters": {
-                "value": "It is now possible to use [Bootstrap Icon library](https://icons.getbootstrap.com)! #emoji-smile#"
+                "value": "It is now (possible)(green) to use [(Bootstrap Icon library)(orange)][https://icons.getbootstrap.com]! #emoji-smile#"
             }
         }
     ],

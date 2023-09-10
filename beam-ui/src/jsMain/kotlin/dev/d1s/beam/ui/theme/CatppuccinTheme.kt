@@ -35,11 +35,13 @@ abstract class CatppuccinTheme(definition: SpaceThemeDefinition, palette: Palett
 
     override val secondaryBlue = palette.blue.color
 
-    override val green = palette.green.color
+    override val red = palette.red.color
 
     override val orange = palette.peach.color
 
-    override val red = palette.red.color
+    override val green = palette.green.color
+
+    override val blue = palette.blue.color
 
     private val PaletteColor.color
         get() = Color.hex(hex.intValue)
