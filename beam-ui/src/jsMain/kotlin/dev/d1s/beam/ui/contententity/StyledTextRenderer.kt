@@ -106,14 +106,11 @@ class DefaultStyledTextRenderer : StyledTextRenderer {
             "<span class=\"$className\">$text</span>"
         }
 
-    private fun String.transformMatchedTextGroup(regex: Regex, transformer: (String) -> String): String =
-        getDeepestMatch(regex)?.let { deepestMatch ->
-            val value = deepestMatch.value
-            val text = deepestMatch.groupValues[1]
-            val transformedText = transformer(text)
-
-            return replace(value, transformedText)
-        } ?: this
+    private fun String.transformMatchedTextGroup(regex: Regex, transformer: (String) -> String) =
+        transformRecursively(regex) {
+            val text = it.groupValues[1]
+            transformer(text)
+        }
 
     private fun String.transformMatchedParametrizedStyle(
         regex: Regex,
@@ -121,26 +118,29 @@ class DefaultStyledTextRenderer : StyledTextRenderer {
     ): String {
         fun MatchResult.textAndParameter() = groupValues[1] to groupValues[2]
 
-        fun String.transform(): String {
-            var currentResult = this
-            var currentDeepestMatch: MatchResult?
-
-            do {
-                currentDeepestMatch = currentResult.getDeepestMatch(regex)
-
-                currentDeepestMatch?.let {
-                    val value = it.value
-                    val textAndParameter = it.textAndParameter()
-                    val transformedValue = transformer(textAndParameter)
-
-                    currentResult = currentResult.replace(value, transformedValue)
-                }
-            } while (currentDeepestMatch != currentResult.getDeepestMatch(regex))
-
-            return currentResult
+        val transformedText = transformRecursively(regex) {
+            val textAndParameter = it.textAndParameter()
+            transformer(textAndParameter)
         }
 
-        return transform()
+        return transformedText
+    }
+
+    private fun String.transformRecursively(regex: Regex, transformer: (MatchResult) -> String): String {
+        var currentResult = this
+        var currentDeepestMatch: MatchResult?
+
+        do {
+            currentDeepestMatch = currentResult.getDeepestMatch(regex)
+
+            currentDeepestMatch?.let {
+                val transformedValue = transformer(it)
+
+                currentResult = currentResult.replace(it.value, transformedValue)
+            }
+        } while (currentDeepestMatch != currentResult.getDeepestMatch(regex))
+
+        return currentResult
     }
 
     private fun String.removeEscapes() =
@@ -210,7 +210,7 @@ class DefaultStyledTextRenderer : StyledTextRenderer {
         private val Secondary = Regex("(?<!\\\\)%([\\s\\S]+)%")
         private val SecondaryEscape = Regex("\\\\(?=%([\\s\\S]+)%)")
 
-        private val Icon = Regex("(?<!\\\\)#(.+)#")
-        private val IconEscape = Regex("\\\\(?=#(.+)#)")
+        private val Icon = Regex("(?<!\\\\):([a-z-]+):")
+        private val IconEscape = Regex("\\\\(?=:([a-z-]+):)")
     }
 }
