@@ -29,7 +29,7 @@ public class RootSpaceModificationBuilder {
         view = ViewConfigurationBuilder().apply(build).build()
     }
 
-    internal fun build() =
+    public fun build(): RootSpaceModification =
         RootSpaceModification(
             metadata,
             view ?: error("View is undefined")
@@ -49,7 +49,7 @@ public class SpaceModificationBuilder {
         view = ViewConfigurationBuilder().apply(build).build()
     }
 
-    internal fun build() =
+    public fun build(): SpaceModification =
         SpaceModification(
             slug ?: error("Space slug is undefined"),
             metadata,
@@ -74,7 +74,7 @@ public class ViewConfigurationBuilder {
         favicon = SpaceFaviconBuilder().apply(build).build()
     }
 
-    internal fun build() =
+    public fun build(): ViewConfiguration =
         ViewConfiguration(
             theme ?: error("Space theme is undefined"),
             icon,
@@ -101,7 +101,7 @@ public class SpaceFaviconBuilder {
 
     public var maskIconColor: String? = null
 
-    internal fun build() =
+    public fun build(): SpaceFavicon =
         SpaceFavicon(
             appleTouch,
             favicon16,

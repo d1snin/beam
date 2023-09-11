@@ -30,17 +30,17 @@ public class BlockModificationBuilder {
 
     public var spaceId: SpaceIdentifier? = null
 
-    private var entities: MutableList<ContentEntity> = mutableListOf()
+    private val entities: ContentEntitiesBuilder = ContentEntitiesBuilder()
 
     public fun entity(build: ContentEntityBuilder.() -> Unit) {
-        entities += ContentEntityBuilder().apply(build).build()
+        entities.entity(build)
     }
 
-    internal fun build() =
+    public fun build(): BlockModification =
         BlockModification(
             index ?: error("Block index is undefined"),
             size ?: error("Block size is undefined"),
-            entities,
+            entities.build(),
             metadata,
             spaceId ?: error("Block space id is undefined")
         )
@@ -51,17 +51,29 @@ public class ContentEntityBuilder {
 
     public var type: ContentEntityTypeDefinition? = null
 
-    private var parameters: ContentEntityParameters? = null
+    private var parameters: ContentEntityParameters = mapOf()
 
     public fun parameters(vararg pairs: Pair<ContentEntityParameterName, ContentEntityParameterValue>) {
         parameters = mapOf(*pairs)
     }
 
-    internal fun build() =
+    public fun build(): ContentEntity =
         ContentEntity(
             type?.name ?: error("Content entity type is undefined"),
-            parameters ?: error("Content entity parameters are undefined")
+            parameters
         )
+}
+
+@BuilderDsl
+public class ContentEntitiesBuilder {
+
+    private val entities: MutableList<ContentEntity> = mutableListOf()
+
+    public fun entity(build: ContentEntityBuilder.() -> Unit) {
+        entities += ContentEntityBuilder().apply(build).build()
+    }
+
+    public fun build(): ContentEntities = entities
 }
 
 public val Void: ContentEntityTypeDefinition = VoidContentEntityTypeDefinition

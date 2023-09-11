@@ -21,7 +21,7 @@ import dev.d1s.beam.commons.*
 import dev.d1s.beam.commons.event.EntityUpdate
 import dev.d1s.exkt.common.pagination.LimitAndOffset
 import dev.d1s.ktor.events.client.ClientWebSocketEvent
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Job
 
 public typealias BeamDaemonBaseUrl = String
 
@@ -41,7 +41,7 @@ public interface BeamClient {
 
     public suspend fun postSpace(
         languageCode: LanguageCode? = null,
-        build: SpaceModificationBuilder.() -> Unit
+        build: suspend SpaceModificationBuilder.() -> Unit
     ): Result<SpaceWithToken>
 
     public suspend fun postRootSpace(
@@ -51,7 +51,7 @@ public interface BeamClient {
 
     public suspend fun postRootSpace(
         languageCode: LanguageCode? = null,
-        build: RootSpaceModificationBuilder.() -> Unit
+        build: suspend RootSpaceModificationBuilder.() -> Unit
     ): Result<SpaceWithToken>
 
     public suspend fun getSpace(id: SpaceIdentifier, languageCode: LanguageCode? = null): Result<Space>
@@ -69,43 +69,71 @@ public interface BeamClient {
     public suspend fun putSpace(
         id: SpaceIdentifier,
         languageCode: LanguageCode? = null,
-        build: SpaceModificationBuilder.() -> Unit
+        build: suspend SpaceModificationBuilder.() -> Unit
     ): Result<Space>
 
     public suspend fun putRootSpace(space: RootSpaceModification, languageCode: LanguageCode? = null): Result<Space>
 
     public suspend fun putRootSpace(
         languageCode: LanguageCode? = null,
-        build: RootSpaceModificationBuilder.() -> Unit
+        build: suspend RootSpaceModificationBuilder.() -> Unit
     ): Result<Space>
 
     public suspend fun deleteSpace(id: SpaceIdentifier): Result<Unit>
 
     public suspend fun postBlock(block: BlockModification, languageCode: LanguageCode? = null): Result<Block>
 
-    public suspend fun postBlock(languageCode: LanguageCode? = null, build: BlockModificationBuilder.() -> Unit): Result<Block>
+    public suspend fun postBlock(
+        languageCode: LanguageCode? = null,
+        build: suspend BlockModificationBuilder.() -> Unit
+    ): Result<Block>
 
     public suspend fun getBlocks(spaceId: SpaceIdentifier, languageCode: LanguageCode? = null): Result<Blocks>
 
-    public suspend fun putBlock(id: BlockId, block: BlockModification, languageCode: LanguageCode? = null): Result<Block>
+    public suspend fun putBlock(
+        id: BlockId,
+        block: BlockModification,
+        languageCode: LanguageCode? = null
+    ): Result<Block>
 
-    public suspend fun putBlock(id: BlockId, languageCode: LanguageCode? = null, build: BlockModificationBuilder.() -> Unit): Result<Block>
+    public suspend fun putBlock(
+        id: BlockId,
+        languageCode: LanguageCode? = null,
+        build: suspend BlockModificationBuilder.() -> Unit
+    ): Result<Block>
 
     public suspend fun deleteBlock(id: BlockId): Result<Unit>
 
-    public suspend fun postTranslation(spaceId: SpaceIdentifier? = null, translation: TranslationModification): Result<Translation>
+    public suspend fun postTranslation(
+        spaceId: SpaceIdentifier? = null,
+        translation: TranslationModification
+    ): Result<Translation>
 
-    public suspend fun postTranslation(spaceId: SpaceIdentifier? = null, build: TranslationModificationBuilder.() -> Unit): Result<Translation>
+    public suspend fun postTranslation(
+        spaceId: SpaceIdentifier? = null,
+        build: suspend TranslationModificationBuilder.() -> Unit
+    ): Result<Translation>
 
     public suspend fun getTranslation(spaceId: SpaceIdentifier? = null, languageCode: LanguageCode): Result<Translation>
 
-    public suspend fun getResolvedTranslation(spaceId: SpaceIdentifier? = null, languageCode: LanguageCode): Result<Translation>
+    public suspend fun getResolvedTranslation(
+        spaceId: SpaceIdentifier? = null,
+        languageCode: LanguageCode
+    ): Result<Translation>
 
     public suspend fun getTranslations(spaceId: SpaceIdentifier? = null): Result<Translations>
 
-    public suspend fun putTranslation(spaceId: SpaceIdentifier? = null, languageCode: LanguageCode, translation: TranslationModification): Result<Translation>
+    public suspend fun putTranslation(
+        spaceId: SpaceIdentifier? = null,
+        languageCode: LanguageCode,
+        translation: TranslationModification
+    ): Result<Translation>
 
-    public suspend fun putTranslation(spaceId: SpaceIdentifier? = null, languageCode: LanguageCode, build: TranslationModificationBuilder.() -> Unit): Result<Translation>
+    public suspend fun putTranslation(
+        spaceId: SpaceIdentifier? = null,
+        languageCode: LanguageCode,
+        build: suspend TranslationModificationBuilder.() -> Unit
+    ): Result<Translation>
 
     public suspend fun deleteTranslation(spaceId: SpaceIdentifier? = null, languageCode: LanguageCode): Result<Unit>
 
@@ -138,5 +166,9 @@ public interface BeamClient {
     public fun isCompatible(daemonVersion: Version): Boolean
 }
 
-public fun BeamClient(httpBaseUrl: BeamDaemonBaseUrl, wsBaseUrl: BeamDaemonBaseUrl? = null, token: SpaceToken? = null): BeamClient =
+public fun BeamClient(
+    httpBaseUrl: BeamDaemonBaseUrl,
+    wsBaseUrl: BeamDaemonBaseUrl? = null,
+    token: SpaceToken? = null
+): BeamClient =
     DefaultBeamClient(httpBaseUrl, wsBaseUrl, token)

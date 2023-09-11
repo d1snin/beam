@@ -82,3 +82,6 @@ public data class SpaceWithToken(
     override val role: Role,
     public val token: SpaceToken
 ) : IdentifiedSpace
+
+public fun SpaceWithToken.toSpace(): Space =
+    Space(id, createdAt, updatedAt, slug, metadata, view, role)

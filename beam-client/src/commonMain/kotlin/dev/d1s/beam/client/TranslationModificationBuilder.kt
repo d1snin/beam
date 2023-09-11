@@ -33,7 +33,7 @@ public class TranslationModificationBuilder {
         translations = mapOf(*pairs)
     }
 
-    internal fun build() =
+    public fun build(): TranslationModification =
         TranslationModification(
             languageCode ?: error("Translation language code is undefined"),
             languageName,
