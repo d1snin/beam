@@ -82,7 +82,7 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
     }
 
     private fun SimplePanel.renderLinkedContainer(block: SimplePanel.() -> Unit) {
-        renderSpaceLink {
+        renderSpaceLink(space) {
             div(className = "d-flex align-items-center") {
                 linkedContainer = this
 
