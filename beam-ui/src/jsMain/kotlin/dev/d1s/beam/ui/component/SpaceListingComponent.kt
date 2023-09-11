@@ -112,7 +112,7 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
     }
 
     private fun SimplePanel.renderSpaceListingMessage() {
-        p(currentTranslation.spaceListingMessage, className = "fs-bold") {
+        p(currentTranslation.spaceListingMessage, className = "fs-bold mb-0") {
             fontSize = 1.1.rem
 
             setSecondaryText()

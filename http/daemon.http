@@ -129,33 +129,32 @@ DELETE http://localhost:8573/blocks/3afa62d1-2a4e-45c8-b173-b211b2b7fb52
 Authorization: Bearer {{token}}
 
 ### POST Translation
-POST http://localhost:8573/translations?
-    space=root
+POST http://localhost:8573/translations
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "languageCode": "en",
+    "languageCode": "ru",
     "languageName": null,
-    "default": false,
+    "default": true,
     "translations": {
-        "ui.icon-alt": "Beam space icon",
+        "ui.icon-alt": "Иконка пространства",
         "ui.space-info.default-title": "Beam",
-        "ui.explore-dropdown.callout": "Explore (tr: en)",
-        "ui.daemon-status.connected": "Connected to daemon.",
-        "ui.daemon-status.disconnected": "Couldn't connect to daemon.",
-        "ui.daemon-status.ms-unit": "ms",
-        "ui.space-failure-card.not-found.icon-alt": "404 image",
-        "ui.space-failure-card.not-found.message": "We couldn't find anything.",
-        "ui.space-failure-card.empty-space.icon-alt": "Empty space icon",
-        "ui.space-failure-card.empty-space.message": "This space seems to be empty.",
-        "ui.footer.message.first-part": "Running",
+        "ui.explore-dropdown.callout": "Обзор",
+        "ui.daemon-status.connected": "Подключен к сервису.",
+        "ui.daemon-status.disconnected": "Не удалось подключиться к сервису.",
+        "ui.daemon-status.ms-unit": "мс",
+        "ui.space-failure-card.not-found.icon-alt": "Иконка 404",
+        "ui.space-failure-card.not-found.message": "Мы ничего не нашли.",
+        "ui.space-failure-card.empty-space.icon-alt": "Иконка пустого пространства",
+        "ui.space-failure-card.empty-space.message": "Эта страница выглядит пустой.",
+        "ui.footer.message.first-part": "Работает на движке",
         "ui.footer.message.second-part": "Beam",
-        "ui.footer.source-code-link.message": "Source code on GitHub",
+        "ui.footer.source-code-link.message": "Исходный код на GitHub",
         "ui.footer.source-code-link.url": "https://github.com/d1snin/beam",
-        "ui.footer.language-switcher.message": "Switch language...",
-        "ui.space-listing.message": "Explore the spaces on this instance:",
-        "ui.space-listing.fetch-more-button": "Load more"
+        "ui.footer.language-switcher.message": "Поменять язык...",
+        "ui.space-listing.message": "Другие страницы:",
+        "ui.space-listing.fetch-more-button": "Загрузить больше"
     }
 }
 
