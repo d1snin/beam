@@ -1,4 +1,4 @@
-[![](./img/banner.svg)](https://github.com/d1snin/beam)
+[![](./img/banner.jpg)](https://github.com/d1snin/beam)
 
 [![](https://github.com/d1snin/beam/actions/workflows/build.yml/badge.svg)](https://github.com/d1snin/beam/actions/workflows/build.yml)
 [![](https://maven.d1s.dev/api/badge/latest/releases/dev/d1s/beam/beam-client?color=40c14a&name=maven.d1s.dev&prefix=v)](https://maven.d1s.dev/#/releases/dev/d1s/beam)
@@ -10,7 +10,7 @@ content blocks.
 Beam can allow you to create a product page, a business card website, personal website or any other project in a second
 that does not imply a high level of user interactions.
 
-[![](./img/preview.svg)](https://github.com/d1snin/beam)
+[![](./img/preview.jpg)](https://github.com/d1snin/beam)
 
 ### Get started with Beam
 
