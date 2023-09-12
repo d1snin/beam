@@ -17,9 +17,7 @@
 package dev.d1s.beam.client.app
 
 import dev.d1s.beam.client.BeamClient
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.lighthousegames.logging.logging
 
 internal interface ApplicationRunner {
@@ -31,25 +29,24 @@ internal class DefaultApplicationRunner : ApplicationRunner {
 
     private val log = logging()
 
-    private val scope = CoroutineScope(Dispatchers.IO)
+    override fun run(application: BeamClientApplication) =
+        runBlocking {
+            log.i {
+                "Starting Beam client application..."
+            }
 
-    override fun run(application: BeamClientApplication) {
-        log.i {
-            "Starting Beam client application..."
-        }
+            val applicationContext = createApplicationContext(application)
 
-        val applicationContext = createApplicationContext(application)
-
-        with(application) {
-            scope.launch {
+            with(application) {
                 applicationContext.run()
             }
-        }
 
-        log.i {
-            "Nothing to do anymore"
+            applicationContext.joinJobs()
+
+            log.i {
+                "Nothing to do anymore"
+            }
         }
-    }
 
     private fun createApplicationContext(application: BeamClientApplication): ApplicationContext {
         val config = application.config
@@ -59,7 +56,7 @@ internal class DefaultApplicationRunner : ApplicationRunner {
             token = config.token
         )
 
-        return ApplicationContext(config, client, scope)
+        return ApplicationContext(config, client)
     }
 }
 

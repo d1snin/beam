@@ -82,9 +82,9 @@ public class DefaultBeamClient(
 
     public override suspend fun postSpace(
         languageCode: LanguageCode?,
-        build: suspend SpaceModificationBuilder.() -> Unit
+        configure: suspend SpaceModificationBuilder.() -> Unit
     ): Result<SpaceWithToken> =
-        postSpace(SpaceModificationBuilder().apply { build() }.build(), languageCode)
+        postSpace(SpaceModificationBuilder().apply { configure() }.build(), languageCode)
 
     public override suspend fun postRootSpace(
         space: RootSpaceModification,
@@ -100,9 +100,9 @@ public class DefaultBeamClient(
 
     public override suspend fun postRootSpace(
         languageCode: LanguageCode?,
-        build: suspend RootSpaceModificationBuilder.() -> Unit
+        configure: suspend RootSpaceModificationBuilder.() -> Unit
     ): Result<SpaceWithToken> =
-        postRootSpace(RootSpaceModificationBuilder().apply { build() }.build(), languageCode)
+        postRootSpace(RootSpaceModificationBuilder().apply { configure() }.build(), languageCode)
 
     public override suspend fun getSpace(id: SpaceIdentifier, languageCode: LanguageCode?): Result<Space> =
         runCatching {
@@ -145,9 +145,9 @@ public class DefaultBeamClient(
     override suspend fun putSpace(
         id: SpaceIdentifier,
         languageCode: LanguageCode?,
-        build: suspend SpaceModificationBuilder.() -> Unit
+        configure: suspend SpaceModificationBuilder.() -> Unit
     ): Result<Space> =
-        putSpace(id, SpaceModificationBuilder().apply { build() }.build(), languageCode)
+        putSpace(id, SpaceModificationBuilder().apply { configure() }.build(), languageCode)
 
     override suspend fun putRootSpace(space: RootSpaceModification, languageCode: LanguageCode?): Result<Space> =
         runCatching {
@@ -162,9 +162,9 @@ public class DefaultBeamClient(
 
     override suspend fun putRootSpace(
         languageCode: LanguageCode?,
-        build: suspend RootSpaceModificationBuilder.() -> Unit
+        configure: suspend RootSpaceModificationBuilder.() -> Unit
     ): Result<Space> =
-        putRootSpace(RootSpaceModificationBuilder().apply { build() }.build(), languageCode)
+        putRootSpace(RootSpaceModificationBuilder().apply { configure() }.build(), languageCode)
 
     override suspend fun deleteSpace(id: SpaceIdentifier): Result<Unit> =
         runCatching {
@@ -188,9 +188,9 @@ public class DefaultBeamClient(
 
     override suspend fun postBlock(
         languageCode: LanguageCode?,
-        build: suspend BlockModificationBuilder.() -> Unit
+        configure: suspend BlockModificationBuilder.() -> Unit
     ): Result<Block> =
-        postBlock(BlockModificationBuilder().apply { build() }.build(), languageCode)
+        postBlock(BlockModificationBuilder().apply { configure() }.build(), languageCode)
 
     public override suspend fun getBlocks(spaceId: SpaceIdentifier, languageCode: LanguageCode?): Result<Blocks> =
         runCatching {
@@ -216,9 +216,9 @@ public class DefaultBeamClient(
     override suspend fun putBlock(
         id: BlockId,
         languageCode: LanguageCode?,
-        build: suspend BlockModificationBuilder.() -> Unit
+        configure: suspend BlockModificationBuilder.() -> Unit
     ): Result<Block> =
-        putBlock(id, BlockModificationBuilder().apply { build() }.build(), languageCode)
+        putBlock(id, BlockModificationBuilder().apply { configure() }.build(), languageCode)
 
     override suspend fun deleteBlock(id: BlockId): Result<Unit> =
         runCatching {
@@ -245,9 +245,9 @@ public class DefaultBeamClient(
 
     override suspend fun postTranslation(
         spaceId: SpaceIdentifier?,
-        build: suspend TranslationModificationBuilder.() -> Unit
+        configure: suspend TranslationModificationBuilder.() -> Unit
     ): Result<Translation> =
-        postTranslation(spaceId, TranslationModificationBuilder().apply { build() }.build())
+        postTranslation(spaceId, TranslationModificationBuilder().apply { configure() }.build())
 
     override suspend fun getTranslation(spaceId: SpaceIdentifier?, languageCode: LanguageCode): Result<Translation> =
         runCatching {
@@ -296,9 +296,9 @@ public class DefaultBeamClient(
     override suspend fun putTranslation(
         spaceId: SpaceIdentifier?,
         languageCode: LanguageCode,
-        build: suspend TranslationModificationBuilder.() -> Unit
+        configure: suspend TranslationModificationBuilder.() -> Unit
     ): Result<Translation> =
-        putTranslation(spaceId, languageCode, TranslationModificationBuilder().apply { build() }.build())
+        putTranslation(spaceId, languageCode, TranslationModificationBuilder().apply { configure() }.build())
 
     override suspend fun deleteTranslation(spaceId: SpaceIdentifier?, languageCode: LanguageCode): Result<Unit> =
         runCatching {

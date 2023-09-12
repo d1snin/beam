@@ -37,7 +37,7 @@ public class RootSpaceModificationBuilder {
 }
 
 @BuilderDsl
-public class SpaceModificationBuilder {
+public class    SpaceModificationBuilder {
 
     public var slug: SpaceSlug? = null
 

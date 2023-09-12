@@ -41,7 +41,7 @@ public interface BeamClient {
 
     public suspend fun postSpace(
         languageCode: LanguageCode? = null,
-        build: suspend SpaceModificationBuilder.() -> Unit
+        configure: suspend SpaceModificationBuilder.() -> Unit
     ): Result<SpaceWithToken>
 
     public suspend fun postRootSpace(
@@ -51,7 +51,7 @@ public interface BeamClient {
 
     public suspend fun postRootSpace(
         languageCode: LanguageCode? = null,
-        build: suspend RootSpaceModificationBuilder.() -> Unit
+        configure: suspend RootSpaceModificationBuilder.() -> Unit
     ): Result<SpaceWithToken>
 
     public suspend fun getSpace(id: SpaceIdentifier, languageCode: LanguageCode? = null): Result<Space>
@@ -69,14 +69,14 @@ public interface BeamClient {
     public suspend fun putSpace(
         id: SpaceIdentifier,
         languageCode: LanguageCode? = null,
-        build: suspend SpaceModificationBuilder.() -> Unit
+        configure: suspend SpaceModificationBuilder.() -> Unit
     ): Result<Space>
 
     public suspend fun putRootSpace(space: RootSpaceModification, languageCode: LanguageCode? = null): Result<Space>
 
     public suspend fun putRootSpace(
         languageCode: LanguageCode? = null,
-        build: suspend RootSpaceModificationBuilder.() -> Unit
+        configure: suspend RootSpaceModificationBuilder.() -> Unit
     ): Result<Space>
 
     public suspend fun deleteSpace(id: SpaceIdentifier): Result<Unit>
@@ -85,7 +85,7 @@ public interface BeamClient {
 
     public suspend fun postBlock(
         languageCode: LanguageCode? = null,
-        build: suspend BlockModificationBuilder.() -> Unit
+        configure: suspend BlockModificationBuilder.() -> Unit
     ): Result<Block>
 
     public suspend fun getBlocks(spaceId: SpaceIdentifier, languageCode: LanguageCode? = null): Result<Blocks>
@@ -99,7 +99,7 @@ public interface BeamClient {
     public suspend fun putBlock(
         id: BlockId,
         languageCode: LanguageCode? = null,
-        build: suspend BlockModificationBuilder.() -> Unit
+        configure: suspend BlockModificationBuilder.() -> Unit
     ): Result<Block>
 
     public suspend fun deleteBlock(id: BlockId): Result<Unit>
@@ -111,7 +111,7 @@ public interface BeamClient {
 
     public suspend fun postTranslation(
         spaceId: SpaceIdentifier? = null,
-        build: suspend TranslationModificationBuilder.() -> Unit
+        configure: suspend TranslationModificationBuilder.() -> Unit
     ): Result<Translation>
 
     public suspend fun getTranslation(spaceId: SpaceIdentifier? = null, languageCode: LanguageCode): Result<Translation>
@@ -132,7 +132,7 @@ public interface BeamClient {
     public suspend fun putTranslation(
         spaceId: SpaceIdentifier? = null,
         languageCode: LanguageCode,
-        build: suspend TranslationModificationBuilder.() -> Unit
+        configure: suspend TranslationModificationBuilder.() -> Unit
     ): Result<Translation>
 
     public suspend fun deleteTranslation(spaceId: SpaceIdentifier? = null, languageCode: LanguageCode): Result<Unit>

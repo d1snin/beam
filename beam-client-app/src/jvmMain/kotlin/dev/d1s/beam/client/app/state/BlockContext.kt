@@ -20,15 +20,12 @@ import dev.d1s.beam.client.BeamClient
 import dev.d1s.beam.client.ContentEntitiesBuilder
 import dev.d1s.beam.commons.*
 import dev.d1s.beam.commons.contententity.ContentEntities
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import org.lighthousegames.logging.logging
 
 public class BlockContext internal constructor(
     initialBlock: Block,
-    private val client: BeamClient,
-    private val coroutineScope: CoroutineScope
+    private val client: BeamClient
 ) {
     private var internalBlock = initialBlock
 
@@ -55,32 +52,25 @@ public class BlockContext internal constructor(
         modifyBlock(metadata = metadata())
     }
 
-    public suspend fun setSpaceId(spaceId: suspend () -> SpaceId) {
-        modifyBlock(spaceId = spaceId())
-    }
-
-    private fun modifyBlock(
+    private suspend fun modifyBlock(
         index: BlockIndex = block.index,
         size: BlockSize = block.size,
         entities: ContentEntities = block.entities,
         metadata: Metadata = block.metadata,
-        spaceId: SpaceId = block.spaceId
     ) {
-        coroutineScope.launch {
-            operationLock.lock()
+        operationLock.lock()
 
-            try {
-                val modification = BlockModification(index, size, entities, metadata, spaceId)
+        try {
+            val modification = BlockModification(index, size, entities, metadata, block.spaceId)
 
-                log.d {
-                    "Modifying block with the following data: $modification"
-                }
-
-                val modifiedBlock = client.putBlock(block.id, modification).getOrThrow()
-                internalBlock = modifiedBlock
-            } finally {
-                operationLock.unlock()
+            log.d {
+                "Modifying block with the following data: $modification"
             }
+
+            val modifiedBlock = client.putBlock(block.id, modification).getOrThrow()
+            internalBlock = modifiedBlock
+        } finally {
+            operationLock.unlock()
         }
     }
 }
