@@ -47,7 +47,7 @@ Content-Type: application/json
     "metadata": {
     },
     "view": {
-        "theme": "catppuccin-mocha",
+        "theme": "catppuccin-latte",
         "icon": null,
         "favicon": null,
         "title": "Test space",
@@ -65,26 +65,28 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "index": 0,
+    "index": 1,
     "size": "EXTRA_LARGE",
     "entities": [
         {
             "type": "text",
             "parameters": {
-                "value": "(:balloon: Colored text with icons!)(blue)",
+                "value": "(:brightness-high: You can do almost anything you want!)(blue)",
                 "heading": "h1"
             }
         },
         {
             "type": "text",
             "parameters": {
-                "value": "It is now (possible)(green) to use [(Bootstrap Icon library)(orange)][https://icons.getbootstrap.com]!"
+                "value": "Need (more power)(red)? Use **embeds**!"
             }
         },
         {
-            "type": "text",
+            "type": "embed",
             "parameters": {
-                "value": "`fun main() {\n    println(\"Hello, World!\")\n}`"
+                "url": "https://www.openstreetmap.org/export/embed.html?bbox=-0.004017949104309083%2C51.47612752641776%2C0.00030577182769775396%2C51.478569861898606&layer=mapnik",
+                "width": "100",
+                "height": "400"
             }
         }
     ],
