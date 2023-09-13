@@ -29,14 +29,14 @@ object AccentDarkTheme : AbstractTheme(SpaceThemeDefinition.AccentDark) {
 
     override val buttonStyle = ButtonStyle.OUTLINELIGHT
 
-    // https://colorpicker.me/#212121
-    override val background = Color.hex(0x212121)
+    // https://colorpicker.me/#151515
+    override val background = Color.hex(0x151515)
 
-    // https://colorpicker.me/#2b2b2b
-    override val overlay = Color.hex(0x2b2b2b)
+    // https://colorpicker.me/#242424
+    override val overlay = Color.hex(0x242424)
 
-    // https://colorpicker.me/#b4b4b4
-    override val outline = Color.hex(0xb4b4b4)
+    // https://colorpicker.me/#c2c2c2
+    override val outline = Color.hex(0xc2c2c2)
 
     // https://colorpicker.me/#f0f0f0
     override val text = Color.hex(0xf0f0f0)
