@@ -75,7 +75,7 @@ tasks.register<Copy>("grabJs") {
     into("src/main/resources/static")
 }
 
-tasks["build"].dependsOn(tasks["grabJs"])
+tasks["processResources"].dependsOn(tasks["grabJs"])
 
 tasks.register<Delete>("cleanJs") {
     delete("src/main/resources/static/main.bundle.js")
