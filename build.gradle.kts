@@ -34,5 +34,6 @@ allprojects {
     repositories {
         mavenCentral()
         maven(url = "https://maven.d1s.dev/releases")
+        maven(url = "https://maven.d1s.dev/snapshots")
     }
 }
