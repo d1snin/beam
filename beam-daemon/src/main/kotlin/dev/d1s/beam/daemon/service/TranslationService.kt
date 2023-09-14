@@ -426,10 +426,7 @@ class DefaultTranslationService : TranslationService, KoinComponent {
                         appleTouch = fav.appleTouch?.translateValue(translation),
                         favicon16 = fav.favicon16?.translateValue(translation),
                         favicon32 = fav.favicon32?.translateValue(translation),
-                        faviconIco = fav.faviconIco?.translateValue(translation),
-                        browserconfig = fav.browserconfig?.translateValue(translation),
-                        maskIcon = fav.maskIcon?.translateValue(translation),
-                        maskIconColor = fav.maskIconColor
+                        faviconIco = fav.faviconIco?.translateValue(translation)
                     )
                 },
                 title = title?.translateValue(translation),
@@ -601,9 +598,6 @@ class DefaultTranslationService : TranslationService, KoinComponent {
                 favicon16.extractAndAddLocations()
                 favicon32.extractAndAddLocations()
                 faviconIco.extractAndAddLocations()
-                browserconfig.extractAndAddLocations()
-                maskIcon.extractAndAddLocations()
-                maskIconColor.extractAndAddLocations()
             }
 
             title.extractAndAddLocations()

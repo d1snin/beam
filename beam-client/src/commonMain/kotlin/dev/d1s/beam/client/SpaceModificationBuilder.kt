@@ -95,20 +95,11 @@ public class SpaceFaviconBuilder {
 
     public var faviconIco: SpaceIconUrl? = null
 
-    public var browserconfig: Url? = null
-
-    public var maskIcon: SpaceIconUrl? = null
-
-    public var maskIconColor: String? = null
-
     public fun build(): SpaceFavicon =
         SpaceFavicon(
             appleTouch,
             favicon16,
             favicon32,
-            faviconIco,
-            browserconfig,
-            maskIcon,
-            maskIconColor
+            faviconIco
         )
 }

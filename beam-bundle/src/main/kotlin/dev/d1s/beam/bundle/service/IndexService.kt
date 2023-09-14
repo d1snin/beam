@@ -47,10 +47,7 @@ class DefaultIndexService : IndexService, KoinComponent {
         appleTouch = Defaults.APPLE_TOUCH_ICON,
         favicon16 = Defaults.FAVICON_16,
         favicon32 = Defaults.FAVICON_32,
-        faviconIco = Defaults.FAVICON_ICO,
-        browserconfig = Defaults.BROWSERCONFIG,
-        maskIcon = Defaults.MASK_ICON,
-        maskIconColor = Defaults.MASK_ICON_COLOR
+        faviconIco = Defaults.FAVICON_ICO
     )
 
     private val logger = logging()

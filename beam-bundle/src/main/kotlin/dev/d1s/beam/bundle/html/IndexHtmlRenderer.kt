@@ -91,16 +91,14 @@ class DefaultIndexHtmlRenderer : IndexHtmlRenderer, KoinComponent {
                     sizes = "180x180"
                 }
 
+                link(rel = "icon", type = "image/png", href = favicon.faviconIco)
+
                 link(rel = "icon", type = "image/png", href = favicon.favicon16) {
                     sizes = "16x16"
                 }
 
                 link(rel = "icon", type = "image/png", href = favicon.favicon32) {
                     sizes = "32x32"
-                }
-
-                link(rel = "mask-icon", href = favicon.maskIcon) {
-                    attributes["color"] = favicon.maskIconColor ?: ""
                 }
 
                 dependencies.forEach { dependency ->

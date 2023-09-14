@@ -38,8 +38,5 @@ public data class SpaceFavicon(
     val appleTouch: SpaceIconUrl?,
     val favicon16: SpaceIconUrl?,
     val favicon32: SpaceIconUrl?,
-    val faviconIco: SpaceIconUrl?,
-    val browserconfig: Url?,
-    val maskIcon: SpaceIconUrl?,
-    val maskIconColor: String?
+    val faviconIco: SpaceIconUrl?
 )

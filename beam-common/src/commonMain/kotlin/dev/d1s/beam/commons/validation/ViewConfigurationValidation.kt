@@ -62,18 +62,6 @@ private fun ValidationBuilder<SpaceFavicon>.validFavicon() {
     SpaceFavicon::faviconIco ifPresent {
         correctUrl()
     }
-
-    SpaceFavicon::browserconfig ifPresent {
-        correctUrl()
-    }
-
-    SpaceFavicon::maskIcon ifPresent {
-        correctUrl()
-    }
-
-    SpaceFavicon::maskIconColor ifPresent {
-        isNotBlank() hint "view mask icon color must not be blank"
-    }
 }
 
 private fun ValidationBuilder<SpaceThemeName>.themeExists() =
