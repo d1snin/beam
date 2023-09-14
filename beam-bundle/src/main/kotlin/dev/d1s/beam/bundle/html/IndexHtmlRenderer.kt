@@ -75,7 +75,7 @@ class DefaultIndexHtmlRenderer : IndexHtmlRenderer, KoinComponent {
                     meta("og:description", preview.description)
                     meta("og:image", preview.image)
 
-                    meta("twitter:card", "summary_large_image")
+                    meta("twitter:card", "summary")
                     meta("twitter:url", preview.url)
                     meta("twitter:title", preview.title)
                     meta("twitter:description", preview.description)
