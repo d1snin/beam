@@ -17,9 +17,9 @@
 package dev.d1s.beam.client.app
 
 import dev.d1s.beam.client.BeamClient
-import dev.d1s.beam.client.Void
 import dev.d1s.beam.client.app.state.BlockContext
 import dev.d1s.beam.commons.BlockSize
+import dev.d1s.beam.commons.contententity.Void
 import dev.d1s.beam.commons.toSpace
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
