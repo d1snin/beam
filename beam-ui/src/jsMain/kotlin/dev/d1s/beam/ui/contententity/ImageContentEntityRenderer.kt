@@ -61,14 +61,22 @@ class ImageContentEntityRenderer : ContentEntityRenderer, KoinComponent {
         val width = parameters[definition.width]?.toInt()
         val height = parameters[definition.height]?.toInt()
 
-        image(src, description, responsive = true) {
-            width?.let {
-                this.width = it.perc
-            }
+        container {
+            image(src, description, responsive = true, className = "rounded") {
+                width?.let {
+                    this.width = it.perc
+                }
 
-            height?.let {
-                this.height = it.px
+                height?.let {
+                    this.height = it.px
+                }
             }
+        }
+    }
+
+    private fun SimplePanel.container(block: SimplePanel.() -> Unit) {
+        div(className = "w-100") {
+            block()
         }
     }
 }
