@@ -53,13 +53,15 @@ class DefaultIndexService : IndexService, KoinComponent {
     private val logger = logging()
 
     override suspend fun resolveSpace(request: SpaceRequest): ResolvedSpace {
+        val spaceId = request.spaceIdentifier
+
         logger.d {
-            "Resolving space ${request.spaceIdentifier}..."
+            "Resolving space $spaceId..."
         }
 
-        val spaceIdentifier = request.spaceIdentifier ?: return notFoundSpace()
+        spaceId ?: return notFoundSpace()
 
-        val spaceResult = beamClient.getSpace(spaceIdentifier)
+        val spaceResult = beamClient.getSpace(spaceId)
 
         spaceResult.onFailure {
             logger.d {

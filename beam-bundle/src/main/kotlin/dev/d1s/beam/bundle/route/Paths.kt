@@ -21,6 +21,6 @@ import dev.d1s.beam.commons.Regex as CommonRegex
 object Paths {
 
     val Index = Regex(
-        "/${CommonRegex.Slug}?"
+        "/(${CommonRegex.Slug})?"
     )
 }
