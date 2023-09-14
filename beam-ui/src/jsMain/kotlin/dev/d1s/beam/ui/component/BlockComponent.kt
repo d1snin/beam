@@ -18,6 +18,7 @@ package dev.d1s.beam.ui.component
 
 import dev.d1s.beam.commons.Block
 import dev.d1s.beam.commons.MetadataKeys
+import dev.d1s.beam.commons.contententity.Image
 import dev.d1s.beam.ui.contententity.renderEntities
 import dev.d1s.beam.ui.util.Size.MaxBlockSize
 import dev.d1s.beam.ui.util.Size.sizeOf
@@ -42,7 +43,7 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
     }
 
     private fun SimplePanel.renderBlockCard(block: Block) {
-        renderCard("w-100 p-3 d-flex flex-column justify-content-start") {
+        renderCard("w-100 d-flex flex-column justify-content-start") {
             val blockSize = if (config.single.value) {
                 sizeOf(MaxBlockSize).px
             } else {
@@ -51,12 +52,31 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
 
             maxWidth = blockSize
 
+            configurePadding(block)
+
             applyMargin()
             applyCompensator()
 
             setOptionalBlockId(block)
 
             renderEntities(block)
+        }
+    }
+
+    private fun SimplePanel.configurePadding(block: Block) {
+        val entities = block.entities
+
+        val isImageBlock = entities.size == 1
+                && entities.first().type == Image.name
+
+        val isFluidImage = block.metadata[MetadataKeys.UI_BLOCK_IMAGE_ENTITY_FLUID]
+            ?.toBooleanStrictOrNull() == true
+
+        if (isImageBlock && isFluidImage) {
+            addCssClass("p-0")
+            addCssClass("overflow-hidden")
+        } else {
+            addCssClass("p-3")
         }
     }
 

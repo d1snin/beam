@@ -75,10 +75,3 @@ public class ContentEntitiesBuilder {
 
     public fun build(): ContentEntities = entities
 }
-
-public val Void: ContentEntityTypeDefinition = VoidContentEntityTypeDefinition
-public val Text: ContentEntityTypeDefinition = TextContentEntityTypeDefinition
-public val ButtonLink: ContentEntityTypeDefinition = ButtonLinkContentEntityTypeDefinition
-public val Space: ContentEntityTypeDefinition = SpaceContentEntityTypeDefinition
-public val Image: ContentEntityTypeDefinition = ImageContentEntityTypeDefinition
-public val Embed: ContentEntityTypeDefinition = EmbedContentEntityTypeDefinition
