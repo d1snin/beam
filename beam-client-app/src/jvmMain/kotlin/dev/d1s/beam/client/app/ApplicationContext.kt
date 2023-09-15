@@ -42,7 +42,7 @@ public class ApplicationContext internal constructor(
     private val log = logging()
 
     init {
-        launchScopedJob {
+        launchScopedJob(waitContext = false) {
             log.d {
                 "Initializing application context..."
             }
@@ -82,25 +82,29 @@ public class ApplicationContext internal constructor(
         }
     }
 
-    internal suspend fun launchJob(block: suspend CoroutineScope.() -> Unit) {
+    internal suspend fun launchJob(waitContext: Boolean = true, block: suspend CoroutineScope.() -> Unit) {
         coroutineScope {
             jobs += launch {
-                applicationContextInitialized.lock()
-
+                waitContextOptionally(condition = waitContext)
                 block()
             }
         }
     }
 
-    internal fun launchScopedJob(block: suspend CoroutineScope.() -> Unit) {
+    internal fun launchScopedJob(waitContext: Boolean = true, block: suspend CoroutineScope.() -> Unit) {
         jobs += scope.launch {
-            applicationContextInitialized.lock()
-
+            waitContextOptionally(condition = waitContext)
             block()
         }
     }
 
     internal suspend fun joinJobs() = jobs.joinAll()
+
+    private suspend fun waitContextOptionally(condition: Boolean) {
+        if (condition) {
+            applicationContextInitialized.lock()
+        }
+    }
 
     private companion object {
 

@@ -50,11 +50,20 @@ internal class DefaultApplicationRunner : ApplicationRunner {
 
     private fun createApplicationContext(application: BeamClientApplication): ApplicationContext {
         val config = application.config
+        val baseUrl = config.httpBaseUrl
+
+        log.d {
+            "Creating client... (base url: $baseUrl)"
+        }
 
         val client = BeamClient(
-            httpBaseUrl = config.httpBaseUrl,
+            httpBaseUrl = baseUrl,
             token = config.token
         )
+
+        log.d {
+            "Creating application context..."
+        }
 
         return ApplicationContext(config, client)
     }
