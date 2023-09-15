@@ -63,6 +63,8 @@ public class ApplicationContext internal constructor(
                 }.getOrThrow().toSpace()
             }
 
+            internalSpace = space
+
             val spaceId = space.id
 
             log.i {
