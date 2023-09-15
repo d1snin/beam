@@ -33,6 +33,8 @@ public typealias TranslationMap = Map<TextLocation, TranslatedText>
 
 public typealias Translations = List<Translation>
 
+public val TextLocation.asTemplate: Template get() = "\${$this}"
+
 public fun TranslationQualifier(spaceId: SpaceId?, languageCode: LanguageCode): TranslationQualifier =
     (spaceId?.let { "$it-" } ?: "") + languageCode
 
