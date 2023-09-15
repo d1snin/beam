@@ -17,18 +17,21 @@
 package dev.d1s.beam.client.app
 
 import dev.d1s.beam.client.BeamClient
-import dev.d1s.beam.client.app.state.BlockContext
-import dev.d1s.beam.commons.BlockSize
-import dev.d1s.beam.commons.contententity.Void
+import dev.d1s.beam.commons.Space
 import dev.d1s.beam.commons.toSpace
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import org.lighthousegames.logging.logging
 
 public class ApplicationContext internal constructor(
-    private val config: ApplicationConfig,
+    internal val config: ApplicationConfig,
     private val client: BeamClient
 ) : BeamClient by client {
+
+    internal var internalSpace: Space? = null
+
+    public val space: Space
+        get() = internalSpace ?: error("Space is not yet initialized.")
 
     private val jobs = mutableListOf<Job>()
 
@@ -39,7 +42,7 @@ public class ApplicationContext internal constructor(
     private val log = logging()
 
     init {
-        jobs += scope.launch {
+        launchScopedJob {
             log.d {
                 "Initializing application context..."
             }
@@ -68,9 +71,7 @@ public class ApplicationContext internal constructor(
 
             val blocks = getBlocks(space.id).getOrThrow()
             blocks.forEach {
-                deleteBlock(it.id).getOrElse {
-                    unableToModify()
-                }
+                deleteBlock(it.id).getOrThrow()
             }
 
             log.i {
@@ -81,37 +82,25 @@ public class ApplicationContext internal constructor(
         }
     }
 
-    public suspend fun block(configure: suspend BlockContext.() -> Unit) {
+    internal suspend fun launchJob(block: suspend CoroutineScope.() -> Unit) {
+        coroutineScope {
+            jobs += launch {
+                applicationContextInitialized.lock()
+
+                block()
+            }
+        }
+    }
+
+    internal fun launchScopedJob(block: suspend CoroutineScope.() -> Unit) {
         jobs += scope.launch {
             applicationContextInitialized.lock()
 
-            val space = config.space
-
-            val createdBlock = postBlock {
-                index = getBlocks(space).getOrThrow().size
-                size = BlockSize.SMALL
-                spaceId = space
-
-                entity {
-                    type = Void
-                }
-            }.getOrElse {
-                unableToModify()
-            }
-
-            val context = BlockContext(
-                createdBlock,
-                client
-            )
-
-            context.configure()
+            block()
         }
     }
 
     internal suspend fun joinJobs() = jobs.joinAll()
-
-    private fun unableToModify(): Nothing =
-        error("Unable to modify space.")
 
     private companion object {
 

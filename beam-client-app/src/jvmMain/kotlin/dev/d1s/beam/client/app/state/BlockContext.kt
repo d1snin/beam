@@ -16,16 +16,17 @@
 
 package dev.d1s.beam.client.app.state
 
-import dev.d1s.beam.client.BeamClient
 import dev.d1s.beam.client.ContentEntitiesBuilder
+import dev.d1s.beam.client.app.ApplicationContext
 import dev.d1s.beam.commons.*
 import dev.d1s.beam.commons.contententity.ContentEntities
+import dev.d1s.beam.commons.contententity.Void
 import kotlinx.coroutines.sync.Mutex
 import org.lighthousegames.logging.logging
 
 public class BlockContext internal constructor(
     initialBlock: Block,
-    private val client: BeamClient
+    private val app: ApplicationContext
 ) {
     private var internalBlock = initialBlock
 
@@ -67,10 +68,33 @@ public class BlockContext internal constructor(
                 "Modifying block with the following data: $modification"
             }
 
-            val modifiedBlock = client.putBlock(block.id, modification).getOrThrow()
+            val modifiedBlock = app.putBlock(block.id, modification).getOrThrow()
             internalBlock = modifiedBlock
         } finally {
             operationLock.unlock()
         }
+    }
+}
+
+public suspend fun ApplicationContext.block(configure: suspend BlockContext.() -> Unit) {
+    launchJob {
+        val space = space.id
+
+        val createdBlock = postBlock {
+            index = getBlocks(space).getOrThrow().size
+            size = BlockSize.SMALL
+            spaceId = space
+
+            entity {
+                type = Void
+            }
+        }.getOrThrow()
+
+        val context = BlockContext(
+            createdBlock,
+            app = this@block
+        )
+
+        context.configure()
     }
 }
