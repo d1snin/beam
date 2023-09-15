@@ -17,12 +17,14 @@
 package dev.d1s.beam.ui.component
 
 import dev.d1s.beam.ui.Qualifier
+import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.theme.setBackground
 import dev.d1s.beam.ui.theme.setTextColor
 import dev.d1s.beam.ui.util.currentTranslationObservable
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
 import dev.d1s.exkt.kvision.component.render
+import io.kvision.core.*
 import io.kvision.panel.SimplePanel
 import io.kvision.state.bind
 import io.kvision.utils.vh
@@ -51,6 +53,7 @@ class RootComponent : Component.Root(), KoinComponent {
         sizing()
         display()
         font()
+        linkStyle()
         background()
         components()
     }
@@ -64,6 +67,8 @@ class RootComponent : Component.Root(), KoinComponent {
         }
     }
 
+    // Тошно.
+
     private fun SimplePanel.display() {
         addCssClass("d-flex")
         addCssClass("flex-column")
@@ -71,6 +76,26 @@ class RootComponent : Component.Root(), KoinComponent {
 
     private fun SimplePanel.font() {
         setTextColor()
+    }
+
+    private fun SimplePanel.linkStyle() {
+        fun setStyle(pClass: PClass? = null, block: Style.() -> Unit) {
+            style("a", pClass) {
+                block()
+            }
+        }
+
+        setStyle {
+            color = currentTheme.secondaryBlue
+        }
+
+        setStyle(PClass.LINK) {
+            textDecoration = TextDecoration(TextDecorationLine.NONE)
+        }
+
+        setStyle(PClass.HOVER) {
+            textDecoration = TextDecoration(TextDecorationLine.UNDERLINE)
+        }
     }
 
     private fun background() {

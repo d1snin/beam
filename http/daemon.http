@@ -69,23 +69,9 @@ Content-Type: application/json
     "size": "EXTRA_LARGE",
     "entities": [
         {
-            "type": "image",
-            "parameters": {
-                "url": "https://s3.d1s.dev/d1s-dev/me.jpg",
-                "width": "100"
-            }
-        },
-        {
             "type": "text",
             "parameters": {
-                "value": "Some text over here",
-                "heading": "h1"
-            }
-        },
-        {
-            "type": "text",
-            "parameters": {
-                "value": "Lorem ipsum `dolor sit amet`"
+                "value": "[some link][https://ya.ru]"
             }
         }
     ],
