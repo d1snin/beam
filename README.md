@@ -5,7 +5,7 @@
 
 ## Beam
 
-Beam is a minimal and opinionated WCF implementation that gives users the ability to create pages consisting of separate
+Beam is a minimal and opinionated WCM implementation that gives users the ability to create pages consisting of separate
 content blocks.
 Beam can allow you to create a product page, a business card website, personal website or any other project in a second
 that does not imply a high level of user interactions.
