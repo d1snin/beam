@@ -102,7 +102,7 @@ private fun Module.observables() {
         qualifier = Qualifier.DaemonStatusWithPingObservable
     }
 
-    singleOf<Observable<Blocks?>>(::CurrentSpaceContentChangeObservable) {
+    singleOf<Observable<Blocks>>(::CurrentSpaceContentChangeObservable) {
         qualifier = Qualifier.CurrentSpaceContentChangeObservable
     }
 

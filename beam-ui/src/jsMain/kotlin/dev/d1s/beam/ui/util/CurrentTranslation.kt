@@ -23,11 +23,16 @@ import dev.d1s.beam.commons.TranslatedText
 import dev.d1s.beam.commons.Translation
 import io.kvision.state.ObservableValue
 import kotlinx.browser.window
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.core.context.GlobalContext
 
 private val client by lazy {
     GlobalContext.get().get<BeamClient>()
 }
+
+private val mainCoroutineScope = CoroutineScope(Dispatchers.Main)
 
 val currentTranslationObservable = ObservableValue(GlobalTranslation.Default)
 val currentTranslation get() = currentTranslationObservable.value
@@ -51,7 +56,10 @@ suspend fun initCurrentTranslation() {
 }
 
 fun setCurrentTranslation(translation: Translation) {
-    currentTranslationObservable.value = translation
+    mainCoroutineScope.launch {
+        currentTranslationObservable.value = translation
+        initCurrentSpace()
+    }
 }
 
 val Translation.iconAlt: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_ICON_ALT)

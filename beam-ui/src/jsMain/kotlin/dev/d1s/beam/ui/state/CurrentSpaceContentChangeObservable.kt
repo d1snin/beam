@@ -28,7 +28,7 @@ import io.kvision.state.ObservableValue
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class CurrentSpaceContentChangeObservable : Observable<Blocks?>, KoinComponent {
+class CurrentSpaceContentChangeObservable : Observable<Blocks>, KoinComponent {
 
     override val state = ObservableValue(currentBlocks)
 
@@ -41,7 +41,7 @@ class CurrentSpaceContentChangeObservable : Observable<Blocks?>, KoinComponent {
             if (space != null) {
                 handleSpaceContentUpdates(space.id)
             } else {
-                setCurrentSpaceContent(blocks = null)
+                setCurrentSpaceContent(blocks = listOf())
             }
         }
 
@@ -51,7 +51,7 @@ class CurrentSpaceContentChangeObservable : Observable<Blocks?>, KoinComponent {
         handleBlockRemoval(spaceId)
     }
 
-    private fun setCurrentSpaceContent(blocks: Blocks?) {
+    private fun setCurrentSpaceContent(blocks: Blocks) {
         setCurrentSpaceBlocks(blocks)
         state.setState(blocks)
     }
@@ -118,7 +118,7 @@ class CurrentSpaceContentChangeObservable : Observable<Blocks?>, KoinComponent {
 
     private suspend fun actualizeCurrentSpaceContent(space: SpaceId) {
         val blocks = client.getBlocks(space, currentLanguageCode).getOrNull()
-        setCurrentSpaceContent(blocks)
+        setCurrentSpaceContent(blocks ?: listOf())
     }
 
     private inline fun ifSpaceMatches(block: Block, spaceId: SpaceId, handler: () -> Unit) {
