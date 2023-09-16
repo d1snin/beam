@@ -37,11 +37,11 @@ import kotlin.math.min
 
 class BlockContainerComponent : Component<Unit>(), KoinComponent {
 
-    private val currentSpaceContentChangeObservable by inject<Observable<Blocks>>(Qualifier.CurrentSpaceContentChangeObservable)
+    private val currentSpaceContentChangeObservable by inject<Observable<Blocks?>>(Qualifier.CurrentSpaceContentChangeObservable)
 
     override fun SimplePanel.render(): Effect {
-        div().bind(currentSpaceContentChangeObservable.state) { blocks ->
-            if (blocks.isNotEmpty()) {
+        div().bind(currentSpaceContentChangeObservable.state) { change ->
+            change?.let { blocks ->
                 renderBlocks(blocks)
             }
         }

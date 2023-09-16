@@ -33,7 +33,7 @@ import org.koin.core.component.inject
 
 class SpaceContentComponent : Component<Unit>(), KoinComponent {
 
-    private val currentSpaceContentChangeObservable by inject<Observable<Blocks>>(Qualifier.CurrentSpaceContentChangeObservable)
+    private val currentSpaceContentChangeObservable by inject<Observable<Blocks?>>(Qualifier.CurrentSpaceContentChangeObservable)
 
     private val maxBlockSizeChangeObservable by inject<Observable<BlockSize>>(Qualifier.MaxBlockSizeChangeObservable)
 
@@ -63,7 +63,7 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
 
     private fun SimplePanel.handleEmptySpace() {
         div().bind(currentSpaceContentChangeObservable.state) { blocks ->
-            if (blocks.isEmpty()) {
+            if (blocks?.isEmpty() == true) {
                 showBlockContainer.setState(false)
 
                 renderEmptySpaceCard()
