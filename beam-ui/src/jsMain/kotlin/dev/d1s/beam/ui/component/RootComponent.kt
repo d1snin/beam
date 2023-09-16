@@ -17,10 +17,13 @@
 package dev.d1s.beam.ui.component
 
 import dev.d1s.beam.ui.Qualifier
+import dev.d1s.beam.ui.state.ObservableLauncher
 import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.theme.setBackground
 import dev.d1s.beam.ui.theme.setTextColor
 import dev.d1s.beam.ui.util.currentTranslationObservable
+import dev.d1s.beam.ui.util.initCurrentSpace
+import dev.d1s.beam.ui.util.initCurrentTranslation
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
 import dev.d1s.exkt.kvision.component.render
@@ -29,6 +32,9 @@ import io.kvision.panel.SimplePanel
 import io.kvision.state.bind
 import io.kvision.utils.vh
 import kotlinx.browser.document
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.w3c.dom.css.CSSStyleDeclaration
@@ -41,9 +47,23 @@ class RootComponent : Component.Root(), KoinComponent {
 
     private val footerComponent by inject<Component<Unit>>(Qualifier.FooterComponent)
 
+    private val observableLauncher by inject<ObservableLauncher>()
+
+    private val mainCoroutineScope = CoroutineScope(Dispatchers.Main)
+
     override fun SimplePanel.render(): Effect {
-        bind(currentTranslationObservable) {
-            renderRoot()
+        mainCoroutineScope.launch {
+            initCurrentTranslation()
+
+            observableLauncher.launchMonitors()
+
+            bind(currentTranslationObservable) {
+                mainCoroutineScope.launch {
+                    initCurrentSpace()
+
+                    renderRoot()
+                }
+            }
         }
 
         return Effect.Success
