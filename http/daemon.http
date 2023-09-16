@@ -47,11 +47,11 @@ Content-Type: application/json
     "metadata": {
     },
     "view": {
-        "theme": "catppuccin-latte",
+        "theme": "catppuccin-mocha",
         "icon": null,
         "favicon": null,
         "title": "Test space",
-        "description": "Test space instance."
+        "description": "${root.custom}"
     }
 }
 

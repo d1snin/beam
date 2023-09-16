@@ -25,6 +25,7 @@ import dev.d1s.beam.bundle.response.Defaults
 import dev.d1s.beam.client.BeamClient
 import dev.d1s.beam.commons.Space
 import dev.d1s.beam.commons.SpaceFavicon
+import dev.d1s.beam.commons.SpaceIdentifier
 import io.ktor.client.plugins.*
 import io.ktor.http.*
 import io.ktor.server.request.*
@@ -39,7 +40,7 @@ interface IndexService {
 
 class DefaultIndexService : IndexService, KoinComponent {
 
-    private val beamClient by inject<BeamClient>()
+    private val client by inject<BeamClient>()
 
     private val renderer by inject<IndexHtmlRenderer>()
 
@@ -61,7 +62,8 @@ class DefaultIndexService : IndexService, KoinComponent {
 
         spaceId ?: return notFoundSpace()
 
-        val spaceResult = beamClient.getSpace(spaceId)
+        val languageCode = resolveLanguageCode(spaceId)
+        val spaceResult = client.getSpace(spaceId, languageCode)
 
         spaceResult.onFailure {
             logger.d {
@@ -175,5 +177,13 @@ class DefaultIndexService : IndexService, KoinComponent {
         val html = renderer.renderIndex(parameters)
 
         return ResolvedSpace(space, html)
+    }
+
+    private suspend fun resolveLanguageCode(spaceId: SpaceIdentifier) =
+        client.getResolvedTranslation(spaceId, LANGUAGE).getOrNull()?.languageCode
+
+    private companion object {
+
+        private const val LANGUAGE = "en"
     }
 }
