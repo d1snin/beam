@@ -32,14 +32,18 @@ private val client by lazy {
 val currentTranslationObservable = ObservableValue(GlobalTranslation.Default)
 val currentTranslation get() = currentTranslationObservable.value
 
+val isDefaultCurrentTranslation
+    get() = currentTranslation === GlobalTranslation.Default
+
+val currentLanguageCode
+    get() = if (isDefaultCurrentTranslation) null else currentTranslation.languageCode
+
 private val browserLanguage
     get() = window.navigator.language.take(2).lowercase()
 
 suspend fun initCurrentTranslation() {
-    val currentSpaceId = currentSpace?.id
-
     val resolvedTranslation =
-        client.getResolvedTranslation(spaceId = currentSpaceId, languageCode = browserLanguage).getOrNull()
+        client.getResolvedTranslation(spaceId = currentSpaceIdentifier, languageCode = browserLanguage).getOrNull()
 
     resolvedTranslation?.let {
         currentTranslationObservable.value = resolvedTranslation

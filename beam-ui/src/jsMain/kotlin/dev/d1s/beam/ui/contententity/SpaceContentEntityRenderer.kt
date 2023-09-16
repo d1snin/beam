@@ -25,6 +25,7 @@ import dev.d1s.beam.commons.contententity.SpaceContentEntityTypeDefinition
 import dev.d1s.beam.commons.contententity.get
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.component.SpaceCardComponent
+import dev.d1s.beam.ui.util.currentLanguageCode
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.render
 import io.kvision.html.div
@@ -91,7 +92,7 @@ class SpaceContentEntityRenderer : ContentEntityRenderer, KoinComponent {
         val spaceIdentifier = entity.parameters[definition.identifier]
         requireNotNull(spaceIdentifier)
 
-        val space = client.getSpace(spaceIdentifier).getOrNull()
+        val space = client.getSpace(spaceIdentifier, currentLanguageCode).getOrNull()
 
         val spaceCard = get<Component<SpaceCardComponent.Config>>(Qualifier.SpaceCardComponent)
 

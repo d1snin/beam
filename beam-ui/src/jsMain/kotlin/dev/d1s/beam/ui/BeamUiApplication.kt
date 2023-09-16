@@ -40,8 +40,8 @@ class BeamUiApplication : Application(), KoinComponent {
 
     override fun start() {
         mainCoroutineScope.launch {
-            initCurrentSpace()
             initCurrentTranslation()
+            initCurrentSpace()
 
             observableLauncher.launchMonitors()
 

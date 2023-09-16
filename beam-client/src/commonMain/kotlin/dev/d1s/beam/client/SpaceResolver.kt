@@ -16,6 +16,7 @@
 
 package dev.d1s.beam.client
 
+import dev.d1s.beam.commons.LanguageCode
 import dev.d1s.beam.commons.Space
 import dev.d1s.beam.commons.SpaceIdentifier
 import io.ktor.http.*
@@ -23,18 +24,18 @@ import dev.d1s.beam.commons.Url as UrlString
 
 public interface SpaceResolver {
 
-    public suspend fun resolve(url: UrlString): Result<Space>
+    public suspend fun resolve(url: UrlString, languageCode: LanguageCode? = null): Result<Space>
 
     public fun resolveIdentifier(url: UrlString): SpaceIdentifier?
 }
 
 public class DefaultSpaceResolver(private val client: BeamClient) : SpaceResolver {
 
-    override suspend fun resolve(url: UrlString): Result<Space> =
+    override suspend fun resolve(url: UrlString, languageCode: LanguageCode?): Result<Space> =
         runCatching {
             val identifier = resolveIdentifier(url) ?: error("Couldn't resolve identifier")
 
-            client.getSpace(identifier).getOrThrow()
+            client.getSpace(identifier, languageCode).getOrThrow()
         }
 
     override fun resolveIdentifier(url: UrlString): SpaceIdentifier? {

@@ -23,10 +23,7 @@ import dev.d1s.beam.commons.Space
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.theme.setSecondaryBlue
 import dev.d1s.beam.ui.theme.setSecondaryText
-import dev.d1s.beam.ui.util.currentSpace
-import dev.d1s.beam.ui.util.currentTranslation
-import dev.d1s.beam.ui.util.spaceListingFetchMoreButton
-import dev.d1s.beam.ui.util.spaceListingMessage
+import dev.d1s.beam.ui.util.*
 import dev.d1s.exkt.common.pagination.Paginator
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
@@ -158,7 +155,7 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
     }
 
     private suspend fun getSpaces(offset: Int = paginator.offset): FetchedSpaces? =
-        beamClient.getSpaces(paginator.limit, offset).getOrNull()?.let { page ->
+        beamClient.getSpaces(paginator.limit, offset, currentLanguageCode).getOrNull()?.let { page ->
             val spaces = page.elements
             val filteredSpaces = spaces.filterSpaces()
             val totalCount = page.count()

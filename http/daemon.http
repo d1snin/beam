@@ -71,7 +71,7 @@ Content-Type: application/json
         {
             "type": "text",
             "parameters": {
-                "value": "[some link][https://ya.ru]"
+                "value": "${root.custom}"
             }
         }
     ],
@@ -116,7 +116,7 @@ DELETE http://localhost:8573/blocks/3afa62d1-2a4e-45c8-b173-b211b2b7fb52
 Authorization: Bearer {{token}}
 
 ### POST Translation
-POST http://localhost:8573/translations
+POST http://localhost:8573/translations?space=root
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -141,7 +141,8 @@ Content-Type: application/json
         "ui.footer.source-code-link.url": "https://github.com/d1snin/beam",
         "ui.footer.language-switcher.message": "Поменять язык...",
         "ui.space-listing.message": "Другие страницы:",
-        "ui.space-listing.fetch-more-button": "Загрузить больше"
+        "ui.space-listing.fetch-more-button": "Загрузить больше",
+        "root.custom": "Кастомный перевод"
     }
 }
 

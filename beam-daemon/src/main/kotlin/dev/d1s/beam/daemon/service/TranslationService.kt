@@ -173,17 +173,29 @@ class DefaultTranslationService : TranslationService, KoinComponent {
 
             val existingTranslation = getTranslation(spaceIdentifier, languageCode).getOrNull()?.entity
 
+            logger.v {
+                "Existing translation: $existingTranslation"
+            }
+
             existingTranslation?.let {
                 return@runCatching convert(it)
             }
 
             val defaultTranslation = getDefaultTranslation(spaceIdentifier).getOrNull()
 
+            logger.v {
+                "Default translation: $defaultTranslation"
+            }
+
             defaultTranslation?.let {
                 return@runCatching convert(it)
             }
 
             val firstAvailableTranslation = getTranslations(spaceIdentifier).getOrNull()?.entities?.firstOrNull()
+
+            logger.v {
+                "First available translation: $firstAvailableTranslation"
+            }
 
             firstAvailableTranslation?.let {
                 return@runCatching convert(it)

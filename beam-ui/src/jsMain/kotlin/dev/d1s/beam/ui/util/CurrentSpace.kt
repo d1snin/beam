@@ -33,7 +33,8 @@ private val resolver by lazy {
     client.resolver
 }
 
-private var lateInitCurrentSpaceIdentifier: SpaceIdentifier? = null
+val currentSpaceIdentifier
+    get() = resolver.resolveIdentifier(window.location.href)
 
 private var lateInitCurrentSpace: Space? = null
 val currentSpace get() = lateInitCurrentSpace
@@ -43,16 +44,10 @@ val currentSpaceUrl get() = buildSpaceUrl(currentSpace?.slug)
 private var lateInitCurrentBlocks: Blocks? = null
 val currentBlocks get() = lateInitCurrentBlocks
 
-fun initCurrentSpaceIdentifier() {
-    lateInitCurrentSpaceIdentifier = resolver.resolveIdentifier(window.location.href)
-}
-
 suspend fun initCurrentSpace() {
-    initCurrentSpaceIdentifier()
-
-    lateInitCurrentSpace = resolver.resolve(window.location.href).getOrNull()
+    lateInitCurrentSpace = resolver.resolve(window.location.href, currentLanguageCode).getOrNull()
     lateInitCurrentBlocks = currentSpace?.let {
-        client.getBlocks(it.id).getOrNull()
+        client.getBlocks(it.id, currentLanguageCode).getOrNull()
     }
 }
 

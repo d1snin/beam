@@ -21,6 +21,7 @@ import dev.d1s.beam.commons.Block
 import dev.d1s.beam.commons.Blocks
 import dev.d1s.beam.commons.SpaceId
 import dev.d1s.beam.ui.util.currentBlocks
+import dev.d1s.beam.ui.util.currentLanguageCode
 import dev.d1s.beam.ui.util.currentSpace
 import dev.d1s.beam.ui.util.setCurrentSpaceBlocks
 import io.kvision.state.ObservableValue
@@ -116,7 +117,7 @@ class CurrentSpaceContentChangeObservable : Observable<Blocks?>, KoinComponent {
     }
 
     private suspend fun actualizeCurrentSpaceContent(space: SpaceId) {
-        val blocks = client.getBlocks(space).getOrNull()
+        val blocks = client.getBlocks(space, currentLanguageCode).getOrNull()
         setCurrentSpaceContent(blocks)
     }
 
