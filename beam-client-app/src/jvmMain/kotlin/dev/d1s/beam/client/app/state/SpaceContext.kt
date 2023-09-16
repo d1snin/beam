@@ -18,11 +18,9 @@ package dev.d1s.beam.client.app.state
 
 import dev.d1s.beam.client.ViewConfigurationBuilder
 import dev.d1s.beam.client.app.ApplicationContext
-import dev.d1s.beam.commons.Metadata
-import dev.d1s.beam.commons.SpaceModification
-import dev.d1s.beam.commons.SpaceSlug
-import dev.d1s.beam.commons.ViewConfiguration
+import dev.d1s.beam.commons.*
 import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import org.lighthousegames.logging.logging
 
 public class SpaceContext internal constructor(
@@ -52,27 +50,32 @@ public class SpaceContext internal constructor(
         metadata: Metadata = space.metadata,
         view: ViewConfiguration = space.view
     ) {
-        operationLock.lock()
-
-        try {
-            val modification = SpaceModification(slug, metadata, view)
-
+        fun log(modification: Any) {
             log.d {
                 "Modifying space with the following data: $modification"
             }
+        }
 
-            val modifiedSpace = app.putSpace(space.id, modification).getOrThrow()
-            app.internalSpace = modifiedSpace
-        } finally {
-            operationLock.unlock()
+        operationLock.withLock {
+            if (space.role == Role.ROOT) {
+                val modification = RootSpaceModification(metadata, view)
+                log(modification)
+
+                val modifiedSpace = app.putRootSpace(modification).getOrThrow()
+                app.internalSpace = modifiedSpace
+            } else {
+                val modification = SpaceModification(slug, metadata, view)
+                log(modification)
+
+                val modifiedSpace = app.putSpace(space.id, modification).getOrThrow()
+                app.internalSpace = modifiedSpace
+            }
         }
     }
 }
 
 public suspend fun ApplicationContext.space(configure: suspend SpaceContext.() -> Unit) {
-    launchJob {
-        val context = SpaceContext(app = this@space)
+    val context = SpaceContext(app = this@space)
 
-        context.configure()
-    }
+    context.configure()
 }

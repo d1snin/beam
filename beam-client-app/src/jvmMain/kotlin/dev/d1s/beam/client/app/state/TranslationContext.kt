@@ -22,17 +22,16 @@ import io.ktor.client.plugins.*
 import io.ktor.http.*
 
 public suspend fun ApplicationContext.translation(configure: suspend TranslationModificationBuilder.() -> Unit) {
-    launchJob {
-        val space = space.id
+    val space = space.id
+    val modification = TranslationModificationBuilder().apply { configure() }.build()
 
-        postTranslation(space) {
-            configure()
-        }.getOrElse {
-            val isConflict = it is ClientRequestException && it.response.status == HttpStatusCode.Conflict
+    postTranslation(space, modification).getOrElse {
+        val isConflict = it is ClientRequestException && it.response.status == HttpStatusCode.Conflict
 
-            if (!isConflict) {
-                throw it
-            }
+        if (isConflict) {
+            putTranslation(space, modification.languageCode, modification).getOrThrow()
+        } else {
+            throw it
         }
     }
 }

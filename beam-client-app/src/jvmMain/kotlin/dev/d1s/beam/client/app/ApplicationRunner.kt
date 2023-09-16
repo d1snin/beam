@@ -36,12 +36,15 @@ internal class DefaultApplicationRunner : ApplicationRunner {
             }
 
             val applicationContext = createApplicationContext(application)
+            applicationContext.waitContext()
+
+            log.d {
+                "Running application with initialized context..."
+            }
 
             with(application) {
                 applicationContext.run()
             }
-
-            applicationContext.joinJobs()
 
             log.i {
                 "Nothing to do anymore"

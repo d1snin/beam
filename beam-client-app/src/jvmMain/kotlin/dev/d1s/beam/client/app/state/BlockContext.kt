@@ -22,6 +22,7 @@ import dev.d1s.beam.commons.*
 import dev.d1s.beam.commons.contententity.ContentEntities
 import dev.d1s.beam.commons.contententity.Void
 import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import org.lighthousegames.logging.logging
 
 public class BlockContext internal constructor(
@@ -30,7 +31,7 @@ public class BlockContext internal constructor(
 ) {
     private var internalBlock = initialBlock
 
-    public val block: Block = internalBlock
+    public val block: Block get() = internalBlock
 
     private val operationLock = Mutex()
 
@@ -59,9 +60,7 @@ public class BlockContext internal constructor(
         entities: ContentEntities = block.entities,
         metadata: Metadata = block.metadata,
     ) {
-        operationLock.lock()
-
-        try {
+        operationLock.withLock {
             val modification = BlockModification(index, size, entities, metadata, block.spaceId)
 
             log.d {
@@ -70,31 +69,27 @@ public class BlockContext internal constructor(
 
             val modifiedBlock = app.putBlock(block.id, modification).getOrThrow()
             internalBlock = modifiedBlock
-        } finally {
-            operationLock.unlock()
         }
     }
 }
 
 public suspend fun ApplicationContext.block(configure: suspend BlockContext.() -> Unit) {
-    launchJob {
-        val space = space.id
+    val space = space.id
 
-        val createdBlock = postBlock {
-            index = getBlocks(space).getOrThrow().size
-            size = BlockSize.SMALL
-            spaceId = space
+    val createdBlock = postBlock {
+        index = getBlocks(space).getOrThrow().size
+        size = BlockSize.SMALL
+        spaceId = space
 
-            entity {
-                type = Void
-            }
-        }.getOrThrow()
+        entity {
+            type = Void
+        }
+    }.getOrThrow()
 
-        val context = BlockContext(
-            createdBlock,
-            app = this@block
-        )
+    val context = BlockContext(
+        createdBlock,
+        app = this@block
+    )
 
-        context.configure()
-    }
+    context.configure()
 }
