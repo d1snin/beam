@@ -123,7 +123,7 @@ Content-Type: application/json
 {
     "languageCode": "ru",
     "languageName": null,
-    "default": true,
+    "default": false,
     "translations": {
         "ui.icon-alt": "Иконка пространства",
         "ui.space-info.default-title": "Beam",
@@ -142,7 +142,7 @@ Content-Type: application/json
         "ui.footer.language-switcher.message": "Поменять язык...",
         "ui.space-listing.message": "Другие страницы:",
         "ui.space-listing.fetch-more-button": "Загрузить больше",
-        "root.custom": "Кастомный перевод"
+        "root.custom": "ru"
     }
 }
 

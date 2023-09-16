@@ -37,9 +37,8 @@ import org.koin.core.component.KoinComponent
 
 class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinComponent {
 
-    private val space by lazy {
-        config.space.value ?: currentSpace
-    }
+    private val space
+        get() = config.space.value ?: currentSpace
 
     private var linkedContainer: SimplePanel? = null
 

@@ -17,20 +17,31 @@
 package dev.d1s.beam.ui.util
 
 import dev.d1s.beam.client.BeamClient
-import dev.d1s.beam.commons.GlobalTranslation
-import dev.d1s.beam.commons.TextLocation
-import dev.d1s.beam.commons.TranslatedText
-import dev.d1s.beam.commons.Translation
+import dev.d1s.beam.commons.*
+import dev.d1s.beam.ui.Qualifier
+import dev.d1s.beam.ui.state.CurrentSpaceContentChangeObservable
+import dev.d1s.beam.ui.state.Observable
 import io.kvision.state.ObservableValue
 import kotlinx.browser.window
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.core.context.GlobalContext
 
 private val client by lazy {
     GlobalContext.get().get<BeamClient>()
 }
 
-val currentTranslationObservable = ObservableValue(GlobalTranslation.Default)
-val currentTranslation get() = currentTranslationObservable.value
+private val currentSpaceContentChangeObservable by lazy {
+    GlobalContext.get().get<Observable<Blocks?>>(Qualifier.CurrentSpaceContentChangeObservable)
+}
+
+private val scope = CoroutineScope(Dispatchers.Main)
+
+private var internalCurrentTranslation = GlobalTranslation.Default
+
+val currentTranslationObservable = ObservableValue(internalCurrentTranslation)
+val currentTranslation get() = internalCurrentTranslation
 
 val isDefaultCurrentTranslation
     get() = currentTranslation === GlobalTranslation.Default
@@ -46,12 +57,24 @@ suspend fun initCurrentTranslation() {
         client.getResolvedTranslation(spaceId = currentSpaceIdentifier, languageCode = browserLanguage).getOrNull()
 
     resolvedTranslation?.let {
-        currentTranslationObservable.value = resolvedTranslation
+        internalCurrentTranslation = resolvedTranslation
+        actualizeCurrentTranslation()
     }
 }
 
 fun setCurrentTranslation(translation: Translation) {
-    currentTranslationObservable.value = translation
+    scope.launch {
+        internalCurrentTranslation = translation
+        initCurrentSpaceAndBlocks()
+
+        actualizeCurrentTranslation()
+
+        (currentSpaceContentChangeObservable as? CurrentSpaceContentChangeObservable)?.let { observable ->
+            currentSpace?.id?.let {
+                observable.setCurrentSpaceContent(currentBlocks)
+            }
+        }
+    }
 }
 
 val Translation.iconAlt: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_ICON_ALT)
@@ -74,3 +97,7 @@ val Translation.spaceListingFetchMoreButton: TranslatedText get() = requiredTran
 
 private fun Translation.requiredTranslation(location: TextLocation) =
     translations[location] ?: error("No translation for given location '$location'")
+
+private fun actualizeCurrentTranslation() {
+    currentTranslationObservable.value = internalCurrentTranslation
+}

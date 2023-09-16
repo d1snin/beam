@@ -39,7 +39,7 @@ class LanguageSwitcherComponent : Component<Unit>(), KoinComponent {
 
     private val client by inject<BeamClient>()
 
-    private val renderingScope = CoroutineScope(Dispatchers.Default)
+    private val renderingScope = CoroutineScope(Dispatchers.Main)
 
     override fun SimplePanel.render(): Effect {
         val (effectState, effect) = Effect.lazy()

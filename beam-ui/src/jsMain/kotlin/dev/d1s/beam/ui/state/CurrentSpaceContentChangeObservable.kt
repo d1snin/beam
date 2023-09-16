@@ -45,15 +45,15 @@ class CurrentSpaceContentChangeObservable : Observable<Blocks?>, KoinComponent {
             }
         }
 
+    fun setCurrentSpaceContent(blocks: Blocks?) {
+        setCurrentSpaceBlocks(blocks)
+        state.setState(blocks)
+    }
+
     private suspend fun handleSpaceContentUpdates(spaceId: SpaceId) {
         handleBlockCreation(spaceId)
         handleBlockUpdate(spaceId)
         handleBlockRemoval(spaceId)
-    }
-
-    private fun setCurrentSpaceContent(blocks: Blocks?) {
-        setCurrentSpaceBlocks(blocks)
-        state.setState(blocks)
     }
 
     private suspend fun handleBlockCreation(spaceId: SpaceId) {
