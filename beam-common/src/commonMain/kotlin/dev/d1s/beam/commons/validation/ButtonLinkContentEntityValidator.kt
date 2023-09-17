@@ -24,7 +24,7 @@ import io.konform.validation.ValidationBuilder
 internal object ButtonLinkContentEntityValidator :
     ContentEntityValidator<ButtonLinkContentEntityTypeDefinition>(ButtonLinkContentEntityTypeDefinition) {
 
-    private val textBoundary = 1..30
+    private val textBoundary = 1..100
 
     override fun ValidationBuilder<ContentEntity>.validate() {
         val validator = this@ButtonLinkContentEntityValidator
