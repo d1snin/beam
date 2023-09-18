@@ -43,11 +43,8 @@ private var internalCurrentTranslation = GlobalTranslation.Default
 val currentTranslationObservable = ObservableValue(internalCurrentTranslation)
 val currentTranslation get() = internalCurrentTranslation
 
-val isDefaultCurrentTranslation
-    get() = currentTranslation === GlobalTranslation.Default
-
 val currentLanguageCode
-    get() = if (isDefaultCurrentTranslation) null else currentTranslation.languageCode
+    get() = currentTranslation.languageCode
 
 private val browserLanguage
     get() = window.navigator.language.take(2).lowercase()

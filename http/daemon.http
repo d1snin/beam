@@ -121,9 +121,9 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "languageCode": "ru",
+    "languageCode": "en",
     "languageName": null,
-    "default": false,
+    "default": true,
     "translations": {
         "ui.icon-alt": "Иконка пространства",
         "ui.space-info.default-title": "Beam",
@@ -142,7 +142,7 @@ Content-Type: application/json
         "ui.footer.language-switcher.message": "Поменять язык...",
         "ui.space-listing.message": "Другие страницы:",
         "ui.space-listing.fetch-more-button": "Загрузить больше",
-        "root.custom": "ru"
+        "root.custom": "en"
     }
 }
 

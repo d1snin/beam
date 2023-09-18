@@ -302,7 +302,7 @@ class DefaultTranslationService : TranslationService, KoinComponent {
                 "Translating entities for block '${block.id}' in language '$languageCode'..."
             }
 
-            val (translation, _) = getTranslation(block.space.id.toString(), languageCode).getOrThrow()
+            val (translation, _) = resolveTranslation(block.space.id.toString(), languageCode).getOrThrow()
 
             val modifiedEntities = block.translateEntities(translation)
             block.entities = modifiedEntities
@@ -314,7 +314,7 @@ class DefaultTranslationService : TranslationService, KoinComponent {
                 "Translating information of space '${space.id}' in language '$languageCode'..."
             }
 
-            val (translation, _) = getTranslation(space.id.toString(), languageCode).getOrThrow()
+            val (translation, _) = resolveTranslation(space.id.toString(), languageCode).getOrThrow()
 
             val modifiedView = space.translateView(translation)
             space.view = modifiedView
