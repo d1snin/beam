@@ -81,7 +81,7 @@ public class SpaceContext internal constructor(
 }
 
 public suspend fun ApplicationContext.space(
-    spaceIdentifier: SpaceIdentifier,
+    spaceIdentifier: SpaceIdentifier = ROOT_SPACE_SLUG,
     configure: suspend SpaceContext.() -> Unit
 ) {
     var space = client.getSpace(spaceIdentifier).getOrNull()

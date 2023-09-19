@@ -29,7 +29,7 @@ public suspend fun SpaceContext.translation(configure: suspend TranslationModifi
     val modification = TranslationModificationBuilder().apply { configure() }.buildTranslationModification()
 
     log.i {
-        "Creating translations for space '$space' in language '${modification.languageCode}'..."
+        "Creating translation for space '$space' in language '${modification.languageCode}'..."
     }
 
     client.postTranslation(space, modification).getOrElse {
