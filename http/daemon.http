@@ -71,11 +71,13 @@ Content-Type: application/json
         {
             "type": "text",
             "parameters": {
-                "value": "${root.custom}"
+                "value": "(Hello, World!)(blue)",
+                "heading": "h1"
             }
         }
     ],
     "metadata": {
+        "ui.block.bare": "true"
     },
     "spaceId": "root"
 }

@@ -43,7 +43,10 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
     }
 
     private fun SimplePanel.renderBlockCard(block: Block) {
-        renderCard("w-100 d-flex flex-column justify-content-start") {
+        val isBare = block.metadata[MetadataKeys.UI_BLOCK_BARE]
+            ?.toBooleanStrictOrNull() == true
+
+        renderCard("w-100 d-flex flex-column justify-content-start", bare = isBare) {
             val blockSize = if (config.single.value) {
                 sizeOf(MaxBlockSize).px
             } else {

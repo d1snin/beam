@@ -25,13 +25,24 @@ import io.kvision.panel.SimplePanel
 fun SimplePanel.renderCard(
     className: String? = null,
     usePageBackground: Boolean = false,
+    bare: Boolean = false,
     block: (SimplePanel.() -> Unit)? = null
 ): SimplePanel {
-    val classes = "rounded shadow" + (className?.let { " $it" } ?: "")
+    val classes = buildList {
+        className?.let {
+            add(it)
+        }
+
+        if (!bare) {
+            add("rounded shadow")
+        }
+    }.joinToString(" ")
 
     return div(className = classes) {
-        setOutline()
-        setBackground(usePageBackground)
+        if (!bare) {
+            setOutline()
+            setBackground(usePageBackground)
+        }
 
         block?.invoke(this)
     }
