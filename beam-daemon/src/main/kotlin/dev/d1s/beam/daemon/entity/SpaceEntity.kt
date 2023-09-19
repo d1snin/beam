@@ -16,10 +16,7 @@
 
 package dev.d1s.beam.daemon.entity
 
-import dev.d1s.beam.commons.Metadata
-import dev.d1s.beam.commons.Role
-import dev.d1s.beam.commons.SpaceSlug
-import dev.d1s.beam.commons.ViewConfiguration
+import dev.d1s.beam.commons.*
 import dev.d1s.exkt.ktorm.UuidIdentifiedAndModificationTimestampAware
 import org.koin.core.component.KoinComponent
 import org.ktorm.entity.Entity
@@ -34,15 +31,10 @@ interface SpaceEntity : UuidIdentifiedAndModificationTimestampAware<SpaceEntity>
 
     var role: Role
 
-    companion object : Entity.Factory<SpaceEntity>() {
-
-        const val ROOT_SPACE_SLUG = "root"
-
-        const val SPACE_CAPACITY = 300
-    }
+    companion object : Entity.Factory<SpaceEntity>()
 }
 
 val SpaceEntity.asString
     get() = "SpaceEntity{slug = $slug, metadata = $metadata, view = $view, role = $role}"
 
-val SpaceEntity.isRoot get() = slug == SpaceEntity.ROOT_SPACE_SLUG
+val SpaceEntity.isRoot get() = slug == ROOT_SPACE_SLUG

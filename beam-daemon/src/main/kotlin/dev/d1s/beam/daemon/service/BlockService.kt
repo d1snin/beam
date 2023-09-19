@@ -22,10 +22,10 @@ import dev.d1s.beam.commons.LanguageCode
 import dev.d1s.beam.commons.SpaceIdentifier
 import dev.d1s.beam.commons.event.EntityUpdate
 import dev.d1s.beam.commons.event.EventReferences
+import dev.d1s.beam.commons.validation.Limits
 import dev.d1s.beam.daemon.configuration.DtoConverters
 import dev.d1s.beam.daemon.database.BlockRepository
 import dev.d1s.beam.daemon.entity.BlockEntity
-import dev.d1s.beam.daemon.entity.SpaceEntity
 import dev.d1s.beam.daemon.entity.asString
 import dev.d1s.beam.daemon.exception.UnprocessableEntityException
 import dev.d1s.exkt.dto.*
@@ -199,7 +199,7 @@ class DefaultBlockService : BlockService, KoinComponent {
         val space = block.space
         val count = blockRepository.countBlocksInSpace(space).getOrThrow()
 
-        if (count >= SpaceEntity.SPACE_CAPACITY) {
+        if (count >= Limits.SPACE_MAX_CAPACITY) {
             logger.w {
                 "Space ${space.id} reached its capacity. Unable to process block creation"
             }

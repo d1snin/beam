@@ -138,7 +138,7 @@ class DefaultSpaceService : SpaceService, KoinComponent {
             }
 
             val rootSpace = SpaceEntity {
-                slug = SpaceEntity.ROOT_SPACE_SLUG
+                slug = ROOT_SPACE_SLUG
                 metadata = space.metadata
                 view = space.view
                 role = Role.ROOT
@@ -253,7 +253,7 @@ class DefaultSpaceService : SpaceService, KoinComponent {
             checkRootSpaceCreated()
 
             val (originalSpace, originalSpaceDto) = getSpace(
-                SpaceEntity.ROOT_SPACE_SLUG,
+                ROOT_SPACE_SLUG,
                 requireDto = true
             ).getOrThrow()
             requireNotNull(originalSpaceDto)
@@ -307,7 +307,7 @@ class DefaultSpaceService : SpaceService, KoinComponent {
 
     private suspend fun DefaultSpaceService.checkRootSpaceCreated(space: SpaceEntity? = null) {
         if (space?.isRoot == false) {
-            getSpace(SpaceEntity.ROOT_SPACE_SLUG).getOrNull()
+            getSpace(ROOT_SPACE_SLUG).getOrNull()
                 ?: throw UnprocessableEntityException("Root space is not created")
         }
     }

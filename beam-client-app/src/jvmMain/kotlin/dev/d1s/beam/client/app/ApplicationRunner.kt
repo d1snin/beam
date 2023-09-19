@@ -36,7 +36,6 @@ internal class DefaultApplicationRunner : ApplicationRunner {
             }
 
             val applicationContext = createApplicationContext(application)
-            applicationContext.waitContext()
 
             log.d {
                 "Running application with initialized context..."
@@ -68,7 +67,7 @@ internal class DefaultApplicationRunner : ApplicationRunner {
             "Creating application context..."
         }
 
-        return ApplicationContext(config, client)
+        return ApplicationContext(client)
     }
 }
 

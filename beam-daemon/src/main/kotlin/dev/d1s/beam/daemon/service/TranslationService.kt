@@ -81,7 +81,7 @@ interface TranslationService {
 
     companion object {
 
-        const val GLOBAL_TRANSLATION_PERMITTED_SPACE = SpaceEntity.ROOT_SPACE_SLUG
+        const val GLOBAL_TRANSLATION_PERMITTED_SPACE = ROOT_SPACE_SLUG
     }
 }
 

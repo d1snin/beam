@@ -24,6 +24,8 @@ public typealias SpaceSlug = SpaceIdentifier
 
 public typealias SpaceToken = String
 
+public const val ROOT_SPACE_SLUG: String = "root"
+
 public sealed interface ModifiedRootSpace {
 
     public val metadata: Metadata

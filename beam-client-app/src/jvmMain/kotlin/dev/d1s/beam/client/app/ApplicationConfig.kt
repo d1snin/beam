@@ -19,14 +19,12 @@ package dev.d1s.beam.client.app
 import com.sksamuel.hoplite.ConfigLoaderBuilder
 import com.sksamuel.hoplite.sources.EnvironmentVariablesPropertySource
 import dev.d1s.beam.client.BeamDaemonBaseUrl
-import dev.d1s.beam.commons.SpaceIdentifier
 import dev.d1s.beam.commons.SpaceToken
 
 private const val ENV_VAR_PREFIX = "BEAM_APP__"
 
 public data class ApplicationConfig(
     val httpBaseUrl: BeamDaemonBaseUrl,
-    val space: SpaceIdentifier,
     val token: SpaceToken
 )
 

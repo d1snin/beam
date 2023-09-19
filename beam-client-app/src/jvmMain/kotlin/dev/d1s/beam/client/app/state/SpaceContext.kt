@@ -16,6 +16,7 @@
 
 package dev.d1s.beam.client.app.state
 
+import dev.d1s.beam.client.BeamClient
 import dev.d1s.beam.client.ViewConfigurationBuilder
 import dev.d1s.beam.client.app.ApplicationContext
 import dev.d1s.beam.commons.*
@@ -23,14 +24,19 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.lighthousegames.logging.logging
 
+private val log = logging()
+
+private const val DEFAULT_THEME = "catppuccin-mocha"
+
 public class SpaceContext internal constructor(
-    private val app: ApplicationContext
+    initialSpace: Space,
+    internal val client: BeamClient
 ) {
-    private val space get() = app.space
+    private var internalSpace = initialSpace
+
+    public val space: Space get() = internalSpace
 
     private val operationLock = Mutex()
-
-    private val log = logging()
 
     public suspend fun setSlug(slug: suspend () -> SpaceSlug) {
         modifySpace(slug = slug())
@@ -57,25 +63,67 @@ public class SpaceContext internal constructor(
         }
 
         operationLock.withLock {
-            if (space.role == Role.ROOT) {
+            internalSpace = if (space.role == Role.ROOT) {
                 val modification = RootSpaceModification(metadata, view)
                 log(modification)
 
-                val modifiedSpace = app.putRootSpace(modification).getOrThrow()
-                app.internalSpace = modifiedSpace
+                val modifiedSpace = client.putRootSpace(modification).getOrThrow()
+                modifiedSpace
             } else {
                 val modification = SpaceModification(slug, metadata, view)
                 log(modification)
 
-                val modifiedSpace = app.putSpace(space.id, modification).getOrThrow()
-                app.internalSpace = modifiedSpace
+                val modifiedSpace = client.putSpace(space.id, modification).getOrThrow()
+                modifiedSpace
             }
         }
     }
 }
 
-public suspend fun ApplicationContext.space(configure: suspend SpaceContext.() -> Unit) {
-    val context = SpaceContext(app = this@space)
+public suspend fun ApplicationContext.space(
+    spaceIdentifier: SpaceIdentifier,
+    configure: suspend SpaceContext.() -> Unit
+) {
+    var space = client.getSpace(spaceIdentifier).getOrNull()
+
+    if (space == null) {
+        log.i {
+            "Couldn't access space '$spaceIdentifier'. Creating it..."
+        }
+
+        if (spaceIdentifier == "root") {
+            space = postRootSpace {
+                view {
+                    theme = DEFAULT_THEME
+                }
+            }.getOrThrow().toSpace()
+        } else {
+            space = postSpace {
+                slug = spaceIdentifier
+
+                view {
+                    theme = DEFAULT_THEME
+                }
+            }.getOrThrow().toSpace()
+        }
+    }
+
+    val spaceId = space.id
+
+    log.i {
+        "Accessed space `${space.slug}` ($spaceId). Cleaning it up..."
+    }
+
+    val blocks = getBlocks(space.id).getOrThrow()
+    blocks.forEach {
+        deleteBlock(it.id).getOrThrow()
+    }
+
+    log.i {
+        "Space initialized."
+    }
+
+    val context = SpaceContext(space, client)
 
     context.configure()
 }

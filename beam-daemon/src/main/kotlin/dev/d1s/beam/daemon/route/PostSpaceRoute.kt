@@ -17,6 +17,7 @@
 package dev.d1s.beam.daemon.route
 
 import dev.d1s.beam.commons.Paths
+import dev.d1s.beam.commons.ROOT_SPACE_SLUG
 import dev.d1s.beam.commons.SpaceModification
 import dev.d1s.beam.commons.validation.validateSpace
 import dev.d1s.beam.daemon.configuration.DtoConverters
@@ -61,7 +62,7 @@ class PostSpaceRoute : Route, KoinComponent {
             authenticate {
                 withRouteConfig {
                     val spaceModificationAllowed =
-                        authService.isSpaceModificationAllowed(call.jwtSubject, SpaceEntity.ROOT_SPACE_SLUG)
+                        authService.isSpaceModificationAllowed(call.jwtSubject, ROOT_SPACE_SLUG)
                             .getOrThrow()
 
                     if (spaceModificationAllowed) {

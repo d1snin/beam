@@ -17,6 +17,7 @@
 package dev.d1s.beam.daemon.route
 
 import dev.d1s.beam.commons.Paths
+import dev.d1s.beam.commons.ROOT_SPACE_SLUG
 import dev.d1s.beam.commons.RootSpaceModification
 import dev.d1s.beam.commons.validation.validateRootSpace
 import dev.d1s.beam.daemon.configuration.DtoConverters
@@ -54,7 +55,7 @@ class PutRootSpaceRoute : Route, KoinComponent {
         authenticate {
             put(Paths.PUT_ROOT_SPACE) {
                 val spaceModificationAllowed =
-                    authService.isSpaceModificationAllowed(call.jwtSubject, SpaceEntity.ROOT_SPACE_SLUG).getOrThrow()
+                    authService.isSpaceModificationAllowed(call.jwtSubject, ROOT_SPACE_SLUG).getOrThrow()
 
                 if (spaceModificationAllowed) {
                     val body = call.receive<RootSpaceModification>()

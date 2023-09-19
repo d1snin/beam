@@ -16,8 +16,8 @@
 
 package dev.d1s.beam.client.app.state
 
+import dev.d1s.beam.client.BeamClient
 import dev.d1s.beam.client.ContentEntitiesBuilder
-import dev.d1s.beam.client.app.ApplicationContext
 import dev.d1s.beam.client.void
 import dev.d1s.beam.commons.*
 import dev.d1s.beam.commons.contententity.ContentEntities
@@ -25,17 +25,17 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.lighthousegames.logging.logging
 
+private val log = logging()
+
 public class BlockContext internal constructor(
     initialBlock: Block,
-    private val app: ApplicationContext
+    internal val client: BeamClient
 ) {
     private var internalBlock = initialBlock
 
     public val block: Block get() = internalBlock
 
     private val operationLock = Mutex()
-
-    private val log = logging()
 
     public suspend fun setIndex(index: suspend () -> BlockIndex) {
         modifyBlock(index = index())
@@ -67,17 +67,21 @@ public class BlockContext internal constructor(
                 "Modifying block with the following data: $modification"
             }
 
-            val modifiedBlock = app.putBlock(block.id, modification).getOrThrow()
+            val modifiedBlock = client.putBlock(block.id, modification).getOrThrow()
             internalBlock = modifiedBlock
         }
     }
 }
 
-public suspend fun ApplicationContext.block(configure: suspend BlockContext.() -> Unit) {
+public suspend fun SpaceContext.block(configure: suspend BlockContext.() -> Unit) {
     val space = space.id
 
-    val createdBlock = postBlock {
-        index = getBlocks(space).getOrThrow().size
+    log.i {
+        "Creating another block for space '$space'..."
+    }
+
+    val createdBlock = client.postBlock {
+        index = client.getBlocks(space).getOrThrow().size
         size = BlockSize.SMALL
         spaceId = space
 
@@ -86,7 +90,7 @@ public suspend fun ApplicationContext.block(configure: suspend BlockContext.() -
 
     val context = BlockContext(
         createdBlock,
-        app = this@block
+        client
     )
 
     context.configure()
