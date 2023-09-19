@@ -41,7 +41,7 @@ public class SpaceContext internal constructor(
     }
 
     public suspend fun setView(view: suspend ViewConfigurationBuilder.() -> Unit) {
-        val builtView = ViewConfigurationBuilder().apply { view() }.build()
+        val builtView = ViewConfigurationBuilder().apply { view() }.buildViewConfiguration()
         modifySpace(view = builtView)
     }
 

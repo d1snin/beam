@@ -18,9 +18,9 @@ package dev.d1s.beam.client.app.state
 
 import dev.d1s.beam.client.ContentEntitiesBuilder
 import dev.d1s.beam.client.app.ApplicationContext
+import dev.d1s.beam.client.void
 import dev.d1s.beam.commons.*
 import dev.d1s.beam.commons.contententity.ContentEntities
-import dev.d1s.beam.commons.contententity.Void
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.lighthousegames.logging.logging
@@ -46,7 +46,7 @@ public class BlockContext internal constructor(
     }
 
     public suspend fun setEntities(entities: suspend ContentEntitiesBuilder.() -> Unit) {
-        val builtEntities = ContentEntitiesBuilder().apply { entities() }.build()
+        val builtEntities = ContentEntitiesBuilder().apply { entities() }.buildContentEntities()
         modifyBlock(entities = builtEntities)
     }
 
@@ -81,9 +81,7 @@ public suspend fun ApplicationContext.block(configure: suspend BlockContext.() -
         size = BlockSize.SMALL
         spaceId = space
 
-        entity {
-            type = Void
-        }
+        void()
     }.getOrThrow()
 
     val context = BlockContext(

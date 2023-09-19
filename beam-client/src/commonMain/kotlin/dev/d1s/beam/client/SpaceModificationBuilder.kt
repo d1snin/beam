@@ -26,10 +26,10 @@ public class RootSpaceModificationBuilder {
     private var view: ViewConfiguration? = null
 
     public fun view(build: ViewConfigurationBuilder.() -> Unit) {
-        view = ViewConfigurationBuilder().apply(build).build()
+        view = ViewConfigurationBuilder().apply(build).buildViewConfiguration()
     }
 
-    public fun build(): RootSpaceModification =
+    public fun buildRootSpaceModification(): RootSpaceModification =
         RootSpaceModification(
             metadata,
             view ?: error("View is undefined")
@@ -37,7 +37,7 @@ public class RootSpaceModificationBuilder {
 }
 
 @BuilderDsl
-public class    SpaceModificationBuilder {
+public class SpaceModificationBuilder {
 
     public var slug: SpaceSlug? = null
 
@@ -46,10 +46,10 @@ public class    SpaceModificationBuilder {
     private var view: ViewConfiguration? = null
 
     public fun view(build: ViewConfigurationBuilder.() -> Unit) {
-        view = ViewConfigurationBuilder().apply(build).build()
+        view = ViewConfigurationBuilder().apply(build).buildViewConfiguration()
     }
 
-    public fun build(): SpaceModification =
+    public fun buildSpaceModification(): SpaceModification =
         SpaceModification(
             slug ?: error("Space slug is undefined"),
             metadata,
@@ -71,10 +71,10 @@ public class ViewConfigurationBuilder {
     private var favicon: SpaceFavicon? = null
 
     public fun favicon(build: SpaceFaviconBuilder.() -> Unit) {
-        favicon = SpaceFaviconBuilder().apply(build).build()
+        favicon = SpaceFaviconBuilder().apply(build).buildSpaceFavicon()
     }
 
-    public fun build(): ViewConfiguration =
+    public fun buildViewConfiguration(): ViewConfiguration =
         ViewConfiguration(
             theme ?: error("Space theme is undefined"),
             icon,
@@ -95,7 +95,7 @@ public class SpaceFaviconBuilder {
 
     public var faviconIco: SpaceIconUrl? = null
 
-    public fun build(): SpaceFavicon =
+    public fun buildSpaceFavicon(): SpaceFavicon =
         SpaceFavicon(
             appleTouch,
             favicon16,

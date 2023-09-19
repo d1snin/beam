@@ -23,7 +23,7 @@ import io.ktor.http.*
 
 public suspend fun ApplicationContext.translation(configure: suspend TranslationModificationBuilder.() -> Unit) {
     val space = space.id
-    val modification = TranslationModificationBuilder().apply { configure() }.build()
+    val modification = TranslationModificationBuilder().apply { configure() }.buildTranslationModification()
 
     postTranslation(space, modification).getOrElse {
         val isConflict = it is ClientRequestException && it.response.status == HttpStatusCode.Conflict

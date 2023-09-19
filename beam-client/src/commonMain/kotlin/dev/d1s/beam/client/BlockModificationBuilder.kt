@@ -20,7 +20,7 @@ import dev.d1s.beam.commons.*
 import dev.d1s.beam.commons.contententity.*
 
 @BuilderDsl
-public class BlockModificationBuilder {
+public class BlockModificationBuilder : ContentEntitiesBuilder() {
 
     public var index: BlockIndex? = null
 
@@ -30,17 +30,11 @@ public class BlockModificationBuilder {
 
     public var spaceId: SpaceIdentifier? = null
 
-    private val entities: ContentEntitiesBuilder = ContentEntitiesBuilder()
-
-    public fun entity(build: ContentEntityBuilder.() -> Unit) {
-        entities.entity(build)
-    }
-
-    public fun build(): BlockModification =
+    public fun buildBlockModification(): BlockModification =
         BlockModification(
             index ?: error("Block index is undefined"),
             size ?: error("Block size is undefined"),
-            entities.build(),
+            buildContentEntities(),
             metadata,
             spaceId ?: error("Block space id is undefined")
         )
@@ -53,11 +47,15 @@ public class ContentEntityBuilder {
 
     private var parameters: ContentEntityParameters = mapOf()
 
+    public fun parameters(build: MutableMap<ContentEntityParameterName, ContentEntityParameterValue>.() -> Unit) {
+        parameters = buildMap(build)
+    }
+
     public fun parameters(vararg pairs: Pair<ContentEntityParameterName, ContentEntityParameterValue>) {
         parameters = mapOf(*pairs)
     }
 
-    public fun build(): ContentEntity =
+    public fun buildContentEntity(): ContentEntity =
         ContentEntity(
             type?.name ?: error("Content entity type is undefined"),
             parameters
@@ -65,13 +63,140 @@ public class ContentEntityBuilder {
 }
 
 @BuilderDsl
-public class ContentEntitiesBuilder {
+public open class ContentEntitiesBuilder {
 
     private val entities: MutableList<ContentEntity> = mutableListOf()
 
     public fun entity(build: ContentEntityBuilder.() -> Unit) {
-        entities += ContentEntityBuilder().apply(build).build()
+        entities += ContentEntityBuilder().apply(build).buildContentEntity()
     }
 
-    public fun build(): ContentEntities = entities
+    public fun buildContentEntities(): ContentEntities = entities
+}
+
+public fun ContentEntitiesBuilder.void(height: Int? = null) {
+    entity {
+        type = Void
+
+        height?.let {
+            parameters(
+                Void.height.name to it.toString()
+            )
+        }
+    }
+}
+
+public fun ContentEntitiesBuilder.text(value: String, heading: String? = null) {
+    entity {
+        type = Text
+
+        parameters {
+            put(Text.value.name, value)
+
+            heading?.let {
+                put(Text.heading.name, it)
+            }
+        }
+    }
+}
+
+public fun ContentEntitiesBuilder.buttonLink(
+    text: String,
+    url: String,
+    style: ButtonLinkContentEntityTypeDefinition.Style? = null,
+    width: Int? = null,
+    height: Int? = null
+) {
+    entity {
+        type = ButtonLink
+
+        parameters {
+            put(ButtonLink.text.name, text)
+            put(ButtonLink.url.name, url)
+
+            style?.let {
+                put(ButtonLink.style.name, style.identifier)
+            }
+
+            width?.let {
+                put(ButtonLink.width.name, it.toString())
+            }
+
+            height?.let {
+                put(ButtonLink.height.name, it.toString())
+            }
+        }
+    }
+}
+
+public fun ContentEntitiesBuilder.space(
+    identifier: SpaceIdentifier,
+    fullWidth: Boolean? = null
+) {
+    entity {
+        type = Space
+
+        parameters {
+            put(Space.identifier.name, identifier)
+
+            fullWidth?.let {
+                put(Space.fullWidth.name, it.toString())
+            }
+        }
+    }
+}
+
+public fun ContentEntitiesBuilder.image(
+    url: String,
+    description: String? = null,
+    width: Int? = null,
+    height: Int? = null
+) {
+    entity {
+        type = Image
+
+        parameters {
+            put(Image.url.name, url)
+            put(Image.url.name, url)
+
+            description?.let {
+                put(Image.description.name, it)
+            }
+
+            width?.let {
+                put(Image.width.name, it.toString())
+            }
+
+            height?.let {
+                put(Image.height.name, it.toString())
+            }
+        }
+    }
+}
+
+public fun ContentEntitiesBuilder.embed(
+    url: String,
+    document: String? = null,
+    width: Int? = null,
+    height: Int? = null
+) {
+    entity {
+        type = Embed
+
+        parameters {
+            put(Embed.url.name, url)
+
+            document?.let {
+                put(Embed.document.name, it)
+            }
+
+            width?.let {
+                put(Embed.width.name, it.toString())
+            }
+
+            height?.let {
+                put(Embed.height.name, it.toString())
+            }
+        }
+    }
 }

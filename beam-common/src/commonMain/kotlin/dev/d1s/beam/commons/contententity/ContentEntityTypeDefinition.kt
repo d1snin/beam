@@ -46,9 +46,9 @@ public fun definition(name: ContentEntityTypeName): ContentEntityTypeDefinition?
         it.name == name
     }
 
-public val Void: ContentEntityTypeDefinition = VoidContentEntityTypeDefinition
-public val Text: ContentEntityTypeDefinition = TextContentEntityTypeDefinition
-public val ButtonLink: ContentEntityTypeDefinition = ButtonLinkContentEntityTypeDefinition
-public val Space: ContentEntityTypeDefinition = SpaceContentEntityTypeDefinition
-public val Image: ContentEntityTypeDefinition = ImageContentEntityTypeDefinition
-public val Embed: ContentEntityTypeDefinition = EmbedContentEntityTypeDefinition
+public val Void: VoidContentEntityTypeDefinition = VoidContentEntityTypeDefinition
+public val Text: TextContentEntityTypeDefinition = TextContentEntityTypeDefinition
+public val ButtonLink: ButtonLinkContentEntityTypeDefinition = ButtonLinkContentEntityTypeDefinition
+public val Space: SpaceContentEntityTypeDefinition = SpaceContentEntityTypeDefinition
+public val Image: ImageContentEntityTypeDefinition = ImageContentEntityTypeDefinition
+public val Embed: EmbedContentEntityTypeDefinition = EmbedContentEntityTypeDefinition

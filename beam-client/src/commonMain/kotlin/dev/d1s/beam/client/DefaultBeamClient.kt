@@ -84,7 +84,7 @@ public class DefaultBeamClient(
         languageCode: LanguageCode?,
         configure: suspend SpaceModificationBuilder.() -> Unit
     ): Result<SpaceWithToken> =
-        postSpace(SpaceModificationBuilder().apply { configure() }.build(), languageCode)
+        postSpace(SpaceModificationBuilder().apply { configure() }.buildSpaceModification(), languageCode)
 
     public override suspend fun postRootSpace(
         space: RootSpaceModification,
@@ -102,7 +102,7 @@ public class DefaultBeamClient(
         languageCode: LanguageCode?,
         configure: suspend RootSpaceModificationBuilder.() -> Unit
     ): Result<SpaceWithToken> =
-        postRootSpace(RootSpaceModificationBuilder().apply { configure() }.build(), languageCode)
+        postRootSpace(RootSpaceModificationBuilder().apply { configure() }.buildRootSpaceModification(), languageCode)
 
     public override suspend fun getSpace(id: SpaceIdentifier, languageCode: LanguageCode?): Result<Space> =
         runCatching {
@@ -147,7 +147,7 @@ public class DefaultBeamClient(
         languageCode: LanguageCode?,
         configure: suspend SpaceModificationBuilder.() -> Unit
     ): Result<Space> =
-        putSpace(id, SpaceModificationBuilder().apply { configure() }.build(), languageCode)
+        putSpace(id, SpaceModificationBuilder().apply { configure() }.buildSpaceModification(), languageCode)
 
     override suspend fun putRootSpace(space: RootSpaceModification, languageCode: LanguageCode?): Result<Space> =
         runCatching {
@@ -164,7 +164,7 @@ public class DefaultBeamClient(
         languageCode: LanguageCode?,
         configure: suspend RootSpaceModificationBuilder.() -> Unit
     ): Result<Space> =
-        putRootSpace(RootSpaceModificationBuilder().apply { configure() }.build(), languageCode)
+        putRootSpace(RootSpaceModificationBuilder().apply { configure() }.buildRootSpaceModification(), languageCode)
 
     override suspend fun deleteSpace(id: SpaceIdentifier): Result<Unit> =
         runCatching {
@@ -190,7 +190,7 @@ public class DefaultBeamClient(
         languageCode: LanguageCode?,
         configure: suspend BlockModificationBuilder.() -> Unit
     ): Result<Block> =
-        postBlock(BlockModificationBuilder().apply { configure() }.build(), languageCode)
+        postBlock(BlockModificationBuilder().apply { configure() }.buildBlockModification(), languageCode)
 
     public override suspend fun getBlocks(spaceId: SpaceIdentifier, languageCode: LanguageCode?): Result<Blocks> =
         runCatching {
@@ -218,7 +218,7 @@ public class DefaultBeamClient(
         languageCode: LanguageCode?,
         configure: suspend BlockModificationBuilder.() -> Unit
     ): Result<Block> =
-        putBlock(id, BlockModificationBuilder().apply { configure() }.build(), languageCode)
+        putBlock(id, BlockModificationBuilder().apply { configure() }.buildBlockModification(), languageCode)
 
     override suspend fun deleteBlock(id: BlockId): Result<Unit> =
         runCatching {
@@ -247,7 +247,7 @@ public class DefaultBeamClient(
         spaceId: SpaceIdentifier?,
         configure: suspend TranslationModificationBuilder.() -> Unit
     ): Result<Translation> =
-        postTranslation(spaceId, TranslationModificationBuilder().apply { configure() }.build())
+        postTranslation(spaceId, TranslationModificationBuilder().apply { configure() }.buildTranslationModification())
 
     override suspend fun getTranslation(spaceId: SpaceIdentifier?, languageCode: LanguageCode): Result<Translation> =
         runCatching {
@@ -298,7 +298,7 @@ public class DefaultBeamClient(
         languageCode: LanguageCode,
         configure: suspend TranslationModificationBuilder.() -> Unit
     ): Result<Translation> =
-        putTranslation(spaceId, languageCode, TranslationModificationBuilder().apply { configure() }.build())
+        putTranslation(spaceId, languageCode, TranslationModificationBuilder().apply { configure() }.buildTranslationModification())
 
     override suspend fun deleteTranslation(spaceId: SpaceIdentifier?, languageCode: LanguageCode): Result<Unit> =
         runCatching {
