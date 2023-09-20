@@ -24,6 +24,8 @@ import dev.d1s.beam.ui.util.*
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
 import dev.d1s.exkt.kvision.component.render
+import io.kvision.core.TextDecoration
+import io.kvision.core.TextDecorationLine
 import io.kvision.html.div
 import io.kvision.html.span
 import io.kvision.panel.SimplePanel
@@ -68,8 +70,13 @@ class FooterComponent : Component<Unit>(), KoinComponent {
 
     private fun SimplePanel.renderSourceCodeLink() {
         div {
-            renderFriendlyLink(currentTranslation.footerSourceCodeLinkMessage, currentTranslation.footerSourceCodeLinkUrl) {
+            renderFriendlyLink(
+                currentTranslation.footerSourceCodeLinkMessage,
+                currentTranslation.footerSourceCodeLinkUrl,
+                external = true
+            ) {
                 setSecondaryText()
+                textDecoration = TextDecoration(TextDecorationLine.UNDERLINE)
             }
         }
     }

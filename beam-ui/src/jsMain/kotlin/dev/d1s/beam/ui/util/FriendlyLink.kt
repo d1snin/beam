@@ -20,10 +20,18 @@ import io.kvision.html.Link
 import io.kvision.html.link
 import io.kvision.panel.SimplePanel
 
-fun SimplePanel.renderFriendlyLink(label: String = "", url: String? = null, className: String? = null, init: Link.() -> Unit = {}) =
+fun SimplePanel.renderFriendlyLink(
+    label: String = "",
+    url: String? = null,
+    className: String? = null,
+    external: Boolean = false,
+    init: Link.() -> Unit = {}
+) =
     link(label, url, className = className) {
-        setAttribute("target", "_blank")
-        setAttribute("rel", "noopener noreferrer")
+        if (external) {
+            setAttribute("target", "_blank")
+            setAttribute("rel", "noopener noreferrer")
+        }
 
         init()
     }

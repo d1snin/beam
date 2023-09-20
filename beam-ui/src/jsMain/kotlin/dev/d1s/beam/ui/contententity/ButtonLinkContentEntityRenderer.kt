@@ -84,7 +84,7 @@ class ButtonLinkContentEntityRenderer : ContentEntityRenderer, KoinComponent {
                     this.height = height.px
                 }
 
-                renderFriendlyLink(text, url, className = "w-100 h-100 btn btn-outline-${style.identifier}") {
+                renderFriendlyLink(text, url, className = "w-100 h-100 btn btn-outline-${style.identifier}", external = true) {
                     role = "button"
                 }
 
