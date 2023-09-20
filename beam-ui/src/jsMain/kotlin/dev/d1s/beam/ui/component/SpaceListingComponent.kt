@@ -226,6 +226,6 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
 
     private companion object {
 
-        private const val PAGE_LIMIT = 2
+        private const val PAGE_LIMIT = 4
     }
 }
