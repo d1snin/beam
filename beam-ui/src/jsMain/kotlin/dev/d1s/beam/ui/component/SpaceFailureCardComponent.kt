@@ -59,7 +59,7 @@ class SpaceFailureCardComponent : Component<SpaceFailureCardComponent.Config>(::
         div(className = "container d-flex justify-content-center") {
             maxWidth = Size.Lg.px
 
-            renderCard(className = "d-flex flex-column justify-content-center w-100 p-5") {
+            renderCard(className = "d-flex flex-column justify-content-center w-100 p-4 pt-5") {
                 block()
             }
         }
