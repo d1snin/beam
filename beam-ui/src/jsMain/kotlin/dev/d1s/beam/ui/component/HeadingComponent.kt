@@ -54,7 +54,7 @@ class HeadingComponent : Component<Unit>(), KoinComponent {
     private fun SimplePanel.renderSpaceCard() {
         val spaceCard = get<Component<SpaceCardComponent.Config>>(Qualifier.SpaceCardComponent)
 
-        div(className = "me-3 me-lg-4") {
+        div(className = "me-2") {
             render(spaceCard) {
                 bare.value = true
                 cardPaddingLevel.value = 4
