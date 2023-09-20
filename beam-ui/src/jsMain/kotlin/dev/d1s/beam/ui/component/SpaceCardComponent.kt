@@ -118,7 +118,7 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
     }
 
     private fun SimplePanel.renderVPanel(block: SimplePanel.() -> Unit) {
-        vPanel(justify = JustifyContent.CENTER, className = "ms-3") {
+        vPanel(justify = JustifyContent.CENTER, className = "mx-3") {
             block()
         }
     }
