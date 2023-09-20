@@ -5,7 +5,7 @@ POST http://localhost:8573/spaces
 Content-Type: application/json
 
 {
-    "slug": "test-2",
+    "slug": "test-1",
     "metadata": {},
     "view": {
         "theme": "catppuccin-mocha",
@@ -123,9 +123,9 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "languageCode": "en",
+    "languageCode": "ru",
     "languageName": null,
-    "default": true,
+    "default": false,
     "translations": {
         "ui.icon-alt": "Иконка пространства",
         "ui.space-info.default-title": "Beam",
@@ -144,7 +144,7 @@ Content-Type: application/json
         "ui.footer.language-switcher.message": "Поменять язык...",
         "ui.space-listing.message": "Другие страницы:",
         "ui.space-listing.fetch-more-button": "Загрузить больше",
-        "root.custom": "en"
+        "root.custom": "ru"
     }
 }
 
@@ -164,8 +164,26 @@ Content-Type: application/json
 {
     "languageCode": "ru",
     "languageName": null,
+    "default": false,
     "translations": {
-        "test": "переведенный текст (ru)"
+        "ui.icon-alt": "Иконка пространства",
+        "ui.space-info.default-title": "Beam",
+        "ui.explore-dropdown.callout": "Обзор",
+        "ui.daemon-status.connected": "Подключен к сервису.",
+        "ui.daemon-status.disconnected": "Не удалось подключиться к сервису.",
+        "ui.daemon-status.ms-unit": "мс",
+        "ui.space-failure-card.not-found.icon-alt": "Иконка 404",
+        "ui.space-failure-card.not-found.message": "Мы ничего не нашли.",
+        "ui.space-failure-card.empty-space.icon-alt": "Иконка пустого пространства",
+        "ui.space-failure-card.empty-space.message": "Эта страница выглядит пустой.",
+        "ui.footer.message.first-part": "Работает на движке",
+        "ui.footer.message.second-part": "Beam",
+        "ui.footer.source-code-link.message": "Исходный код на GitHub",
+        "ui.footer.source-code-link.url": "https://github.com/d1snin/beam",
+        "ui.footer.language-switcher.message": "Поменять язык...",
+        "ui.space-listing.message": "Другие страницы:",
+        "ui.space-listing.fetch-more-button": "Загрузить больше",
+        "root.custom": "ru"
     }
 }
 

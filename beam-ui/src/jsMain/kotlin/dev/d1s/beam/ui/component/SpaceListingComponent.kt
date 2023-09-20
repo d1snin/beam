@@ -53,7 +53,9 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
 
     private val beamClient by inject<BeamClient>()
 
-    private val spaces = ObservableValue(listOf<Space>() to 0)
+    private val emptySpaces: FetchedSpaces = listOf<Space>() to 0
+
+    private val spaces = ObservableValue(emptySpaces)
 
     private val paginator = Paginator(PAGE_LIMIT, currentPage = 0)
 
@@ -64,10 +66,19 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
     override fun SimplePanel.render(): Effect {
         val (state, effect) = Effect.lazy()
 
-        renderingScope.launch {
-            initialize()
-            renderSpaceContainer(state)
+        fun render() {
+            renderingScope.launch {
+                initialize()
+                renderSpaceContainer(state)
+            }
         }
+
+        currentTranslationObservable.subscribeSkipping {
+            reset()
+            render()
+        }
+
+        render()
 
         return effect
     }
@@ -90,6 +101,13 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
                 renderFetchMoreButton()
             }
         }
+    }
+
+    private fun SimplePanel.reset() {
+        getChildren().forEach { it.dispose() }
+        spaces.value = emptySpaces
+        paginator.currentPage = 0
+        initialized.value = false
     }
 
     private fun SimplePanel.renderBoundContainer(
