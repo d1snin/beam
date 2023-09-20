@@ -39,6 +39,24 @@ GET http://localhost:8573/spaces/root?language=en
 GET http://localhost:8573/spaces?limit=10&offset=0
 
 ### PUT Space
+PUT http://localhost:8573/spaces/test-1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "slug": "test-1",
+    "metadata": {
+    },
+    "view": {
+        "theme": "catppuccin-mocha",
+        "icon": null,
+        "favicon": null,
+        "title": "Test space",
+        "description": "${root.custom}"
+    }
+}
+
+### PUT Root Space
 PUT http://localhost:8573/spaces/root
 Authorization: Bearer {{token}}
 Content-Type: application/json

@@ -47,7 +47,7 @@ val currentLanguageCode
     get() = currentTranslation.languageCode
 
 private val browserLanguage
-    get() = window.navigator.language.take(2).lowercase()
+    get() = LocalStorage.languageCode ?: window.navigator.language.take(2).lowercase()
 
 suspend fun initCurrentTranslation() {
     val resolvedTranslation =
@@ -61,6 +61,8 @@ suspend fun initCurrentTranslation() {
 
 fun setCurrentTranslation(translation: Translation) {
     scope.launch {
+        LocalStorage.languageCode = translation.languageCode
+
         internalCurrentTranslation = translation
         initCurrentSpaceAndBlocks()
 
