@@ -57,7 +57,11 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
 
     private val spaces = ObservableValue(emptySpaces)
 
-    private val paginator = Paginator(PAGE_LIMIT, currentPage = 0)
+    private val paginator by lazy {
+        val limit = if (currentSpace != null) PAGE_LIMIT + 1 else PAGE_LIMIT
+
+        Paginator(limit, currentPage = 0)
+    }
 
     private val renderingScope = CoroutineScope(Dispatchers.Main)
 

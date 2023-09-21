@@ -11,7 +11,7 @@ Content-Type: application/json
         "theme": "catppuccin-mocha",
         "icon": null,
         "favicon": null,
-        "title": "Test space",
+        "title": "Test space 1",
         "description": "Test space instance."
     }
 }
