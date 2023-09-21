@@ -28,7 +28,6 @@ import dev.d1s.beam.commons.SpaceFavicon
 import dev.d1s.beam.commons.SpaceIdentifier
 import io.ktor.client.plugins.*
 import io.ktor.http.*
-import io.ktor.server.request.*
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.lighthousegames.logging.logging
@@ -137,16 +136,6 @@ class DefaultIndexService : IndexService, KoinComponent {
             "Resolving with found space by identifier ${request.spaceIdentifier}..."
         }
 
-        val url = URLBuilder(request.call.request.uri).apply {
-            set {
-                parameters.clear()
-            }
-        }.build().toString()
-
-        logger.d {
-            "Url: $url"
-        }
-
         val view = space.view
 
         val title = view.title ?: Defaults.TITLE
@@ -154,7 +143,6 @@ class DefaultIndexService : IndexService, KoinComponent {
         val icon = view.icon ?: Defaults.ICON
 
         val urlPreview = SpaceUrlPreview(
-            url,
             siteName = Defaults.SITE_NAME,
             title,
             description,

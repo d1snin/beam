@@ -36,7 +36,6 @@ data class RenderParameters(
 )
 
 data class SpaceUrlPreview(
-    val url: String,
     val siteName: String,
     val title: String,
     val description: String,
@@ -69,14 +68,12 @@ class DefaultIndexHtmlRenderer : IndexHtmlRenderer, KoinComponent {
 
                 renderParameters.urlPreview?.let { preview ->
                     meta("og:type", "website")
-                    meta("og:url", preview.url)
                     meta("og:site_name", preview.siteName)
                     meta("og:title", preview.title)
                     meta("og:description", preview.description)
                     meta("og:image", preview.image)
 
                     meta("twitter:card", "summary")
-                    meta("twitter:url", preview.url)
                     meta("twitter:title", preview.title)
                     meta("twitter:description", preview.description)
                     meta("twitter:image", preview.image)
