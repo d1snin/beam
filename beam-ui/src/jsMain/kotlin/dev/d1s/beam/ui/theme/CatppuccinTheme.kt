@@ -41,6 +41,8 @@ abstract class CatppuccinTheme(definition: SpaceThemeDefinition, palette: Palett
 
     override val green = palette.green.color
 
+    override val yellow = palette.yellow.color
+
     override val blue = palette.blue.color
 
     private val PaletteColor.color

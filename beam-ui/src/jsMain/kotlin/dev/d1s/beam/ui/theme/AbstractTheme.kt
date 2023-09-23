@@ -49,6 +49,8 @@ abstract class AbstractTheme(val definition: SpaceThemeDefinition) {
 
     abstract val green: Color
 
+    abstract val yellow: Color
+
     abstract val blue: Color
 }
 

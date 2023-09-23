@@ -170,6 +170,7 @@ class DefaultStyledTextRenderer : StyledTextRenderer {
         RED("red", { currentTheme.red }),
         ORANGE("orange", { currentTheme.orange }),
         GREEN("green", { currentTheme.green }),
+        YELLOW("yellow", { currentTheme.yellow }),
         BLUE("blue", { currentTheme.blue });
 
         companion object {

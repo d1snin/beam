@@ -56,6 +56,9 @@ object AccentDarkTheme : AbstractTheme(SpaceThemeDefinition.AccentDark) {
     // https://colorpicker.me/#89ffa9
     override val green = Color.hex(0x89ffa9)
 
+    // https://colorpicker.me/#feff9e
+    override val yellow = Color.hex(0xfeff9e)
+
     // https://colorpicker.me/#4dd3ff
     override val blue = Color.hex(0x4dd3ff)
 }
