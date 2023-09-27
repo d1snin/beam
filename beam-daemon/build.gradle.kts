@@ -83,7 +83,7 @@ dependencies {
 }
 
 application {
-    mainClass.set("dev.d1s.beam.server.MainKt")
+    mainClass.set("dev.d1s.beam.daemon.MainKt")
 }
 
 tasks.withType<KotlinCompile> {
