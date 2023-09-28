@@ -22,6 +22,7 @@ import dev.d1s.beam.commons.contententity.Image
 import dev.d1s.beam.ui.contententity.renderEntities
 import dev.d1s.beam.ui.util.Size.MaxBlockSize
 import dev.d1s.beam.ui.util.Size.sizeOf
+import dev.d1s.beam.ui.util.renderFriendlyLink
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
 import io.kvision.panel.SimplePanel
@@ -46,24 +47,34 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
         val isBare = block.metadata[MetadataKeys.UI_BLOCK_BARE]
             ?.toBooleanStrictOrNull() == true
 
-        renderCard("w-100 d-flex flex-column justify-content-start", bare = isBare) {
-            val blockSize = if (config.single.value) {
-                sizeOf(MaxBlockSize).px
-            } else {
-                sizeOf(block.size).px
+        fun SimplePanel.renderCard() {
+            renderCard("w-100 d-flex flex-column justify-content-start", bare = isBare) {
+                val blockSize = if (config.single.value) {
+                    sizeOf(MaxBlockSize).px
+                } else {
+                    sizeOf(block.size).px
+                }
+
+                maxWidth = blockSize
+
+                configurePadding(block)
+
+                applyMargin()
+                applyCompensator()
+
+                setOptionalBlockId(block)
+
+                renderEntities(block)
             }
-
-            maxWidth = blockSize
-
-            configurePadding(block)
-
-            applyMargin()
-            applyCompensator()
-
-            setOptionalBlockId(block)
-
-            renderEntities(block)
         }
+
+        val link = block.metadata[MetadataKeys.UI_BLOCK_LINK]
+
+        link?.let {
+            renderFriendlyLink(url = it, external = true) {
+                renderCard()
+            }
+        } ?: renderCard()
     }
 
     private fun SimplePanel.configurePadding(block: Block) {

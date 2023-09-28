@@ -22,5 +22,6 @@ public object MetadataKeys {
 
     public const val UI_BLOCK_ID: MetadataKey = "ui.block.id"
     public const val UI_BLOCK_BARE: MetadataKey = "ui.block.bare"
+    public const val UI_BLOCK_LINK: MetadataKey = "ui.block.link"
     public const val UI_BLOCK_IMAGE_ENTITY_FLUID: MetadataKey = "ui.block.image.fluid"
 }
