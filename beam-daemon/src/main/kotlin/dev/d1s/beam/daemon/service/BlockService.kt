@@ -164,6 +164,8 @@ class DefaultBlockService : BlockService, KoinComponent {
 
             translationService.verifyLocationsExist(modification).getOrThrow()
 
+            processBlockIndex(modification)
+
             originalBlock.apply {
                 this.index = modification.index
                 this.size = modification.size
