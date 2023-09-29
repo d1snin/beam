@@ -30,6 +30,7 @@ private const val DEFAULT_THEME = "catppuccin-mocha"
 
 public class SpaceContext internal constructor(
     initialSpace: Space,
+    internal val processBlocks: Boolean,
     internal val client: BeamClient
 ) {
     private var internalSpace = initialSpace
@@ -82,6 +83,7 @@ public class SpaceContext internal constructor(
 
 public suspend fun ApplicationContext.space(
     spaceIdentifier: SpaceIdentifier = ROOT_SPACE_SLUG,
+    processBlocks: Boolean = true,
     configure: suspend SpaceContext.() -> Unit
 ) {
     var space = client.getSpace(spaceIdentifier).getOrNull()
@@ -114,16 +116,18 @@ public suspend fun ApplicationContext.space(
         "Accessed space `${space.slug}` ($spaceId). Cleaning it up..."
     }
 
-    val blocks = getBlocks(space.id).getOrThrow()
-    blocks.forEach {
-        deleteBlock(it.id).getOrThrow()
+    if (processBlocks) {
+        val blocks = getBlocks(space.id).getOrThrow()
+        blocks.forEach {
+            deleteBlock(it.id).getOrThrow()
+        }
     }
 
     log.i {
         "Space initialized."
     }
 
-    val context = SpaceContext(space, client)
+    val context = SpaceContext(space, processBlocks, client)
 
     context.configure()
 }

@@ -76,22 +76,32 @@ public class BlockContext internal constructor(
 public suspend fun SpaceContext.block(configure: suspend BlockContext.() -> Unit) {
     val space = space.id
 
-    log.i {
-        "Creating another block for space '$space'..."
+    suspend fun processBlock() {
+        log.i {
+            "Creating another block for space '$space'..."
+        }
+
+        val createdBlock = client.postBlock {
+            index = client.getBlocks(space).getOrThrow().size
+            size = BlockSize.SMALL
+            spaceId = space
+
+            void()
+        }.getOrThrow()
+
+        val context = BlockContext(
+            createdBlock,
+            client
+        )
+
+        context.configure()
     }
 
-    val createdBlock = client.postBlock {
-        index = client.getBlocks(space).getOrThrow().size
-        size = BlockSize.SMALL
-        spaceId = space
-
-        void()
-    }.getOrThrow()
-
-    val context = BlockContext(
-        createdBlock,
-        client
-    )
-
-    context.configure()
+    if (processBlocks) {
+        processBlock()
+    } else {
+        log.i {
+            "Won't process block for space '$space'."
+        }
+    }
 }
