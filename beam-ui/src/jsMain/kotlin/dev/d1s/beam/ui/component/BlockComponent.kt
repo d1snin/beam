@@ -18,10 +18,10 @@ package dev.d1s.beam.ui.component
 
 import dev.d1s.beam.commons.Block
 import dev.d1s.beam.commons.MetadataKeys
-import dev.d1s.beam.commons.contententity.Image
 import dev.d1s.beam.ui.contententity.renderEntities
 import dev.d1s.beam.ui.util.Size.MaxBlockSize
 import dev.d1s.beam.ui.util.Size.sizeOf
+import dev.d1s.beam.ui.util.isFluidImage
 import dev.d1s.beam.ui.util.renderFriendlyLink
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
@@ -78,15 +78,7 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
     }
 
     private fun SimplePanel.configurePadding(block: Block) {
-        val entities = block.entities
-
-        val isImageBlock = entities.size == 1
-                && entities.first().type == Image.name
-
-        val isFluidImage = block.metadata[MetadataKeys.UI_BLOCK_IMAGE_ENTITY_FLUID]
-            ?.toBooleanStrictOrNull() == true
-
-        if (isImageBlock && isFluidImage) {
+        if (block.isFluidImage()) {
             addCssClass("p-0")
             addCssClass("overflow-hidden")
         } else {

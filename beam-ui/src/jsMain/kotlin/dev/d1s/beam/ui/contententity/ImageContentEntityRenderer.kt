@@ -17,10 +17,8 @@
 package dev.d1s.beam.ui.contententity
 
 import dev.d1s.beam.commons.Block
-import dev.d1s.beam.commons.contententity.ContentEntities
-import dev.d1s.beam.commons.contententity.ContentEntity
-import dev.d1s.beam.commons.contententity.ImageContentEntityTypeDefinition
-import dev.d1s.beam.commons.contententity.get
+import dev.d1s.beam.commons.contententity.*
+import dev.d1s.beam.ui.util.isFluidImage
 import io.kvision.html.div
 import io.kvision.html.image
 import io.kvision.panel.SimplePanel
@@ -34,7 +32,7 @@ class ImageContentEntityRenderer : ContentEntityRenderer, KoinComponent {
 
     override fun SimplePanel.render(sequence: ContentEntities, block: Block) {
         renderImageRow {
-            renderImages(sequence)
+            renderImages(sequence, block)
         }
     }
 
@@ -44,13 +42,17 @@ class ImageContentEntityRenderer : ContentEntityRenderer, KoinComponent {
         }
     }
 
-    private fun SimplePanel.renderImages(sequence: ContentEntities) {
+    private fun SimplePanel.renderImages(sequence: ContentEntities, block: Block) {
         sequence.forEach { entity ->
-            renderImage(entity)
+            renderImage(entity, block)
+
+            if (!block.isFluidImage()) {
+                separateContentEntity(entity, block)
+            }
         }
     }
 
-    private fun SimplePanel.renderImage(entity: ContentEntity) {
+    private fun SimplePanel.renderImage(entity: ContentEntity, block: Block) {
         val parameters = entity.parameters
 
         val src = parameters[definition.url]
@@ -61,7 +63,7 @@ class ImageContentEntityRenderer : ContentEntityRenderer, KoinComponent {
         val width = parameters[definition.width]?.toInt()
         val height = parameters[definition.height]?.toInt()
 
-        container {
+        container(entity, block) {
             image(src, description, responsive = true, className = "rounded") {
                 width?.let {
                     this.width = it.perc
@@ -74,9 +76,13 @@ class ImageContentEntityRenderer : ContentEntityRenderer, KoinComponent {
         }
     }
 
-    private fun SimplePanel.container(block: SimplePanel.() -> Unit) {
+    private fun SimplePanel.container(entity: ContentEntity, block: Block, configure: SimplePanel.() -> Unit) {
         div(className = "w-100") {
-            block()
+            if (entity.isFirstIn(block)) {
+                addCssClass("mt-0")
+            }
+
+            configure()
         }
     }
 }
