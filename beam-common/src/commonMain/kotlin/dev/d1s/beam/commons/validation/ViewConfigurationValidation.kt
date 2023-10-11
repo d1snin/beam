@@ -35,6 +35,10 @@ internal val validateViewConfiguration: Validation<ViewConfiguration> = Validati
         validFavicon()
     }
 
+    ViewConfiguration::preview ifPresent {
+        validatePreview()
+    }
+
     ViewConfiguration::title ifPresent {
         isNotBlank() hint "view title must not be blank"
         maxLength(Limits.VIEW_TITLE_MAX_LENGTH) hint "view title must be shorter than ${Limits.VIEW_TITLE_MAX_LENGTH} characters"
@@ -60,6 +64,12 @@ private fun ValidationBuilder<SpaceFavicon>.validFavicon() {
     }
 
     SpaceFavicon::faviconIco ifPresent {
+        correctUrl()
+    }
+}
+
+private fun ValidationBuilder<SpaceUrlPreview>.validatePreview() {
+    SpaceUrlPreview::image ifPresent {
         correctUrl()
     }
 }

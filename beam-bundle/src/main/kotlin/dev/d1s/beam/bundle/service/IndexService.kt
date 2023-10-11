@@ -20,12 +20,13 @@ import dev.d1s.beam.bundle.entity.ResolvedSpace
 import dev.d1s.beam.bundle.entity.SpaceRequest
 import dev.d1s.beam.bundle.html.IndexHtmlRenderer
 import dev.d1s.beam.bundle.html.RenderParameters
-import dev.d1s.beam.bundle.html.SpaceUrlPreview
+import dev.d1s.beam.bundle.html.UrlPreviewMetaTags
 import dev.d1s.beam.bundle.response.Defaults
 import dev.d1s.beam.client.BeamClient
 import dev.d1s.beam.commons.Space
 import dev.d1s.beam.commons.SpaceFavicon
 import dev.d1s.beam.commons.SpaceIdentifier
+import dev.d1s.beam.commons.SpaceUrlPreview
 import io.ktor.client.plugins.*
 import io.ktor.http.*
 import org.koin.core.component.KoinComponent
@@ -142,11 +143,18 @@ class DefaultIndexService : IndexService, KoinComponent {
         val description = view.description ?: Defaults.DESCRIPTION
         val icon = view.icon ?: Defaults.ICON
 
-        val urlPreview = SpaceUrlPreview(
+        val preview = view.preview
+
+        val urlPreview = UrlPreviewMetaTags(
             siteName = Defaults.SITE_NAME,
             title,
             description,
-            icon
+            image = preview?.image ?: icon,
+            type = when (preview?.type) {
+                SpaceUrlPreview.Type.DEFAULT -> UrlPreviewMetaTags.TYPE_SUMMARY
+                SpaceUrlPreview.Type.LARGE -> UrlPreviewMetaTags.TYPE_SUMMARY_LARGE_IMAGE
+                else -> Defaults.PREVIEW_TYPE
+            }
         )
 
         val parameters = RenderParameters(

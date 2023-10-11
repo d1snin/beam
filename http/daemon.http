@@ -11,6 +11,7 @@ Content-Type: application/json
         "theme": "catppuccin-mocha",
         "icon": null,
         "favicon": null,
+        "preview": null,
         "title": "Test space 1",
         "description": "Test space instance."
     }
@@ -27,6 +28,7 @@ Content-Type: application/json
         "theme": "catppuccin-mocha",
         "icon": null,
         "favicon": null,
+        "preview": null,
         "title": "Test space",
         "description": "Test space instance."
     }
@@ -51,6 +53,7 @@ Content-Type: application/json
         "theme": "catppuccin-mocha",
         "icon": null,
         "favicon": null,
+        "preview": null,
         "title": "Test space",
         "description": "${root.custom}"
     }
@@ -68,6 +71,7 @@ Content-Type: application/json
         "theme": "accent-dark",
         "icon": null,
         "favicon": null,
+        "preview": null,
         "title": "Test space",
         "description": "Test space instance."
     }

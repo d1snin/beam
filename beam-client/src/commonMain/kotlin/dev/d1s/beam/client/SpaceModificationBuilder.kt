@@ -70,8 +70,14 @@ public class ViewConfigurationBuilder {
 
     private var favicon: SpaceFavicon? = null
 
+    private var preview: SpaceUrlPreview? = null
+
     public fun favicon(build: SpaceFaviconBuilder.() -> Unit) {
         favicon = SpaceFaviconBuilder().apply(build).buildSpaceFavicon()
+    }
+
+    public fun preview(build: SpaceUrlPreviewBuilder.() -> Unit) {
+        preview = SpaceUrlPreviewBuilder().apply(build).buildSpaceUrlPreview()
     }
 
     public fun buildViewConfiguration(): ViewConfiguration =
@@ -79,6 +85,7 @@ public class ViewConfigurationBuilder {
             theme ?: error("Space theme is undefined"),
             icon,
             favicon,
+            preview,
             title,
             description
         )
@@ -101,5 +108,19 @@ public class SpaceFaviconBuilder {
             favicon16,
             favicon32,
             faviconIco
+        )
+}
+
+@BuilderDsl
+public class SpaceUrlPreviewBuilder {
+
+    public var type: SpaceUrlPreview.Type? = null
+
+    public var image: Url? = null
+
+    public fun buildSpaceUrlPreview(): SpaceUrlPreview =
+        SpaceUrlPreview(
+            type ?: error("Preview type is undefined"),
+            image
         )
 }

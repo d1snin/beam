@@ -32,15 +32,22 @@ data class RenderParameters(
     val description: String?,
     val icon: SpaceIconUrl?,
     val favicon: SpaceFavicon,
-    val urlPreview: SpaceUrlPreview?
+    val urlPreview: UrlPreviewMetaTags?
 )
 
-data class SpaceUrlPreview(
+data class UrlPreviewMetaTags(
     val siteName: String,
     val title: String,
     val description: String,
-    val image: String
-)
+    val image: String,
+    val type: String
+) {
+    companion object {
+
+        const val TYPE_SUMMARY = "summary"
+        const val TYPE_SUMMARY_LARGE_IMAGE = "summary_large_image"
+    }
+}
 
 interface IndexHtmlRenderer {
 
@@ -73,7 +80,7 @@ class DefaultIndexHtmlRenderer : IndexHtmlRenderer, KoinComponent {
                     meta("og:description", preview.description)
                     meta("og:image", preview.image)
 
-                    meta("twitter:card", "summary")
+                    meta("twitter:card", preview.type)
                     meta("twitter:title", preview.title)
                     meta("twitter:description", preview.description)
                     meta("twitter:image", preview.image)

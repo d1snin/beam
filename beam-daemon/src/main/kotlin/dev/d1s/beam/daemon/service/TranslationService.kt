@@ -441,6 +441,12 @@ class DefaultTranslationService : TranslationService, KoinComponent {
                         faviconIco = fav.faviconIco?.translateValue(translation)
                     )
                 },
+                preview = preview?.let { prev ->
+                    SpaceUrlPreview(
+                        type = prev.type,
+                        image = prev.image?.translateValue(translation)
+                    )
+                },
                 title = title?.translateValue(translation),
                 description = description?.translateValue(translation),
             )

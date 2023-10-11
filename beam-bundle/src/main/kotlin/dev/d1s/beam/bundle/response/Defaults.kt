@@ -16,12 +16,16 @@
 
 package dev.d1s.beam.bundle.response
 
+import dev.d1s.beam.bundle.html.UrlPreviewMetaTags
+
 object Defaults {
 
     const val TITLE = "Beam Space"
-    const val DESCRIPTION = "Explore a public space created on Beam."
+    const val DESCRIPTION = "Explore this public space created on Beam."
 
     const val SITE_NAME = "Beam"
+
+    const val PREVIEW_TYPE = UrlPreviewMetaTags.TYPE_SUMMARY
 
     const val ICON = "/icon.png"
 

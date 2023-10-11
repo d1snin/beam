@@ -29,6 +29,7 @@ public data class ViewConfiguration(
     val theme: SpaceThemeName,
     val icon: SpaceIconUrl?,
     val favicon: SpaceFavicon?,
+    val preview: SpaceUrlPreview?,
     val title: SpaceTitle?,
     val description: SpaceDescription?
 )
@@ -40,3 +41,13 @@ public data class SpaceFavicon(
     val favicon32: SpaceIconUrl?,
     val faviconIco: SpaceIconUrl?
 )
+
+@Serializable
+public data class SpaceUrlPreview(
+    val type: Type,
+    val image: Url?,
+) {
+    public enum class Type {
+        DEFAULT, LARGE
+    }
+}
