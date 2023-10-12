@@ -47,6 +47,7 @@ public object GlobalTranslation {
     public val Locations: List<TextLocation> = listOf(
         LOCATION_ICON_ALT,
         LOCATION_DEFAULT_TITLE,
+        LOCATION_DEFAULT_REMARK,
         LOCATION_EXPLORE_DROPDOWN_CALLOUT,
         LOCATION_DAEMON_STATUS_CONNECTED,
         LOCATION_DAEMON_STATUS_DISCONNECTED,
