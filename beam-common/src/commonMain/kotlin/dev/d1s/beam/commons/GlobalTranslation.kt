@@ -29,21 +29,15 @@ public object GlobalTranslation {
     public const val LOCATION_DAEMON_STATUS_DISCONNECTED: TextLocation = "ui.daemon-status.disconnected"
     public const val LOCATION_DAEMON_STATUS_MS_UNIT: TextLocation = "ui.daemon-status.ms-unit"
 
-    public const val LOCATION_SPACE_FAILURE_CARD_NOT_FOUND_ICON_ALT: TextLocation =
-        "ui.space-failure-card.not-found.icon-alt"
-    public const val LOCATION_SPACE_FAILURE_CARD_NOT_FOUND_MESSAGE: TextLocation =
-        "ui.space-failure-card.not-found.message"
+    public const val LOCATION_FAILURE_CARD_NOT_FOUND_ICON_ALT: TextLocation =
+        "ui.failure-card.not-found.icon-alt"
+    public const val LOCATION_FAILURE_CARD_NOT_FOUND_MESSAGE: TextLocation =
+        "ui.failure-card.not-found.message"
 
-    public const val LOCATION_SPACE_FAILURE_CARD_EMPTY_SPACE_ICON_ALT: TextLocation =
-        "ui.space-failure-card.empty-space.icon-alt"
-    public const val LOCATION_SPACE_FAILURE_CARD_EMPTY_SPACE_MESSAGE: TextLocation =
-        "ui.space-failure-card.empty-space.message"
-
-    public const val LOCATION_FOOTER_MESSAGE_FIRST_PART: TextLocation = "ui.footer.message.first-part"
-    public const val LOCATION_FOOTER_MESSAGE_SECOND_PART: TextLocation = "ui.footer.message.second-part"
-
-    public const val LOCATION_FOOTER_SOURCE_CODE_LINK_MESSAGE: TextLocation = "ui.footer.source-code-link.message"
-    public const val LOCATION_FOOTER_SOURCE_CODE_LINK_URL: TextLocation = "ui.footer.source-code-link.url"
+    public const val LOCATION_FAILURE_CARD_EMPTY_SPACE_ICON_ALT: TextLocation =
+        "ui.failure-card.empty-space.icon-alt"
+    public const val LOCATION_FAILURE_CARD_EMPTY_SPACE_MESSAGE: TextLocation =
+        "ui.failure-card.empty-space.message"
 
     public const val LOCATION_FOOTER_LANGUAGE_SWITCHER_MESSAGE: TextLocation = "ui.footer.language-switcher.message"
 
@@ -57,14 +51,10 @@ public object GlobalTranslation {
         LOCATION_DAEMON_STATUS_CONNECTED,
         LOCATION_DAEMON_STATUS_DISCONNECTED,
         LOCATION_DAEMON_STATUS_MS_UNIT,
-        LOCATION_SPACE_FAILURE_CARD_NOT_FOUND_ICON_ALT,
-        LOCATION_SPACE_FAILURE_CARD_NOT_FOUND_MESSAGE,
-        LOCATION_SPACE_FAILURE_CARD_EMPTY_SPACE_ICON_ALT,
-        LOCATION_SPACE_FAILURE_CARD_EMPTY_SPACE_MESSAGE,
-        LOCATION_FOOTER_MESSAGE_FIRST_PART,
-        LOCATION_FOOTER_MESSAGE_SECOND_PART,
-        LOCATION_FOOTER_SOURCE_CODE_LINK_MESSAGE,
-        LOCATION_FOOTER_SOURCE_CODE_LINK_URL,
+        LOCATION_FAILURE_CARD_NOT_FOUND_ICON_ALT,
+        LOCATION_FAILURE_CARD_NOT_FOUND_MESSAGE,
+        LOCATION_FAILURE_CARD_EMPTY_SPACE_ICON_ALT,
+        LOCATION_FAILURE_CARD_EMPTY_SPACE_MESSAGE,
         LOCATION_FOOTER_LANGUAGE_SWITCHER_MESSAGE,
         LOCATION_SPACE_LISTING_MESSAGE,
         LOCATION_SPACE_LISTING_FETCH_MORE_BUTTON
@@ -83,14 +73,10 @@ public object GlobalTranslation {
             LOCATION_DAEMON_STATUS_CONNECTED to "Connected to daemon.",
             LOCATION_DAEMON_STATUS_DISCONNECTED to "Couldn't connect to daemon.",
             LOCATION_DAEMON_STATUS_MS_UNIT to "ms",
-            LOCATION_SPACE_FAILURE_CARD_NOT_FOUND_ICON_ALT to "404 image",
-            LOCATION_SPACE_FAILURE_CARD_NOT_FOUND_MESSAGE to "We couldn't find anything.",
-            LOCATION_SPACE_FAILURE_CARD_EMPTY_SPACE_ICON_ALT to "Empty space icon",
-            LOCATION_SPACE_FAILURE_CARD_EMPTY_SPACE_MESSAGE to "This space seems to be empty.",
-            LOCATION_FOOTER_MESSAGE_FIRST_PART to "Running",
-            LOCATION_FOOTER_MESSAGE_SECOND_PART to "Beam",
-            LOCATION_FOOTER_SOURCE_CODE_LINK_MESSAGE to "Source code on GitHub",
-            LOCATION_FOOTER_SOURCE_CODE_LINK_URL to "https://github.com/d1snin/beam",
+            LOCATION_FAILURE_CARD_NOT_FOUND_ICON_ALT to "404 image",
+            LOCATION_FAILURE_CARD_NOT_FOUND_MESSAGE to "We couldn't find anything.",
+            LOCATION_FAILURE_CARD_EMPTY_SPACE_ICON_ALT to "Empty space icon",
+            LOCATION_FAILURE_CARD_EMPTY_SPACE_MESSAGE to "This space seems to be empty.",
             LOCATION_FOOTER_LANGUAGE_SWITCHER_MESSAGE to "Switch language...",
             LOCATION_SPACE_LISTING_MESSAGE to "Explore the spaces on this instance:",
             LOCATION_SPACE_LISTING_FETCH_MORE_BUTTON to "Load more"

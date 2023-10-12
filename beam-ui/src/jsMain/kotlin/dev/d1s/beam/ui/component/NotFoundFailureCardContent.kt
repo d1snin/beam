@@ -18,28 +18,25 @@ package dev.d1s.beam.ui.component
 
 import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.util.currentTranslation
-import dev.d1s.beam.ui.util.spaceFailureCardEmptySpaceIconAlt
-import dev.d1s.beam.ui.util.spaceFailureCardEmptySpaceMessage
+import dev.d1s.beam.ui.util.failureCardNotFoundIconAlt
+import dev.d1s.beam.ui.util.failureCardNotFoundMessage
 import io.kvision.html.image
 import io.kvision.panel.SimplePanel
-import io.kvision.utils.perc
 import org.koin.core.component.KoinComponent
 
-class EmptySpaceFailureCardContent : SpaceFailureCardContent(), KoinComponent {
+class NotFoundFailureCardContent : FailureCardContent(), KoinComponent {
 
-    override val mode = SpaceFailureCardComponent.Mode.EMPTY_SPACE
+    override val mode = FailureCardComponent.Mode.NOT_FOUND
 
     override fun SimplePanel.image() {
         image(
-            currentTheme.emptySpaceIcon,
-            alt = currentTranslation.spaceFailureCardEmptySpaceIconAlt,
-            className = "mb-4 mb-lg-5 align-self-center"
-        ) {
-            width = 35.perc
-        }
+            currentTheme.notFoundIcon,
+            alt = currentTranslation.failureCardNotFoundIconAlt,
+            className = "w-100 mb-4 mb-lg-5"
+        )
     }
 
     override fun SimplePanel.text() {
-        spaceFailureCardText(currentTranslation.spaceFailureCardEmptySpaceMessage)
+        failureCardText(currentTranslation.failureCardNotFoundMessage)
     }
 }

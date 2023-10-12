@@ -49,7 +49,7 @@ object Qualifier {
     val SpaceContentComponent = named("space-content-component")
     val BlockContainerComponent = named("block-container-component")
     val BlockComponent = named("block-component")
-    val SpaceFailureCardComponent = named("space-failure-card-component")
+    val FailureCardComponent = named("failure-card-component")
     val FooterComponent = named("footer-component")
     val LanguageSwitcherComponent = named("language-switcher-component")
 
@@ -60,8 +60,8 @@ object Qualifier {
     val ImageContentEntityRenderer = named("image-content-entity-renderer")
     val EmbedContentEntityRenderer = named("embed-content-entity-renderer")
 
-    val NotFoundSpaceFailureCardContent = named("not-found-space-failure-card-content")
-    val EmptySpaceFailureCardContent = named("empty-space-failure-card-content")
+    val NotFoundFailureCardContent = named("not-found-failure-card-content")
+    val EmptyFailureCardContent = named("empty-failure-card-content")
 }
 
 fun setupModule() {
@@ -78,7 +78,7 @@ private val mainModule = module {
     components()
     contentEntityRenderers()
     styledTextRenderer()
-    spaceFailureCardContents()
+    failureCardContents()
 }
 
 private fun Module.beamClient() {
@@ -146,8 +146,8 @@ private fun Module.components() {
         qualifier = Qualifier.BlockComponent
     }
 
-    singleOf<Component<SpaceFailureCardComponent.Config>>(::SpaceFailureCardComponent) {
-        qualifier = Qualifier.SpaceFailureCardComponent
+    singleOf<Component<FailureCardComponent.Config>>(::FailureCardComponent) {
+        qualifier = Qualifier.FailureCardComponent
     }
 
     singleOf<Component<Unit>>(::FooterComponent) {
@@ -189,12 +189,12 @@ private fun Module.styledTextRenderer() {
     singleOf<StyledTextRenderer>(::DefaultStyledTextRenderer)
 }
 
-private fun Module.spaceFailureCardContents() {
-    singleOf<SpaceFailureCardContent>(::NotFoundSpaceFailureCardContent) {
-        qualifier = Qualifier.NotFoundSpaceFailureCardContent
+private fun Module.failureCardContents() {
+    singleOf<FailureCardContent>(::NotFoundFailureCardContent) {
+        qualifier = Qualifier.NotFoundFailureCardContent
     }
 
-    singleOf<SpaceFailureCardContent>(::EmptySpaceFailureCardContent) {
-        qualifier = Qualifier.EmptySpaceFailureCardContent
+    singleOf<FailureCardContent>(::EmptyFailureCardContent) {
+        qualifier = Qualifier.EmptyFailureCardContent
     }
 }

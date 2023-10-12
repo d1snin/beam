@@ -28,15 +28,15 @@ import kotlinx.atomicfu.atomic
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class SpaceFailureCardComponent : Component<SpaceFailureCardComponent.Config>(::Config), KoinComponent {
+class FailureCardComponent : Component<FailureCardComponent.Config>(::Config), KoinComponent {
 
     private val spaceListingComponent by inject<Component<Unit>>(Qualifier.SpaceListingComponent)
 
     private val contents by lazy {
-        getKoin().getAll<SpaceFailureCardContent>()
+        getKoin().getAll<FailureCardContent>()
     }
 
-    private val content: SpaceFailureCardContent
+    private val content: FailureCardContent
         get() {
             val mode = config.mode.value
 

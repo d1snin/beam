@@ -19,15 +19,15 @@ package dev.d1s.beam.ui.component
 import io.kvision.html.p
 import io.kvision.panel.SimplePanel
 
-abstract class SpaceFailureCardContent {
+abstract class FailureCardContent {
 
-    abstract val mode: SpaceFailureCardComponent.Mode
+    abstract val mode: FailureCardComponent.Mode
 
     abstract fun SimplePanel.image()
 
     abstract fun SimplePanel.text()
 }
 
-fun SimplePanel.spaceFailureCardText(text: String) {
+fun SimplePanel.failureCardText(text: String) {
     p(text, className = "mb-0 h3")
 }

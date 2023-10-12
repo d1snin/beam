@@ -39,7 +39,7 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
 
     private val blockContainerComponent by inject<Component<Unit>>(Qualifier.BlockContainerComponent)
 
-    private val spaceFailureCardComponent by inject<Component<SpaceFailureCardComponent.Config>>(Qualifier.SpaceFailureCardComponent)
+    private val failureCardComponent by inject<Component<FailureCardComponent.Config>>(Qualifier.FailureCardComponent)
 
     private val showBlockContainer = ObservableValue(true)
 
@@ -75,14 +75,14 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
 
 
     private fun SimplePanel.renderNotFoundCard() {
-        render(spaceFailureCardComponent) {
-            mode.value = SpaceFailureCardComponent.Mode.NOT_FOUND
+        render(failureCardComponent) {
+            mode.value = FailureCardComponent.Mode.NOT_FOUND
         }
     }
 
     private fun SimplePanel.renderEmptySpaceCard() {
-        render(spaceFailureCardComponent) {
-            mode.value = SpaceFailureCardComponent.Mode.EMPTY_SPACE
+        render(failureCardComponent) {
+            mode.value = FailureCardComponent.Mode.EMPTY_SPACE
         }
     }
 
