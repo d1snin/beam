@@ -23,6 +23,7 @@ public typealias SpaceIconUrl = Url
 
 public typealias SpaceTitle = String
 public typealias SpaceDescription = String
+public typealias SpaceRemark = String
 
 @Serializable
 public data class ViewConfiguration(
@@ -31,7 +32,8 @@ public data class ViewConfiguration(
     val favicon: SpaceFavicon?,
     val preview: SpaceUrlPreview?,
     val title: SpaceTitle?,
-    val description: SpaceDescription?
+    val description: SpaceDescription?,
+    val remark: SpaceRemark?
 )
 
 @Serializable

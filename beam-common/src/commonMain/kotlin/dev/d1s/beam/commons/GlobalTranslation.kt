@@ -20,7 +20,8 @@ public object GlobalTranslation {
 
     public const val LOCATION_ICON_ALT: TextLocation = "ui.icon-alt"
 
-    public const val LOCATION_SPACE_INFO_DEFAULT_TITLE: TextLocation = "ui.space-info.default-title"
+    public const val LOCATION_DEFAULT_TITLE: TextLocation = "ui.default-title"
+    public const val LOCATION_DEFAULT_REMARK: TextLocation = "ui.default-remark"
 
     public const val LOCATION_EXPLORE_DROPDOWN_CALLOUT: TextLocation = "ui.explore-dropdown.callout"
 
@@ -51,7 +52,7 @@ public object GlobalTranslation {
 
     public val Locations: List<TextLocation> = listOf(
         LOCATION_ICON_ALT,
-        LOCATION_SPACE_INFO_DEFAULT_TITLE,
+        LOCATION_DEFAULT_TITLE,
         LOCATION_EXPLORE_DROPDOWN_CALLOUT,
         LOCATION_DAEMON_STATUS_CONNECTED,
         LOCATION_DAEMON_STATUS_DISCONNECTED,
@@ -76,7 +77,8 @@ public object GlobalTranslation {
         default = false,
         translations = mapOf(
             LOCATION_ICON_ALT to "Beam space icon",
-            LOCATION_SPACE_INFO_DEFAULT_TITLE to "Beam",
+            LOCATION_DEFAULT_TITLE to "Beam",
+            LOCATION_DEFAULT_REMARK to "Running [Beam][https://github.com/d1snin/beam] v$VERSION",
             LOCATION_EXPLORE_DROPDOWN_CALLOUT to "Explore",
             LOCATION_DAEMON_STATUS_CONNECTED to "Connected to daemon.",
             LOCATION_DAEMON_STATUS_DISCONNECTED to "Couldn't connect to daemon.",

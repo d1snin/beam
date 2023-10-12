@@ -134,8 +134,7 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
 
             addCssClass(headingClass)
 
-            val title = space?.view?.title ?: currentTranslation.spaceInfoDefaultTitle
-
+            val title = space?.view?.title ?: currentTranslation.defaultTitle
             renderStyledText(title)
 
             underlineOnHover()

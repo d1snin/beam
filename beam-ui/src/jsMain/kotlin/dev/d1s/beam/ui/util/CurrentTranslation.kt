@@ -77,7 +77,8 @@ fun setCurrentTranslation(translation: Translation) {
 }
 
 val Translation.iconAlt: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_ICON_ALT)
-val Translation.spaceInfoDefaultTitle: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_SPACE_INFO_DEFAULT_TITLE)
+val Translation.defaultTitle: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_DEFAULT_TITLE)
+val Translation.defaultRemark: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_DEFAULT_REMARK)
 val Translation.exploreDropdownCallout: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_EXPLORE_DROPDOWN_CALLOUT)
 val Translation.daemonStatusConnected: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_DAEMON_STATUS_CONNECTED)
 val Translation.daemonStatusDisconnected: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_DAEMON_STATUS_DISCONNECTED)

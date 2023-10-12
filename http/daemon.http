@@ -13,7 +13,8 @@ Content-Type: application/json
         "favicon": null,
         "preview": null,
         "title": "Test space 1",
-        "description": "Test space instance."
+        "description": "Test space instance.",
+        "remark": null
     }
 }
 
@@ -30,7 +31,8 @@ Content-Type: application/json
         "favicon": null,
         "preview": null,
         "title": "Test space",
-        "description": "Test space instance."
+        "description": "Test space instance.",
+        "remark": null
     }
 }
 
@@ -55,7 +57,8 @@ Content-Type: application/json
         "favicon": null,
         "preview": null,
         "title": "Test space",
-        "description": "${root.custom}"
+        "description": "${root.custom}",
+        "remark": null
     }
 }
 
@@ -73,7 +76,8 @@ Content-Type: application/json
         "favicon": null,
         "preview": null,
         "title": "Test space",
-        "description": "Test space instance."
+        "description": "Test space instance.",
+        "remark": null
     }
 }
 
@@ -151,7 +155,8 @@ Content-Type: application/json
     "default": false,
     "translations": {
         "ui.icon-alt": "Иконка пространства",
-        "ui.space-info.default-title": "Beam",
+        "ui.default-title": "Beam",
+        "ui.default-remark": "Running [Beam][https://github.com/d1snin/beam]",
         "ui.explore-dropdown.callout": "Обзор",
         "ui.daemon-status.connected": "Подключен к сервису.",
         "ui.daemon-status.disconnected": "Не удалось подключиться к сервису.",
@@ -190,7 +195,8 @@ Content-Type: application/json
     "default": false,
     "translations": {
         "ui.icon-alt": "Иконка пространства",
-        "ui.space-info.default-title": "Beam",
+        "ui.default-title": "Beam",
+        "ui.default-remark": "Running [Beam][https://github.com/d1snin/beam]",
         "ui.explore-dropdown.callout": "Обзор",
         "ui.daemon-status.connected": "Подключен к сервису.",
         "ui.daemon-status.disconnected": "Не удалось подключиться к сервису.",

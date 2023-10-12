@@ -21,7 +21,6 @@ import dev.d1s.beam.commons.contententity.*
 import io.kvision.html.p
 import io.kvision.panel.SimplePanel
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
 

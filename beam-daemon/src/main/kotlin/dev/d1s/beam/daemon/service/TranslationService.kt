@@ -449,6 +449,7 @@ class DefaultTranslationService : TranslationService, KoinComponent {
                 },
                 title = title?.translateValue(translation),
                 description = description?.translateValue(translation),
+                remark = remark?.translateValue(translation)
             )
         }
 

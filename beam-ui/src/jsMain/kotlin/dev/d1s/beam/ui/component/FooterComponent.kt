@@ -16,18 +16,16 @@
 
 package dev.d1s.beam.ui.component
 
-import dev.d1s.beam.commons.VERSION
 import dev.d1s.beam.ui.Qualifier
-import dev.d1s.beam.ui.theme.setSecondaryBlue
+import dev.d1s.beam.ui.contententity.renderStyledText
 import dev.d1s.beam.ui.theme.setSecondaryText
-import dev.d1s.beam.ui.util.*
+import dev.d1s.beam.ui.util.currentSpace
+import dev.d1s.beam.ui.util.currentTranslation
+import dev.d1s.beam.ui.util.defaultRemark
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
 import dev.d1s.exkt.kvision.component.render
-import io.kvision.core.TextDecoration
-import io.kvision.core.TextDecorationLine
 import io.kvision.html.div
-import io.kvision.html.span
 import io.kvision.panel.SimplePanel
 import io.kvision.utils.rem
 import org.koin.core.component.KoinComponent
@@ -39,54 +37,22 @@ class FooterComponent : Component<Unit>(), KoinComponent {
 
     override fun SimplePanel.render(): Effect {
         div(className = "container-fluid pt-5 pb-2 mt-auto d-flex justify-content-between align-items-center") {
-            renderText()
+            renderRemark()
             renderLanguageSwitcherComponent()
         }
 
         return Effect.Success
     }
 
-    private fun SimplePanel.renderText() {
+    private fun SimplePanel.renderRemark() {
         div {
             fontSize = 0.85.rem
             setSecondaryText()
 
-            renderMessage()
-            renderSourceCodeLink()
+            val remark = currentSpace?.view?.remark ?: currentTranslation.defaultRemark
+            renderStyledText(remark)
         }
     }
-
-    private fun SimplePanel.renderMessage() {
-        div {
-            span(currentTranslation.footerMessageFirstPart)
-            nbsp()
-            span(currentTranslation.footerMessageSecondPart) {
-                setSecondaryBlue()
-            }
-            nbsp()
-            span("v$VERSION")
-        }
-    }
-
-    private fun SimplePanel.renderSourceCodeLink() {
-        div {
-            renderFriendlyLink(
-                currentTranslation.footerSourceCodeLinkMessage,
-                currentTranslation.footerSourceCodeLinkUrl,
-                external = true
-            ) {
-                setSecondaryText()
-                textDecoration = TextDecoration(TextDecorationLine.UNDERLINE)
-            }
-        }
-    }
-
-    private fun SimplePanel.nbsp() =
-        span {
-            addAfterInsertHook {
-                getElement()?.innerHTML = "&nbsp;"
-            }
-        }
 
     private fun SimplePanel.renderLanguageSwitcherComponent() {
         render(languageSwitcherComponent)

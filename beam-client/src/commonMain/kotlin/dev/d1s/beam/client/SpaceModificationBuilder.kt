@@ -68,6 +68,8 @@ public class ViewConfigurationBuilder {
 
     public var description: SpaceDescription? = null
 
+    public var remark: SpaceRemark? = null
+
     private var favicon: SpaceFavicon? = null
 
     private var preview: SpaceUrlPreview? = null
@@ -87,7 +89,8 @@ public class ViewConfigurationBuilder {
             favicon,
             preview,
             title,
-            description
+            description,
+            remark
         )
 }
 
