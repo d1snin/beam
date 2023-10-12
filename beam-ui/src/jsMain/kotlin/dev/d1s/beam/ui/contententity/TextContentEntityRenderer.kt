@@ -27,8 +27,6 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
 
     override val definition = TextContentEntityTypeDefinition
 
-    private val styledTextRenderer by inject<StyledTextRenderer>()
-
     override fun SimplePanel.render(sequence: ContentEntities, block: Block) {
         p {
             renderSequence(sequence, block)
@@ -84,11 +82,7 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
         val content = parameters[definition.value]
         requireNotNull(content)
 
-        val renderedContent = styledTextRenderer.render(content)
-
-        addAfterInsertHook {
-            getElement()?.innerHTML = renderedContent
-        }
+        renderStyledText(content)
     }
 
     private fun TextContentEntityTypeDefinition.Heading.toBootstrapHeadingClass() =

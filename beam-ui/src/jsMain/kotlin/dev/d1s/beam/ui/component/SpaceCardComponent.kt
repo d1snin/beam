@@ -17,6 +17,7 @@
 package dev.d1s.beam.ui.component
 
 import dev.d1s.beam.commons.Space
+import dev.d1s.beam.ui.contententity.renderStyledText
 import dev.d1s.beam.ui.resource.ResourceLocation
 import dev.d1s.beam.ui.theme.setSecondaryText
 import dev.d1s.beam.ui.util.*
@@ -134,7 +135,8 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
             addCssClass(headingClass)
 
             val title = space?.view?.title ?: currentTranslation.spaceInfoDefaultTitle
-            +title
+
+            renderStyledText(title)
 
             underlineOnHover()
         }
@@ -147,7 +149,7 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
 
                 setSecondaryText()
 
-                +it
+                renderStyledText(it)
             }
         }
     }

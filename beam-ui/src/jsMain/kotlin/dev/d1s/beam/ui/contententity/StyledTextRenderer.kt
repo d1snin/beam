@@ -20,6 +20,8 @@ import dev.d1s.beam.commons.Html
 import dev.d1s.beam.ui.theme.currentTheme
 import io.ktor.util.*
 import io.kvision.core.Color
+import io.kvision.panel.SimplePanel
+import org.koin.core.context.GlobalContext
 
 interface StyledTextRenderer {
 
@@ -213,5 +215,17 @@ class DefaultStyledTextRenderer : StyledTextRenderer {
 
         private val Icon = Regex("(?<!\\\\):([a-z-]+):")
         private val IconEscape = Regex("\\\\(?=:([a-z-]+):)")
+    }
+}
+
+private val styledTextRenderer by lazy {
+    GlobalContext.get().get<StyledTextRenderer>()
+}
+
+fun SimplePanel.renderStyledText(content: String) {
+    val renderedContent = styledTextRenderer.render(content)
+
+    addAfterInsertHook {
+        getElement()?.innerHTML = renderedContent
     }
 }
