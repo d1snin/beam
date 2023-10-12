@@ -17,7 +17,7 @@
 package dev.d1s.beam.client.app.state
 
 import dev.d1s.beam.client.BeamClient
-import dev.d1s.beam.client.ViewConfigurationBuilder
+import dev.d1s.beam.client.SpaceViewBuilder
 import dev.d1s.beam.client.app.ApplicationContext
 import dev.d1s.beam.commons.*
 import kotlinx.coroutines.sync.Mutex
@@ -47,15 +47,15 @@ public class SpaceContext internal constructor(
         modifySpace(metadata = metadata())
     }
 
-    public suspend fun setView(view: suspend ViewConfigurationBuilder.() -> Unit) {
-        val builtView = ViewConfigurationBuilder().apply { view() }.buildViewConfiguration()
+    public suspend fun setView(view: suspend SpaceViewBuilder.() -> Unit) {
+        val builtView = SpaceViewBuilder().apply { view() }.buildSpaceView()
         modifySpace(view = builtView)
     }
 
     private suspend fun modifySpace(
         slug: SpaceSlug = space.slug,
         metadata: Metadata = space.metadata,
-        view: ViewConfiguration = space.view
+        view: SpaceView = space.view
     ) {
         fun log(modification: Any) {
             log.d {

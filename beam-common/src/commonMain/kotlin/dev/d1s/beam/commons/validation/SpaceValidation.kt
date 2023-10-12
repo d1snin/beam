@@ -25,7 +25,7 @@ import io.konform.validation.Validation
 
 public val validateRootSpace: Validation<ModifiedRootSpace> = Validation {
     ModifiedRootSpace::view {
-        run(validateViewConfiguration)
+        run(validateSpaceView)
     }
 }
 
@@ -46,6 +46,6 @@ public val validateSpace: Validation<ModifiedSpace> = Validation {
     }
 
     ModifiedSpace::view {
-        run(validateViewConfiguration)
+        run(validateSpaceView)
     }
 }

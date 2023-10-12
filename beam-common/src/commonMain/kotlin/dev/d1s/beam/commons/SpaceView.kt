@@ -26,7 +26,7 @@ public typealias SpaceDescription = String
 public typealias SpaceRemark = String
 
 @Serializable
-public data class ViewConfiguration(
+public data class SpaceView(
     val theme: SpaceThemeName,
     val icon: SpaceIconUrl?,
     val favicon: SpaceFavicon?,

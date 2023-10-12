@@ -23,10 +23,10 @@ public class RootSpaceModificationBuilder {
 
     public var metadata: Metadata = metadataOf()
 
-    private var view: ViewConfiguration? = null
+    private var view: SpaceView? = null
 
-    public fun view(build: ViewConfigurationBuilder.() -> Unit) {
-        view = ViewConfigurationBuilder().apply(build).buildViewConfiguration()
+    public fun view(build: SpaceViewBuilder.() -> Unit) {
+        view = SpaceViewBuilder().apply(build).buildSpaceView()
     }
 
     public fun buildRootSpaceModification(): RootSpaceModification =
@@ -43,10 +43,10 @@ public class SpaceModificationBuilder {
 
     public var metadata: Metadata = metadataOf()
 
-    private var view: ViewConfiguration? = null
+    private var view: SpaceView? = null
 
-    public fun view(build: ViewConfigurationBuilder.() -> Unit) {
-        view = ViewConfigurationBuilder().apply(build).buildViewConfiguration()
+    public fun view(build: SpaceViewBuilder.() -> Unit) {
+        view = SpaceViewBuilder().apply(build).buildSpaceView()
     }
 
     public fun buildSpaceModification(): SpaceModification =
@@ -58,7 +58,7 @@ public class SpaceModificationBuilder {
 }
 
 @BuilderDsl
-public class ViewConfigurationBuilder {
+public class SpaceViewBuilder {
 
     public var theme: SpaceThemeName? = null
 
@@ -82,8 +82,8 @@ public class ViewConfigurationBuilder {
         preview = SpaceUrlPreviewBuilder().apply(build).buildSpaceUrlPreview()
     }
 
-    public fun buildViewConfiguration(): ViewConfiguration =
-        ViewConfiguration(
+    public fun buildSpaceView(): SpaceView =
+        SpaceView(
             theme ?: error("Space theme is undefined"),
             icon,
             favicon,

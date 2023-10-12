@@ -430,7 +430,7 @@ class DefaultTranslationService : TranslationService, KoinComponent {
 
     private fun SpaceEntity.translateView(translation: TranslationEntity) =
         with(view) {
-            ViewConfiguration(
+            SpaceView(
                 theme = theme,
                 icon = icon?.translateValue(translation),
                 favicon = favicon?.let { fav ->

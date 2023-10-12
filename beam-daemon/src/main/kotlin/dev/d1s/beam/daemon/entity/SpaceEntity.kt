@@ -27,7 +27,7 @@ interface SpaceEntity : UuidIdentifiedAndModificationTimestampAware<SpaceEntity>
 
     var metadata: Metadata
 
-    var view: ViewConfiguration
+    var view: SpaceView
 
     var role: Role
 

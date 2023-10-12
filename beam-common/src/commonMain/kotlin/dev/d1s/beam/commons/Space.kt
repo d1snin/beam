@@ -30,7 +30,7 @@ public sealed interface ModifiedRootSpace {
 
     public val metadata: Metadata
 
-    public val view: ViewConfiguration
+    public val view: SpaceView
 }
 
 public sealed interface ModifiedSpace : ModifiedRootSpace {
@@ -56,7 +56,7 @@ public data class Space(
     override val updatedAt: ModificationTime,
     override val slug: SpaceSlug,
     override val metadata: Metadata,
-    override val view: ViewConfiguration,
+    override val view: SpaceView,
     override val role: Role,
 ) : IdentifiedSpace
 
@@ -64,13 +64,13 @@ public data class Space(
 public data class SpaceModification(
     override val slug: SpaceSlug,
     override val metadata: Metadata,
-    override val view: ViewConfiguration
+    override val view: SpaceView
 ) : ModifiedSpace
 
 @Serializable
 public data class RootSpaceModification(
     override val metadata: Metadata,
-    override val view: ViewConfiguration
+    override val view: SpaceView
 ) : ModifiedRootSpace
 
 @Serializable
@@ -80,7 +80,7 @@ public data class SpaceWithToken(
     override val updatedAt: ModificationTime,
     override val slug: SpaceSlug,
     override val metadata: Metadata,
-    override val view: ViewConfiguration,
+    override val view: SpaceView,
     override val role: Role,
     public val token: SpaceToken
 ) : IdentifiedSpace

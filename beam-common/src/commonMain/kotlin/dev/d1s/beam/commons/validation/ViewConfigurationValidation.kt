@@ -22,29 +22,29 @@ import io.konform.validation.Validation
 import io.konform.validation.ValidationBuilder
 import io.konform.validation.jsonschema.maxLength
 
-internal val validateViewConfiguration: Validation<ViewConfiguration> = Validation {
-    ViewConfiguration::theme {
+internal val validateSpaceView: Validation<SpaceView> = Validation {
+    SpaceView::theme {
         themeExists()
     }
 
-    ViewConfiguration::icon ifPresent {
+    SpaceView::icon ifPresent {
         correctUrl()
     }
 
-    ViewConfiguration::favicon ifPresent {
+    SpaceView::favicon ifPresent {
         validFavicon()
     }
 
-    ViewConfiguration::preview ifPresent {
+    SpaceView::preview ifPresent {
         validatePreview()
     }
 
-    ViewConfiguration::title ifPresent {
+    SpaceView::title ifPresent {
         isNotBlank() hint "view title must not be blank"
         maxLength(Limits.VIEW_TITLE_MAX_LENGTH) hint "view title must be shorter than ${Limits.VIEW_TITLE_MAX_LENGTH} characters"
     }
 
-    ViewConfiguration::description ifPresent {
+    SpaceView::description ifPresent {
         isNotBlank() hint "view description must not be blank"
         maxLength(Limits.VIEW_DESCRIPTION_MAX_LENGTH) hint "view description must be shorter than ${Limits.VIEW_DESCRIPTION_MAX_LENGTH} characters"
     }
