@@ -31,6 +31,7 @@ class DefaultCurrentTheme : CurrentTheme, KoinComponent {
 
     private val themes = listOf(
         AccentDarkTheme,
+        GoldDarkTheme,
         SkyTheme,
         BarbieTheme,
         CatppuccinLatteTheme,

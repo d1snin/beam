@@ -23,11 +23,9 @@ POST http://localhost:8573/spaces/root
 Content-Type: application/json
 
 {
-    "metadata": {
-        "bundle.space.keywords": "test, keywords"
-    },
+    "metadata": {},
     "view": {
-        "theme": "sky",
+        "theme": "gold-dark",
         "icon": null,
         "favicon": null,
         "preview": null,
