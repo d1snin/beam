@@ -24,6 +24,7 @@ Content-Type: application/json
 
 {
     "metadata": {
+        "bundle.space.keywords": "test, keywords"
     },
     "view": {
         "theme": "sky",

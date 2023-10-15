@@ -62,62 +62,74 @@ class DefaultIndexHtmlRenderer : IndexHtmlRenderer, KoinComponent {
         createHTML().html {
             lang = "en"
 
-            head {
-                title(renderParameters.title)
-                meta("title", renderParameters.title)
+            renderHead(renderParameters)
+            renderBody()
+        }
 
-                renderParameters.description?.let {
-                    meta("description", it)
-                }
+    private fun HTML.renderHead(renderParameters: RenderParameters) {
+        head {
+            title(renderParameters.title)
+            meta("title", renderParameters.title)
 
-                meta("charset", "utf-8")
-                meta("viewport", "width=device-width, initial-scale=1")
-
-                renderParameters.urlPreview?.let { preview ->
-                    meta("og:type", "website")
-                    meta("og:site_name", preview.siteName)
-                    meta("og:title", preview.title)
-                    meta("og:description", preview.description)
-                    meta("og:image", preview.image)
-
-                    meta("twitter:card", preview.type)
-                    meta("twitter:title", preview.title)
-                    meta("twitter:description", preview.description)
-                    meta("twitter:image", preview.image)
-                }
-
-                meta(DaemonConnectorMeta.HTTP, config.daemonHttpAddress)
-                meta(DaemonConnectorMeta.WS, config.daemonWsAddress)
-
-                val favicon = renderParameters.favicon
-
-                link(rel = "apple-touch-icon", href = favicon.appleTouch) {
-                    sizes = "180x180"
-                }
-
-                link(rel = "icon", type = "image/png", href = favicon.faviconIco)
-
-                link(rel = "icon", type = "image/png", href = favicon.favicon16) {
-                    sizes = "16x16"
-                }
-
-                link(rel = "icon", type = "image/png", href = favicon.favicon32) {
-                    sizes = "32x32"
-                }
-
-                dependencies.forEach { dependency ->
-                    dependency()
-                }
-
-                script {
-                    src = Defaults.SCRIPT
-                }
+            renderParameters.description?.let {
+                meta("description", it)
             }
 
-            body {
-                div {
-                    id = "root"
-                }
+            val keywords = renderParameters.space?.metadata?.get(MetadataKeys.BUNDLE_SPACE_KEYWORDS)
+            if (!keywords.isNullOrBlank()) {
+                meta("keywords", keywords)
+            }
+
+            meta("charset", "utf-8")
+            meta("viewport", "width=device-width, initial-scale=1")
+
+            renderParameters.urlPreview?.let { preview ->
+                meta("og:type", "website")
+                meta("og:site_name", preview.siteName)
+                meta("og:title", preview.title)
+                meta("og:description", preview.description)
+                meta("og:image", preview.image)
+
+                meta("twitter:card", preview.type)
+                meta("twitter:title", preview.title)
+                meta("twitter:description", preview.description)
+                meta("twitter:image", preview.image)
+            }
+
+            meta(DaemonConnectorMeta.HTTP, config.daemonHttpAddress)
+            meta(DaemonConnectorMeta.WS, config.daemonWsAddress)
+
+            val favicon = renderParameters.favicon
+
+            link(rel = "apple-touch-icon", href = favicon.appleTouch) {
+                sizes = "180x180"
+            }
+
+            link(rel = "icon", type = "image/png", href = favicon.faviconIco)
+
+            link(rel = "icon", type = "image/png", href = favicon.favicon16) {
+                sizes = "16x16"
+            }
+
+            link(rel = "icon", type = "image/png", href = favicon.favicon32) {
+                sizes = "32x32"
+            }
+
+            dependencies.forEach { dependency ->
+                dependency()
+            }
+
+            script {
+                src = Defaults.SCRIPT
             }
         }
+    }
+
+    private fun HTML.renderBody() {
+        body {
+            div {
+                id = "root"
+            }
+        }
+    }
 }
