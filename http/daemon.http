@@ -91,8 +91,15 @@ Content-Type: application/json
 
 {
     "index": 0,
-    "size": "SMALL",
+    "size": "MEDIUM",
     "entities": [
+        {
+            "type": "image",
+            "parameters": {
+                "url": "https://i.pinimg.com/564x/0d/0a/b0/0d0ab0ad54642f5ea60f31324c1f299f.jpg",
+                "width": "100"
+            }
+        },
         {
             "type": "image",
             "parameters": {

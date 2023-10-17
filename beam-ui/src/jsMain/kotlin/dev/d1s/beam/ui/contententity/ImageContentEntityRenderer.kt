@@ -17,7 +17,10 @@
 package dev.d1s.beam.ui.contententity
 
 import dev.d1s.beam.commons.Block
-import dev.d1s.beam.commons.contententity.*
+import dev.d1s.beam.commons.contententity.ContentEntity
+import dev.d1s.beam.commons.contententity.ImageContentEntityTypeDefinition
+import dev.d1s.beam.commons.contententity.get
+import dev.d1s.beam.commons.contententity.isFirstIn
 import dev.d1s.beam.ui.util.isFluidImage
 import io.kvision.html.div
 import io.kvision.html.image
@@ -26,33 +29,11 @@ import io.kvision.utils.perc
 import io.kvision.utils.px
 import org.koin.core.component.KoinComponent
 
-class ImageContentEntityRenderer : ContentEntityRenderer, KoinComponent {
+class ImageContentEntityRenderer : SingleContentEntityRenderer, KoinComponent {
 
     override val definition = ImageContentEntityTypeDefinition
 
-    override fun SimplePanel.render(sequence: ContentEntities, block: Block) {
-        renderImageRow {
-            renderImages(sequence, block)
-        }
-    }
-
-    private fun SimplePanel.renderImageRow(block: SimplePanel.() -> Unit) {
-        div(className = "row row-cols-auto g-3") {
-            block()
-        }
-    }
-
-    private fun SimplePanel.renderImages(sequence: ContentEntities, block: Block) {
-        sequence.forEach { entity ->
-            renderImage(entity, block)
-
-            if (!block.isFluidImage()) {
-                separateContentEntity(entity, block)
-            }
-        }
-    }
-
-    private fun SimplePanel.renderImage(entity: ContentEntity, block: Block) {
+    override fun SimplePanel.render(entity: ContentEntity, block: Block) {
         val parameters = entity.parameters
 
         val src = parameters[definition.url]
@@ -64,6 +45,10 @@ class ImageContentEntityRenderer : ContentEntityRenderer, KoinComponent {
         val height = parameters[definition.height]?.toInt()
 
         container(entity, block) {
+            if (!block.isFluidImage()) {
+                separateContentEntity(entity, block)
+            }
+
             image(src, description, responsive = true, className = "rounded") {
                 width?.let {
                     this.width = it.perc

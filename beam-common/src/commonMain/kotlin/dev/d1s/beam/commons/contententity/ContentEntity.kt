@@ -38,10 +38,10 @@ public operator fun ContentEntityParameters.get(definition: ContentEntityParamet
     this[definition.name]
 
 public fun ContentEntity.isFirstIn(block: Block): Boolean =
-    this == block.entities.firstOrNull()
+    this === block.entities.firstOrNull()
 
 public fun ContentEntity.isLastIn(block: Block): Boolean =
-    this == block.entities.lastOrNull()
+    this === block.entities.lastOrNull()
 
 public fun ContentEntities.isLastIn(block: Block): Boolean =
     this.lastOrNull()?.equals(block.entities.lastOrNull()) == true
