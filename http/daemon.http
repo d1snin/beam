@@ -25,7 +25,7 @@ Content-Type: application/json
 {
     "metadata": {},
     "view": {
-        "theme": "gold-dark",
+        "theme": "accent-dark",
         "icon": null,
         "favicon": null,
         "preview": null,
@@ -91,27 +91,16 @@ Content-Type: application/json
 
 {
     "index": 0,
-    "size": "MEDIUM",
+    "size": "EXTRA_LARGE",
     "entities": [
         {
-            "type": "image",
+            "type": "text",
             "parameters": {
-                "url": "https://i.pinimg.com/564x/0d/0a/b0/0d0ab0ad54642f5ea60f31324c1f299f.jpg",
-                "width": "100"
-            }
-        },
-        {
-            "type": "image",
-            "parameters": {
-                "url": "https://i.pinimg.com/564x/0d/0a/b0/0d0ab0ad54642f5ea60f31324c1f299f.jpg",
-                "width": "100"
+                "value": ":1-circle:"
             }
         }
     ],
-    "metadata": {
-        "ui.block.link": "https://pin.it/1CM6dqW",
-        "ui.block.image.fluid": "true"
-    },
+    "metadata": {},
     "spaceId": "root"
 }
 

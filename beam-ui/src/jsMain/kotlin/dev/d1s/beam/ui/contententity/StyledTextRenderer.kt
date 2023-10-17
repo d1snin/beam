@@ -213,8 +213,8 @@ class DefaultStyledTextRenderer : StyledTextRenderer {
         private val Secondary = Regex("(?<!\\\\)%([\\s\\S]+)%")
         private val SecondaryEscape = Regex("\\\\(?=%([\\s\\S]+)%)")
 
-        private val Icon = Regex("(?<!\\\\):([a-z-]+):")
-        private val IconEscape = Regex("\\\\(?=:([a-z-]+):)")
+        private val Icon = Regex("(?<!\\\\):([a-z1-9-]+):")
+        private val IconEscape = Regex("\\\\(?=:([a-z1-9-]+):)")
     }
 }
 
