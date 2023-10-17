@@ -35,8 +35,8 @@ object GoldDarkTheme : AbstractTheme(SpaceThemeDefinition.GoldDark) {
     // https://colorpicker.me/#242424
     override val overlay = Color.hex(0x242424)
 
-    // https://colorpicker.me/#fff001
-    override val outline = Color.hex(0xfff001)
+    // https://colorpicker.me/#aba54a
+    override val outline = Color.hex(0xaba54a)
 
     // https://colorpicker.me/#f0f0f0
     override val text = Color.hex(0xf0f0f0)
