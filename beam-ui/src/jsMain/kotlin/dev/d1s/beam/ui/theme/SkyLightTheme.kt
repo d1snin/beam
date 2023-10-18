@@ -21,44 +21,44 @@ import dev.d1s.beam.ui.resource.ResourceLocation
 import io.kvision.core.Color
 import io.kvision.html.ButtonStyle
 
-object SkyTheme : AbstractTheme(SpaceThemeDefinition.Sky) {
+object SkyLightTheme : AbstractTheme(SpaceThemeDefinition.SkyLight) {
 
     override val notFoundIcon = ResourceLocation.NOT_FOUND_DARK
 
     override val emptySpaceIcon = ResourceLocation.EMPTY_SPACE_DARK
 
-    override val buttonStyle = ButtonStyle.OUTLINEDARK
+    override val buttonStyle = ButtonStyle.DARK
 
-    // https://colorpicker.me/#c8ebff
-    override val background = Color.hex(0xc8ebff)
+    // https://colorpicker.me/#fbfbfb
+    override val background = Color.hex(0xfbfbfb)
 
-    // https://colorpicker.me/#e3f5ff
-    override val overlay = Color.hex(0xe3f5ff)
+    // https://colorpicker.me/#e9e9e9
+    override val overlay = Color.hex(0xe9e9e9)
 
-    // https://colorpicker.me/#00a2ff
-    override val outline = Color.hex(0x00a2ff)
+    // https://colorpicker.me/#00a4d9
+    override val outline = Color.hex(0x00a4d9)
 
-    // https://colorpicker.me/#1b1b1b
-    override val text = Color.hex(0x1b1b1b)
+    // https://colorpicker.me/#d7ce4b
+    override val text = Color.hex(0x181818)
 
-    // https://colorpicker.me/#3e3e3e
-    override val secondaryText = Color.hex(0x3e3e3e)
+    // https://colorpicker.me/#444444
+    override val secondaryText = Color.hex(0x444444)
 
-    // https://colorpicker.me/#3989aa
-    override val secondaryBlue = Color.hex(0x3989aa)
+    // https://colorpicker.me/#3199c5
+    override val secondaryBlue = Color.hex(0x3199c5)
 
-    // https://colorpicker.me/#ff2020
-    override val red = Color.hex(0xff2020)
+    // https://colorpicker.me/#9f0000
+    override val red = Color.hex(0x9f0000)
 
-    // https://colorpicker.me/#ff8f1f
-    override val orange = Color.hex(0xff8f1f)
+    // https://colorpicker.me/#ff7a00
+    override val orange = Color.hex(0xff7a00)
 
-    // https://colorpicker.me/#009c61
-    override val green = Color.hex(0x009c61)
+    // https://colorpicker.me/#00ad2f
+    override val green = Color.hex(0x00ad2f)
 
     // https://colorpicker.me/#feff9e
     override val yellow = Color.hex(0xfeff9e)
 
-    // https://colorpicker.me/#009bce
-    override val blue = Color.hex(0x009bce)
+    // https://colorpicker.me/#00a4d9
+    override val blue = Color.hex(0x00a4d9)
 }

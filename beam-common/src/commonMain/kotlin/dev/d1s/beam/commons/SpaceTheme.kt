@@ -27,7 +27,7 @@ public sealed class SpaceThemeDefinition(public val name: SpaceThemeName) {
 
     public data object GoldDark : SpaceThemeDefinition("gold-dark")
 
-    public data object Sky : SpaceThemeDefinition("sky")
+    public data object SkyLight : SpaceThemeDefinition("sky-light")
 
     public data object Barbie : SpaceThemeDefinition("barbie")
 
@@ -48,7 +48,7 @@ public sealed class SpaceThemeDefinition(public val name: SpaceThemeName) {
                 AccentDark,
                 GoldLight,
                 GoldDark,
-                Sky,
+                SkyLight,
                 Barbie,
                 CatppuccinLatte,
                 CatppuccinFrappe,

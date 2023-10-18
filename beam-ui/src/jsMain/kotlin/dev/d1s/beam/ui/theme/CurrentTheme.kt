@@ -33,7 +33,7 @@ class DefaultCurrentTheme : CurrentTheme, KoinComponent {
         AccentDarkTheme,
         GoldLightTheme,
         GoldDarkTheme,
-        SkyTheme,
+        SkyLightTheme,
         BarbieTheme,
         CatppuccinLatteTheme,
         CatppuccinFrappeTheme,
