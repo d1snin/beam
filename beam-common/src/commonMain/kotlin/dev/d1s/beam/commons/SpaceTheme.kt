@@ -23,6 +23,8 @@ public sealed class SpaceThemeDefinition(public val name: SpaceThemeName) {
 
     public data object AccentDark : SpaceThemeDefinition("accent-dark")
 
+    public data object GoldLight : SpaceThemeDefinition("gold-light")
+
     public data object GoldDark : SpaceThemeDefinition("gold-dark")
 
     public data object Sky : SpaceThemeDefinition("sky")
@@ -44,6 +46,7 @@ public sealed class SpaceThemeDefinition(public val name: SpaceThemeName) {
         public val definitions: List<SpaceThemeDefinition> =
             listOf(
                 AccentDark,
+                GoldLight,
                 GoldDark,
                 Sky,
                 Barbie,
