@@ -27,7 +27,7 @@ object GoldLightTheme : AbstractTheme(SpaceThemeDefinition.GoldLight) {
 
     override val emptySpaceIcon = ResourceLocation.EMPTY_SPACE_DARK
 
-    override val buttonStyle = ButtonStyle.DARK
+    override val buttonStyle = ButtonStyle.OUTLINEDARK
 
     // https://colorpicker.me/#fbfbfb
     override val background = Color.hex(0xfbfbfb)
