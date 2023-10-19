@@ -47,15 +47,23 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
         val isBare = block.metadata[MetadataKeys.UI_BLOCK_BARE]
             ?.toBooleanStrictOrNull() == true
 
-        fun SimplePanel.renderCard() {
-            renderCard("w-100 d-flex flex-column justify-content-start", bare = isBare) {
-                val blockSize = if (config.single.value) {
-                    sizeOf(MaxBlockSize).px
-                } else {
-                    sizeOf(block.size).px
-                }
+        fun SimplePanel.configureContainer() {
+            addCssClass("w-100")
+            addCssClass("d-flex")
 
-                maxWidth = blockSize
+            val blockSize = if (config.single.value) {
+                sizeOf(MaxBlockSize).px
+            } else {
+                sizeOf(block.size).px
+            }
+
+            maxWidth = blockSize
+
+        }
+
+        fun SimplePanel.renderCard() {
+            renderCard("flex-column justify-content-start", bare = isBare) {
+                configureContainer()
 
                 configurePadding(block)
 
@@ -72,6 +80,8 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
 
         link?.let {
             renderFriendlyLink(url = it, external = true) {
+                configureContainer()
+
                 renderCard()
             }
         } ?: renderCard()

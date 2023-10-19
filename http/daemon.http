@@ -25,7 +25,7 @@ Content-Type: application/json
 {
     "metadata": {},
     "view": {
-        "theme": "gold-light",
+        "theme": "accent-dark",
         "icon": null,
         "favicon": null,
         "preview": null,
@@ -91,7 +91,7 @@ Content-Type: application/json
 
 {
     "index": 0,
-    "size": "EXTRA_LARGE",
+    "size": "SMALL",
     "entities": [
         {
             "type": "text",
@@ -100,7 +100,9 @@ Content-Type: application/json
             }
         }
     ],
-    "metadata": {},
+    "metadata": {
+        "ui.block.link": "https:/ya.ru"
+    },
     "spaceId": "root"
 }
 
@@ -136,7 +138,7 @@ Content-Type: application/json
 }
 
 ### DELETE Block
-DELETE http://localhost:8573/blocks/3afa62d1-2a4e-45c8-b173-b211b2b7fb52
+DELETE http://localhost:8573/blocks/5989ded8-4101-4092-8c2d-443cf85bd96c
 Authorization: Bearer {{token}}
 
 ### POST Translation
