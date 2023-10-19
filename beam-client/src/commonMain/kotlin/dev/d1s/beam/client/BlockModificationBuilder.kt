@@ -115,13 +115,13 @@ public fun ContentEntitiesBuilder.buttonLink(
             put(ButtonLink.text.name, text)
 
             icon?.let {
-                put(ButtonLink.icon.name, text)
+                put(ButtonLink.icon.name, it)
             }
 
             put(ButtonLink.url.name, url)
 
             style?.let {
-                put(ButtonLink.style.name, style.identifier)
+                put(ButtonLink.style.name, it.identifier)
             }
 
             width?.let {
