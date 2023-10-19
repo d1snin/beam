@@ -75,7 +75,7 @@ class ButtonLinkContentEntityRenderer : ContentEntityRenderer, KoinComponent {
         val height = parameters[definition.height]?.toInt()
 
         fun render() {
-            div(className = "d-flex") {
+            div(className = "d-flex mt-0") {
                 width?.let {
                     this.width = width.perc
                 }
@@ -92,7 +92,7 @@ class ButtonLinkContentEntityRenderer : ContentEntityRenderer, KoinComponent {
                     role = "button"
 
                     div(className = "h-100 d-flex justify-content-center align-items-center") {
-                        +text
+                        renderStyledText(text)
                     }
                 }
 

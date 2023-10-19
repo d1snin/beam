@@ -91,18 +91,17 @@ Content-Type: application/json
 
 {
     "index": 0,
-    "size": "SMALL",
+    "size": "EXTRA_LARGE",
     "entities": [
         {
-            "type": "text",
+            "type": "button-link",
             "parameters": {
-                "value": ":1-circle:"
+                "text": ":star: ***Hello, World!***",
+                "url": "https://ya.ru"
             }
         }
     ],
-    "metadata": {
-        "ui.block.link": "https:/ya.ru"
-    },
+    "metadata": {},
     "spaceId": "root"
 }
 

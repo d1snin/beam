@@ -45,6 +45,7 @@ class DefaultStyledTextRenderer : StyledTextRenderer {
 
     override fun render(text: String): Html =
         text.escapeHTML()
+            .escapeWhitespace()
             .transformUrl()
             .transformColor()
             .transformCodeBlock()
@@ -56,6 +57,9 @@ class DefaultStyledTextRenderer : StyledTextRenderer {
             .transformSecondary()
             .transformIcon()
             .removeEscapes()
+
+    private fun String.escapeWhitespace() =
+        replace("\\s".toRegex(), "&nbsp;")
 
     private fun String.transformUrl() =
         transformMatchedParametrizedStyle(Url) { (text, link) ->
