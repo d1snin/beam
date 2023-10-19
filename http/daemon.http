@@ -96,8 +96,9 @@ Content-Type: application/json
         {
             "type": "button-link",
             "parameters": {
-                "text": ":star: ***Hello, World!***",
-                "url": "https://ya.ru"
+                "text": "Hello, World",
+                "url": "https://ya.ru",
+                "icon": "star"
             }
         }
     ],

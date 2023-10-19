@@ -30,6 +30,7 @@ internal object ButtonLinkContentEntityValidator :
         val validator = this@ButtonLinkContentEntityValidator
 
         requireCorrectBoundary(validator, definition.text, textBoundary, stringLengthMode = true)
+        requireNotBlankText(validator, definition.icon)
         requireCorrectUrl(validator, definition.url)
         requireCorrectStyle()
         requireCorrectWidth(validator, definition.width)

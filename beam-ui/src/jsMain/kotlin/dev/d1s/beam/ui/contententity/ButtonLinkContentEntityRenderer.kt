@@ -21,8 +21,10 @@ import dev.d1s.beam.commons.contententity.ButtonLinkContentEntityTypeDefinition
 import dev.d1s.beam.commons.contententity.ContentEntities
 import dev.d1s.beam.commons.contententity.ContentEntity
 import dev.d1s.beam.commons.contententity.get
+import dev.d1s.beam.ui.util.iconWithMargin
 import dev.d1s.beam.ui.util.renderFriendlyLink
 import io.kvision.html.div
+import io.kvision.html.span
 import io.kvision.panel.SimplePanel
 import io.kvision.utils.perc
 import io.kvision.utils.px
@@ -64,6 +66,8 @@ class ButtonLinkContentEntityRenderer : ContentEntityRenderer, KoinComponent {
         val text = parameters[definition.text]
         requireNotNull(text)
 
+        val icon = parameters[definition.icon]
+
         val url = parameters[definition.url]
         requireNotNull(url)
 
@@ -92,7 +96,11 @@ class ButtonLinkContentEntityRenderer : ContentEntityRenderer, KoinComponent {
                     role = "button"
 
                     div(className = "h-100 d-flex justify-content-center align-items-center") {
-                        renderStyledText(text)
+                        icon?.let {
+                            iconWithMargin("bi bi-$it")
+                        }
+
+                        span(text)
                     }
                 }
 

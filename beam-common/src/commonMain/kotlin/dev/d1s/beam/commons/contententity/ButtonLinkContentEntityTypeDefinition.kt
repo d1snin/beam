@@ -20,6 +20,8 @@ public data object ButtonLinkContentEntityTypeDefinition : CommonContentEntityTy
 
     val text: ContentEntityParameterDefinition = parameter("text", required = true, translatable = true)
 
+    val icon: ContentEntityParameterDefinition = parameter("icon")
+
     val url: ContentEntityParameterDefinition = urlParameter(required = true)
 
     val style: ContentEntityParameterDefinition = parameter("style")
