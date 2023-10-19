@@ -102,6 +102,7 @@ public fun ContentEntitiesBuilder.text(value: String, heading: String? = null) {
 
 public fun ContentEntitiesBuilder.buttonLink(
     text: String,
+    icon: String? = null,
     url: String,
     style: ButtonLinkContentEntityTypeDefinition.Style? = null,
     width: Int? = null,
@@ -112,6 +113,11 @@ public fun ContentEntitiesBuilder.buttonLink(
 
         parameters {
             put(ButtonLink.text.name, text)
+
+            icon?.let {
+                put(ButtonLink.icon.name, text)
+            }
+
             put(ButtonLink.url.name, url)
 
             style?.let {
