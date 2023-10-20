@@ -22,8 +22,8 @@ public object Limits {
     public const val VIEW_DESCRIPTION_MAX_LENGTH: Int = 700
 
     public const val METADATA_MAX_LENGTH: Int = 100
-    public const val METADATA_VALUE_MAX_LENGTH: Int = 100
+    public const val METADATA_VALUE_MAX_LENGTH: Int = 500
 
     public const val SPACE_MAX_CAPACITY: Int = 300
-    public const val BLOCK_MAX_CAPACITY: Int = 20
+    public const val BLOCK_MAX_CAPACITY: Int = 50
 }
