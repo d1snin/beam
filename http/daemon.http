@@ -25,7 +25,7 @@ Content-Type: application/json
 {
     "metadata": {},
     "view": {
-        "theme": "accent-dark",
+        "theme": "sky-light",
         "icon": null,
         "favicon": null,
         "preview": null,

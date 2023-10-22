@@ -32,8 +32,8 @@ object SkyLightTheme : AbstractTheme(SpaceThemeDefinition.SkyLight) {
     // https://colorpicker.me/#fbfbfb
     override val background = Color.hex(0xfbfbfb)
 
-    // https://colorpicker.me/#e9e9e9
-    override val overlay = Color.hex(0xe9e9e9)
+    // https://colorpicker.me/#f4f4f4
+    override val overlay = Color.hex(0xf4f4f4)
 
     // https://colorpicker.me/#00a4d9
     override val outline = Color.hex(0x00a4d9)
