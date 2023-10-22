@@ -26,16 +26,20 @@ public class BlockModificationBuilder : ContentEntitiesBuilder() {
 
     public var size: BlockSize? = null
 
-    public var metadata: Metadata = metadataOf()
-
     public var spaceId: SpaceIdentifier? = null
+
+    private val metadataBuilder = MetadataBuilder()
+
+    public fun metadata(key: MetadataKey, value: MetadataValue) {
+        metadataBuilder.metadata(key, value)
+    }
 
     public fun buildBlockModification(): BlockModification =
         BlockModification(
             index ?: error("Block index is undefined"),
             size ?: error("Block size is undefined"),
             buildContentEntities(),
-            metadata,
+            metadataBuilder.buildMetadata(),
             spaceId ?: error("Block space id is undefined")
         )
 }
@@ -100,6 +104,18 @@ public fun ContentEntitiesBuilder.text(value: String, heading: String? = null) {
     }
 }
 
+public fun ContentEntitiesBuilder.firstHeading(value: String) {
+    text(value, heading = TextContentEntityTypeDefinition.Heading.H1.name)
+}
+
+public fun ContentEntitiesBuilder.secondHeading(value: String) {
+    text(value, heading = TextContentEntityTypeDefinition.Heading.H2.name)
+}
+
+public fun ContentEntitiesBuilder.thirdHeading(value: String) {
+    text(value, heading = TextContentEntityTypeDefinition.Heading.H3.name)
+}
+
 public fun ContentEntitiesBuilder.buttonLink(
     text: String,
     icon: String? = null,
@@ -135,6 +151,16 @@ public fun ContentEntitiesBuilder.buttonLink(
     }
 }
 
+public fun ContentEntitiesBuilder.fullWidthButtonLink(
+    text: String,
+    icon: String? = null,
+    url: String,
+    style: ButtonLinkContentEntityTypeDefinition.Style? = null,
+    height: Int? = null
+) {
+    buttonLink(text, icon, url, style, width = 100, height)
+}
+
 public fun ContentEntitiesBuilder.space(
     identifier: SpaceIdentifier,
     fullWidth: Boolean? = null
@@ -150,6 +176,10 @@ public fun ContentEntitiesBuilder.space(
             }
         }
     }
+}
+
+public fun ContentEntitiesBuilder.fullWidthSpace(identifier: SpaceIdentifier) {
+    space(identifier, fullWidth = true)
 }
 
 public fun ContentEntitiesBuilder.image(
@@ -180,6 +210,14 @@ public fun ContentEntitiesBuilder.image(
     }
 }
 
+public fun ContentEntitiesBuilder.fullWidthImage(
+    url: String,
+    description: String? = null,
+    height: Int? = null
+) {
+    image(url, description, width = 100, height)
+}
+
 public fun ContentEntitiesBuilder.embed(
     url: String,
     document: String? = null,
@@ -205,4 +243,12 @@ public fun ContentEntitiesBuilder.embed(
             }
         }
     }
+}
+
+public fun ContentEntitiesBuilder.fullWidthEmbed(
+    url: String,
+    document: String? = null,
+    height: Int? = null
+) {
+    embed(url, document, width = 100, height)
 }

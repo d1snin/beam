@@ -18,6 +18,7 @@ package dev.d1s.beam.client.app.state
 
 import dev.d1s.beam.client.BeamClient
 import dev.d1s.beam.client.ContentEntitiesBuilder
+import dev.d1s.beam.client.MetadataBuilder
 import dev.d1s.beam.client.void
 import dev.d1s.beam.commons.*
 import dev.d1s.beam.commons.contententity.ContentEntities
@@ -50,8 +51,9 @@ public class BlockContext internal constructor(
         modifyBlock(entities = builtEntities)
     }
 
-    public suspend fun setMetadata(metadata: suspend () -> Metadata) {
-        modifyBlock(metadata = metadata())
+    public suspend fun setMetadata(metadata: suspend MetadataBuilder.() -> Unit) {
+        val builtMetadata = MetadataBuilder().apply { metadata() }.buildMetadata()
+        modifyBlock(metadata = builtMetadata)
     }
 
     private suspend fun modifyBlock(
@@ -104,4 +106,55 @@ public suspend fun SpaceContext.block(configure: suspend BlockContext.() -> Unit
             "Won't process block for space '$space'."
         }
     }
+}
+
+public suspend fun SpaceContext.sizedBlock(size: BlockSize, configure: suspend BlockContext.() -> Unit) {
+    block {
+        setSize {
+            size
+        }
+
+        configure()
+    }
+}
+
+public suspend fun SpaceContext.sizedBlockWithEntities(
+    size: BlockSize,
+    configureEntities: suspend ContentEntitiesBuilder.() -> Unit
+) {
+    sizedBlock(size) {
+        setEntities(configureEntities)
+    }
+}
+
+public suspend fun SpaceContext.smallBlock(configure: suspend BlockContext.() -> Unit) {
+    sizedBlock(size = BlockSize.SMALL, configure)
+}
+
+public suspend fun SpaceContext.mediumBlock(configure: suspend BlockContext.() -> Unit) {
+    sizedBlock(size = BlockSize.MEDIUM, configure)
+}
+
+public suspend fun SpaceContext.largeBlock(configure: suspend BlockContext.() -> Unit) {
+    sizedBlock(size = BlockSize.LARGE, configure)
+}
+
+public suspend fun SpaceContext.extraLargeBlock(configure: suspend BlockContext.() -> Unit) {
+    sizedBlock(size = BlockSize.EXTRA_LARGE, configure)
+}
+
+public suspend fun SpaceContext.smallBlockWithEntities(configureEntities: suspend ContentEntitiesBuilder.() -> Unit) {
+    sizedBlockWithEntities(size = BlockSize.SMALL, configureEntities)
+}
+
+public suspend fun SpaceContext.mediumBlockWithEntities(configureEntities: suspend ContentEntitiesBuilder.() -> Unit) {
+    sizedBlockWithEntities(size = BlockSize.MEDIUM, configureEntities)
+}
+
+public suspend fun SpaceContext.largeBlockWithEntities(configureEntities: suspend ContentEntitiesBuilder.() -> Unit) {
+    sizedBlockWithEntities(size = BlockSize.LARGE, configureEntities)
+}
+
+public suspend fun SpaceContext.extraLargeBlockWithEntities(configureEntities: suspend ContentEntitiesBuilder.() -> Unit) {
+    sizedBlockWithEntities(size = BlockSize.EXTRA_LARGE, configureEntities)
 }

@@ -21,9 +21,13 @@ import dev.d1s.beam.commons.*
 @BuilderDsl
 public class RootSpaceModificationBuilder {
 
-    public var metadata: Metadata = metadataOf()
-
     private var view: SpaceView? = null
+
+    private val metadataBuilder = MetadataBuilder()
+
+    public fun metadata(key: MetadataKey, value: MetadataValue) {
+        metadataBuilder.metadata(key, value)
+    }
 
     public fun view(build: SpaceViewBuilder.() -> Unit) {
         view = SpaceViewBuilder().apply(build).buildSpaceView()
@@ -31,7 +35,7 @@ public class RootSpaceModificationBuilder {
 
     public fun buildRootSpaceModification(): RootSpaceModification =
         RootSpaceModification(
-            metadata,
+            metadataBuilder.buildMetadata(),
             view ?: error("View is undefined")
         )
 }
