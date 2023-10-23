@@ -17,6 +17,7 @@
 package dev.d1s.beam.client.app.state
 
 import dev.d1s.beam.client.BeamClient
+import dev.d1s.beam.client.MetadataBuilder
 import dev.d1s.beam.client.SpaceViewBuilder
 import dev.d1s.beam.client.app.ApplicationContext
 import dev.d1s.beam.commons.*
@@ -43,8 +44,9 @@ public class SpaceContext internal constructor(
         modifySpace(slug = slug())
     }
 
-    public suspend fun setMetadata(metadata: suspend () -> Metadata) {
-        modifySpace(metadata = metadata())
+    public suspend fun setMetadata(metadata: suspend MetadataBuilder.() -> Unit) {
+        val builtMetadata = MetadataBuilder().apply { metadata() }.buildMetadata()
+        modifySpace(metadata = builtMetadata)
     }
 
     public suspend fun setView(view: suspend SpaceViewBuilder.() -> Unit) {
