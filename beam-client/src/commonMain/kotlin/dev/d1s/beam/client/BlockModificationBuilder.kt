@@ -104,16 +104,20 @@ public fun ContentEntitiesBuilder.text(value: String, heading: String? = null) {
     }
 }
 
+public fun ContentEntitiesBuilder.heading(value: String, level: TextContentEntityTypeDefinition.Heading) {
+    text(value, heading = level.key)
+}
+
 public fun ContentEntitiesBuilder.firstHeading(value: String) {
-    text(value, heading = TextContentEntityTypeDefinition.Heading.H1.name)
+    heading(value, level = TextContentEntityTypeDefinition.Heading.H1)
 }
 
 public fun ContentEntitiesBuilder.secondHeading(value: String) {
-    text(value, heading = TextContentEntityTypeDefinition.Heading.H2.name)
+    heading(value, level = TextContentEntityTypeDefinition.Heading.H2)
 }
 
 public fun ContentEntitiesBuilder.thirdHeading(value: String) {
-    text(value, heading = TextContentEntityTypeDefinition.Heading.H3.name)
+    heading(value, level = TextContentEntityTypeDefinition.Heading.H3)
 }
 
 public fun ContentEntitiesBuilder.buttonLink(
