@@ -16,11 +16,8 @@
 
 package dev.d1s.beam.ui.contententity
 
-import dev.d1s.beam.commons.Block
-import dev.d1s.beam.commons.contententity.ContentEntity
 import dev.d1s.beam.commons.contententity.ImageContentEntityTypeDefinition
 import dev.d1s.beam.commons.contententity.get
-import dev.d1s.beam.commons.contententity.isFirstIn
 import dev.d1s.beam.ui.util.isFluidImage
 import io.kvision.html.div
 import io.kvision.html.image
@@ -33,8 +30,8 @@ class ImageContentEntityRenderer : SingleContentEntityRenderer, KoinComponent {
 
     override val definition = ImageContentEntityTypeDefinition
 
-    override fun SimplePanel.render(entity: ContentEntity, block: Block) {
-        val parameters = entity.parameters
+    override fun SimplePanel.render(context: SingleContentEntityRenderingContext) {
+        val parameters = context.entity.parameters
 
         val src = parameters[definition.url]
         requireNotNull(src)
@@ -44,9 +41,9 @@ class ImageContentEntityRenderer : SingleContentEntityRenderer, KoinComponent {
         val width = parameters[definition.width]?.toInt()
         val height = parameters[definition.height]?.toInt()
 
-        container(entity, block) {
-            if (!block.isFluidImage()) {
-                separateContentEntity(entity, block)
+        container(context) {
+            if (!context.block.isFluidImage()) {
+                separateContentEntity(context)
             }
 
             image(src, description, responsive = true, className = "rounded") {
@@ -61,9 +58,12 @@ class ImageContentEntityRenderer : SingleContentEntityRenderer, KoinComponent {
         }
     }
 
-    private fun SimplePanel.container(entity: ContentEntity, block: Block, configure: SimplePanel.() -> Unit) {
+    private fun SimplePanel.container(
+        context: SingleContentEntityRenderingContext,
+        configure: SimplePanel.() -> Unit
+    ) {
         div(className = "w-100") {
-            if (entity.isFirstIn(block)) {
+            if (context.isFirst()) {
                 addCssClass("mt-0")
             }
 

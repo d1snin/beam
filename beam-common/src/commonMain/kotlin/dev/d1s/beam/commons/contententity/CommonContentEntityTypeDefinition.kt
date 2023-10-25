@@ -18,6 +18,8 @@ package dev.d1s.beam.commons.contententity
 
 public abstract class CommonContentEntityTypeDefinition(name: String) : ContentEntityTypeDefinition(name) {
 
+    public val collapsed: ContentEntityParameterDefinition = parameter(CommonParameters.COLLAPSED)
+
     protected fun widthParameter(
         required: Boolean = false,
         translatable: Boolean = false
@@ -32,4 +34,9 @@ public abstract class CommonContentEntityTypeDefinition(name: String) : ContentE
         required: Boolean = false,
         translatable: Boolean = true
     ): ContentEntityParameterDefinition = parameter("url", required, translatable)
+}
+
+public object CommonParameters {
+
+    public const val COLLAPSED: ContentEntityParameterName = "collapsed"
 }

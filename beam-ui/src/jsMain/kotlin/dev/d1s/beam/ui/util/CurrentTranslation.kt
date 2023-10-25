@@ -90,6 +90,7 @@ val Translation.failureCardEmptySpaceMessage: TranslatedText get() = requiredTra
 val Translation.footerLanguageSwitcherMessage: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_FOOTER_LANGUAGE_SWITCHER_MESSAGE)
 val Translation.spaceListingMessage: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_SPACE_LISTING_MESSAGE)
 val Translation.spaceListingFetchMoreButton: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_SPACE_LISTING_FETCH_MORE_BUTTON)
+val Translation.blockCollapsedContentEntityButtonMessage: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_BLOCK_COLLAPSED_CONTENT_ENTITY_BUTTON_MESSAGE)
 
 private fun Translation.requiredTranslation(location: TextLocation) =
     translations[location] ?: error("No translation for given location '$location'")

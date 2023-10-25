@@ -27,7 +27,7 @@ internal object TextContentEntityValidator :
     override fun ValidationBuilder<ContentEntity>.validate() {
         val validator = this@TextContentEntityValidator
 
-        requireNotBlankText(validator, definition.value)
+        requireNotBlankText(validator, requiredDefinition.value)
 
         requireHeading()
     }
@@ -35,8 +35,8 @@ internal object TextContentEntityValidator :
     private fun ValidationBuilder<ContentEntity>.requireHeading() {
         val headings = TextContentEntityTypeDefinition.Heading.entries.joinToString(", ") { it.key }
 
-        addTypedConstraint("parameter '${definition.heading.name}' must be one of the following: $headings") { entity ->
-            entity.parameters[definition.heading]?.let { heading ->
+        addTypedConstraint("parameter '${requiredDefinition.heading.name}' must be one of the following: $headings") { entity ->
+            entity.parameters[requiredDefinition.heading]?.let { heading ->
                 return@addTypedConstraint TextContentEntityTypeDefinition.Heading.byKey(heading) != null
             }
 

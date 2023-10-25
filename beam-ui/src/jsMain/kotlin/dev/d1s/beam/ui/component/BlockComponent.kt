@@ -18,20 +18,36 @@ package dev.d1s.beam.ui.component
 
 import dev.d1s.beam.commons.Block
 import dev.d1s.beam.commons.MetadataKeys
+import dev.d1s.beam.commons.contententity.CommonParameters
+import dev.d1s.beam.commons.contententity.ContentEntities
+import dev.d1s.beam.commons.contententity.ContentEntity
 import dev.d1s.beam.ui.contententity.renderEntities
+import dev.d1s.beam.ui.contententity.split
+import dev.d1s.beam.ui.util.*
 import dev.d1s.beam.ui.util.Size.MaxBlockSize
 import dev.d1s.beam.ui.util.Size.sizeOf
-import dev.d1s.beam.ui.util.isFluidImage
-import dev.d1s.beam.ui.util.renderFriendlyLink
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
+import io.kvision.core.onEvent
+import io.kvision.html.div
+import io.kvision.html.span
 import io.kvision.panel.SimplePanel
+import io.kvision.state.ObservableValue
+import io.kvision.state.bind
+import io.kvision.utils.event
 import io.kvision.utils.plus
 import io.kvision.utils.px
 import kotlinx.atomicfu.atomic
 import org.koin.core.component.KoinComponent
 
 class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent {
+
+    private val blockMargin = BLOCK_MARGIN_VALUE.px
+
+    private var collapsedContentCounter = 0
+
+    private val collapsedContentId
+        get() = COLLAPSED_CONTENT_ID + collapsedContentCounter
 
     override fun SimplePanel.render(): Effect {
         val block = requireNotNull(config.block.value) {
@@ -77,7 +93,7 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
 
                 setOptionalBlockId(block)
 
-                renderEntities(block)
+                renderContent(block)
             }
         }
 
@@ -124,6 +140,75 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
         }
     }
 
+    private fun SimplePanel.renderContent(block: Block) {
+        block.entities.splitCollapsedEntities { batch, collapsed ->
+            if (collapsed) {
+                renderExpandableContainer {
+                    renderEntities(block, batch)
+                }
+            } else {
+                renderEntities(block, batch)
+            }
+        }
+    }
+
+    private fun ContentEntities.splitCollapsedEntities(block: (ContentEntities, collapsed: Boolean) -> Unit) {
+        fun ContentEntity.isCollapsed() =
+            parameters[CommonParameters.COLLAPSED]?.toBooleanStrictOrNull() ?: false
+
+        split(condition = { entity -> entity.isCollapsed() }) { entities, collapsed ->
+            block(entities, collapsed)
+        }
+    }
+
+    private fun SimplePanel.renderExpandableContainer(block: SimplePanel.() -> Unit) {
+        collapsedContentCounter++
+
+        var opened = false
+        val clicked = ObservableValue(opened)
+
+        div().bind(clicked) {
+            renderFriendlyLink(
+                url = "#$collapsedContentId",
+                className = "fw-bold"
+            ) {
+                role = "button"
+                setAttribute("data-bs-toggle", "collapse")
+                setAttribute("aria-expanded", "false")
+                setAttribute("aria-controls", collapsedContentId)
+
+                val icon = if (opened) {
+                    "chevron-down"
+                } else {
+                    "chevron-right"
+                }
+
+                iconWithMargin("bi bi-$icon", margin = 1)
+                span(currentTranslation.blockCollapsedContentEntityButtonMessage)
+
+                opacity = if (opened) 0.6 else 1.0
+            }
+        }
+
+        div(className = "mt-2 collapse") {
+            onEvent {
+                event("hide.bs.collapse") {
+                    opened = false
+                    clicked.setState(opened)
+                }
+
+                event("show.bs.collapse") {
+                    opened = true
+                    clicked.setState(opened)
+                }
+            }
+
+            id = collapsedContentId
+
+            block()
+        }
+    }
+
     class Config {
 
         val block = atomic<Block?>(null)
@@ -140,6 +225,6 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
 
         const val BLOCK_MARGIN_VALUE = 20
 
-        private val blockMargin = BLOCK_MARGIN_VALUE.px
+        private const val COLLAPSED_CONTENT_ID = "collapsed-content-"
     }
 }

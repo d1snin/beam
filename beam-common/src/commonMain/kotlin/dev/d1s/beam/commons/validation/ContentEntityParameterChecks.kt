@@ -18,6 +18,7 @@ package dev.d1s.beam.commons.validation
 
 import dev.d1s.beam.commons.contententity.ContentEntity
 import dev.d1s.beam.commons.contententity.ContentEntityParameterDefinition
+import dev.d1s.beam.commons.contententity.ContentEntityParameterName
 import dev.d1s.beam.commons.contententity.get
 import io.konform.validation.ValidationBuilder
 
@@ -104,15 +105,22 @@ internal fun ValidationBuilder<ContentEntity>.requireNotBlankText(
 
 internal fun ValidationBuilder<ContentEntity>.requireCorrectBoolean(
     validator: ContentEntityValidator<*>,
-    parameterDefinition: ContentEntityParameterDefinition
+    parameterName: ContentEntityParameterName
 ) {
     with(validator) {
-        addTypedConstraint("parameter '${parameterDefinition.name} must be 'true' or 'false'") { entity ->
-            entity.parameters[parameterDefinition]?.let {
+        addTypedConstraint("parameter '${parameterName} must be 'true' or 'false'") { entity ->
+            entity.parameters[parameterName]?.let {
                 it.toBooleanStrictOrNull() ?: return@addTypedConstraint false
             }
 
             true
         }
     }
+}
+
+internal fun ValidationBuilder<ContentEntity>.requireCorrectBoolean(
+    validator: ContentEntityValidator<*>,
+    parameterDefinition: ContentEntityParameterDefinition
+) {
+    requireCorrectBoolean(validator, parameterDefinition.name)
 }

@@ -16,7 +16,6 @@
 
 package dev.d1s.beam.ui.contententity
 
-import dev.d1s.beam.commons.Block
 import dev.d1s.beam.commons.contententity.ButtonLinkContentEntityTypeDefinition
 import dev.d1s.beam.commons.contententity.ContentEntities
 import dev.d1s.beam.commons.contententity.ContentEntity
@@ -36,16 +35,20 @@ class ButtonLinkContentEntityRenderer : ContentEntityRenderer, KoinComponent {
 
     private val ContentEntity.width get() = parameters[definition.width]
 
-    override fun SimplePanel.render(sequence: ContentEntities, block: Block) {
-        sequence.split(condition = { it.width != null }) { entities, sized ->
-            renderButtons(entities, block, sized)
+    override fun SimplePanel.render(context: SequenceContentEntityRenderingContext) {
+        context.sequence.split(condition = { it.width != null }) { entities, sized ->
+            renderButtons(entities, context, sized)
         }
     }
 
-    private fun SimplePanel.renderButtons(entities: ContentEntities, block: Block, sized: Boolean) {
+    private fun SimplePanel.renderButtons(
+        entities: ContentEntities,
+        context: SequenceContentEntityRenderingContext,
+        sized: Boolean
+    ) {
         fun SimplePanel.renderEach(fullWidth: Boolean) {
             entities.forEach { entity ->
-                renderButton(entity, block, fullWidth)
+                renderButton(entity, context, fullWidth)
             }
         }
 
@@ -55,12 +58,16 @@ class ButtonLinkContentEntityRenderer : ContentEntityRenderer, KoinComponent {
             div(className = "row row-cols-auto g-2") {
                 renderEach(fullWidth = false)
 
-                separateContentEntities(entities, block)
+                separateContentEntities(entities, context)
             }
         }
     }
 
-    private fun SimplePanel.renderButton(entity: ContentEntity, block: Block, fullWidth: Boolean) {
+    private fun SimplePanel.renderButton(
+        entity: ContentEntity,
+        context: SequenceContentEntityRenderingContext,
+        fullWidth: Boolean
+    ) {
         val parameters = entity.parameters
 
         val text = parameters[definition.text]
@@ -105,7 +112,7 @@ class ButtonLinkContentEntityRenderer : ContentEntityRenderer, KoinComponent {
                 }
 
                 if (fullWidth) {
-                    separateContentEntity(entity, block)
+                    separateContentEntity(entity, context)
                 }
             }
         }

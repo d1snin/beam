@@ -16,9 +16,6 @@
 
 package dev.d1s.beam.ui.contententity
 
-import dev.d1s.beam.commons.Block
-import dev.d1s.beam.commons.contententity.ContentEntities
-import dev.d1s.beam.commons.contententity.ContentEntity
 import dev.d1s.beam.commons.contententity.ContentEntityTypeDefinition
 import io.kvision.panel.SimplePanel
 
@@ -26,16 +23,17 @@ interface ContentEntityRenderer {
 
     val definition: ContentEntityTypeDefinition
 
-    fun SimplePanel.render(sequence: ContentEntities, block: Block)
+    fun SimplePanel.render(context: SequenceContentEntityRenderingContext)
 }
 
 interface SingleContentEntityRenderer : ContentEntityRenderer {
 
-    fun SimplePanel.render(entity: ContentEntity, block: Block)
+    fun SimplePanel.render(context: SingleContentEntityRenderingContext)
 
-    override fun SimplePanel.render(sequence: ContentEntities, block: Block) {
-        sequence.forEach { entity ->
-            render(entity, block)
+    override fun SimplePanel.render(context: SequenceContentEntityRenderingContext) {
+        context.sequence.forEach { entity ->
+            val singleContext = SingleContentEntityRenderingContext(entity, context.batch, context.block)
+            render(singleContext)
         }
     }
 }

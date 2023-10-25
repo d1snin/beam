@@ -16,8 +16,6 @@
 
 package dev.d1s.beam.ui.contententity
 
-import dev.d1s.beam.commons.Block
-import dev.d1s.beam.commons.contententity.ContentEntity
 import dev.d1s.beam.commons.contententity.VoidContentEntityTypeDefinition
 import dev.d1s.beam.commons.contententity.get
 import dev.d1s.beam.ui.util.Size
@@ -32,8 +30,8 @@ class VoidContentEntityRenderer : SingleContentEntityRenderer, KoinComponent {
 
     private val defaultHeight = Size.Sm
 
-    override fun SimplePanel.render(entity: ContentEntity, block: Block) {
-        val height = entity.parameters[definition.height]?.toIntOrNull() ?: defaultHeight
+    override fun SimplePanel.render(context: SingleContentEntityRenderingContext) {
+        val height = context.entity.parameters[definition.height]?.toIntOrNull() ?: defaultHeight
 
         div(className = "w-100") {
             this.height = height.px

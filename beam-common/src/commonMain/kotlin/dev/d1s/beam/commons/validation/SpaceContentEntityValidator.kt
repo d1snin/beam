@@ -26,7 +26,7 @@ internal object SpaceContentEntityValidator :
     override fun ValidationBuilder<ContentEntity>.validate() {
         val validator = this@SpaceContentEntityValidator
 
-        requireNotBlankText(validator, definition.identifier)
-        requireCorrectBoolean(validator, definition.fullWidth)
+        requireNotBlankText(validator, requiredDefinition.identifier)
+        requireCorrectBoolean(validator, requiredDefinition.fullWidth)
     }
 }

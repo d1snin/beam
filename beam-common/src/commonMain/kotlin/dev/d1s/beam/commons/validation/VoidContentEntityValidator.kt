@@ -24,6 +24,6 @@ internal object VoidContentEntityValidator :
     ContentEntityValidator<VoidContentEntityTypeDefinition>(VoidContentEntityTypeDefinition) {
 
     override fun ValidationBuilder<ContentEntity>.validate() {
-        requireCorrectHeight(this@VoidContentEntityValidator, definition.height)
+        requireCorrectHeight(this@VoidContentEntityValidator, requiredDefinition.height)
     }
 }

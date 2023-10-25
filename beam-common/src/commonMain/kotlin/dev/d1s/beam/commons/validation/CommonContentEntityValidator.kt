@@ -16,19 +16,17 @@
 
 package dev.d1s.beam.commons.validation
 
+import dev.d1s.beam.commons.contententity.CommonContentEntityTypeDefinition
+import dev.d1s.beam.commons.contententity.CommonParameters
 import dev.d1s.beam.commons.contententity.ContentEntity
-import dev.d1s.beam.commons.contententity.EmbedContentEntityTypeDefinition
 import io.konform.validation.ValidationBuilder
 
-internal object EmbedContentEntityValidator :
-    ContentEntityValidator<EmbedContentEntityTypeDefinition>(EmbedContentEntityTypeDefinition) {
+internal object CommonContentEntityValidator :
+    ContentEntityValidator<CommonContentEntityTypeDefinition>(global = true) {
 
     override fun ValidationBuilder<ContentEntity>.validate() {
-        val validator = this@EmbedContentEntityValidator
+        val validator = this@CommonContentEntityValidator
 
-        requireCorrectUrl(validator, requiredDefinition.url)
-        requireNotBlankText(validator, requiredDefinition.document)
-        requireCorrectWidth(validator, requiredDefinition.width)
-        requireCorrectHeight(validator, requiredDefinition.height)
+        requireCorrectBoolean(validator, CommonParameters.COLLAPSED)
     }
 }

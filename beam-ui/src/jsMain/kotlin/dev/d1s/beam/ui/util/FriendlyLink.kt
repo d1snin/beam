@@ -23,11 +23,12 @@ import io.kvision.panel.SimplePanel
 fun SimplePanel.renderFriendlyLink(
     label: String = "",
     url: String? = null,
+    icon: String? = null,
     className: String? = null,
     external: Boolean = false,
     init: Link.() -> Unit = {}
 ) =
-    link(label, url, className = className) {
+    link(label, url, icon = icon, className = className) {
         if (external) {
             setAttribute("target", "_blank")
             setAttribute("rel", "noopener noreferrer")

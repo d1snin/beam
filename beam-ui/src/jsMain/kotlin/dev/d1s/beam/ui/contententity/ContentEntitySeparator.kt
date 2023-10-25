@@ -16,7 +16,6 @@
 
 package dev.d1s.beam.ui.contententity
 
-import dev.d1s.beam.commons.Block
 import dev.d1s.beam.commons.contententity.ContentEntities
 import dev.d1s.beam.commons.contententity.ContentEntity
 import dev.d1s.beam.commons.contententity.isFirstIn
@@ -25,25 +24,45 @@ import io.kvision.panel.SimplePanel
 
 fun SimplePanel.separateContentEntity(
     contentEntity: ContentEntity,
-    block: Block,
+    context: ContentEntityRenderingContext,
     topMargin: Int? = null,
-    bottomMargin: Int = 3
+    bottomMargin: Int = 3,
 ) {
-    val first = contentEntity.isFirstIn(block)
-    val last = contentEntity.isLastIn(block)
+    val batch = context.batch
 
-    val topMarginLevel = topMargin?.takeIf { !first } ?: 0
-    val bottomMarginLevel = bottomMargin.takeIf { !last } ?: 0
+    val firstInBatch = contentEntity.isFirstIn(batch)
+    val lastInBatch = contentEntity.isLastIn(batch)
+
+    val lastInBlock = contentEntity.isLastIn(context.block.entities)
+
+    val topMarginLevel = topMargin?.takeIf { !firstInBatch } ?: 0
+    val bottomMarginLevel = bottomMargin.takeIf { !lastInBatch || !lastInBlock } ?: 0
 
     addCssClass("mt-$topMarginLevel")
     addCssClass("mb-$bottomMarginLevel")
 }
 
+fun SimplePanel.separateContentEntity(
+    context: SingleContentEntityRenderingContext,
+    topMargin: Int? = null,
+    bottomMargin: Int = 3,
+) {
+    separateContentEntity(context.entity, context, topMargin, bottomMargin)
+}
+
 fun SimplePanel.separateContentEntities(
     contentEntities: ContentEntities,
-    block: Block,
+    context: ContentEntityRenderingContext,
     topMargin: Int? = null,
     bottomMargin: Int = 3
 ) {
-    separateContentEntity(contentEntities.last(), block, topMargin, bottomMargin)
+    separateContentEntity(contentEntities.last(), context, topMargin, bottomMargin)
+}
+
+fun SimplePanel.separateContentEntities(
+    context: SequenceContentEntityRenderingContext,
+    topMargin: Int? = null,
+    bottomMargin: Int = 3
+) {
+    separateContentEntities(context.sequence, context, topMargin, bottomMargin)
 }

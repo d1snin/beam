@@ -26,9 +26,9 @@ internal object ImageContentEntityValidator :
     override fun ValidationBuilder<ContentEntity>.validate() {
         val validator = this@ImageContentEntityValidator
 
-        requireCorrectUrl(validator, definition.url)
-        requireNotBlankText(validator, definition.description)
-        requireCorrectWidth(validator, definition.width)
-        requireCorrectHeight(validator, definition.height)
+        requireCorrectUrl(validator, requiredDefinition.url)
+        requireNotBlankText(validator, requiredDefinition.description)
+        requireCorrectWidth(validator, requiredDefinition.width)
+        requireCorrectHeight(validator, requiredDefinition.height)
     }
 }

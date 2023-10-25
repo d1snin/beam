@@ -16,8 +16,10 @@
 
 package dev.d1s.beam.ui.contententity
 
-import dev.d1s.beam.commons.Block
-import dev.d1s.beam.commons.contententity.*
+import dev.d1s.beam.commons.contententity.ContentEntity
+import dev.d1s.beam.commons.contententity.ContentEntityParameters
+import dev.d1s.beam.commons.contententity.TextContentEntityTypeDefinition
+import dev.d1s.beam.commons.contententity.get
 import io.kvision.html.p
 import io.kvision.panel.SimplePanel
 import org.koin.core.component.KoinComponent
@@ -26,25 +28,25 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
 
     override val definition = TextContentEntityTypeDefinition
 
-    override fun SimplePanel.render(sequence: ContentEntities, block: Block) {
+    override fun SimplePanel.render(context: SequenceContentEntityRenderingContext) {
         p {
-            renderSequence(sequence, block)
-            separateContentEntities(sequence, block)
+            renderSequence(context)
+            separateContentEntities(context)
         }
     }
 
-    private fun SimplePanel.renderSequence(sequence: ContentEntities, block: Block) {
-        sequence.forEach { entity ->
-            renderTextEntity(entity.parameters, entity, block)
+    private fun SimplePanel.renderSequence(context: SequenceContentEntityRenderingContext) {
+        context.sequence.forEach { entity ->
+            renderTextEntity(entity.parameters, entity, context)
         }
     }
 
     private fun SimplePanel.renderTextEntity(
         parameters: ContentEntityParameters,
         contentEntity: ContentEntity,
-        block: Block
+        context: SequenceContentEntityRenderingContext
     ) {
-        optionalHeading(parameters, contentEntity, block) {
+        optionalHeading(parameters, contentEntity, context) {
             paragraph {
                 renderText(parameters)
             }
@@ -54,7 +56,7 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
     private fun SimplePanel.optionalHeading(
         parameters: ContentEntityParameters,
         contentEntity: ContentEntity,
-        block: Block,
+        context: SequenceContentEntityRenderingContext,
         init: SimplePanel.() -> Unit
     ) {
         val heading = parameters[definition.heading]?.let {
@@ -66,7 +68,7 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
 
             p(className = className) {
                 init()
-                separateContentEntity(contentEntity, block, topMargin = 4, bottomMargin = 2)
+                separateContentEntity(contentEntity, context, topMargin = 4, bottomMargin = 2)
             }
         } ?: init()
     }

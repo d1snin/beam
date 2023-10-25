@@ -16,7 +16,6 @@
 
 package dev.d1s.beam.ui.contententity
 
-import dev.d1s.beam.commons.Block
 import dev.d1s.beam.commons.contententity.ContentEntity
 import dev.d1s.beam.commons.contententity.EmbedContentEntityTypeDefinition
 import dev.d1s.beam.commons.contententity.get
@@ -34,10 +33,10 @@ class EmbedContentEntityRenderer : SingleContentEntityRenderer, KoinComponent {
 
     override val definition = EmbedContentEntityTypeDefinition
 
-    override fun SimplePanel.render(entity: ContentEntity, block: Block) {
+    override fun SimplePanel.render(context: SingleContentEntityRenderingContext) {
         div(className = "d-flex w-100") {
-            renderIframe(entity)
-            separateContentEntity(entity, block)
+            renderIframe(context.entity)
+            separateContentEntity(context)
         }
     }
 

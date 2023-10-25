@@ -16,7 +16,6 @@
 
 package dev.d1s.beam.commons.contententity
 
-import dev.d1s.beam.commons.Block
 import kotlinx.serialization.Serializable
 
 public typealias ContentEntities = List<ContentEntity>
@@ -37,11 +36,11 @@ public data class ContentEntity(
 public operator fun ContentEntityParameters.get(definition: ContentEntityParameterDefinition): ContentEntityParameterValue? =
     this[definition.name]
 
-public fun ContentEntity.isFirstIn(block: Block): Boolean =
-    this === block.entities.firstOrNull()
+public fun ContentEntity.isFirstIn(batch: ContentEntities): Boolean =
+    this === batch.firstOrNull()
 
-public fun ContentEntity.isLastIn(block: Block): Boolean =
-    this === block.entities.lastOrNull()
+public fun ContentEntity.isLastIn(batch: ContentEntities): Boolean =
+    this === batch.lastOrNull()
 
-public fun ContentEntities.isLastIn(block: Block): Boolean =
-    this.lastOrNull()?.equals(block.entities.lastOrNull()) == true
+public fun ContentEntities.isLastIn(batch: ContentEntities): Boolean =
+    this.lastOrNull()?.equals(batch.lastOrNull()) == true

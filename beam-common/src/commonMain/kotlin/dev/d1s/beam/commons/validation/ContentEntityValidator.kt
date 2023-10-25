@@ -26,13 +26,20 @@ internal abstract class ContentEntityValidator<in D : ContentEntityTypeDefinitio
         this.definition = definition
     }
 
-    lateinit var definition: @UnsafeVariance D
+    var definition: @UnsafeVariance D? = null
+
+    val requiredDefinition
+        get() = requireNotNull(definition) {
+            "Content entity definition for validator is not set"
+        }
 
     abstract fun ValidationBuilder<ContentEntity>.validate()
 
     fun ValidationBuilder<ContentEntity>.addTypedConstraint(errorMessage: String, test: (ContentEntity) -> Boolean) {
         addConstraint(errorMessage) { entity ->
-            if (entity.type == definition.name) {
+            val entityType = entity.type
+
+            if (entityType == (definition?.name ?: entityType)) {
                 test(entity)
             } else {
                 true
@@ -44,6 +51,8 @@ internal abstract class ContentEntityValidator<in D : ContentEntityTypeDefinitio
 
         val validators = listOf(
             ContentEntityParametersValidator,
+            CommonContentEntityValidator,
+
             VoidContentEntityValidator,
             TextContentEntityValidator,
             ButtonLinkContentEntityValidator,

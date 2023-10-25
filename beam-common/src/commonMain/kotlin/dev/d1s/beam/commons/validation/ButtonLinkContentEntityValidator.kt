@@ -29,21 +29,21 @@ internal object ButtonLinkContentEntityValidator :
     override fun ValidationBuilder<ContentEntity>.validate() {
         val validator = this@ButtonLinkContentEntityValidator
 
-        requireCorrectBoundary(validator, definition.text, textBoundary, stringLengthMode = true)
-        requireNotBlankText(validator, definition.icon)
-        requireCorrectUrl(validator, definition.url)
+        requireCorrectBoundary(validator, requiredDefinition.text, textBoundary, stringLengthMode = true)
+        requireNotBlankText(validator, requiredDefinition.icon)
+        requireCorrectUrl(validator, requiredDefinition.url)
         requireCorrectStyle()
-        requireCorrectWidth(validator, definition.width)
-        requireCorrectHeight(validator, definition.height)
+        requireCorrectWidth(validator, requiredDefinition.width)
+        requireCorrectHeight(validator, requiredDefinition.height)
     }
 
     private fun ValidationBuilder<ContentEntity>.requireCorrectStyle() {
-        val message = "parameter '${definition.style.name}' is not one of the following values: ${
+        val message = "parameter '${requiredDefinition.style.name}' is not one of the following values: ${
             ButtonLinkContentEntityTypeDefinition.Style.entries.joinToString(", ") { it.identifier }
         }"
 
         addTypedConstraint(message) { entity ->
-            entity.parameters[definition.style]?.let { styleIdentifier ->
+            entity.parameters[requiredDefinition.style]?.let { styleIdentifier ->
                 val style = ButtonLinkContentEntityTypeDefinition.Style.byIdentifier(styleIdentifier)
                 return@addTypedConstraint style != null
             }

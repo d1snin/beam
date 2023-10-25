@@ -44,6 +44,9 @@ public object GlobalTranslation {
     public const val LOCATION_SPACE_LISTING_MESSAGE: TextLocation = "ui.space-listing.message"
     public const val LOCATION_SPACE_LISTING_FETCH_MORE_BUTTON: TextLocation = "ui.space-listing.fetch-more-button"
 
+    public const val LOCATION_BLOCK_COLLAPSED_CONTENT_ENTITY_BUTTON_MESSAGE: TextLocation =
+        "ui.block.collapsed-content-entity.button.message"
+
     public val Locations: List<TextLocation> = listOf(
         LOCATION_ICON_ALT,
         LOCATION_DEFAULT_TITLE,
@@ -58,7 +61,8 @@ public object GlobalTranslation {
         LOCATION_FAILURE_CARD_EMPTY_SPACE_MESSAGE,
         LOCATION_FOOTER_LANGUAGE_SWITCHER_MESSAGE,
         LOCATION_SPACE_LISTING_MESSAGE,
-        LOCATION_SPACE_LISTING_FETCH_MORE_BUTTON
+        LOCATION_SPACE_LISTING_FETCH_MORE_BUTTON,
+        LOCATION_BLOCK_COLLAPSED_CONTENT_ENTITY_BUTTON_MESSAGE
     )
 
     public val Default: Translation = Translation(
@@ -80,7 +84,8 @@ public object GlobalTranslation {
             LOCATION_FAILURE_CARD_EMPTY_SPACE_MESSAGE to "This space seems to be empty.",
             LOCATION_FOOTER_LANGUAGE_SWITCHER_MESSAGE to "Switch language...",
             LOCATION_SPACE_LISTING_MESSAGE to "Explore the spaces on this instance:",
-            LOCATION_SPACE_LISTING_FETCH_MORE_BUTTON to "Load more"
+            LOCATION_SPACE_LISTING_FETCH_MORE_BUTTON to "Load more",
+            LOCATION_BLOCK_COLLAPSED_CONTENT_ENTITY_BUTTON_MESSAGE to "Expand"
         )
     )
 }
