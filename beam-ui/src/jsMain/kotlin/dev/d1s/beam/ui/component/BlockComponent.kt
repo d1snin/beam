@@ -44,8 +44,6 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
 
     private val blockMargin = BLOCK_MARGIN_VALUE.px
 
-    private var collapsedContentCounter = 0
-
     private val collapsedContentId
         get() = COLLAPSED_CONTENT_ID + collapsedContentCounter
 
@@ -167,15 +165,17 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
         var opened = false
         val clicked = ObservableValue(opened)
 
+        val contentId = collapsedContentId
+
         div().bind(clicked) {
             renderFriendlyLink(
-                url = "#$collapsedContentId",
+                url = "#$contentId",
                 className = "fw-bold"
             ) {
                 role = "button"
                 setAttribute("data-bs-toggle", "collapse")
                 setAttribute("aria-expanded", "false")
-                setAttribute("aria-controls", collapsedContentId)
+                setAttribute("aria-controls", contentId)
 
                 val icon = if (opened) {
                     "chevron-down"
@@ -203,7 +203,7 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
                 }
             }
 
-            id = collapsedContentId
+            id = contentId
 
             block()
         }
@@ -222,6 +222,8 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
     }
 
     companion object {
+
+        private var collapsedContentCounter = 0
 
         const val BLOCK_MARGIN_VALUE = 20
 

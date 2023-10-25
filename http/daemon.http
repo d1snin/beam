@@ -96,31 +96,22 @@ Content-Type: application/json
         {
             "type": "text",
             "parameters": {
-                "value": "(:arrows-collapse: Collapsed content entity test)(blue)",
-                "heading": "h1"
+                "value": "Test collapsed entity",
+                "collapsed": "true"
             }
         },
         {
             "type": "text",
             "parameters": {
-                "value": "The following content entities are collapsed:"
+                "value": "Test collapsed entity",
+                "collapsed": "true"
             }
         },
         {
             "type": "text",
             "parameters": {
-                "collapsed": "true",
-                "value": "(Here is OpenStreetMap embed...)(blue)",
-                "heading": "h2"
-            }
-        },
-        {
-            "type": "embed",
-            "parameters": {
-                "collapsed": "true",
-                "url": "https://www.openstreetmap.org/export/embed.html?bbox=73.22044372558595%2C61.20282912131457%2C73.54831695556642%2C61.30495199572362&amp;layer=mapnik",
-                "width": "100",
-                "height": "350"
+                "value": "Test collapsed entity",
+                "collapsed": "true"
             }
         }
     ],
