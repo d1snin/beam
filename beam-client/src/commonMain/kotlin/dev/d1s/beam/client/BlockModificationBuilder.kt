@@ -78,23 +78,23 @@ public open class ContentEntitiesBuilder {
     public fun buildContentEntities(): ContentEntities = entities
 }
 
-public fun ContentEntitiesBuilder.void(height: Int? = null) {
+public fun ContentEntitiesBuilder.void(height: Int? = null, collapsed: Boolean? = null) {
     entity {
         type = Void
 
-        height?.let {
-            parameters(
-                Void.height.name to it.toString()
-            )
+        parametersWithCommons(collapsed = collapsed) {
+            height?.let {
+                put(Void.height.name, it.toString())
+            }
         }
     }
 }
 
-public fun ContentEntitiesBuilder.text(value: String, heading: String? = null) {
+public fun ContentEntitiesBuilder.text(value: String, heading: String? = null, collapsed: Boolean? = null) {
     entity {
         type = Text
 
-        parameters {
+        parametersWithCommons(collapsed = collapsed) {
             put(Text.value.name, value)
 
             heading?.let {
@@ -104,20 +104,24 @@ public fun ContentEntitiesBuilder.text(value: String, heading: String? = null) {
     }
 }
 
-public fun ContentEntitiesBuilder.heading(value: String, level: TextContentEntityTypeDefinition.Heading) {
-    text(value, heading = level.key)
+public fun ContentEntitiesBuilder.heading(
+    value: String,
+    level: TextContentEntityTypeDefinition.Heading,
+    collapsed: Boolean? = null
+) {
+    text(value, heading = level.key, collapsed = collapsed)
 }
 
-public fun ContentEntitiesBuilder.firstHeading(value: String) {
-    heading(value, level = TextContentEntityTypeDefinition.Heading.H1)
+public fun ContentEntitiesBuilder.firstHeading(value: String, collapsed: Boolean? = null) {
+    heading(value, level = TextContentEntityTypeDefinition.Heading.H1, collapsed = collapsed)
 }
 
-public fun ContentEntitiesBuilder.secondHeading(value: String) {
-    heading(value, level = TextContentEntityTypeDefinition.Heading.H2)
+public fun ContentEntitiesBuilder.secondHeading(value: String, collapsed: Boolean? = null) {
+    heading(value, level = TextContentEntityTypeDefinition.Heading.H2, collapsed = collapsed)
 }
 
-public fun ContentEntitiesBuilder.thirdHeading(value: String) {
-    heading(value, level = TextContentEntityTypeDefinition.Heading.H3)
+public fun ContentEntitiesBuilder.thirdHeading(value: String, collapsed: Boolean? = null) {
+    heading(value, level = TextContentEntityTypeDefinition.Heading.H3, collapsed = collapsed)
 }
 
 public fun ContentEntitiesBuilder.buttonLink(
@@ -126,12 +130,13 @@ public fun ContentEntitiesBuilder.buttonLink(
     url: String,
     style: ButtonLinkContentEntityTypeDefinition.Style? = null,
     width: Int? = null,
-    height: Int? = null
+    height: Int? = null,
+    collapsed: Boolean? = null
 ) {
     entity {
         type = ButtonLink
 
-        parameters {
+        parametersWithCommons(collapsed = collapsed) {
             put(ButtonLink.text.name, text)
 
             icon?.let {
@@ -160,19 +165,21 @@ public fun ContentEntitiesBuilder.fullWidthButtonLink(
     icon: String? = null,
     url: String,
     style: ButtonLinkContentEntityTypeDefinition.Style? = null,
-    height: Int? = null
+    height: Int? = null,
+    collapsed: Boolean? = null
 ) {
-    buttonLink(text, icon, url, style, width = 100, height)
+    buttonLink(text, icon, url, style, width = 100, height, collapsed)
 }
 
 public fun ContentEntitiesBuilder.space(
     identifier: SpaceIdentifier,
-    fullWidth: Boolean? = null
+    fullWidth: Boolean? = null,
+    collapsed: Boolean? = null
 ) {
     entity {
         type = Space
 
-        parameters {
+        parametersWithCommons(collapsed = collapsed) {
             put(Space.identifier.name, identifier)
 
             fullWidth?.let {
@@ -182,20 +189,21 @@ public fun ContentEntitiesBuilder.space(
     }
 }
 
-public fun ContentEntitiesBuilder.fullWidthSpace(identifier: SpaceIdentifier) {
-    space(identifier, fullWidth = true)
+public fun ContentEntitiesBuilder.fullWidthSpace(identifier: SpaceIdentifier, collapsed: Boolean? = null) {
+    space(identifier, fullWidth = true, collapsed = collapsed)
 }
 
 public fun ContentEntitiesBuilder.image(
     url: String,
     description: String? = null,
     width: Int? = null,
-    height: Int? = null
+    height: Int? = null,
+    collapsed: Boolean? = null
 ) {
     entity {
         type = Image
 
-        parameters {
+        parametersWithCommons(collapsed = collapsed) {
             put(Image.url.name, url)
             put(Image.url.name, url)
 
@@ -217,21 +225,23 @@ public fun ContentEntitiesBuilder.image(
 public fun ContentEntitiesBuilder.fullWidthImage(
     url: String,
     description: String? = null,
-    height: Int? = null
+    height: Int? = null,
+    collapsed: Boolean? = null
 ) {
-    image(url, description, width = 100, height)
+    image(url, description, width = 100, height, collapsed)
 }
 
 public fun ContentEntitiesBuilder.embed(
     url: String,
     document: String? = null,
     width: Int? = null,
-    height: Int? = null
+    height: Int? = null,
+    collapsed: Boolean? = null
 ) {
     entity {
         type = Embed
 
-        parameters {
+        parametersWithCommons(collapsed = collapsed) {
             put(Embed.url.name, url)
 
             document?.let {
@@ -255,4 +265,17 @@ public fun ContentEntitiesBuilder.fullWidthEmbed(
     height: Int? = null
 ) {
     embed(url, document, width = 100, height)
+}
+
+private fun ContentEntityBuilder.parametersWithCommons(
+    collapsed: Boolean?,
+    build: MutableMap<ContentEntityParameterName, ContentEntityParameterValue>.() -> Unit
+) {
+    parameters {
+        collapsed?.let {
+            put(CommonParameters.COLLAPSED, it.toString())
+        }
+
+        build()
+    }
 }
