@@ -45,7 +45,7 @@ public enum class ButtonStyle(public val code: String) {
 
         public val Default: ButtonStyle = LIGHT
 
-        public fun byName(name: String?): ButtonStyle? =
+        public fun byName(name: String): ButtonStyle? =
             entries.find {
                 it.lowercaseName == name
             }

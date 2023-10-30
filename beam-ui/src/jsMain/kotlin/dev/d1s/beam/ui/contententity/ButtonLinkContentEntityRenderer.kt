@@ -78,9 +78,7 @@ class ButtonLinkContentEntityRenderer : ContentEntityRenderer, KoinComponent {
         val url = parameters[definition.url]
         requireNotNull(url)
 
-        val styleIdentifier = parameters[definition.style]
-        val style = ButtonStyle.byName(styleIdentifier)
-            ?: ButtonStyle.Default
+        val style = parameters[definition.style]?.let { ButtonStyle.byName(it) } ?: ButtonStyle.Default
 
         val width = parameters[definition.width]?.toInt()
         val height = parameters[definition.height]?.toInt()

@@ -25,6 +25,7 @@ object Size {
 
     private val LgBreakpoint = breakpointOf(BlockSize.LARGE)
     private val XlBreakpoint = breakpointOf(BlockSize.EXTRA_LARGE)
+    private val XxlBreakpoint = breakpointOf(BlockSize.SUPER_LARGE)
 
     val MaxBlockSize: BlockSize
         get() {
@@ -32,7 +33,8 @@ object Size {
 
             return when {
                 width in LgBreakpoint..<XlBreakpoint -> BlockSize.LARGE
-                width >= XlBreakpoint -> BlockSize.EXTRA_LARGE
+                width in XlBreakpoint..<XxlBreakpoint -> BlockSize.EXTRA_LARGE
+                width >= XxlBreakpoint -> BlockSize.SUPER_LARGE
                 else -> BlockSize.MEDIUM
             }
         }
@@ -44,7 +46,6 @@ object Size {
             MaxBlockSize.level >= BlockSize.LARGE.level -> sizeOf(BlockSize.LARGE)
             else -> Md
         }
-    val Xl get() = sizeOf(MaxBlockSize)
 
     fun sizeOf(blockSize: BlockSize) =
         STEP * blockSize.level

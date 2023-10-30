@@ -85,7 +85,7 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
         }
 
         fun SimplePanel.renderCard() {
-            renderCard("flex-column justify-content-start", bare = isBare) {
+            renderCard("flex-column justify-content-start overflow-hidden", bare = isBare) {
                 configureContainer()
                 configurePadding(block)
 
@@ -108,7 +108,6 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
     private fun SimplePanel.configurePadding(block: Block) {
         if (block.isFluidImage()) {
             addCssClass("p-0")
-            addCssClass("overflow-hidden")
         } else {
             addCssClass("p-3")
         }

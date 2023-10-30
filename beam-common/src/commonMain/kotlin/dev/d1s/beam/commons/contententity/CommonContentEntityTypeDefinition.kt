@@ -54,7 +54,7 @@ public enum class Alignment {
 
         public val Default: Alignment = START
 
-        public fun byName(name: String?): Alignment? =
+        public fun byName(name: String): Alignment? =
             entries.find {
                 it.lowercaseName == name
             }
