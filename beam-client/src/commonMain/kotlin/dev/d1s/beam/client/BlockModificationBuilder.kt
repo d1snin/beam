@@ -143,6 +143,30 @@ public fun ContentEntitiesBuilder.thirdHeading(
     heading(value, level = Heading.H3, alignment = alignment, collapsed = collapsed)
 }
 
+public fun ContentEntitiesBuilder.firstDisplay(
+    value: String,
+    alignment: Alignment? = null,
+    collapsed: Boolean? = null
+) {
+    heading(value, level = Heading.DISPLAY_1, alignment = alignment, collapsed = collapsed)
+}
+
+public fun ContentEntitiesBuilder.secondDisplay(
+    value: String,
+    alignment: Alignment? = null,
+    collapsed: Boolean? = null
+) {
+    heading(value, level = Heading.DISPLAY_2, alignment = alignment, collapsed = collapsed)
+}
+
+public fun ContentEntitiesBuilder.thirdDisplay(
+    value: String,
+    alignment: Alignment? = null,
+    collapsed: Boolean? = null
+) {
+    heading(value, level = Heading.DISPLAY_3, alignment = alignment, collapsed = collapsed)
+}
+
 public fun ContentEntitiesBuilder.buttonLink(
     text: String,
     icon: String? = null,
