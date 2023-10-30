@@ -91,7 +91,7 @@ Content-Type: application/json
 
 {
     "index": 0,
-    "size": "SMALL",
+    "size": "EXTRA_LARGE",
     "entities": [
         {
             "type": "void",
