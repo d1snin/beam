@@ -58,7 +58,7 @@ public data class BlockModification(
 ) : AbstractBlock
 
 public enum class BlockSize {
-    SMALL, MEDIUM, LARGE, EXTRA_LARGE, SUPER_LARGE;
+    SMALL, MEDIUM, LARGE, EXTRA_LARGE, ULTRA_LARGE, SUPER_LARGE;
 
     public val level: Int = ordinal + 1
 }

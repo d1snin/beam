@@ -91,18 +91,15 @@ Content-Type: application/json
 
 {
     "index": 0,
-    "size": "SUPER_LARGE",
+    "size": "SMALL",
     "entities": [
         {
-            "type": "text",
+            "type": "void",
             "parameters": {
-                "value": "(Test first-level display heading)(blue)",
-                "heading": "display_1"
             }
         }
     ],
     "metadata": {
-        "ui.block.bare": "true"
     },
     "spaceId": "root"
 }
