@@ -143,6 +143,10 @@ public suspend fun SpaceContext.extraLargeBlock(configure: suspend BlockContext.
     sizedBlock(size = BlockSize.EXTRA_LARGE, configure)
 }
 
+public suspend fun SpaceContext.superLargeBlock(configure: suspend BlockContext.() -> Unit) {
+    sizedBlock(size = BlockSize.SUPER_LARGE, configure)
+}
+
 public suspend fun SpaceContext.smallBlockWithEntities(configureEntities: suspend ContentEntitiesBuilder.() -> Unit) {
     sizedBlockWithEntities(size = BlockSize.SMALL, configureEntities)
 }
@@ -157,4 +161,8 @@ public suspend fun SpaceContext.largeBlockWithEntities(configureEntities: suspen
 
 public suspend fun SpaceContext.extraLargeBlockWithEntities(configureEntities: suspend ContentEntitiesBuilder.() -> Unit) {
     sizedBlockWithEntities(size = BlockSize.EXTRA_LARGE, configureEntities)
+}
+
+public suspend fun SpaceContext.superLargeBlockWithEntities(configureEntities: suspend ContentEntitiesBuilder.() -> Unit) {
+    sizedBlockWithEntities(size = BlockSize.SUPER_LARGE, configureEntities)
 }
