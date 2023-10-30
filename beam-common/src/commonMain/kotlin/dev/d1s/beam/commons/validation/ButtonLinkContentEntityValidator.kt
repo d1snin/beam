@@ -18,7 +18,7 @@ package dev.d1s.beam.commons.validation
 
 import dev.d1s.beam.commons.contententity.ButtonLinkContentEntityTypeDefinition
 import dev.d1s.beam.commons.contententity.ContentEntity
-import dev.d1s.beam.commons.contententity.get
+import dev.d1s.beam.commons.util.lowercaseName
 import io.konform.validation.ValidationBuilder
 
 internal object ButtonLinkContentEntityValidator :
@@ -38,17 +38,12 @@ internal object ButtonLinkContentEntityValidator :
     }
 
     private fun ValidationBuilder<ContentEntity>.requireCorrectStyle() {
-        val message = "parameter '${requiredDefinition.style.name}' is not one of the following values: ${
-            ButtonLinkContentEntityTypeDefinition.Style.entries.joinToString(", ") { it.identifier }
-        }"
+        val validator = this@ButtonLinkContentEntityValidator
 
-        addTypedConstraint(message) { entity ->
-            entity.parameters[requiredDefinition.style]?.let { styleIdentifier ->
-                val style = ButtonLinkContentEntityTypeDefinition.Style.byIdentifier(styleIdentifier)
-                return@addTypedConstraint style != null
-            }
-
-            true
+        val styles = ButtonLinkContentEntityTypeDefinition.Style.entries.map {
+            it.lowercaseName
         }
+
+        requireAnyText(validator, requiredDefinition.style, styles)
     }
 }

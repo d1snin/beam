@@ -19,6 +19,7 @@ package dev.d1s.beam.ui.contententity
 import dev.d1s.beam.commons.contententity.ContentEntity
 import dev.d1s.beam.commons.contententity.EmbedContentEntityTypeDefinition
 import dev.d1s.beam.commons.contententity.get
+import dev.d1s.beam.ui.util.justifyContent
 import io.kvision.core.Border
 import io.kvision.core.BorderStyle
 import io.kvision.core.Position
@@ -35,7 +36,10 @@ class EmbedContentEntityRenderer : SingleContentEntityRenderer, KoinComponent {
 
     override fun SimplePanel.render(context: SingleContentEntityRenderingContext) {
         div(className = "d-flex w-100") {
+            justifyContent(context.alignment)
+
             renderIframe(context.entity)
+
             separateContentEntity(context)
         }
     }

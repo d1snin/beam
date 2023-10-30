@@ -25,6 +25,7 @@ import dev.d1s.beam.commons.contententity.get
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.component.SpaceCardComponent
 import dev.d1s.beam.ui.util.currentLanguageCode
+import dev.d1s.beam.ui.util.justifyContent
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.render
 import io.kvision.html.div
@@ -44,12 +45,13 @@ class SpaceContentEntityRenderer : ContentEntityRenderer, KoinComponent {
 
     private val renderingScope = CoroutineScope(Dispatchers.Main)
 
-    private val ContentEntity.fullWidth get() = parameters[definition.fullWidth]?.toBooleanStrict() ?: false
+    private val ContentEntity.fullWidth
+        get() = parameters[definition.fullWidth]?.toBooleanStrict() ?: false
 
     override fun SimplePanel.render(context: SequenceContentEntityRenderingContext) {
         val lgCols = if (context.block.size >= BlockSize.LARGE) 2 else 1
 
-        context.sequence.split(condition = { it.fullWidth }) { entities, fullWidth ->
+        context.sequence.splitBy(selector = { it.fullWidth }) { entities, fullWidth ->
             fun SimplePanel.renderSequence() {
                 renderSequence(entities, context, fullWidth)
             }
@@ -57,7 +59,7 @@ class SpaceContentEntityRenderer : ContentEntityRenderer, KoinComponent {
             if (fullWidth) {
                 renderSequence()
             } else {
-                renderRow(lgCols) {
+                renderRow(lgCols, context) {
                     renderSequence()
                     separateContentEntities(context)
                 }
@@ -65,8 +67,14 @@ class SpaceContentEntityRenderer : ContentEntityRenderer, KoinComponent {
         }
     }
 
-    private fun SimplePanel.renderRow(lgCols: Int, block: SimplePanel.() -> Unit) {
+    private fun SimplePanel.renderRow(
+        lgCols: Int,
+        context: SequenceContentEntityRenderingContext,
+        block: SimplePanel.() -> Unit
+    ) {
         div(className = "w-100 row row-cols-1 row-cols-lg-$lgCols") {
+            justifyContent(context.alignment)
+
             block()
         }
     }

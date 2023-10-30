@@ -32,7 +32,8 @@ interface SingleContentEntityRenderer : ContentEntityRenderer {
 
     override fun SimplePanel.render(context: SequenceContentEntityRenderingContext) {
         context.sequence.forEach { entity ->
-            val singleContext = SingleContentEntityRenderingContext(entity, context.batch, context.block)
+            val singleContext =
+                SingleContentEntityRenderingContext(entity, context.batch, context.block, context.alignment)
             render(singleContext)
         }
     }

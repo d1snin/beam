@@ -19,27 +19,25 @@ package dev.d1s.beam.ui.contententity
 import dev.d1s.beam.commons.contententity.ContentEntities
 import dev.d1s.beam.commons.contententity.ContentEntity
 
-fun ContentEntities.split(condition: (ContentEntity) -> Boolean, block: (ContentEntities, Boolean) -> Unit) {
+fun <T> ContentEntities.splitBy(selector: (ContentEntity) -> T, block: (ContentEntities, T) -> Unit) {
     val entities = this
     val buffer = mutableListOf<ContentEntity>()
 
-    fun ContentEntity.matches() = condition(this)
-
-    var bufferMatches = entities.first().matches()
+    var bufferProperty = selector(entities.first())
 
     fun executeBuffer() {
-        block(buffer, bufferMatches)
+        block(buffer, bufferProperty)
         buffer.clear()
     }
 
     entities.forEach { entity ->
-        val entityMatches = entity.matches()
+        val entityProperty = selector(entity)
 
-        if ((bufferMatches && entityMatches) || (!bufferMatches && !entityMatches)) {
+        if (bufferProperty == entityProperty) {
             buffer.add(entity)
         } else {
             executeBuffer()
-            bufferMatches = entityMatches
+            bufferProperty = entityProperty
             buffer.add(entity)
         }
     }

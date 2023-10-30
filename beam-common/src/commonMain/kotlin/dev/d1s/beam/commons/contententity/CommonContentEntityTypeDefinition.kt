@@ -16,7 +16,11 @@
 
 package dev.d1s.beam.commons.contententity
 
+import dev.d1s.beam.commons.util.lowercaseName
+
 public abstract class CommonContentEntityTypeDefinition(name: String) : ContentEntityTypeDefinition(name) {
+
+    public val alignment: ContentEntityParameterDefinition = parameter(CommonParameters.ALIGNMENT)
 
     public val collapsed: ContentEntityParameterDefinition = parameter(CommonParameters.COLLAPSED)
 
@@ -38,5 +42,21 @@ public abstract class CommonContentEntityTypeDefinition(name: String) : ContentE
 
 public object CommonParameters {
 
+    public const val ALIGNMENT: ContentEntityParameterName = "alignment"
+
     public const val COLLAPSED: ContentEntityParameterName = "collapsed"
+}
+
+public enum class Alignment {
+    START, CENTER, END;
+
+    public companion object {
+
+        public val Default: Alignment = START
+
+        public fun byName(name: String?): Alignment? =
+            entries.find {
+                it.lowercaseName == name
+            }
+    }
 }

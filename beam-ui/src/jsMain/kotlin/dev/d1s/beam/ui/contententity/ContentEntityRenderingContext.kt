@@ -17,6 +17,7 @@
 package dev.d1s.beam.ui.contententity
 
 import dev.d1s.beam.commons.Block
+import dev.d1s.beam.commons.contententity.Alignment
 import dev.d1s.beam.commons.contententity.ContentEntities
 import dev.d1s.beam.commons.contententity.ContentEntity
 import dev.d1s.beam.commons.contententity.isFirstIn
@@ -26,12 +27,15 @@ interface ContentEntityRenderingContext {
     val batch: ContentEntities
 
     val block: Block
+
+    val alignment: Alignment
 }
 
 data class SingleContentEntityRenderingContext(
     val entity: ContentEntity,
     override val batch: ContentEntities,
-    override val block: Block
+    override val block: Block,
+    override val alignment: Alignment
 ) : ContentEntityRenderingContext {
 
     fun isFirst() = entity.isFirstIn(batch)
@@ -40,5 +44,6 @@ data class SingleContentEntityRenderingContext(
 data class SequenceContentEntityRenderingContext(
     val sequence: ContentEntities,
     override val batch: ContentEntities,
-    override val block: Block
+    override val block: Block,
+    override val alignment: Alignment
 ) : ContentEntityRenderingContext

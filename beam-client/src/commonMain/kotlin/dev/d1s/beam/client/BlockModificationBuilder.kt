@@ -109,7 +109,7 @@ public fun ContentEntitiesBuilder.heading(
     level: TextContentEntityTypeDefinition.Heading,
     collapsed: Boolean? = null
 ) {
-    text(value, heading = level.key, collapsed = collapsed)
+    text(value, heading = level.name, collapsed = collapsed)
 }
 
 public fun ContentEntitiesBuilder.firstHeading(value: String, collapsed: Boolean? = null) {
@@ -146,7 +146,7 @@ public fun ContentEntitiesBuilder.buttonLink(
             put(ButtonLink.url.name, url)
 
             style?.let {
-                put(ButtonLink.style.name, it.identifier)
+                put(ButtonLink.style.name, it.name)
             }
 
             width?.let {

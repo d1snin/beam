@@ -16,6 +16,8 @@
 
 package dev.d1s.beam.commons.contententity
 
+import dev.d1s.beam.commons.util.lowercaseName
+
 public data object ButtonLinkContentEntityTypeDefinition : CommonContentEntityTypeDefinition(name = "button-link") {
 
     val text: ContentEntityParameterDefinition = parameter("text", required = true, translatable = true)
@@ -30,7 +32,7 @@ public data object ButtonLinkContentEntityTypeDefinition : CommonContentEntityTy
 
     val height: ContentEntityParameterDefinition = heightParameter()
 
-    public enum class Style(public val identifier: String) {
+    public enum class Style(public val code: String) {
         PRIMARY("primary"),
         SUCCESS("success"),
         DANGER("danger"),
@@ -42,9 +44,9 @@ public data object ButtonLinkContentEntityTypeDefinition : CommonContentEntityTy
 
             public val Default: Style = LIGHT
 
-            public fun byIdentifier(identifier: String?): Style? =
+            public fun byName(name: String?): Style? =
                 entries.find {
-                    it.identifier == identifier
+                    it.lowercaseName == name
                 }
         }
     }

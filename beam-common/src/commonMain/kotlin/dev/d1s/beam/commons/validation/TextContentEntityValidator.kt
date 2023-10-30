@@ -18,7 +18,7 @@ package dev.d1s.beam.commons.validation
 
 import dev.d1s.beam.commons.contententity.ContentEntity
 import dev.d1s.beam.commons.contententity.TextContentEntityTypeDefinition
-import dev.d1s.beam.commons.contententity.get
+import dev.d1s.beam.commons.util.lowercaseName
 import io.konform.validation.ValidationBuilder
 
 internal object TextContentEntityValidator :
@@ -33,14 +33,12 @@ internal object TextContentEntityValidator :
     }
 
     private fun ValidationBuilder<ContentEntity>.requireHeading() {
-        val headings = TextContentEntityTypeDefinition.Heading.entries.joinToString(", ") { it.key }
+        val validator = this@TextContentEntityValidator
 
-        addTypedConstraint("parameter '${requiredDefinition.heading.name}' must be one of the following: $headings") { entity ->
-            entity.parameters[requiredDefinition.heading]?.let { heading ->
-                return@addTypedConstraint TextContentEntityTypeDefinition.Heading.byKey(heading) != null
-            }
-
-            true
+        val headings = TextContentEntityTypeDefinition.Heading.entries.map {
+            it.lowercaseName
         }
+
+        requireAnyText(validator, requiredDefinition.heading, headings)
     }
 }

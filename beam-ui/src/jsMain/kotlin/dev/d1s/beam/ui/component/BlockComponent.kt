@@ -22,7 +22,7 @@ import dev.d1s.beam.commons.contententity.CommonParameters
 import dev.d1s.beam.commons.contententity.ContentEntities
 import dev.d1s.beam.commons.contententity.ContentEntity
 import dev.d1s.beam.ui.contententity.renderEntities
-import dev.d1s.beam.ui.contententity.split
+import dev.d1s.beam.ui.contententity.splitBy
 import dev.d1s.beam.ui.util.*
 import dev.d1s.beam.ui.util.Size.MaxBlockSize
 import dev.d1s.beam.ui.util.Size.sizeOf
@@ -154,7 +154,7 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
         fun ContentEntity.isCollapsed() =
             parameters[CommonParameters.COLLAPSED]?.toBooleanStrictOrNull() ?: false
 
-        split(condition = { entity -> entity.isCollapsed() }) { entities, collapsed ->
+        splitBy(selector = { entity -> entity.isCollapsed() }) { entities, collapsed ->
             block(entities, collapsed)
         }
     }

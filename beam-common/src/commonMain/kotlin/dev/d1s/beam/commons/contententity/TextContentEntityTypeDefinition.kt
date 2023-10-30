@@ -16,20 +16,22 @@
 
 package dev.d1s.beam.commons.contententity
 
+import dev.d1s.beam.commons.util.lowercaseName
+
 public data object TextContentEntityTypeDefinition : CommonContentEntityTypeDefinition(name = "text") {
 
     val value: ContentEntityParameterDefinition = parameter("value", required = true, translatable = true)
 
     val heading: ContentEntityParameterDefinition = parameter("heading")
 
-    public enum class Heading(public val key: String) {
-        H1("h1"), H2("h2"), H3("h3");
+    public enum class Heading {
+        H1, H2, H3;
 
         public companion object {
 
-            public fun byKey(key: String): Heading? =
+            public fun byName(name: String): Heading? =
                 entries.find {
-                    it.key == key
+                    it.lowercaseName == name
                 }
         }
     }

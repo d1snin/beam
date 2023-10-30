@@ -124,3 +124,31 @@ internal fun ValidationBuilder<ContentEntity>.requireCorrectBoolean(
 ) {
     requireCorrectBoolean(validator, parameterDefinition.name)
 }
+
+internal fun ValidationBuilder<ContentEntity>.requireAnyText(
+    validator: ContentEntityValidator<*>,
+    parameterName: ContentEntityParameterName,
+    texts: List<String>
+) {
+    with(validator) {
+        val message = "parameter '$parameterName' is not one of the following values: ${
+            texts.joinToString(", ")
+        }"
+
+        addTypedConstraint(message) { entity ->
+            entity.parameters[parameterName]?.let { text ->
+                return@addTypedConstraint text in texts
+            }
+
+            true
+        }
+    }
+}
+
+internal fun ValidationBuilder<ContentEntity>.requireAnyText(
+    validator: ContentEntityValidator<*>,
+    parameterDefinition: ContentEntityParameterDefinition,
+    texts: List<String>
+) {
+    requireAnyText(validator, parameterDefinition.name, texts)
+}

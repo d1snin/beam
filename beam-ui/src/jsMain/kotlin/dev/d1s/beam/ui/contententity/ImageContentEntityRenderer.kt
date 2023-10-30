@@ -19,6 +19,7 @@ package dev.d1s.beam.ui.contententity
 import dev.d1s.beam.commons.contententity.ImageContentEntityTypeDefinition
 import dev.d1s.beam.commons.contententity.get
 import dev.d1s.beam.ui.util.isFluidImage
+import dev.d1s.beam.ui.util.justifyContent
 import io.kvision.html.div
 import io.kvision.html.image
 import io.kvision.panel.SimplePanel
@@ -62,7 +63,9 @@ class ImageContentEntityRenderer : SingleContentEntityRenderer, KoinComponent {
         context: SingleContentEntityRenderingContext,
         configure: SimplePanel.() -> Unit
     ) {
-        div(className = "w-100") {
+        div(className = "d-flex w-100") {
+            justifyContent(context.alignment)
+
             if (context.isFirst()) {
                 addCssClass("mt-0")
             }

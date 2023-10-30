@@ -21,6 +21,7 @@ import dev.d1s.beam.commons.contententity.ContentEntities
 import dev.d1s.beam.commons.contententity.ContentEntity
 import dev.d1s.beam.commons.contententity.get
 import dev.d1s.beam.ui.util.iconWithMargin
+import dev.d1s.beam.ui.util.justifyContent
 import dev.d1s.beam.ui.util.renderFriendlyLink
 import io.kvision.html.div
 import io.kvision.html.span
@@ -36,7 +37,7 @@ class ButtonLinkContentEntityRenderer : ContentEntityRenderer, KoinComponent {
     private val ContentEntity.width get() = parameters[definition.width]
 
     override fun SimplePanel.render(context: SequenceContentEntityRenderingContext) {
-        context.sequence.split(condition = { it.width != null }) { entities, sized ->
+        context.sequence.splitBy(selector = { it.width != null }) { entities, sized ->
             renderButtons(entities, context, sized)
         }
     }
@@ -56,6 +57,8 @@ class ButtonLinkContentEntityRenderer : ContentEntityRenderer, KoinComponent {
             renderEach(fullWidth = true)
         } else {
             div(className = "row row-cols-auto g-2") {
+                justifyContent(context.alignment)
+
                 renderEach(fullWidth = false)
 
                 separateContentEntities(entities, context)
@@ -79,13 +82,13 @@ class ButtonLinkContentEntityRenderer : ContentEntityRenderer, KoinComponent {
         requireNotNull(url)
 
         val styleIdentifier = parameters[definition.style]
-        val style = ButtonLinkContentEntityTypeDefinition.Style.byIdentifier(styleIdentifier)
+        val style = ButtonLinkContentEntityTypeDefinition.Style.byName(styleIdentifier)
             ?: ButtonLinkContentEntityTypeDefinition.Style.Default
 
         val width = parameters[definition.width]?.toInt()
         val height = parameters[definition.height]?.toInt()
 
-        fun render() {
+        fun SimplePanel.render() {
             div(className = "d-flex mt-0") {
                 width?.let {
                     this.width = width.perc
@@ -97,7 +100,7 @@ class ButtonLinkContentEntityRenderer : ContentEntityRenderer, KoinComponent {
 
                 renderFriendlyLink(
                     url = url,
-                    className = "w-100 h-100 btn btn-outline-${style.identifier}",
+                    className = "w-100 h-100 btn btn-outline-${style.code}",
                     external = true
                 ) {
                     role = "button"
@@ -119,6 +122,8 @@ class ButtonLinkContentEntityRenderer : ContentEntityRenderer, KoinComponent {
 
         if (fullWidth) {
             div(className = "d-flex w-100") {
+                justifyContent(context.alignment)
+
                 render()
             }
         } else {

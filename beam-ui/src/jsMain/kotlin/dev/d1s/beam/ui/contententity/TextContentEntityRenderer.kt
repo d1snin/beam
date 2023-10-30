@@ -20,6 +20,7 @@ import dev.d1s.beam.commons.contententity.ContentEntity
 import dev.d1s.beam.commons.contententity.ContentEntityParameters
 import dev.d1s.beam.commons.contententity.TextContentEntityTypeDefinition
 import dev.d1s.beam.commons.contententity.get
+import dev.d1s.beam.ui.util.alignText
 import io.kvision.html.p
 import io.kvision.panel.SimplePanel
 import org.koin.core.component.KoinComponent
@@ -48,6 +49,8 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
     ) {
         optionalHeading(parameters, contentEntity, context) {
             paragraph {
+                alignText(context.alignment)
+
                 renderText(parameters)
             }
         }
@@ -60,7 +63,7 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
         init: SimplePanel.() -> Unit
     ) {
         val heading = parameters[definition.heading]?.let {
-            TextContentEntityTypeDefinition.Heading.byKey(it)
+            TextContentEntityTypeDefinition.Heading.byName(it)
         }
 
         heading?.let {
