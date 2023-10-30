@@ -16,10 +16,7 @@
 
 package dev.d1s.beam.ui.contententity
 
-import dev.d1s.beam.commons.contententity.ContentEntity
-import dev.d1s.beam.commons.contententity.ContentEntityParameters
-import dev.d1s.beam.commons.contententity.TextContentEntityTypeDefinition
-import dev.d1s.beam.commons.contententity.get
+import dev.d1s.beam.commons.contententity.*
 import dev.d1s.beam.ui.util.alignText
 import io.kvision.html.p
 import io.kvision.panel.SimplePanel
@@ -63,7 +60,7 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
         init: SimplePanel.() -> Unit
     ) {
         val heading = parameters[definition.heading]?.let {
-            TextContentEntityTypeDefinition.Heading.byName(it)
+            Heading.byName(it)
         }
 
         heading?.let {
@@ -89,10 +86,13 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
         renderStyledText(content)
     }
 
-    private fun TextContentEntityTypeDefinition.Heading.toBootstrapHeadingClass() =
+    private fun Heading.toBootstrapHeadingClass() =
         when (this) {
-            TextContentEntityTypeDefinition.Heading.H1 -> "h1"
-            TextContentEntityTypeDefinition.Heading.H2 -> "h3"
-            TextContentEntityTypeDefinition.Heading.H3 -> "h5"
+            Heading.H1 -> "h1"
+            Heading.H2 -> "h3"
+            Heading.H3 -> "h5"
+            Heading.DISPLAY_1 -> "display-1"
+            Heading.DISPLAY_2 -> "display-3"
+            Heading.DISPLAY_3 -> "display-5"
         }
 }

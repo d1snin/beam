@@ -112,7 +112,7 @@ public fun ContentEntitiesBuilder.text(
 
 public fun ContentEntitiesBuilder.heading(
     value: String,
-    level: TextContentEntityTypeDefinition.Heading,
+    level: Heading,
     alignment: Alignment? = null,
     collapsed: Boolean? = null
 ) {
@@ -124,7 +124,7 @@ public fun ContentEntitiesBuilder.firstHeading(
     alignment: Alignment? = null,
     collapsed: Boolean? = null
 ) {
-    heading(value, level = TextContentEntityTypeDefinition.Heading.H1, alignment = alignment, collapsed = collapsed)
+    heading(value, level = Heading.H1, alignment = alignment, collapsed = collapsed)
 }
 
 public fun ContentEntitiesBuilder.secondHeading(
@@ -132,7 +132,7 @@ public fun ContentEntitiesBuilder.secondHeading(
     alignment: Alignment? = null,
     collapsed: Boolean? = null
 ) {
-    heading(value, level = TextContentEntityTypeDefinition.Heading.H2, alignment = alignment, collapsed = collapsed)
+    heading(value, level = Heading.H2, alignment = alignment, collapsed = collapsed)
 }
 
 public fun ContentEntitiesBuilder.thirdHeading(
@@ -140,14 +140,14 @@ public fun ContentEntitiesBuilder.thirdHeading(
     alignment: Alignment? = null,
     collapsed: Boolean? = null
 ) {
-    heading(value, level = TextContentEntityTypeDefinition.Heading.H3, alignment = alignment, collapsed = collapsed)
+    heading(value, level = Heading.H3, alignment = alignment, collapsed = collapsed)
 }
 
 public fun ContentEntitiesBuilder.buttonLink(
     text: String,
     icon: String? = null,
     url: String,
-    style: ButtonLinkContentEntityTypeDefinition.Style? = null,
+    style: ButtonStyle? = null,
     width: Int? = null,
     height: Int? = null,
     alignment: Alignment? = null,
@@ -184,7 +184,7 @@ public fun ContentEntitiesBuilder.fullWidthButtonLink(
     text: String,
     icon: String? = null,
     url: String,
-    style: ButtonLinkContentEntityTypeDefinition.Style? = null,
+    style: ButtonStyle? = null,
     height: Int? = null,
     alignment: Alignment? = null,
     collapsed: Boolean? = null

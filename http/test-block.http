@@ -12,6 +12,48 @@ Content-Type: application/json
         {
             "type": "text",
             "parameters": {
+                "value": "(Test first-level display heading)(blue)",
+                "heading": "display_1"
+            }
+        },
+        {
+            "type": "text",
+            "parameters": {
+                "alignment": "center",
+                "value": "Test text that goes after first-level display heading"
+            }
+        },
+        {
+            "type": "text",
+            "parameters": {
+                "value": "Test second-level display heading",
+                "heading": "display_2"
+            }
+        },
+        {
+            "type": "text",
+            "parameters": {
+                "alignment": "center",
+                "value": "Test text that goes after second-level display heading"
+            }
+        },
+        {
+            "type": "text",
+            "parameters": {
+                "value": "Test third-level display heading",
+                "heading": "display_3"
+            }
+        },
+        {
+            "type": "text",
+            "parameters": {
+                "alignment": "center",
+                "value": "Test text that goes after third-level display heading"
+            }
+        },
+        {
+            "type": "text",
+            "parameters": {
                 "alignment": "center",
                 "value": "Test first-level heading",
                 "heading": "h1"

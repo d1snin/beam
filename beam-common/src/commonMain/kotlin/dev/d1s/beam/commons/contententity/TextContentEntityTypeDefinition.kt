@@ -23,16 +23,16 @@ public data object TextContentEntityTypeDefinition : CommonContentEntityTypeDefi
     val value: ContentEntityParameterDefinition = parameter("value", required = true, translatable = true)
 
     val heading: ContentEntityParameterDefinition = parameter("heading")
+}
 
-    public enum class Heading {
-        H1, H2, H3;
+public enum class Heading {
+    H1, H2, H3, DISPLAY_1, DISPLAY_2, DISPLAY_3;
 
-        public companion object {
+    public companion object {
 
-            public fun byName(name: String): Heading? =
-                entries.find {
-                    it.lowercaseName == name
-                }
-        }
+        public fun byName(name: String): Heading? =
+            entries.find {
+                it.lowercaseName == name
+            }
     }
 }

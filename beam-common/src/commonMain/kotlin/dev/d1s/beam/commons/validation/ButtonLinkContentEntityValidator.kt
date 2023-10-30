@@ -17,6 +17,7 @@
 package dev.d1s.beam.commons.validation
 
 import dev.d1s.beam.commons.contententity.ButtonLinkContentEntityTypeDefinition
+import dev.d1s.beam.commons.contententity.ButtonStyle
 import dev.d1s.beam.commons.contententity.ContentEntity
 import dev.d1s.beam.commons.util.lowercaseName
 import io.konform.validation.ValidationBuilder
@@ -40,7 +41,7 @@ internal object ButtonLinkContentEntityValidator :
     private fun ValidationBuilder<ContentEntity>.requireCorrectStyle() {
         val validator = this@ButtonLinkContentEntityValidator
 
-        val styles = ButtonLinkContentEntityTypeDefinition.Style.entries.map {
+        val styles = ButtonStyle.entries.map {
             it.lowercaseName
         }
 

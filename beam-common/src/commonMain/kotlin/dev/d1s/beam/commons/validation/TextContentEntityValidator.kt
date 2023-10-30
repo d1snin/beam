@@ -17,6 +17,7 @@
 package dev.d1s.beam.commons.validation
 
 import dev.d1s.beam.commons.contententity.ContentEntity
+import dev.d1s.beam.commons.contententity.Heading
 import dev.d1s.beam.commons.contententity.TextContentEntityTypeDefinition
 import dev.d1s.beam.commons.util.lowercaseName
 import io.konform.validation.ValidationBuilder
@@ -35,7 +36,7 @@ internal object TextContentEntityValidator :
     private fun ValidationBuilder<ContentEntity>.requireHeading() {
         val validator = this@TextContentEntityValidator
 
-        val headings = TextContentEntityTypeDefinition.Heading.entries.map {
+        val headings = Heading.entries.map {
             it.lowercaseName
         }
 

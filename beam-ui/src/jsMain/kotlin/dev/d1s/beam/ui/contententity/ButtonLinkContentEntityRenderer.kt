@@ -16,10 +16,7 @@
 
 package dev.d1s.beam.ui.contententity
 
-import dev.d1s.beam.commons.contententity.ButtonLinkContentEntityTypeDefinition
-import dev.d1s.beam.commons.contententity.ContentEntities
-import dev.d1s.beam.commons.contententity.ContentEntity
-import dev.d1s.beam.commons.contententity.get
+import dev.d1s.beam.commons.contententity.*
 import dev.d1s.beam.ui.util.iconWithMargin
 import dev.d1s.beam.ui.util.justifyContent
 import dev.d1s.beam.ui.util.renderFriendlyLink
@@ -82,8 +79,8 @@ class ButtonLinkContentEntityRenderer : ContentEntityRenderer, KoinComponent {
         requireNotNull(url)
 
         val styleIdentifier = parameters[definition.style]
-        val style = ButtonLinkContentEntityTypeDefinition.Style.byName(styleIdentifier)
-            ?: ButtonLinkContentEntityTypeDefinition.Style.Default
+        val style = ButtonStyle.byName(styleIdentifier)
+            ?: ButtonStyle.Default
 
         val width = parameters[definition.width]?.toInt()
         val height = parameters[definition.height]?.toInt()

@@ -31,23 +31,23 @@ public data object ButtonLinkContentEntityTypeDefinition : CommonContentEntityTy
     val width: ContentEntityParameterDefinition = widthParameter()
 
     val height: ContentEntityParameterDefinition = heightParameter()
+}
 
-    public enum class Style(public val code: String) {
-        PRIMARY("primary"),
-        SUCCESS("success"),
-        DANGER("danger"),
-        WARNING("warning"),
-        INFO("info"),
-        LIGHT("light");
+public enum class ButtonStyle(public val code: String) {
+    PRIMARY("primary"),
+    SUCCESS("success"),
+    DANGER("danger"),
+    WARNING("warning"),
+    INFO("info"),
+    LIGHT("light");
 
-        public companion object {
+    public companion object {
 
-            public val Default: Style = LIGHT
+        public val Default: ButtonStyle = LIGHT
 
-            public fun byName(name: String?): Style? =
-                entries.find {
-                    it.lowercaseName == name
-                }
-        }
+        public fun byName(name: String?): ButtonStyle? =
+            entries.find {
+                it.lowercaseName == name
+            }
     }
 }
