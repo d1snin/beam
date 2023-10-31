@@ -116,7 +116,7 @@ public fun ContentEntitiesBuilder.heading(
     alignment: Alignment? = null,
     collapsed: Boolean? = null
 ) {
-    text(value, heading = level.name, alignment = alignment, collapsed = collapsed)
+    text(value, heading = level.lowercaseName, alignment = alignment, collapsed = collapsed)
 }
 
 public fun ContentEntitiesBuilder.firstHeading(
