@@ -190,7 +190,7 @@ public fun ContentEntitiesBuilder.buttonLink(
             put(ButtonLink.url.name, url)
 
             style?.let {
-                put(ButtonLink.style.name, it.name)
+                put(ButtonLink.style.name, it.lowercaseName)
             }
 
             width?.let {
