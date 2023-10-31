@@ -20,7 +20,7 @@ import dev.d1s.beam.commons.BlockSize
 
 object Size {
 
-    private const val STEP = 250
+    private const val STEP = 230
     private const val WHITESPACE = 30
 
     private val LgBreakpoint = breakpointOf(BlockSize.LARGE)

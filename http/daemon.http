@@ -175,8 +175,6 @@ Content-Type: application/json
 ### GET Translation
 GET http://localhost:8573/translations/en?space=
 
-
-
 ### GET Resolved Translation
 GET http://localhost:8573/translation?language=al&space=root
 
