@@ -21,7 +21,7 @@ import dev.d1s.beam.commons.contententity.*
 import dev.d1s.beam.commons.util.lowercaseName
 
 @BuilderDsl
-public class BlockModificationBuilder : ContentEntitiesBuilder() {
+public class BlockModificationBuilder() : ContentEntitiesBuilder() {
 
     public var index: BlockIndex? = null
 
@@ -30,6 +30,14 @@ public class BlockModificationBuilder : ContentEntitiesBuilder() {
     public var spaceId: SpaceIdentifier? = null
 
     private val metadataBuilder = MetadataBuilder()
+
+    public constructor(modification: BlockModification) : this() {
+        index = modification.index
+        size = modification.size
+        entities = modification.entities.toMutableList()
+        metadataBuilder.metadata = modification.metadata.toMutableMap()
+        spaceId = modification.spaceId
+    }
 
     public fun metadata(key: MetadataKey, value: MetadataValue) {
         metadataBuilder.metadata(key, value)
@@ -70,7 +78,7 @@ public class ContentEntityBuilder {
 @BuilderDsl
 public open class ContentEntitiesBuilder {
 
-    private val entities: MutableList<ContentEntity> = mutableListOf()
+    internal var entities: MutableList<ContentEntity> = mutableListOf()
 
     public fun entity(build: ContentEntityBuilder.() -> Unit) {
         entities += ContentEntityBuilder().apply(build).buildContentEntity()

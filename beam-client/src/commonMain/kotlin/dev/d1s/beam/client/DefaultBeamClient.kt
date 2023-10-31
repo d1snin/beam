@@ -63,6 +63,8 @@ public class DefaultBeamClient(
 
     private val eventHandlingScope = CoroutineScope(Dispatchers.Main)
 
+    private val blockMiddlewares = mutableSetOf<BlockMiddleware>()
+
     override suspend fun getDaemonStatus(): Result<DaemonStatus> =
         runCatching {
             httpClient.get(Paths.GET_DAEMON_STATUS_ROUTE).body()
@@ -179,9 +181,11 @@ public class DefaultBeamClient(
         runCatching {
             requireToken()
 
+            val body = block.runBlockMiddlewares()
+
             httpClient.post(Paths.POST_BLOCK) {
                 contentType(ContentType.Application.Json)
-                setBody(block)
+                setBody(body)
                 setLanguageCode(languageCode)
             }.body()
         }
@@ -190,7 +194,12 @@ public class DefaultBeamClient(
         languageCode: LanguageCode?,
         configure: suspend BlockModificationBuilder.() -> Unit
     ): Result<Block> =
-        postBlock(BlockModificationBuilder().apply { configure() }.buildBlockModification(), languageCode)
+        postBlock(
+            BlockModificationBuilder().apply { configure() }
+                .runBlockMiddlewares()
+                .buildBlockModification(),
+            languageCode
+        )
 
     public override suspend fun getBlocks(spaceId: SpaceIdentifier, languageCode: LanguageCode?): Result<Blocks> =
         runCatching {
@@ -206,9 +215,11 @@ public class DefaultBeamClient(
 
             val path = Paths.PUT_BLOCK.replaceIdPlaceholder(id)
 
+            val body = block.runBlockMiddlewares()
+
             httpClient.put(path) {
                 contentType(ContentType.Application.Json)
-                setBody(block)
+                setBody(body)
                 setLanguageCode(languageCode)
             }.body()
         }
@@ -218,7 +229,13 @@ public class DefaultBeamClient(
         languageCode: LanguageCode?,
         configure: suspend BlockModificationBuilder.() -> Unit
     ): Result<Block> =
-        putBlock(id, BlockModificationBuilder().apply { configure() }.buildBlockModification(), languageCode)
+        putBlock(
+            id,
+            BlockModificationBuilder().apply { configure() }
+                .runBlockMiddlewares()
+                .buildBlockModification(),
+            languageCode
+        )
 
     override suspend fun deleteBlock(id: BlockId): Result<Unit> =
         runCatching {
@@ -298,7 +315,11 @@ public class DefaultBeamClient(
         languageCode: LanguageCode,
         configure: suspend TranslationModificationBuilder.() -> Unit
     ): Result<Translation> =
-        putTranslation(spaceId, languageCode, TranslationModificationBuilder().apply { configure() }.buildTranslationModification())
+        putTranslation(
+            spaceId,
+            languageCode,
+            TranslationModificationBuilder().apply { configure() }.buildTranslationModification()
+        )
 
     override suspend fun deleteTranslation(spaceId: SpaceIdentifier?, languageCode: LanguageCode): Result<Unit> =
         runCatching {
@@ -362,6 +383,24 @@ public class DefaultBeamClient(
 
     override fun isCompatible(daemonVersion: Version): Boolean =
         daemonVersion == VERSION
+
+    override fun addBlockMiddleware(middleware: BlockMiddleware) {
+        blockMiddlewares += middleware
+    }
+
+    private suspend fun BlockModification.runBlockMiddlewares() =
+        BlockModificationBuilder(modification = this).apply {
+            runBlockMiddlewares()
+        }.buildBlockModification()
+
+    private suspend fun BlockModificationBuilder.runBlockMiddlewares() =
+        apply {
+            blockMiddlewares.forEach { middleware ->
+                with(middleware) {
+                    process()
+                }
+            }
+        }
 
     private fun HttpRequestBuilder.setLanguageCode(languageCode: LanguageCode?) {
         parameter(Paths.LANGUAGE_CODE_QUERY_PARAMETER, languageCode)

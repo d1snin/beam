@@ -164,6 +164,8 @@ public interface BeamClient {
     public suspend fun isCompatible(): Result<Boolean>
 
     public fun isCompatible(daemonVersion: Version): Boolean
+
+    public fun addBlockMiddleware(middleware: BlockMiddleware)
 }
 
 public fun BeamClient(
