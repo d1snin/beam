@@ -36,6 +36,7 @@ private val definitions = listOf(
     VoidContentEntityTypeDefinition,
     TextContentEntityTypeDefinition,
     ButtonLinkContentEntityTypeDefinition,
+    AlertContentEntityTypeDefinition,
     SpaceContentEntityTypeDefinition,
     ImageContentEntityTypeDefinition,
     EmbedContentEntityTypeDefinition
@@ -49,6 +50,7 @@ public fun definition(name: ContentEntityTypeName): ContentEntityTypeDefinition?
 public val Void: VoidContentEntityTypeDefinition = VoidContentEntityTypeDefinition
 public val Text: TextContentEntityTypeDefinition = TextContentEntityTypeDefinition
 public val ButtonLink: ButtonLinkContentEntityTypeDefinition = ButtonLinkContentEntityTypeDefinition
+public val Alert: AlertContentEntityTypeDefinition = AlertContentEntityTypeDefinition
 public val Space: SpaceContentEntityTypeDefinition = SpaceContentEntityTypeDefinition
 public val Image: ImageContentEntityTypeDefinition = ImageContentEntityTypeDefinition
 public val Embed: EmbedContentEntityTypeDefinition = EmbedContentEntityTypeDefinition

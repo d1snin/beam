@@ -228,6 +228,51 @@ public fun ContentEntitiesBuilder.fullWidthButtonLink(
     buttonLink(text, icon, url, style, width = 100, height, alignment = alignment, collapsed = collapsed)
 }
 
+public fun ContentEntitiesBuilder.alert(
+    text: String,
+    icon: String? = null,
+    style: ButtonStyle? = null,
+    width: Int? = null,
+    height: Int? = null,
+    alignment: Alignment? = null,
+    collapsed: Boolean? = null
+) {
+    entity {
+        type = Alert
+
+        parametersWithCommons(alignment = alignment, collapsed = collapsed) {
+            put(Alert.text.name, text)
+
+            icon?.let {
+                put(Alert.icon.name, it)
+            }
+
+            style?.let {
+                put(Alert.style.name, it.lowercaseName)
+            }
+
+            width?.let {
+                put(Alert.width.name, it.toString())
+            }
+
+            height?.let {
+                put(Alert.height.name, it.toString())
+            }
+        }
+    }
+}
+
+public fun ContentEntitiesBuilder.fullWidthAlert(
+    text: String,
+    icon: String? = null,
+    style: ButtonStyle? = null,
+    height: Int? = null,
+    alignment: Alignment? = null,
+    collapsed: Boolean? = null
+) {
+    alert(text, icon, style, width = 100, height, alignment = alignment, collapsed = collapsed)
+}
+
 public fun ContentEntitiesBuilder.space(
     identifier: SpaceIdentifier,
     fullWidth: Boolean? = null,

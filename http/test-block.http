@@ -298,6 +298,52 @@ Content-Type: application/json
                 "url": "https://ya.ru",
                 "style": "info"
             }
+        },
+        {
+            "type": "text",
+            "parameters": {
+                "value": "Alert test",
+                "heading": "h1"
+            }
+        },
+        {
+            "type": "alert",
+            "parameters": {
+                "text": "Test alert",
+                "icon": "info-circle-fill",
+                "style": "primary",
+                "width": "100"
+            }
+        },
+        {
+            "type": "alert",
+            "parameters": {
+                "alignment": "end",
+                "width": "50",
+                "text": "Test alert",
+                "icon": "info-circle-fill",
+                "style": "info"
+            }
+        },
+        {
+            "type": "alert",
+            "parameters": {
+                "alignment": "start",
+                "width": "50",
+                "text": "Test alert",
+                "icon": "info-circle-fill",
+                "style": "light"
+            }
+        },
+        {
+            "type": "alert",
+            "parameters": {
+                "alignment": "center",
+                "width": "50",
+                "text": "Test alert",
+                "icon": "info-circle-fill",
+                "style": "success"
+            }
         }
     ],
     "metadata": {},

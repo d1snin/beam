@@ -56,6 +56,7 @@ internal abstract class ContentEntityValidator<in D : ContentEntityTypeDefinitio
             VoidContentEntityValidator,
             TextContentEntityValidator,
             ButtonLinkContentEntityValidator,
+            AlertContentEntityValidator,
             SpaceContentEntityValidator,
             ImageContentEntityValidator,
             EmbedContentEntityValidator

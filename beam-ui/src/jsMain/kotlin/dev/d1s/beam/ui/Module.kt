@@ -56,6 +56,7 @@ object Qualifier {
     val VoidContentEntityRenderer = named("void-content-entity-renderer")
     val TextContentEntityRenderer = named("text-content-entity-renderer")
     val ButtonLinkContentEntityRenderer = named("button-link-content-entity-renderer")
+    val AlertContentEntityRenderer = named("alert-content-entity-renderer")
     val SpaceContentEntityRenderer = named("space-content-entity-renderer")
     val ImageContentEntityRenderer = named("image-content-entity-renderer")
     val EmbedContentEntityRenderer = named("embed-content-entity-renderer")
@@ -170,6 +171,10 @@ private fun Module.contentEntityRenderers() {
 
     singleOf<ContentEntityRenderer>(::ButtonLinkContentEntityRenderer) {
         qualifier = Qualifier.ButtonLinkContentEntityRenderer
+    }
+
+    singleOf<ContentEntityRenderer>(::AlertContentEntityRenderer) {
+        qualifier = Qualifier.AlertContentEntityRenderer
     }
 
     singleOf<ContentEntityRenderer>(::SpaceContentEntityRenderer) {
