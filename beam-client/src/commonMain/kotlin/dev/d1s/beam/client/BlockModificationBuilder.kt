@@ -43,6 +43,10 @@ public class BlockModificationBuilder() : ContentEntitiesBuilder() {
         metadataBuilder.metadata(key, value)
     }
 
+    public fun metadata(build: MetadataBuilder.() -> Unit) {
+        metadataBuilder.apply(build)
+    }
+
     public fun buildBlockModification(): BlockModification =
         BlockModification(
             index ?: error("Block index is undefined"),
@@ -58,7 +62,7 @@ public class ContentEntityBuilder {
 
     public var type: ContentEntityTypeDefinition? = null
 
-    private var parameters: ContentEntityParameters = mapOf()
+    public var parameters: ContentEntityParameters = mapOf()
 
     public fun parameters(build: MutableMap<ContentEntityParameterName, ContentEntityParameterValue>.() -> Unit) {
         parameters = buildMap(build)
@@ -78,7 +82,7 @@ public class ContentEntityBuilder {
 @BuilderDsl
 public open class ContentEntitiesBuilder {
 
-    internal var entities: MutableList<ContentEntity> = mutableListOf()
+    public var entities: MutableList<ContentEntity> = mutableListOf()
 
     public fun entity(build: ContentEntityBuilder.() -> Unit) {
         entities += ContentEntityBuilder().apply(build).buildContentEntity()
