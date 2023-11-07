@@ -83,7 +83,7 @@ class ExploreDropdownComponent : Component<Unit>(), KoinComponent {
 
     private fun SimplePanel.setMenuWidth(maxBlockSize: BlockSize) {
         val maxBlockSizeValue = sizeOf(maxBlockSize)
-        val minimizedMaxBlockSize = (maxBlockSizeValue * 0.70).toInt()
+        val minimizedMaxBlockSize = (maxBlockSizeValue * MENU_WIDTH_RATIO).toInt()
 
         width = minimizedMaxBlockSize.px
     }
@@ -94,5 +94,10 @@ class ExploreDropdownComponent : Component<Unit>(), KoinComponent {
         (effect as? LazyEffect)?.state?.subscribe { visible ->
             componentToBeVisible.visible = visible
         }
+    }
+
+    private companion object {
+
+        private const val MENU_WIDTH_RATIO = 0.70
     }
 }

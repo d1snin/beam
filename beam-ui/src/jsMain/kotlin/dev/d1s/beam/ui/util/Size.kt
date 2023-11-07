@@ -46,7 +46,11 @@ object Size {
         }
 
     fun sizeOf(blockSize: BlockSize) =
-        STEP * blockSize.level
+        if (blockSize == BlockSize.HALF) {
+            (STEP * MaxBlockSize.level) / 2
+        } else {
+            STEP * blockSize.level
+        }
 
     private fun breakpointOf(blockSize: BlockSize) =
         sizeOf(blockSize) + WHITESPACE

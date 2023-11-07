@@ -58,7 +58,17 @@ public data class BlockModification(
 ) : AbstractBlock
 
 public enum class BlockSize {
-    SMALL, MEDIUM, LARGE, EXTRA_LARGE;
+    SMALL, MEDIUM, HALF, LARGE, EXTRA_LARGE;
 
-    public val level: Int = ordinal + 1
+    public val level: Int
+        get() = if (this == HALF) {
+            HALF_LEVEL
+        } else {
+            ordinal + 1
+        }
+
+    public companion object {
+
+        public const val HALF_LEVEL: Int = 0
+    }
 }
