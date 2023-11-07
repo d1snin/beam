@@ -120,9 +120,14 @@ public suspend fun SpaceContext.sizedBlock(size: BlockSize, configure: suspend B
 
 public suspend fun SpaceContext.sizedBlockWithEntities(
     size: BlockSize,
+    row: RowIndex? = null,
     configureEntities: suspend ContentEntitiesBuilder.() -> Unit
 ) {
     sizedBlock(size) {
+        row?.let {
+            setRow { it }
+        }
+
         setEntities(configureEntities)
     }
 }
@@ -143,18 +148,30 @@ public suspend fun SpaceContext.extraLargeBlock(configure: suspend BlockContext.
     sizedBlock(size = BlockSize.EXTRA_LARGE, configure)
 }
 
-public suspend fun SpaceContext.smallBlockWithEntities(configureEntities: suspend ContentEntitiesBuilder.() -> Unit) {
-    sizedBlockWithEntities(size = BlockSize.SMALL, configureEntities)
+public suspend fun SpaceContext.smallBlockWithEntities(
+    row: RowIndex? = null,
+    configureEntities: suspend ContentEntitiesBuilder.() -> Unit
+) {
+    sizedBlockWithEntities(size = BlockSize.SMALL, row, configureEntities)
 }
 
-public suspend fun SpaceContext.mediumBlockWithEntities(configureEntities: suspend ContentEntitiesBuilder.() -> Unit) {
-    sizedBlockWithEntities(size = BlockSize.MEDIUM, configureEntities)
+public suspend fun SpaceContext.mediumBlockWithEntities(
+    row: RowIndex? = null,
+    configureEntities: suspend ContentEntitiesBuilder.() -> Unit
+) {
+    sizedBlockWithEntities(size = BlockSize.MEDIUM, row, configureEntities)
 }
 
-public suspend fun SpaceContext.largeBlockWithEntities(configureEntities: suspend ContentEntitiesBuilder.() -> Unit) {
-    sizedBlockWithEntities(size = BlockSize.LARGE, configureEntities)
+public suspend fun SpaceContext.largeBlockWithEntities(
+    row: RowIndex? = null,
+    configureEntities: suspend ContentEntitiesBuilder.() -> Unit
+) {
+    sizedBlockWithEntities(size = BlockSize.LARGE, row, configureEntities)
 }
 
-public suspend fun SpaceContext.extraLargeBlockWithEntities(configureEntities: suspend ContentEntitiesBuilder.() -> Unit) {
-    sizedBlockWithEntities(size = BlockSize.EXTRA_LARGE, configureEntities)
+public suspend fun SpaceContext.extraLargeBlockWithEntities(
+    row: RowIndex? = null,
+    configureEntities: suspend ContentEntitiesBuilder.() -> Unit
+) {
+    sizedBlockWithEntities(size = BlockSize.EXTRA_LARGE, row, configureEntities)
 }
