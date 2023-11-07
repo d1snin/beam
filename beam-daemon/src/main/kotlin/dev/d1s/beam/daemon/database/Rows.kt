@@ -23,6 +23,7 @@ import org.ktorm.schema.enum
 import org.ktorm.schema.int
 import org.ktorm.schema.uuid
 
+@Suppress("unused")
 object Rows : UuidIdentifiedEntities<RowEntity>(tableName = "row") {
 
     val index = int("index").bindTo {

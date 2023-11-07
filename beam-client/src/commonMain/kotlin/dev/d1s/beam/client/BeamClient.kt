@@ -104,6 +104,20 @@ public interface BeamClient {
 
     public suspend fun deleteBlock(id: BlockId): Result<Unit>
 
+    public suspend fun getRow(index: RowIndex, spaceId: SpaceIdentifier): Result<Row>
+
+    public suspend fun putRow(
+        index: RowIndex,
+        spaceId: SpaceIdentifier,
+        row: RowModification
+    ): Result<Row>
+
+    public suspend fun putRow(
+        index: RowIndex,
+        spaceId: SpaceIdentifier,
+        configure: suspend RowModificationBuilder.() -> Unit
+    ): Result<Row>
+
     public suspend fun postTranslation(
         spaceId: SpaceIdentifier? = null,
         translation: TranslationModification
@@ -159,6 +173,13 @@ public interface BeamClient {
     public suspend fun onBlockRemoved(
         id: BlockId? = null,
         block: suspend (ClientWebSocketEvent<Block>) -> Unit
+    ): Result<Job>
+
+    public suspend fun onRowCreated(block: suspend (ClientWebSocketEvent<Row>) -> Unit): Result<Job>
+
+    public suspend fun onRowUpdated(
+        qualifier: RowQualifier? = null,
+        block: suspend (ClientWebSocketEvent<EntityUpdate<Row>>) -> Unit
     ): Result<Job>
 
     public suspend fun isCompatible(): Result<Boolean>

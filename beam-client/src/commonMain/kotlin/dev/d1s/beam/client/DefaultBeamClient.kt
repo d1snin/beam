@@ -246,6 +246,36 @@ public class DefaultBeamClient(
             httpClient.delete(path)
         }
 
+    override suspend fun getRow(index: RowIndex, spaceId: SpaceIdentifier): Result<Row> =
+        runCatching {
+            val path = Paths.GET_ROW.replaceIdPlaceholder(index.toString())
+
+            httpClient.get(path) {
+                setSpaceId(spaceId)
+            }.body()
+        }
+
+    override suspend fun putRow(index: RowIndex, spaceId: SpaceIdentifier, row: RowModification): Result<Row> =
+        runCatching {
+            val path = Paths.PUT_ROW.replaceIdPlaceholder(index.toString())
+
+            httpClient.put(path) {
+                setSpaceId(spaceId)
+                setBody(row)
+            }.body()
+        }
+
+    override suspend fun putRow(
+        index: RowIndex,
+        spaceId: SpaceIdentifier,
+        configure: suspend RowModificationBuilder.() -> Unit
+    ): Result<Row> =
+        putRow(
+            index,
+            spaceId,
+            RowModificationBuilder().apply { configure() }.buildRowModification()
+        )
+
     override suspend fun postTranslation(
         spaceId: SpaceIdentifier?,
         translation: TranslationModification
@@ -370,6 +400,18 @@ public class DefaultBeamClient(
         block: suspend (ClientWebSocketEvent<Block>) -> Unit
     ): Result<Job> {
         val reference = EventReferences.blockRemoved(id)
+
+        return handleWsEvents(reference, block)
+    }
+
+    override suspend fun onRowCreated(block: suspend (ClientWebSocketEvent<Row>) -> Unit): Result<Job> =
+        handleWsEvents(EventReferences.rowCreated, block)
+
+    public override suspend fun onRowUpdated(
+        qualifier: RowQualifier?,
+        block: suspend (ClientWebSocketEvent<EntityUpdate<Row>>) -> Unit
+    ): Result<Job> {
+        val reference = EventReferences.rowUpdated(qualifier)
 
         return handleWsEvents(reference, block)
     }

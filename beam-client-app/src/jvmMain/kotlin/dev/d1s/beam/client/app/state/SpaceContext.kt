@@ -54,6 +54,12 @@ public class SpaceContext internal constructor(
         modifySpace(view = builtView)
     }
 
+    public suspend fun alignRow(rowIndex: RowIndex, align: RowAlign) {
+        client.putRow(rowIndex, space.id) {
+            this.align = align
+        }
+    }
+
     private suspend fun modifySpace(
         slug: SpaceSlug = space.slug,
         metadata: Metadata = space.metadata,

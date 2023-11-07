@@ -90,8 +90,8 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "row": 0,
-    "size": "HALF",
+    "row": 4,
+    "size": "MEDIUM",
     "entities": [
         {
             "type": "void",
@@ -143,12 +143,12 @@ Authorization: Bearer {{token}}
 GET http://localhost:8573/rows/0?space=root
 
 ### PUT Row
-PUT http://localhost:8573/rows/1?space=root
+PUT http://localhost:8573/rows/2?space=root
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "align": "START"
+    "align": "BETWEEN"
 }
 
 ### POST Translation

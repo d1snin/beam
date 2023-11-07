@@ -16,12 +16,12 @@
 
 package dev.d1s.beam.ui.contententity
 
-import dev.d1s.beam.commons.contententity.ContentEntities
-import dev.d1s.beam.commons.contententity.ContentEntity
-
-fun <T> ContentEntities.splitBy(selector: (ContentEntity) -> T, block: (ContentEntities, T) -> Unit) {
+fun <TSubject, TProperty> List<TSubject>.splitBy(
+    selector: (TSubject) -> TProperty,
+    block: (List<TSubject>, TProperty) -> Unit
+) {
     val entities = this
-    val buffer = mutableListOf<ContentEntity>()
+    val buffer = mutableListOf<TSubject>()
 
     var bufferProperty = selector(entities.first())
 

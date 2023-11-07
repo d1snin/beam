@@ -73,8 +73,6 @@ class DefaultBlockService : BlockService, KoinComponent {
 
     private val eventChannel by inject<WebSocketEventChannel>()
 
-    private val rowService: RowService by inject<RowService>()
-
     private val spaceService by inject<SpaceService>()
 
     private val translationService by inject<TranslationService>()

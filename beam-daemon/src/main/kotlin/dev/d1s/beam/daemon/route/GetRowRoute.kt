@@ -39,7 +39,7 @@ class GetRowRoute : Route, KoinComponent {
         get(Paths.GET_ROW) {
             val rowIndex = call.requiredIntIdParameter
             val spaceIdentifier = call.requiredSpaceIdQueryParameter
-            val foundRow = rowService.getRow(rowIndex, spaceIdentifier, requireDto = true).getOrThrow()
+            val foundRow = rowService.getOrCreateRow(rowIndex, spaceIdentifier, requireDto = true).getOrThrow()
 
             call.respond(foundRow.requiredDto)
         }

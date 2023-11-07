@@ -37,7 +37,7 @@ interface RowService {
 
     suspend fun createRow(row: RowEntity): ResultingEntityWithOptionalDto<RowEntity, Row>
 
-    suspend fun getRow(
+    suspend fun getOrCreateRow(
         index: RowIndex,
         spaceIdentifier: SpaceIdentifier,
         requireDto: Boolean = false
@@ -76,7 +76,7 @@ class DefaultRowService : RowService, KoinComponent {
             addedRow to rowDto
         }
 
-    override suspend fun getRow(
+    override suspend fun getOrCreateRow(
         index: RowIndex,
         spaceIdentifier: SpaceIdentifier,
         requireDto: Boolean
@@ -119,7 +119,7 @@ class DefaultRowService : RowService, KoinComponent {
                 "Updating row with index $index in space '$spaceIdentifier'"
             }
 
-            val (originalRow, originalRowDto) = getRow(index, spaceIdentifier, requireDto = true).getOrThrow()
+            val (originalRow, originalRowDto) = getOrCreateRow(index, spaceIdentifier, requireDto = true).getOrThrow()
             requireNotNull(originalRowDto)
 
             originalRow.apply {

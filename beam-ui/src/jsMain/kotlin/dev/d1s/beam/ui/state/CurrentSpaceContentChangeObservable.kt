@@ -19,6 +19,7 @@ package dev.d1s.beam.ui.state
 import dev.d1s.beam.client.BeamClient
 import dev.d1s.beam.commons.Block
 import dev.d1s.beam.commons.Blocks
+import dev.d1s.beam.commons.Row
 import dev.d1s.beam.commons.SpaceId
 import dev.d1s.beam.ui.util.currentBlocks
 import dev.d1s.beam.ui.util.currentLanguageCode
@@ -54,6 +55,8 @@ class CurrentSpaceContentChangeObservable : Observable<Blocks?>, KoinComponent {
         handleBlockCreation(spaceId)
         handleBlockUpdate(spaceId)
         handleBlockRemoval(spaceId)
+
+        handleRowUpdate(spaceId)
     }
 
     private suspend fun handleBlockCreation(spaceId: SpaceId) {
@@ -116,6 +119,16 @@ class CurrentSpaceContentChangeObservable : Observable<Blocks?>, KoinComponent {
         }
     }
 
+    private suspend fun handleRowUpdate(spaceId: SpaceId) {
+        client.onRowUpdated {
+            val row = it.data.new
+
+            ifSpaceMatches(row, spaceId) {
+                actualizeCurrentSpaceContent(spaceId)
+            }
+        }
+    }
+
     private suspend fun actualizeCurrentSpaceContent(space: SpaceId) {
         val blocks = client.getBlocks(space, currentLanguageCode).getOrNull()
         setCurrentSpaceContent(blocks)
@@ -123,6 +136,12 @@ class CurrentSpaceContentChangeObservable : Observable<Blocks?>, KoinComponent {
 
     private inline fun ifSpaceMatches(block: Block, spaceId: SpaceId, handler: () -> Unit) {
         if (block.spaceId == spaceId) {
+            handler()
+        }
+    }
+
+    private inline fun ifSpaceMatches(row: Row, spaceId: SpaceId, handler: () -> Unit) {
+        if (row.spaceId == spaceId) {
             handler()
         }
     }

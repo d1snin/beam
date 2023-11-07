@@ -14,8 +14,16 @@
  * limitations under the License.
  */
 
-package dev.d1s.beam.client.response
+package dev.d1s.beam.client
 
-import dev.d1s.beam.commons.Block
+import dev.d1s.beam.commons.RowAlign
+import dev.d1s.beam.commons.RowModification
 
-public typealias Blocks = List<Block>
+@BuilderDsl
+public class RowModificationBuilder {
+
+    public var align: RowAlign? = null
+
+    public fun buildRowModification(): RowModification =
+        RowModification(align ?: error("Row align is undefined"))
+}

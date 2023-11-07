@@ -16,11 +16,15 @@
 
 package dev.d1s.beam.ui.component
 
+import dev.d1s.beam.client.BeamClient
 import dev.d1s.beam.commons.Block
 import dev.d1s.beam.commons.Blocks
+import dev.d1s.beam.commons.RowAlign
+import dev.d1s.beam.commons.RowIndex
 import dev.d1s.beam.ui.Qualifier
+import dev.d1s.beam.ui.contententity.splitBy
 import dev.d1s.beam.ui.state.Observable
-import dev.d1s.beam.ui.util.Size
+import dev.d1s.beam.ui.util.currentSpace
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
 import dev.d1s.exkt.kvision.component.render
@@ -30,14 +34,25 @@ import io.kvision.panel.SimplePanel
 import io.kvision.panel.hPanel
 import io.kvision.panel.vPanel
 import io.kvision.state.bind
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
-import kotlin.math.min
+
+private data class BlockBatch(
+    val rowIndex: RowIndex,
+    val blocks: Blocks
+)
 
 class BlockContainerComponent : Component<Unit>(), KoinComponent {
 
     private val currentSpaceContentChangeObservable by inject<Observable<Blocks?>>(Qualifier.CurrentSpaceContentChangeObservable)
+
+    private val client by inject<BeamClient>()
+
+    private val clientScope = CoroutineScope(Dispatchers.Main)
 
     override fun SimplePanel.render(): Effect {
         div().bind(currentSpaceContentChangeObservable.state) { change ->
@@ -50,48 +65,25 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
     }
 
     private fun SimplePanel.renderBlocks(blocks: Blocks) {
-        div(className = "container-fluid d-flex justify-content-center") {
+        println("blockContainer renderBlocks: $blocks")
+
+        div(className = "container-fluid px-0 d-flex justify-content-center") {
             vPanel(className = "w-100") {
-                val batches = blocks.splitIntoBatches()
+                val batches = buildList {
+                    blocks.splitBy(selector = { it.row }) { blocks, row ->
+                        val batch = BlockBatch(row, blocks.toList())
+                        add(batch)
+                    }
+                }
 
                 processBatches(batches)
             }
         }
     }
 
-    private fun Blocks.splitIntoBatches(): List<Blocks> {
-        val maxBlockSize = Size.MaxBlockSize.level
+    private fun SimplePanel.processBatches(batches: List<BlockBatch>) {
+        println("blockContainer processBatches: $batches")
 
-        val batches = mutableListOf<Blocks>()
-        val currentBatch = mutableListOf<Block>()
-
-        fun Block.relativeSize() =
-            min(size.level, maxBlockSize)
-
-        fun Blocks.totalSizeIncluding(block: Block) =
-            sumOf {
-                it.relativeSize()
-            } + block.relativeSize()
-
-        fun processCurrentBatch() {
-            batches += currentBatch.toMutableList()
-            currentBatch.clear()
-        }
-
-        forEach { block ->
-            if (currentBatch.totalSizeIncluding(block) > maxBlockSize) {
-                processCurrentBatch()
-            }
-
-            currentBatch += block
-        }
-
-        processCurrentBatch()
-
-        return batches
-    }
-
-    private fun SimplePanel.processBatches(batches: List<Blocks>) {
         val maxPaddingCount = batches.getMaxPaddingCount()
 
         batches.forEachIndexed { batchIndex, blockBatch ->
@@ -101,35 +93,55 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
         }
     }
 
-    private fun List<Blocks>.getMaxPaddingCount() =
+    private fun List<BlockBatch>.getMaxPaddingCount() =
         maxOf {
-            it.getPaddingCount()
+            it.blocks.getPaddingCount()
         }
 
     private fun Blocks.getPaddingCount() =
         size - 1
 
-    private fun Blocks.getWidthCompensator(maxPaddingCount: Int): Double {
-        val paddingCount = getPaddingCount()
+    private fun BlockBatch.getWidthCompensator(maxPaddingCount: Int): Double {
+        val paddingCount = blocks.getPaddingCount()
 
         return if (paddingCount < maxPaddingCount) {
             val compensatorMultiplier = maxPaddingCount - paddingCount
             val totalCompensator = BlockComponent.BLOCK_MARGIN_VALUE * compensatorMultiplier
-            totalCompensator.toDouble() / size
+            totalCompensator.toDouble() / blocks.size
         } else {
             .0
         }
     }
 
-    private fun SimplePanel.renderBlockPanel(index: Int, batch: Blocks, batches: List<Blocks>, compensator: Double) {
-        hPanel(className = "w-100", justify = JustifyContent.CENTER) {
-            batch.forEachIndexed { blockIndex, block ->
-                val lastBlock = blockIndex == batch.lastIndex
-                val lastBatch = index == batches.lastIndex
+    private fun SimplePanel.renderBlockPanel(
+        index: Int,
+        batch: BlockBatch,
+        batches: List<BlockBatch>,
+        compensator: Double
+    ) {
+        println("blockContainer renderBlockPanel: index $index batch $batch batches $batches compensator $compensator")
 
-                val single = batch.size == 1
+        div(className = "w-100") {
+            clientScope.launch {
+                val currentSpaceId = currentSpace?.id
 
-                renderBlock(block, lastBlock, lastBatch, compensator, single)
+                if (currentSpaceId != null) {
+                    val row = client.getRow(batch.rowIndex, currentSpaceId).getOrThrow()
+                    val justify = justifyContentByRowAlign(row.align)
+
+                    hPanel(className = "w-100", justify = justify) {
+                        val blocks = batch.blocks
+
+                        blocks.forEachIndexed { blockIndex, block ->
+                            val lastBlock = blockIndex == blocks.lastIndex
+                            val lastBatch = index == batches.lastIndex
+
+                            val single = blocks.size == 1
+
+                            renderBlock(block, lastBlock, lastBatch, compensator, single)
+                        }
+                    }
+                }
             }
         }
     }
@@ -159,4 +171,12 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
             this.single.value = single
         }
     }
+
+    private fun justifyContentByRowAlign(align: RowAlign) =
+        when (align) {
+            RowAlign.START -> JustifyContent.START
+            RowAlign.END -> JustifyContent.END
+            RowAlign.CENTER -> JustifyContent.CENTER
+            RowAlign.BETWEEN -> JustifyContent.SPACEBETWEEN
+        }
 }
