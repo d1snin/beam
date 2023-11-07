@@ -16,13 +16,24 @@
 
 package dev.d1s.beam.daemon.database
 
-import org.ktorm.database.Database
-import org.ktorm.entity.sequenceOf
+import dev.d1s.beam.commons.RowAlign
+import dev.d1s.beam.daemon.entity.RowEntity
+import dev.d1s.exkt.ktorm.UuidIdentifiedEntities
+import org.ktorm.schema.enum
+import org.ktorm.schema.int
+import org.ktorm.schema.uuid
 
-val Database.spaces get() = sequenceOf(Spaces)
+object Rows : UuidIdentifiedEntities<RowEntity>(tableName = "row") {
 
-val Database.blocks get() = sequenceOf(Blocks)
+    val index = int("index").bindTo {
+        it.index
+    }
 
-val Database.rows get() = sequenceOf(Rows)
+    val align = enum<RowAlign>("align").bindTo {
+        it.align
+    }
 
-val Database.translations get() = sequenceOf(Translations)
+    val spaceId = uuid("space_id").references(Spaces) {
+        it.space
+    }
+}

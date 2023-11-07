@@ -16,9 +16,7 @@
 
 package dev.d1s.beam.commons.event
 
-import dev.d1s.beam.commons.BlockId
-import dev.d1s.beam.commons.SpaceId
-import dev.d1s.beam.commons.TranslationQualifier
+import dev.d1s.beam.commons.*
 import dev.d1s.ktor.events.commons.EventReference
 import dev.d1s.ktor.events.commons.ref
 
@@ -27,6 +25,8 @@ public object EventReferences {
     public val spaceCreated: EventReference = ref("space-created")
 
     public val blockCreated: EventReference = ref("block-created")
+
+    public val rowCreated: EventReference = ref("row-created")
 
     public val translationCreated: EventReference = ref("translation-created")
 
@@ -37,6 +37,8 @@ public object EventReferences {
     public fun blockUpdated(id: BlockId? = null): EventReference = ref("block-updated", id)
 
     public fun blockRemoved(id: BlockId? = null): EventReference = ref("block-removed", id)
+
+    public fun rowUpdated(qualifier: RowQualifier? = null): EventReference = ref("row-updated", qualifier)
 
     public fun translationUpdated(qualifier: TranslationQualifier? = null): EventReference =
         ref("translation-updated", qualifier)

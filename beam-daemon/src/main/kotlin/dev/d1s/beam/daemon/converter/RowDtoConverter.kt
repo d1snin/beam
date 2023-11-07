@@ -16,24 +16,19 @@
 
 package dev.d1s.beam.daemon.converter
 
-import dev.d1s.beam.commons.BlockModification
-import dev.d1s.beam.daemon.entity.BlockEntity
-import dev.d1s.beam.daemon.service.SpaceService
+import dev.d1s.beam.commons.Row
+import dev.d1s.beam.daemon.entity.RowEntity
 import dev.d1s.exkt.dto.DtoConverter
-import dev.d1s.exkt.dto.entity
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
-class BlockModificationDtoConverter : DtoConverter<BlockEntity, BlockModification>, KoinComponent {
+class RowDtoConverter : DtoConverter<RowEntity, Row>, KoinComponent {
 
-    private val spaceService by inject<SpaceService>()
-
-    override suspend fun convertToEntity(dto: BlockModification) =
-        BlockEntity {
-            row = dto.row
-            size = dto.size
-            entities = dto.entities
-            metadata = dto.metadata
-            space = spaceService.getSpace(dto.spaceId).getOrThrow().entity
+    override suspend fun convertToDto(entity: RowEntity) =
+        with(entity) {
+            Row(
+                index,
+                align,
+                space.id.toString()
+            )
         }
 }

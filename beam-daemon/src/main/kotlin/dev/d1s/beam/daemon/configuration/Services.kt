@@ -29,6 +29,7 @@ object Services : ApplicationConfigurer {
         module.apply {
             singleOf<AuthService>(::DefaultAuthService)
             singleOf<BlockService>(::DefaultBlockService)
+            singleOf<RowService>(::DefaultRowService)
             singleOf<SpaceService>(::DefaultSpaceService)
             singleOf<TranslationService>(::DefaultTranslationService)
         }

@@ -73,6 +73,8 @@ class DefaultBlockService : BlockService, KoinComponent {
 
     private val eventChannel by inject<WebSocketEventChannel>()
 
+    private val rowService: RowService by inject<RowService>()
+
     private val spaceService by inject<SpaceService>()
 
     private val translationService by inject<TranslationService>()
@@ -91,8 +93,6 @@ class DefaultBlockService : BlockService, KoinComponent {
             checkBlockLimit(block)
 
             translationService.verifyLocationsExist(block).getOrThrow()
-
-            processBlockIndex(block)
 
             val addedBlock = blockRepository.addBlock(block).getOrThrow()
             val translatedBlock = translateOptionally(addedBlock, languageCode)
@@ -164,10 +164,8 @@ class DefaultBlockService : BlockService, KoinComponent {
 
             translationService.verifyLocationsExist(modification).getOrThrow()
 
-            processBlockIndex(modification)
-
             originalBlock.apply {
-                this.index = modification.index
+                this.row = modification.row
                 this.size = modification.size
                 this.entities = modification.entities
                 this.metadata = modification.metadata
@@ -210,39 +208,7 @@ class DefaultBlockService : BlockService, KoinComponent {
         }
     }
 
-    private suspend fun processBlockIndex(block: BlockEntity) {
-        val space = block.space
-        val index = block.index
-
-        val latestIndex = blockRepository.findLatestBlockIndexInSpace(space).getOrNull()
-            ?: if (index != 0) {
-                throw BadRequestException("First block index must be 0")
-            } else {
-                0
-            }
-
-        logger.d {
-            "Processing block index. index: $index; latestIndex: $latestIndex"
-        }
-
-        when {
-            index == latestIndex + 1 -> {}
-            index <= latestIndex -> {
-                val blocksToUpdate =
-                    blockRepository.findBlocksInSpaceWhichIndexIsGreaterOrEqualTo(space, index).getOrThrow()
-
-                blocksToUpdate.forEach {
-                    it.index++
-                }
-
-                blockRepository.updateBlocks(blocksToUpdate)
-            }
-
-            else -> {
-                throw BadRequestException("Block index is out of bounds")
-            }
-        }
-    }
+    // Я боюсь наступления вечера...
 
     private suspend fun translateOptionally(block: BlockEntity, languageCode: LanguageCode?) =
         block.apply {

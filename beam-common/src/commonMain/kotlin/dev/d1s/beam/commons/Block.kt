@@ -21,13 +21,11 @@ import kotlinx.serialization.Serializable
 
 public typealias BlockId = String
 
-public typealias BlockIndex = Int
-
 public typealias Blocks = List<Block>
 
 public sealed interface AbstractBlock {
 
-    public val index: BlockIndex
+    public val row: RowIndex
 
     public val size: BlockSize
 
@@ -41,7 +39,7 @@ public sealed interface AbstractBlock {
 @Serializable
 public data class Block(
     val id: BlockId,
-    override val index: BlockIndex,
+    override val row: RowIndex,
     override val size: BlockSize,
     override val entities: ContentEntities,
     override val metadata: Metadata,
@@ -50,7 +48,7 @@ public data class Block(
 
 @Serializable
 public data class BlockModification(
-    override val index: BlockIndex,
+    override val row: RowIndex,
     override val size: BlockSize,
     override val entities: ContentEntities,
     override val metadata: Metadata,

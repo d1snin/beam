@@ -20,11 +20,10 @@ import dev.d1s.beam.commons.AbstractBlock
 import io.konform.validation.Validation
 import io.konform.validation.jsonschema.maxItems
 import io.konform.validation.jsonschema.minItems
-import io.konform.validation.jsonschema.minimum
 
 public val validateBlock: Validation<AbstractBlock> = Validation {
-    AbstractBlock::index {
-        minimum(0) hint "block index must be greater or equal to 0"
+    AbstractBlock::row {
+        requireValidaRowIndex()
     }
 
     AbstractBlock::entities {

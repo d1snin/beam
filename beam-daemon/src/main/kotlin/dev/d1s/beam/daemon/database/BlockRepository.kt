@@ -16,6 +16,7 @@
 
 package dev.d1s.beam.daemon.database
 
+import dev.d1s.beam.commons.RowIndex
 import dev.d1s.beam.daemon.entity.BlockEntities
 import dev.d1s.beam.daemon.entity.BlockEntity
 import dev.d1s.beam.daemon.entity.SpaceEntity
@@ -24,7 +25,6 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.ktorm.database.Database
 import org.ktorm.dsl.eq
-import org.ktorm.dsl.greaterEq
 import org.ktorm.entity.*
 import java.util.*
 
@@ -36,9 +36,7 @@ interface BlockRepository {
 
     suspend fun countBlocksInSpace(space: SpaceEntity): Result<Int>
 
-    suspend fun findLatestBlockIndexInSpace(space: SpaceEntity): Result<Int>
-
-    suspend fun findBlocksInSpaceWhichIndexIsGreaterOrEqualTo(space: SpaceEntity, index: Int): Result<BlockEntities>
+    suspend fun findLatestBlockRowInSpace(space: SpaceEntity): Result<Int>
 
     suspend fun findBlocksInSpace(space: SpaceEntity): Result<BlockEntities>
 
@@ -73,29 +71,17 @@ class DefaultBlockRepository : BlockRepository, KoinComponent {
             findBlocksInSpaceAsSequence(space).count()
         }
 
-    override suspend fun findLatestBlockIndexInSpace(space: SpaceEntity): Result<Int> =
+    override suspend fun findLatestBlockRowInSpace(space: SpaceEntity): Result<RowIndex> =
         withIoCatching {
             findBlocksInSpaceAsSequence(space).sortedByDescending {
-                it.index
-            }.first().index
-        }
-
-    override suspend fun findBlocksInSpaceWhichIndexIsGreaterOrEqualTo(
-        space: SpaceEntity,
-        index: Int
-    ): Result<BlockEntities> =
-        withIoCatching {
-            findBlocksInSpaceAsSequence(space).sortedByDescending {
-                it.index
-            }.filter {
-                it.index greaterEq index
-            }.toList()
+                it.row
+            }.first().row
         }
 
     override suspend fun findBlocksInSpace(space: SpaceEntity): Result<BlockEntities> =
         withIoCatching {
             findBlocksInSpaceAsSequence(space).sortedBy {
-                it.index
+                it.row
             }.toList()
         }
 

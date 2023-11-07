@@ -16,9 +16,9 @@
 
 package dev.d1s.beam.daemon.entity
 
-import dev.d1s.beam.commons.BlockIndex
 import dev.d1s.beam.commons.BlockSize
 import dev.d1s.beam.commons.Metadata
+import dev.d1s.beam.commons.RowIndex
 import dev.d1s.beam.commons.contententity.ContentEntities
 import dev.d1s.exkt.ktorm.UuidIdentified
 import org.ktorm.entity.Entity
@@ -27,7 +27,7 @@ typealias BlockEntities = List<BlockEntity>
 
 interface BlockEntity : UuidIdentified<BlockEntity> {
 
-    var index: BlockIndex
+    var row: RowIndex
 
     var size: BlockSize
 
@@ -41,4 +41,4 @@ interface BlockEntity : UuidIdentified<BlockEntity> {
 }
 
 val BlockEntity.asString
-    get() = "BlockEntity{index = $index, size = $size, entities = $entities, metadata = $metadata}"
+    get() = "BlockEntity{row = $row, size = $size, entities = $entities, metadata = $metadata}"

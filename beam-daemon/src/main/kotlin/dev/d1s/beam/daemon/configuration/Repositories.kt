@@ -28,6 +28,7 @@ object Repositories : ApplicationConfigurer {
     override fun Application.configure(module: Module, config: ApplicationConfig) {
         module.apply {
             singleOf<BlockRepository>(::DefaultBlockRepository)
+            singleOf<RowRepository>(::DefaultRowRepository)
             singleOf<SpaceRepository>(::DefaultSpaceRepository)
             singleOf<TranslationRepository>(::DefaultTranslationRepository)
         }

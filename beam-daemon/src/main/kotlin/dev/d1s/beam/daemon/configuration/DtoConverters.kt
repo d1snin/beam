@@ -19,6 +19,7 @@ package dev.d1s.beam.daemon.configuration
 import dev.d1s.beam.commons.*
 import dev.d1s.beam.daemon.converter.*
 import dev.d1s.beam.daemon.entity.BlockEntity
+import dev.d1s.beam.daemon.entity.RowEntity
 import dev.d1s.beam.daemon.entity.SpaceEntity
 import dev.d1s.beam.daemon.entity.TranslationEntity
 import dev.d1s.exkt.dto.DtoConverter
@@ -33,6 +34,9 @@ object DtoConverters : ApplicationConfigurer {
 
     val BlockDtoConverterQualifier = named("block-dto-converter")
     val BlockModificationDtoConverterQualifier = named("block-modification-dto-converter")
+
+    val RowDtoConverterQualifier = named("row-dto-converter")
+    val RowModificationDtoConverterQualifier = named("row-modification-dto-converter")
 
     val SpaceDtoConverterQualifier = named("space-dto-converter")
     val SpaceModificationDtoConverterQualifier = named("space-modification-dto-converter")
@@ -49,6 +53,14 @@ object DtoConverters : ApplicationConfigurer {
 
             singleOf<DtoConverter<BlockEntity, BlockModification>>(::BlockModificationDtoConverter) {
                 qualifier = BlockModificationDtoConverterQualifier
+            }
+
+            singleOf<DtoConverter<RowEntity, Row>>(::RowDtoConverter) {
+                qualifier = RowDtoConverterQualifier
+            }
+
+            singleOf<DtoConverter<RowEntity, RowModification>>(::RowModificationDtoConverter) {
+                qualifier = RowModificationDtoConverterQualifier
             }
 
             singleOf<DtoConverter<SpaceEntity, Space>>(::SpaceDtoConverter) {

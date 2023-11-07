@@ -44,6 +44,9 @@ public object Paths {
     public const val PUT_BLOCK: String = "/blocks/{$ID_PARAMETER}"
     public const val DELETE_BLOCK: String = "/blocks/{$ID_PARAMETER}"
 
+    public const val GET_ROW: String = "/rows/{${ID_PARAMETER}}"
+    public const val PUT_ROW: String = "/rows/{${ID_PARAMETER}}"
+
     public const val POST_TRANSLATION: String = "/translations"
     public const val GET_TRANSLATION: String = "/translations/{$LANGUAGE_CODE_PARAMETER}"
     public const val GET_RESOLVED_TRANSLATION: String = "/translation"

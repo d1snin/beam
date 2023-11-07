@@ -23,6 +23,9 @@ import io.ktor.server.plugins.*
 val ApplicationCall.requiredIdParameter: String
     get() = requiredParameter(Paths.ID_PARAMETER)
 
+val ApplicationCall.requiredIntIdParameter: Int
+    get() = requiredIdParameter.toIntOrNull() ?: throw BadRequestException("Invalid parameter. Integer expected")
+
 val ApplicationCall.requiredLanguageCodeParameter: String
     get() = requiredParameter(Paths.LANGUAGE_CODE_PARAMETER)
 

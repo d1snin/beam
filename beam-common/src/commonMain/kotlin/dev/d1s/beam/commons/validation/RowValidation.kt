@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-package dev.d1s.beam.daemon.database
+package dev.d1s.beam.commons.validation
 
-import org.ktorm.database.Database
-import org.ktorm.entity.sequenceOf
+import dev.d1s.beam.commons.RowIndex
+import io.konform.validation.ValidationBuilder
+import io.konform.validation.jsonschema.minimum
 
-val Database.spaces get() = sequenceOf(Spaces)
-
-val Database.blocks get() = sequenceOf(Blocks)
-
-val Database.rows get() = sequenceOf(Rows)
-
-val Database.translations get() = sequenceOf(Translations)
+internal fun ValidationBuilder<RowIndex>.requireValidaRowIndex() {
+    minimum(0) hint "row index must be greater or equal to 0"
+}

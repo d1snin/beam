@@ -38,8 +38,8 @@ public class BlockContext internal constructor(
 
     private val operationLock = Mutex()
 
-    public suspend fun setIndex(index: suspend () -> BlockIndex) {
-        modifyBlock(index = index())
+    public suspend fun setRow(row: suspend () -> RowIndex) {
+        modifyBlock(row = row())
     }
 
     public suspend fun setSize(size: suspend () -> BlockSize) {
@@ -57,13 +57,13 @@ public class BlockContext internal constructor(
     }
 
     private suspend fun modifyBlock(
-        index: BlockIndex = block.index,
+        row: RowIndex = block.row,
         size: BlockSize = block.size,
         entities: ContentEntities = block.entities,
         metadata: Metadata = block.metadata,
     ) {
         operationLock.withLock {
-            val modification = BlockModification(index, size, entities, metadata, block.spaceId)
+            val modification = BlockModification(row, size, entities, metadata, block.spaceId)
 
             log.d {
                 "Modifying block with the following data: $modification"
@@ -84,7 +84,7 @@ public suspend fun SpaceContext.block(configure: suspend BlockContext.() -> Unit
         }
 
         val createdBlock = client.postBlock {
-            index = client.getBlocks(space).getOrThrow().size
+            row = 0
             size = BlockSize.SMALL
             spaceId = space
 

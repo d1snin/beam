@@ -14,15 +14,23 @@
  * limitations under the License.
  */
 
-package dev.d1s.beam.daemon.database
+package dev.d1s.beam.daemon.entity
 
-import org.ktorm.database.Database
-import org.ktorm.entity.sequenceOf
+import dev.d1s.beam.commons.RowAlign
+import dev.d1s.beam.commons.RowIndex
+import dev.d1s.exkt.ktorm.UuidIdentified
+import org.ktorm.entity.Entity
 
-val Database.spaces get() = sequenceOf(Spaces)
+interface RowEntity : UuidIdentified<RowEntity> {
 
-val Database.blocks get() = sequenceOf(Blocks)
+    var index: RowIndex
 
-val Database.rows get() = sequenceOf(Rows)
+    var align: RowAlign
 
-val Database.translations get() = sequenceOf(Translations)
+    var space: SpaceEntity
+
+    companion object : Entity.Factory<RowEntity>()
+}
+
+val RowEntity.asString
+    get() = "RowEntity{index = $index, align = $align}"

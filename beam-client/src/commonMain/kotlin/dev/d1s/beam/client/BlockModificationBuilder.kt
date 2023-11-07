@@ -23,7 +23,7 @@ import dev.d1s.beam.commons.util.lowercaseName
 @BuilderDsl
 public class BlockModificationBuilder() : ContentEntitiesBuilder() {
 
-    public var index: BlockIndex? = null
+    public var row: RowIndex? = null
 
     public var size: BlockSize? = null
 
@@ -32,7 +32,7 @@ public class BlockModificationBuilder() : ContentEntitiesBuilder() {
     private val metadataBuilder = MetadataBuilder()
 
     public constructor(modification: BlockModification) : this() {
-        index = modification.index
+        row = modification.row
         size = modification.size
         entities = modification.entities.toMutableList()
         metadataBuilder.metadata = modification.metadata.toMutableMap()
@@ -49,7 +49,7 @@ public class BlockModificationBuilder() : ContentEntitiesBuilder() {
 
     public fun buildBlockModification(): BlockModification =
         BlockModification(
-            index ?: error("Block index is undefined"),
+            row ?: error("Block row is undefined"),
             size ?: error("Block size is undefined"),
             buildContentEntities(),
             metadataBuilder.buildMetadata(),

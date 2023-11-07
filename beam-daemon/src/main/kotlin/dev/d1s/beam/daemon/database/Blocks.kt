@@ -29,8 +29,8 @@ import org.ktorm.schema.uuid
 @Suppress("unused")
 object Blocks : UuidIdentifiedEntities<BlockEntity>(tableName = "block") {
 
-    val index = int("index").bindTo {
-        it.index
+    val row = int("row").bindTo {
+        it.row
     }
 
     val size = enum<BlockSize>("size").bindTo {
