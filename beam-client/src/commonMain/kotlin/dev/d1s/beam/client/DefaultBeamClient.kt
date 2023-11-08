@@ -255,6 +255,13 @@ public class DefaultBeamClient(
             }.body()
         }
 
+    override suspend fun getRows(spaceId: SpaceIdentifier): Result<Rows> =
+        runCatching {
+            httpClient.get(Paths.GET_ROWS) {
+                setSpaceId(spaceId)
+            }.body()
+        }
+
     override suspend fun putRow(index: RowIndex, spaceId: SpaceIdentifier, row: RowModification): Result<Row> =
         runCatching {
             val path = Paths.PUT_ROW.replaceIdPlaceholder(index.toString())

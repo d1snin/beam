@@ -17,9 +17,9 @@
 package dev.d1s.beam.ui.component
 
 import dev.d1s.beam.commons.BlockSize
-import dev.d1s.beam.commons.Blocks
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.state.Observable
+import dev.d1s.beam.ui.state.SpaceContentChange
 import dev.d1s.beam.ui.util.currentSpace
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
@@ -33,7 +33,7 @@ import org.koin.core.component.inject
 
 class SpaceContentComponent : Component<Unit>(), KoinComponent {
 
-    private val currentSpaceContentChangeObservable by inject<Observable<Blocks?>>(Qualifier.CurrentSpaceContentChangeObservable)
+    private val currentSpaceContentChangeObservable by inject<Observable<SpaceContentChange?>>(Qualifier.CurrentSpaceContentChangeObservable)
 
     private val maxBlockSizeChangeObservable by inject<Observable<BlockSize>>(Qualifier.MaxBlockSizeChangeObservable)
 
@@ -62,8 +62,8 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
     }
 
     private fun SimplePanel.handleEmptySpace() {
-        div().bind(currentSpaceContentChangeObservable.state) { blocks ->
-            if (blocks?.isEmpty() == true) {
+        div().bind(currentSpaceContentChangeObservable.state) { change ->
+            if (change?.blocks?.isEmpty() == true) {
                 showBlockContainer.setState(false)
 
                 renderEmptySpaceCard()

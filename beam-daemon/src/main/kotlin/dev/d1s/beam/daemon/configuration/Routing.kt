@@ -43,6 +43,7 @@ object Routing : ApplicationConfigurer {
             +DeleteBlockRoute()
 
             +GetRowRoute()
+            +GetRowsRoute()
             +PutRowRoute()
 
             +PostTranslationRoute()

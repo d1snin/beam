@@ -16,7 +16,6 @@
 
 package dev.d1s.beam.ui.component
 
-import dev.d1s.beam.client.BeamClient
 import dev.d1s.beam.commons.Block
 import dev.d1s.beam.commons.Blocks
 import dev.d1s.beam.commons.RowAlign
@@ -24,6 +23,8 @@ import dev.d1s.beam.commons.RowIndex
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.contententity.splitBy
 import dev.d1s.beam.ui.state.Observable
+import dev.d1s.beam.ui.state.SpaceContentChange
+import dev.d1s.beam.ui.util.Size
 import dev.d1s.beam.ui.util.currentSpace
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
@@ -34,12 +35,10 @@ import io.kvision.panel.SimplePanel
 import io.kvision.panel.hPanel
 import io.kvision.panel.vPanel
 import io.kvision.state.bind
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
+import kotlin.math.min
 
 private data class BlockBatch(
     val rowIndex: RowIndex,
@@ -48,48 +47,91 @@ private data class BlockBatch(
 
 class BlockContainerComponent : Component<Unit>(), KoinComponent {
 
-    private val currentSpaceContentChangeObservable by inject<Observable<Blocks?>>(Qualifier.CurrentSpaceContentChangeObservable)
-
-    private val client by inject<BeamClient>()
-
-    private val clientScope = CoroutineScope(Dispatchers.Main)
+    private val currentSpaceContentChangeObservable by inject<Observable<SpaceContentChange?>>(Qualifier.CurrentSpaceContentChangeObservable)
 
     override fun SimplePanel.render(): Effect {
         div().bind(currentSpaceContentChangeObservable.state) { change ->
-            change?.let { blocks ->
-                renderBlocks(blocks)
+            change?.let {
+                renderBlocks(it)
             }
         }
 
         return Effect.Success
     }
 
-    private fun SimplePanel.renderBlocks(blocks: Blocks) {
-        println("blockContainer renderBlocks: $blocks")
-
+    private fun SimplePanel.renderBlocks(change: SpaceContentChange) {
         div(className = "container-fluid px-0 d-flex justify-content-center") {
             vPanel(className = "w-100") {
-                val batches = buildList {
-                    blocks.splitBy(selector = { it.row }) { blocks, row ->
-                        val batch = BlockBatch(row, blocks.toList())
-                        add(batch)
-                    }
-                }
-
-                processBatches(batches)
+                val batches = change.blocks.splitIntoBatches()
+                processBatches(batches, change)
             }
         }
     }
 
-    private fun SimplePanel.processBatches(batches: List<BlockBatch>) {
-        println("blockContainer processBatches: $batches")
+    private fun Blocks.splitIntoBatches(): List<BlockBatch> =
+        buildList {
+            splitIntoBatchesByRow().forEach {
+                it.splitIntoBatchesBySize().forEach { batchBySize ->
+                    add(batchBySize)
+                }
+            }
+        }
 
+    private fun Blocks.splitIntoBatchesByRow(): List<BlockBatch> {
+        val blocks = this@splitIntoBatchesByRow
+
+        val rowBatches = buildList {
+            blocks.splitBy(selector = { it.row }) { blocks, row ->
+                val batch = BlockBatch(row, blocks.toList())
+                add(batch)
+            }
+        }
+
+        return rowBatches
+    }
+
+
+    private fun BlockBatch.splitIntoBatchesBySize(): List<BlockBatch> {
+        val maxBlockSize = Size.MaxBlockSize.level
+
+        val batches = mutableListOf<Blocks>()
+        val currentBatch = mutableListOf<Block>()
+
+        fun Block.relativeSize() =
+            min(size.level, maxBlockSize)
+
+        fun Blocks.totalSizeIncluding(block: Block) =
+            sumOf {
+                it.relativeSize()
+            } + block.relativeSize()
+
+        fun processCurrentBatch() {
+            batches += currentBatch.toMutableList()
+            currentBatch.clear()
+        }
+
+        blocks.forEach { block ->
+            if (currentBatch.totalSizeIncluding(block) > maxBlockSize) {
+                processCurrentBatch()
+            }
+
+            currentBatch += block
+        }
+
+        processCurrentBatch()
+
+        return batches.map {
+            BlockBatch(rowIndex, it)
+        }
+    }
+
+    private fun SimplePanel.processBatches(batches: List<BlockBatch>, change: SpaceContentChange) {
         val maxPaddingCount = batches.getMaxPaddingCount()
 
         batches.forEachIndexed { batchIndex, blockBatch ->
             val widthCompensator = blockBatch.getWidthCompensator(maxPaddingCount)
 
-            renderBlockPanel(batchIndex, blockBatch, batches, widthCompensator)
+            renderBlockPanel(batchIndex, blockBatch, batches, widthCompensator, change)
         }
     }
 
@@ -117,30 +159,25 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
         index: Int,
         batch: BlockBatch,
         batches: List<BlockBatch>,
-        compensator: Double
+        compensator: Double,
+        change: SpaceContentChange
     ) {
-        println("blockContainer renderBlockPanel: index $index batch $batch batches $batches compensator $compensator")
+        val currentSpaceId = currentSpace?.id
 
-        div(className = "w-100") {
-            clientScope.launch {
-                val currentSpaceId = currentSpace?.id
+        if (currentSpaceId != null) {
+            val row = change.row(batch.rowIndex)
+            val justify = justifyContentByRowAlign(row.align)
 
-                if (currentSpaceId != null) {
-                    val row = client.getRow(batch.rowIndex, currentSpaceId).getOrThrow()
-                    val justify = justifyContentByRowAlign(row.align)
+            hPanel(className = "w-100", justify = justify) {
+                val blocks = batch.blocks
 
-                    hPanel(className = "w-100", justify = justify) {
-                        val blocks = batch.blocks
+                blocks.forEachIndexed { blockIndex, block ->
+                    val lastBlock = blockIndex == blocks.lastIndex
+                    val lastBatch = index == batches.lastIndex
 
-                        blocks.forEachIndexed { blockIndex, block ->
-                            val lastBlock = blockIndex == blocks.lastIndex
-                            val lastBatch = index == batches.lastIndex
+                    val single = blocks.size == 1
 
-                            val single = blocks.size == 1
-
-                            renderBlock(block, lastBlock, lastBatch, compensator, single)
-                        }
-                    }
+                    renderBlock(block, lastBlock, lastBatch, compensator, single)
                 }
             }
         }

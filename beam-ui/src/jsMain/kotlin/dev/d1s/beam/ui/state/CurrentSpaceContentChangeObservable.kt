@@ -17,21 +17,32 @@
 package dev.d1s.beam.ui.state
 
 import dev.d1s.beam.client.BeamClient
-import dev.d1s.beam.commons.Block
-import dev.d1s.beam.commons.Blocks
-import dev.d1s.beam.commons.Row
-import dev.d1s.beam.commons.SpaceId
-import dev.d1s.beam.ui.util.currentBlocks
-import dev.d1s.beam.ui.util.currentLanguageCode
-import dev.d1s.beam.ui.util.currentSpace
-import dev.d1s.beam.ui.util.setCurrentSpaceBlocks
+import dev.d1s.beam.commons.*
+import dev.d1s.beam.ui.util.*
 import io.kvision.state.ObservableValue
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class CurrentSpaceContentChangeObservable : Observable<Blocks?>, KoinComponent {
+data class SpaceContentChange(
+    val rows: Rows,
+    val blocks: Blocks
+) {
+    fun row(rowIndex: RowIndex) =
+        rows.first {
+            it.index == rowIndex
+        }
+}
 
-    override val state = ObservableValue(currentBlocks)
+infix fun Rows?.with(blocks: Blocks?) =
+    this?.let { r ->
+        blocks?.let { b ->
+            SpaceContentChange(r, b)
+        }
+    }
+
+class CurrentSpaceContentChangeObservable : Observable<SpaceContentChange?>, KoinComponent {
+
+    override val state = ObservableValue(currentRows with currentBlocks)
 
     private val client by inject<BeamClient>()
 
@@ -42,13 +53,14 @@ class CurrentSpaceContentChangeObservable : Observable<Blocks?>, KoinComponent {
             if (space != null) {
                 handleSpaceContentUpdates(space.id)
             } else {
-                setCurrentSpaceContent(blocks = null)
+                setCurrentSpaceContent(change = null)
             }
         }
 
-    fun setCurrentSpaceContent(blocks: Blocks?) {
-        setCurrentSpaceBlocks(blocks)
-        state.setState(blocks)
+    fun setCurrentSpaceContent(change: SpaceContentChange?) {
+        setCurrentSpaceRows(change?.rows)
+        setCurrentSpaceBlocks(change?.blocks)
+        state.setState(change)
     }
 
     private suspend fun handleSpaceContentUpdates(spaceId: SpaceId) {
@@ -130,8 +142,12 @@ class CurrentSpaceContentChangeObservable : Observable<Blocks?>, KoinComponent {
     }
 
     private suspend fun actualizeCurrentSpaceContent(space: SpaceId) {
+        val rows = client.getRows(space).getOrNull()
         val blocks = client.getBlocks(space, currentLanguageCode).getOrNull()
-        setCurrentSpaceContent(blocks)
+
+        val change = rows with blocks
+
+        setCurrentSpaceContent(change)
     }
 
     private inline fun ifSpaceMatches(block: Block, spaceId: SpaceId, handler: () -> Unit) {

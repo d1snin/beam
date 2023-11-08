@@ -21,6 +21,8 @@ import dev.d1s.beam.commons.RowIndex
 import dev.d1s.exkt.ktorm.UuidIdentified
 import org.ktorm.entity.Entity
 
+typealias RowEntities = List<RowEntity>
+
 interface RowEntity : UuidIdentified<RowEntity> {
 
     var index: RowIndex

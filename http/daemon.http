@@ -90,7 +90,7 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "row": 4,
+    "row": 0,
     "size": "MEDIUM",
     "entities": [
         {
@@ -142,8 +142,11 @@ Authorization: Bearer {{token}}
 ### GET Row
 GET http://localhost:8573/rows/0?space=root
 
+### GET Rows
+GET http://localhost:8573/rows?space=root
+
 ### PUT Row
-PUT http://localhost:8573/rows/2?space=root
+PUT http://localhost:8573/rows/0?space=root
 Authorization: Bearer {{token}}
 Content-Type: application/json
 

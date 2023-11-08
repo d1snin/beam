@@ -106,6 +106,8 @@ public interface BeamClient {
 
     public suspend fun getRow(index: RowIndex, spaceId: SpaceIdentifier): Result<Row>
 
+    public suspend fun getRows(spaceId: SpaceIdentifier): Result<Rows>
+
     public suspend fun putRow(
         index: RowIndex,
         spaceId: SpaceIdentifier,

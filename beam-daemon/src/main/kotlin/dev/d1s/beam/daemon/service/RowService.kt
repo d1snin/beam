@@ -23,10 +23,7 @@ import dev.d1s.beam.daemon.configuration.DtoConverters
 import dev.d1s.beam.daemon.database.RowRepository
 import dev.d1s.beam.daemon.entity.RowEntity
 import dev.d1s.beam.daemon.entity.asString
-import dev.d1s.exkt.dto.DtoConverter
-import dev.d1s.exkt.dto.ResultingEntityWithOptionalDto
-import dev.d1s.exkt.dto.convertToDtoIf
-import dev.d1s.exkt.dto.entity
+import dev.d1s.exkt.dto.*
 import dev.d1s.ktor.events.server.WebSocketEventChannel
 import dev.d1s.ktor.events.server.event
 import org.koin.core.component.KoinComponent
@@ -42,6 +39,11 @@ interface RowService {
         spaceIdentifier: SpaceIdentifier,
         requireDto: Boolean = false
     ): ResultingEntityWithOptionalDto<RowEntity, Row>
+
+    suspend fun getRows(
+        spaceIdentifier: SpaceIdentifier,
+        requireDto: Boolean = false
+    ): ResultingEntityWithOptionalDtoList<RowEntity, Row>
 
     suspend fun updateRow(
         index: RowIndex,
@@ -105,6 +107,24 @@ class DefaultRowService : RowService, KoinComponent {
             }
 
             row to rowDtoConverter.convertToDtoIf(row) {
+                requireDto
+            }
+        }
+
+    override suspend fun getRows(
+        spaceIdentifier: SpaceIdentifier,
+        requireDto: Boolean
+    ): ResultingEntityWithOptionalDtoList<RowEntity, Row> =
+        runCatching {
+            logger.d {
+                "Obtaining rows for space '$spaceIdentifier'"
+            }
+
+            val (space, _) = spaceService.getSpace(spaceIdentifier).getOrThrow()
+
+            val rows = rowRepository.findRows(space).getOrThrow()
+
+            rows to rowDtoConverter.convertToDtoListIf(rows) {
                 requireDto
             }
         }

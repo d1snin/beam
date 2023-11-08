@@ -18,6 +18,7 @@ package dev.d1s.beam.ui.util
 
 import dev.d1s.beam.client.BeamClient
 import dev.d1s.beam.commons.Blocks
+import dev.d1s.beam.commons.Rows
 import dev.d1s.beam.commons.Space
 import dev.d1s.beam.ui.theme.setTextColor
 import io.kvision.panel.SimplePanel
@@ -40,14 +41,23 @@ val currentSpace get() = lateInitCurrentSpace
 
 val currentSpaceUrl get() = buildSpaceUrl(currentSpace?.slug)
 
+private var lateInitCurrentRows: Rows? = null
+val currentRows get() = lateInitCurrentRows
+
 private var lateInitCurrentBlocks: Blocks? = null
 val currentBlocks get() = lateInitCurrentBlocks
 
 suspend fun initCurrentSpaceAndBlocks() {
     lateInitCurrentSpace = resolver.resolve(window.location.href, currentLanguageCode).getOrNull()
-    lateInitCurrentBlocks = currentSpace?.let {
-        client.getBlocks(it.id, currentLanguageCode).getOrNull()
+
+    currentSpace?.let {
+        lateInitCurrentRows = client.getRows(it.id).getOrNull()
+        lateInitCurrentBlocks = client.getBlocks(it.id, currentLanguageCode).getOrNull()
     }
+}
+
+fun setCurrentSpaceRows(rows: Rows?) {
+    lateInitCurrentRows = rows
 }
 
 fun setCurrentSpaceBlocks(blocks: Blocks?) {

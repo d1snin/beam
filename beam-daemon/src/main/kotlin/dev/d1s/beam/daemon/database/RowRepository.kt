@@ -17,6 +17,7 @@
 package dev.d1s.beam.daemon.database
 
 import dev.d1s.beam.commons.RowIndex
+import dev.d1s.beam.daemon.entity.RowEntities
 import dev.d1s.beam.daemon.entity.RowEntity
 import dev.d1s.beam.daemon.entity.SpaceEntity
 import dev.d1s.beam.daemon.util.withIoCatching
@@ -26,13 +27,17 @@ import org.ktorm.database.Database
 import org.ktorm.dsl.and
 import org.ktorm.dsl.eq
 import org.ktorm.entity.add
+import org.ktorm.entity.filter
 import org.ktorm.entity.find
+import org.ktorm.entity.toList
 
 interface RowRepository {
 
     suspend fun addRow(row: RowEntity): Result<RowEntity>
 
     suspend fun findRow(index: RowIndex, space: SpaceEntity): Result<RowEntity>
+
+    suspend fun findRows(space: SpaceEntity): Result<RowEntities>
 
     suspend fun updateRow(row: RowEntity): Result<RowEntity>
 }
@@ -56,6 +61,13 @@ class DefaultRowRepository : RowRepository, KoinComponent {
             database.rows.find {
                 (it.index eq index) and (it.spaceId eq spaceId)
             } ?: error("Row not found with index $index in space '$spaceId'")
+        }
+
+    override suspend fun findRows(space: SpaceEntity): Result<RowEntities> =
+        withIoCatching {
+            database.rows.filter {
+                it.spaceId eq space.id
+            }.toList()
         }
 
     override suspend fun updateRow(row: RowEntity): Result<RowEntity> =

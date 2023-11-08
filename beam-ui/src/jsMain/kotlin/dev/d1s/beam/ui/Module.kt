@@ -17,7 +17,6 @@
 package dev.d1s.beam.ui
 
 import dev.d1s.beam.commons.BlockSize
-import dev.d1s.beam.commons.Blocks
 import dev.d1s.beam.ui.client.DaemonConnector
 import dev.d1s.beam.ui.client.DaemonStatusWithPing
 import dev.d1s.beam.ui.client.DefaultDaemonConnector
@@ -103,7 +102,7 @@ private fun Module.observables() {
         qualifier = Qualifier.DaemonStatusWithPingObservable
     }
 
-    singleOf<Observable<Blocks?>>(::CurrentSpaceContentChangeObservable) {
+    singleOf<Observable<SpaceContentChange?>>(::CurrentSpaceContentChangeObservable) {
         qualifier = Qualifier.CurrentSpaceContentChangeObservable
     }
 

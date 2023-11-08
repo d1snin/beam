@@ -18,6 +18,8 @@ package dev.d1s.beam.commons
 
 import kotlinx.serialization.Serializable
 
+public typealias Rows = List<Row>
+
 public typealias RowQualifier = String
 
 public typealias RowIndex = Int

@@ -17,10 +17,15 @@
 package dev.d1s.beam.ui.util
 
 import dev.d1s.beam.client.BeamClient
-import dev.d1s.beam.commons.*
+import dev.d1s.beam.commons.GlobalTranslation
+import dev.d1s.beam.commons.TextLocation
+import dev.d1s.beam.commons.TranslatedText
+import dev.d1s.beam.commons.Translation
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.state.CurrentSpaceContentChangeObservable
 import dev.d1s.beam.ui.state.Observable
+import dev.d1s.beam.ui.state.SpaceContentChange
+import dev.d1s.beam.ui.state.with
 import io.kvision.state.ObservableValue
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
@@ -33,7 +38,7 @@ private val client by lazy {
 }
 
 private val currentSpaceContentChangeObservable by lazy {
-    GlobalContext.get().get<Observable<Blocks?>>(Qualifier.CurrentSpaceContentChangeObservable)
+    GlobalContext.get().get<Observable<SpaceContentChange?>>(Qualifier.CurrentSpaceContentChangeObservable)
 }
 
 private val scope = CoroutineScope(Dispatchers.Main)
@@ -70,7 +75,7 @@ fun setCurrentTranslation(translation: Translation) {
 
         (currentSpaceContentChangeObservable as? CurrentSpaceContentChangeObservable)?.let { observable ->
             currentSpace?.id?.let {
-                observable.setCurrentSpaceContent(currentBlocks)
+                observable.setCurrentSpaceContent(currentRows with currentBlocks)
             }
         }
     }

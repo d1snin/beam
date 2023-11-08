@@ -73,6 +73,8 @@ class DefaultBlockService : BlockService, KoinComponent {
 
     private val eventChannel by inject<WebSocketEventChannel>()
 
+    private val rowService by inject<RowService>()
+
     private val spaceService by inject<SpaceService>()
 
     private val translationService by inject<TranslationService>()
@@ -91,6 +93,8 @@ class DefaultBlockService : BlockService, KoinComponent {
             checkBlockLimit(block)
 
             translationService.verifyLocationsExist(block).getOrThrow()
+
+            processBlockRow(block)
 
             val addedBlock = blockRepository.addBlock(block).getOrThrow()
             val translatedBlock = translateOptionally(addedBlock, languageCode)
@@ -162,6 +166,8 @@ class DefaultBlockService : BlockService, KoinComponent {
 
             translationService.verifyLocationsExist(modification).getOrThrow()
 
+            processBlockRow(modification)
+
             originalBlock.apply {
                 this.row = modification.row
                 this.size = modification.size
@@ -204,6 +210,10 @@ class DefaultBlockService : BlockService, KoinComponent {
 
             throw UnprocessableEntityException("Space capacity reached")
         }
+    }
+
+    private suspend fun processBlockRow(block: BlockEntity) {
+        rowService.getOrCreateRow(block.row, block.space.id.toString()).getOrThrow()
     }
 
     // Я боюсь наступления вечера...
