@@ -267,6 +267,7 @@ public class DefaultBeamClient(
             val path = Paths.PUT_ROW.replaceIdPlaceholder(index.toString())
 
             httpClient.put(path) {
+                contentType(ContentType.Application.Json)
                 setSpaceId(spaceId)
                 setBody(row)
             }.body()
