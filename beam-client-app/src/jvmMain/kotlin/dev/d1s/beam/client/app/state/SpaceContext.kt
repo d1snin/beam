@@ -57,7 +57,7 @@ public class SpaceContext internal constructor(
     public suspend fun alignRow(rowIndex: RowIndex, align: RowAlign) {
         client.putRow(rowIndex, space.id) {
             this.align = align
-        }
+        }.getOrThrow()
     }
 
     private suspend fun modifySpace(
