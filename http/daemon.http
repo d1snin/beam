@@ -17,7 +17,7 @@ Content-Type: application/json
         "remark": null
     }
 }
-a
+
 ### POST Root Space
 POST http://localhost:8573/spaces/root
 Content-Type: application/json
