@@ -144,9 +144,17 @@ class DefaultBlockService : BlockService, KoinComponent {
 
             val blocks = blockRepository.findBlocksInSpace(space).getOrThrow()
 
-            val translatedBlocks = translateOptionally(blocks, languageCode)
+            val sortedBlocks = blocks
+                .sortedBy {
+                    it.index ?: MAX_INDEX
+                }
+                .sortedBy {
+                    it.row
+                }
 
-            translatedBlocks to blockDtoConverter.convertToDtoListIf(blocks) {
+            val translatedBlocks = translateOptionally(sortedBlocks, languageCode)
+
+            translatedBlocks to blockDtoConverter.convertToDtoListIf(translatedBlocks) {
                 requireDto
             }
         }
@@ -252,5 +260,10 @@ class DefaultBlockService : BlockService, KoinComponent {
             blockDto
         }
         eventChannel.send(event)
+    }
+
+    private companion object {
+
+        private const val MAX_INDEX = Int.MAX_VALUE
     }
 }

@@ -25,6 +25,8 @@ public class BlockModificationBuilder() : ContentEntitiesBuilder() {
 
     public var row: RowIndex? = null
 
+    public var index: BlockIndex? = null
+
     public var size: BlockSize? = null
 
     public var spaceId: SpaceIdentifier? = null
@@ -33,6 +35,7 @@ public class BlockModificationBuilder() : ContentEntitiesBuilder() {
 
     public constructor(modification: BlockModification) : this() {
         row = modification.row
+        index = modification.index
         size = modification.size
         entities = modification.entities.toMutableList()
         metadataBuilder.metadata = modification.metadata.toMutableMap()
@@ -50,6 +53,7 @@ public class BlockModificationBuilder() : ContentEntitiesBuilder() {
     public fun buildBlockModification(): BlockModification =
         BlockModification(
             row ?: error("Block row is undefined"),
+            index,
             size ?: error("Block size is undefined"),
             buildContentEntities(),
             metadataBuilder.buildMetadata(),

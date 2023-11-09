@@ -42,6 +42,10 @@ public class BlockContext internal constructor(
         modifyBlock(row = row())
     }
 
+    public suspend fun setIndex(index: suspend () -> BlockIndex?) {
+        modifyBlock(index = index())
+    }
+
     public suspend fun setSize(size: suspend () -> BlockSize) {
         modifyBlock(size = size())
     }
@@ -58,12 +62,13 @@ public class BlockContext internal constructor(
 
     private suspend fun modifyBlock(
         row: RowIndex = block.row,
+        index: BlockIndex? = block.index,
         size: BlockSize = block.size,
         entities: ContentEntities = block.entities,
         metadata: Metadata = block.metadata,
     ) {
         operationLock.withLock {
-            val modification = BlockModification(row, size, entities, metadata, block.spaceId)
+            val modification = BlockModification(row, index, size, entities, metadata, block.spaceId)
 
             log.d {
                 "Modifying block with the following data: $modification"

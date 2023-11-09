@@ -31,6 +31,7 @@ class BlockModificationDtoConverter : DtoConverter<BlockEntity, BlockModificatio
     override suspend fun convertToEntity(dto: BlockModification) =
         BlockEntity {
             row = dto.row
+            index = dto.index
             size = dto.size
             entities = dto.entities
             metadata = dto.metadata

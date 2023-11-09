@@ -16,6 +16,7 @@
 
 package dev.d1s.beam.daemon.entity
 
+import dev.d1s.beam.commons.BlockIndex
 import dev.d1s.beam.commons.BlockSize
 import dev.d1s.beam.commons.Metadata
 import dev.d1s.beam.commons.RowIndex
@@ -29,6 +30,8 @@ interface BlockEntity : UuidIdentified<BlockEntity> {
 
     var row: RowIndex
 
+    var index: BlockIndex?
+
     var size: BlockSize
 
     var entities: ContentEntities
@@ -41,4 +44,4 @@ interface BlockEntity : UuidIdentified<BlockEntity> {
 }
 
 val BlockEntity.asString
-    get() = "BlockEntity{row = $row, size = $size, entities = $entities, metadata = $metadata}"
+    get() = "BlockEntity{row = $row, index = $index, size = $size, entities = $entities, metadata = $metadata}"

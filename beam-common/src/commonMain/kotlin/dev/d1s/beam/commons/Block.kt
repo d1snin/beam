@@ -23,9 +23,13 @@ public typealias BlockId = String
 
 public typealias Blocks = List<Block>
 
+public typealias BlockIndex = Int
+
 public sealed interface AbstractBlock {
 
     public val row: RowIndex
+
+    public val index: BlockIndex?
 
     public val size: BlockSize
 
@@ -40,6 +44,7 @@ public sealed interface AbstractBlock {
 public data class Block(
     val id: BlockId,
     override val row: RowIndex,
+    override val index: BlockIndex?,
     override val size: BlockSize,
     override val entities: ContentEntities,
     override val metadata: Metadata,
@@ -49,6 +54,7 @@ public data class Block(
 @Serializable
 public data class BlockModification(
     override val row: RowIndex,
+    override val index: BlockIndex?,
     override val size: BlockSize,
     override val entities: ContentEntities,
     override val metadata: Metadata,

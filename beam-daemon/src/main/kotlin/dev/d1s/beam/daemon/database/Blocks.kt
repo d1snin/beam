@@ -33,6 +33,10 @@ object Blocks : UuidIdentifiedEntities<BlockEntity>(tableName = "block") {
         it.row
     }
 
+    val index = int("index").bindTo {
+        it.index
+    }
+
     val size = enum<BlockSize>("size").bindTo {
         it.size
     }

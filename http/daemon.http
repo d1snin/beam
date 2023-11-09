@@ -91,6 +91,7 @@ Content-Type: application/json
 
 {
     "row": 0,
+    "index": null,
     "size": "MEDIUM",
     "entities": [
         {

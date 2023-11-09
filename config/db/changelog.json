@@ -28,6 +28,12 @@
                                 },
                                 {
                                     "column": {
+                                        "name": "index",
+                                        "type": "integer"
+                                    }
+                                },
+                                {
+                                    "column": {
                                         "name": "row",
                                         "type": "integer",
                                         "constraints": {

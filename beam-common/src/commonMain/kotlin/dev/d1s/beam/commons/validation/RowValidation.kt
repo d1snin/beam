@@ -20,6 +20,6 @@ import dev.d1s.beam.commons.RowIndex
 import io.konform.validation.ValidationBuilder
 import io.konform.validation.jsonschema.minimum
 
-internal fun ValidationBuilder<RowIndex>.requireValidaRowIndex() {
+internal fun ValidationBuilder<RowIndex>.requireValidRowIndex() {
     minimum(0) hint "row index must be greater or equal to 0"
 }

@@ -28,6 +28,7 @@ class BlockDtoConverter : DtoConverter<BlockEntity, Block>, KoinComponent {
             Block(
                 id.toString(),
                 row,
+                index,
                 size,
                 entities,
                 metadata,

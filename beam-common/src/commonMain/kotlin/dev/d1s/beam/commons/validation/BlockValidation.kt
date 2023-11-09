@@ -17,13 +17,20 @@
 package dev.d1s.beam.commons.validation
 
 import dev.d1s.beam.commons.AbstractBlock
+import dev.d1s.beam.commons.BlockIndex
 import io.konform.validation.Validation
+import io.konform.validation.ValidationBuilder
 import io.konform.validation.jsonschema.maxItems
 import io.konform.validation.jsonschema.minItems
+import io.konform.validation.jsonschema.minimum
 
 public val validateBlock: Validation<AbstractBlock> = Validation {
     AbstractBlock::row {
-        requireValidaRowIndex()
+        requireValidRowIndex()
+    }
+
+    AbstractBlock::index ifPresent {
+        requireValidBlockIndex()
     }
 
     AbstractBlock::entities {
@@ -38,4 +45,8 @@ public val validateBlock: Validation<AbstractBlock> = Validation {
     AbstractBlock::metadata {
         run(validateMetadata)
     }
+}
+
+private fun ValidationBuilder<BlockIndex>.requireValidBlockIndex() {
+    minimum(0) hint "block index must be greater or equal to 0"
 }

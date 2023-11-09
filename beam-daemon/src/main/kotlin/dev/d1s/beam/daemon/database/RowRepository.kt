@@ -26,10 +26,7 @@ import org.koin.core.component.inject
 import org.ktorm.database.Database
 import org.ktorm.dsl.and
 import org.ktorm.dsl.eq
-import org.ktorm.entity.add
-import org.ktorm.entity.filter
-import org.ktorm.entity.find
-import org.ktorm.entity.toList
+import org.ktorm.entity.*
 
 interface RowRepository {
 

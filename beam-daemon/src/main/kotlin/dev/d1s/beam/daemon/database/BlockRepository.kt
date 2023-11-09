@@ -16,7 +16,6 @@
 
 package dev.d1s.beam.daemon.database
 
-import dev.d1s.beam.commons.RowIndex
 import dev.d1s.beam.daemon.entity.BlockEntities
 import dev.d1s.beam.daemon.entity.BlockEntity
 import dev.d1s.beam.daemon.entity.SpaceEntity
@@ -35,8 +34,6 @@ interface BlockRepository {
     suspend fun findBlockById(id: UUID): Result<BlockEntity>
 
     suspend fun countBlocksInSpace(space: SpaceEntity): Result<Int>
-
-    suspend fun findLatestBlockRowInSpace(space: SpaceEntity): Result<Int>
 
     suspend fun findBlocksInSpace(space: SpaceEntity): Result<BlockEntities>
 
@@ -71,18 +68,9 @@ class DefaultBlockRepository : BlockRepository, KoinComponent {
             findBlocksInSpaceAsSequence(space).count()
         }
 
-    override suspend fun findLatestBlockRowInSpace(space: SpaceEntity): Result<RowIndex> =
-        withIoCatching {
-            findBlocksInSpaceAsSequence(space).sortedByDescending {
-                it.row
-            }.first().row
-        }
-
     override suspend fun findBlocksInSpace(space: SpaceEntity): Result<BlockEntities> =
         withIoCatching {
-            findBlocksInSpaceAsSequence(space).sortedBy {
-                it.row
-            }.toList()
+            findBlocksInSpaceAsSequence(space).toList()
         }
 
     override suspend fun updateBlock(block: BlockEntity): Result<BlockEntity> =
