@@ -90,6 +90,7 @@ public suspend fun SpaceContext.block(configure: suspend BlockContext.() -> Unit
 
         val createdBlock = client.postBlock {
             row = 0
+            index = null
             size = BlockSize.SMALL
             spaceId = space
 

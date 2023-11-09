@@ -29,7 +29,11 @@
                                 {
                                     "column": {
                                         "name": "index",
-                                        "type": "integer"
+                                        "type": "integer",
+                                        "constraints": {
+                                            "nullable": false,
+                                            "notNullConstraintName": "nn_block_index"
+                                        }
                                     }
                                 },
                                 {

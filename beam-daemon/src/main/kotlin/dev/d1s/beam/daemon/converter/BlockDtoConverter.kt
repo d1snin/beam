@@ -18,6 +18,7 @@ package dev.d1s.beam.daemon.converter
 
 import dev.d1s.beam.commons.Block
 import dev.d1s.beam.daemon.entity.BlockEntity
+import dev.d1s.beam.daemon.entity.requiredIndex
 import dev.d1s.exkt.dto.DtoConverter
 import org.koin.core.component.KoinComponent
 
@@ -28,7 +29,7 @@ class BlockDtoConverter : DtoConverter<BlockEntity, Block>, KoinComponent {
             Block(
                 id.toString(),
                 row,
-                index,
+                requiredIndex,
                 size,
                 entities,
                 metadata,

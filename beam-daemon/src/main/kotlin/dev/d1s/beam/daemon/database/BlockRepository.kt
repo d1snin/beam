@@ -16,14 +16,18 @@
 
 package dev.d1s.beam.daemon.database
 
+import dev.d1s.beam.commons.RowIndex
 import dev.d1s.beam.daemon.entity.BlockEntities
 import dev.d1s.beam.daemon.entity.BlockEntity
 import dev.d1s.beam.daemon.entity.SpaceEntity
+import dev.d1s.beam.daemon.entity.requiredIndex
 import dev.d1s.beam.daemon.util.withIoCatching
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.ktorm.database.Database
+import org.ktorm.dsl.and
 import org.ktorm.dsl.eq
+import org.ktorm.dsl.greaterEq
 import org.ktorm.entity.*
 import java.util.*
 
@@ -36,6 +40,14 @@ interface BlockRepository {
     suspend fun countBlocksInSpace(space: SpaceEntity): Result<Int>
 
     suspend fun findBlocksInSpace(space: SpaceEntity): Result<BlockEntities>
+
+    suspend fun findLatestBlockIndexInSpaceByRow(space: SpaceEntity, row: RowIndex): Result<Int>
+
+    suspend fun findBlocksInSpaceByRowWhichIndexIsGreaterOrEqualTo(
+        space: SpaceEntity,
+        row: RowIndex,
+        index: Int
+    ): Result<BlockEntities>
 
     suspend fun updateBlock(block: BlockEntity): Result<BlockEntity>
 
@@ -73,6 +85,26 @@ class DefaultBlockRepository : BlockRepository, KoinComponent {
             findBlocksInSpaceAsSequence(space).toList()
         }
 
+    override suspend fun findLatestBlockIndexInSpaceByRow(space: SpaceEntity, row: RowIndex): Result<Int> =
+        withIoCatching {
+           findBlocksInSpaceAsSequence(space, row).sortedByDescending {
+                it.index
+            }.first().requiredIndex
+        }
+
+    override suspend fun findBlocksInSpaceByRowWhichIndexIsGreaterOrEqualTo(
+        space: SpaceEntity,
+        row: RowIndex,
+        index: Int
+    ): Result<BlockEntities> =
+        withIoCatching {
+            findBlocksInSpaceAsSequence(space, row).sortedByDescending {
+                it.index
+            }.filter {
+                it.index greaterEq index
+            }.toList()
+        }
+
     override suspend fun updateBlock(block: BlockEntity): Result<BlockEntity> =
         withIoCatching {
             block.apply {
@@ -96,8 +128,14 @@ class DefaultBlockRepository : BlockRepository, KoinComponent {
             Unit
         }
 
-    private fun findBlocksInSpaceAsSequence(space: SpaceEntity) =
-        database.blocks.filter {
-            it.spaceId eq space.id
+    private fun findBlocksInSpaceAsSequence(space: SpaceEntity, row: RowIndex? = null) =
+        database.blocks.filter { block ->
+            (block.spaceId eq space.id).let {
+                if (row != null) {
+                    it and (block.row eq row)
+                } else {
+                    it
+                }
+            }
         }
 }

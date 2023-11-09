@@ -27,6 +27,7 @@ import dev.d1s.beam.daemon.configuration.DtoConverters
 import dev.d1s.beam.daemon.database.BlockRepository
 import dev.d1s.beam.daemon.entity.BlockEntity
 import dev.d1s.beam.daemon.entity.asString
+import dev.d1s.beam.daemon.entity.requiredIndex
 import dev.d1s.beam.daemon.exception.UnprocessableEntityException
 import dev.d1s.exkt.dto.*
 import dev.d1s.ktor.events.server.WebSocketEventChannel
@@ -95,6 +96,7 @@ class DefaultBlockService : BlockService, KoinComponent {
             translationService.verifyLocationsExist(block).getOrThrow()
 
             processBlockRow(block)
+            processBlockIndex(block)
 
             val addedBlock = blockRepository.addBlock(block).getOrThrow()
             val translatedBlock = translateOptionally(addedBlock, languageCode)
@@ -146,7 +148,7 @@ class DefaultBlockService : BlockService, KoinComponent {
 
             val sortedBlocks = blocks
                 .sortedBy {
-                    it.index ?: MAX_INDEX
+                    it.index
                 }
                 .sortedBy {
                     it.row
@@ -175,6 +177,7 @@ class DefaultBlockService : BlockService, KoinComponent {
             translationService.verifyLocationsExist(modification).getOrThrow()
 
             processBlockRow(modification)
+            processBlockIndex(modification)
 
             originalBlock.apply {
                 this.row = modification.row
@@ -224,6 +227,50 @@ class DefaultBlockService : BlockService, KoinComponent {
         rowService.getOrCreateRow(block.row, block.space.id.toString()).getOrThrow()
     }
 
+    private suspend fun processBlockIndex(block: BlockEntity) {
+        val space = block.space
+        val row = block.row
+
+        var latestIndex = blockRepository.findLatestBlockIndexInSpaceByRow(space, row).getOrNull()
+
+        if (block.index == null) {
+            block.index = latestIndex?.inc() ?: START_INDEX
+        }
+
+        val requiredIndex = block.requiredIndex
+
+        if (latestIndex == null) {
+            if (requiredIndex != START_INDEX) {
+                throw BadRequestException("First block index must be $START_INDEX")
+            }
+
+            latestIndex = START_INDEX
+        }
+
+        logger.d {
+            "Processing block index. index: $requiredIndex; latestIndex: $latestIndex"
+        }
+
+        when {
+            requiredIndex == latestIndex + 1 -> {}
+            requiredIndex <= latestIndex -> {
+                val blocksToUpdate =
+                    blockRepository.findBlocksInSpaceByRowWhichIndexIsGreaterOrEqualTo(space, row, requiredIndex)
+                        .getOrThrow()
+
+                blocksToUpdate.forEach {
+                    it.index = it.requiredIndex + 1
+                }
+
+                blockRepository.updateBlocks(blocksToUpdate)
+            }
+
+            else -> {
+                throw BadRequestException("Block index is out of bounds")
+            }
+        }
+    }
+
     // Я боюсь наступления вечера...
 
     private suspend fun translateOptionally(block: BlockEntity, languageCode: LanguageCode?) =
@@ -264,6 +311,6 @@ class DefaultBlockService : BlockService, KoinComponent {
 
     private companion object {
 
-        private const val MAX_INDEX = Int.MAX_VALUE
+        private const val START_INDEX = 0
     }
 }

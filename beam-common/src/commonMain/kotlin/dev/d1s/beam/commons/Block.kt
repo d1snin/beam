@@ -44,7 +44,7 @@ public sealed interface AbstractBlock {
 public data class Block(
     val id: BlockId,
     override val row: RowIndex,
-    override val index: BlockIndex?,
+    override val index: BlockIndex,
     override val size: BlockSize,
     override val entities: ContentEntities,
     override val metadata: Metadata,
