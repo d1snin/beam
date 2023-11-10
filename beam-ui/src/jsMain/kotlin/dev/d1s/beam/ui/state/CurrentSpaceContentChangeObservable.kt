@@ -28,7 +28,7 @@ data class SpaceContentChange(
     val blocks: Blocks
 ) {
     fun row(rowIndex: RowIndex) =
-        rows.first {
+        rows.find {
             it.index == rowIndex
         }
 }

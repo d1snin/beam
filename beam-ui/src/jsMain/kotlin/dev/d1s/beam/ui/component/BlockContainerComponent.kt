@@ -166,18 +166,21 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
 
         if (currentSpaceId != null) {
             val row = change.row(batch.rowIndex)
-            val justify = justifyContentByRowAlign(row.align)
 
-            hPanel(className = "w-100", justify = justify) {
-                val blocks = batch.blocks
+            if (row != null) {
+                val justify = justifyContentByRowAlign(row.align)
 
-                blocks.forEachIndexed { blockIndex, block ->
-                    val lastBlock = blockIndex == blocks.lastIndex
-                    val lastBatch = index == batches.lastIndex
+                hPanel(className = "w-100", justify = justify) {
+                    val blocks = batch.blocks
 
-                    val single = blocks.size == 1
+                    blocks.forEachIndexed { blockIndex, block ->
+                        val lastBlock = blockIndex == blocks.lastIndex
+                        val lastBatch = index == batches.lastIndex
 
-                    renderBlock(block, lastBlock, lastBatch, compensator, single)
+                        val single = blocks.size == 1
+
+                        renderBlock(block, lastBlock, lastBatch, compensator, single)
+                    }
                 }
             }
         }
