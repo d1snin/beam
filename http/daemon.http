@@ -90,8 +90,8 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "row": 1,
-    "index": 0,
+    "row": 0,
+    "index": null,
     "size": "MEDIUM",
     "entities": [
         {
@@ -109,25 +109,18 @@ Content-Type: application/json
 GET http://localhost:8573/blocks?space=root&language=ru
 
 ### PUT Block
-PUT http://localhost:8573/blocks/5883fe73-29a6-46b5-9c7e-d907727bf530
+PUT http://localhost:8573/blocks/d35814a3-ab38-49bd-8a83-85d0b7d530ed
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "index": 0,
-    "size": "EXTRA_LARGE",
+    "row": 0,
+    "index": null,
+    "size": "MEDIUM",
     "entities": [
         {
-            "type": "space",
+            "type": "void",
             "parameters": {
-                "identifier": "root"
-            }
-        },
-        {
-            "type": "button-link",
-            "parameters": {
-                "text": "Does it work?",
-                "url": "https://github.com/d1snin/beam"
             }
         }
     ],

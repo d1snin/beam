@@ -16,6 +16,7 @@
 
 package dev.d1s.beam.daemon.database
 
+import dev.d1s.beam.commons.BlockIndex
 import dev.d1s.beam.commons.RowIndex
 import dev.d1s.beam.daemon.entity.BlockEntities
 import dev.d1s.beam.daemon.entity.BlockEntity
@@ -25,9 +26,7 @@ import dev.d1s.beam.daemon.util.withIoCatching
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.ktorm.database.Database
-import org.ktorm.dsl.and
-import org.ktorm.dsl.eq
-import org.ktorm.dsl.greaterEq
+import org.ktorm.dsl.*
 import org.ktorm.entity.*
 import java.util.*
 
@@ -37,16 +36,38 @@ interface BlockRepository {
 
     suspend fun findBlockById(id: UUID): Result<BlockEntity>
 
+    suspend fun findBlockInSpaceByRowAndIndex(space: SpaceEntity, row: RowIndex, index: BlockIndex): Result<BlockEntity>
+
     suspend fun countBlocksInSpace(space: SpaceEntity): Result<Int>
 
     suspend fun findBlocksInSpace(space: SpaceEntity): Result<BlockEntities>
 
     suspend fun findLatestBlockIndexInSpaceByRow(space: SpaceEntity, row: RowIndex): Result<Int>
 
+    suspend fun findBlocksInSpaceByRowWhichIndexIsGreater(
+        space: SpaceEntity,
+        row: RowIndex,
+        index: BlockIndex
+    ): Result<BlockEntities>
+
     suspend fun findBlocksInSpaceByRowWhichIndexIsGreaterOrEqualTo(
         space: SpaceEntity,
         row: RowIndex,
-        index: Int
+        index: BlockIndex
+    ): Result<BlockEntities>
+
+    suspend fun findBlocksInSpaceByRowWhichIndexIsBetweenEndExclusive(
+        space: SpaceEntity,
+        row: RowIndex,
+        start: BlockIndex,
+        endExclusive: BlockIndex
+    ): Result<BlockEntities>
+
+    suspend fun findBlocksInSpaceByRowWhichIndexIsBetweenStartExclusive(
+        space: SpaceEntity,
+        row: RowIndex,
+        startExclusive: BlockIndex,
+        end: BlockIndex
     ): Result<BlockEntities>
 
     suspend fun updateBlock(block: BlockEntity): Result<BlockEntity>
@@ -72,36 +93,78 @@ class DefaultBlockRepository : BlockRepository, KoinComponent {
         withIoCatching {
             database.blocks.find {
                 it.id eq id
-            } ?: error("Block not found by ID $id")
+            } ?: error("Block not found by ID '$id'")
+        }
+
+    override suspend fun findBlockInSpaceByRowAndIndex(
+        space: SpaceEntity,
+        row: RowIndex,
+        index: BlockIndex
+    ): Result<BlockEntity> =
+        withIoCatching {
+            database.blocks.find {
+                (it.spaceId eq space.id) and (it.row eq row) and (it.index eq index)
+            } ?: error("Block not found in space '${space.id}' by row $row and index $index")
         }
 
     override suspend fun countBlocksInSpace(space: SpaceEntity): Result<Int> =
         withIoCatching {
-            findBlocksInSpaceAsSequence(space).count()
+            findBlocksInSpaceAsSequence(space, sorted = false).count()
         }
 
     override suspend fun findBlocksInSpace(space: SpaceEntity): Result<BlockEntities> =
         withIoCatching {
-            findBlocksInSpaceAsSequence(space).toList()
+            findBlocksInSpaceAsSequence(space, sorted = false).toList()
         }
 
     override suspend fun findLatestBlockIndexInSpaceByRow(space: SpaceEntity, row: RowIndex): Result<Int> =
         withIoCatching {
-           findBlocksInSpaceAsSequence(space, row).sortedByDescending {
-                it.index
-            }.first().requiredIndex
+            findBlocksInSpaceAsSequence(space, row).first().requiredIndex
+        }
+
+    override suspend fun findBlocksInSpaceByRowWhichIndexIsGreater(
+        space: SpaceEntity,
+        row: RowIndex,
+        index: BlockIndex
+    ): Result<BlockEntities> =
+        withIoCatching {
+            findBlocksInSpaceAsSequence(space, row).filter {
+                it.index greater index
+            }.toList()
         }
 
     override suspend fun findBlocksInSpaceByRowWhichIndexIsGreaterOrEqualTo(
         space: SpaceEntity,
         row: RowIndex,
-        index: Int
+        index: BlockIndex
     ): Result<BlockEntities> =
         withIoCatching {
-            findBlocksInSpaceAsSequence(space, row).sortedByDescending {
-                it.index
-            }.filter {
+            findBlocksInSpaceAsSequence(space, row).filter {
                 it.index greaterEq index
+            }.toList()
+        }
+
+    override suspend fun findBlocksInSpaceByRowWhichIndexIsBetweenEndExclusive(
+        space: SpaceEntity,
+        row: RowIndex,
+        start: BlockIndex,
+        endExclusive: BlockIndex
+    ): Result<BlockEntities> =
+        withIoCatching {
+            findBlocksInSpaceAsSequence(space, row).filter {
+                (it.index greaterEq start) and (it.index less endExclusive)
+            }.toList()
+        }
+
+    override suspend fun findBlocksInSpaceByRowWhichIndexIsBetweenStartExclusive(
+        space: SpaceEntity,
+        row: RowIndex,
+        startExclusive: BlockIndex,
+        end: BlockIndex
+    ): Result<BlockEntities> =
+        withIoCatching {
+            findBlocksInSpaceAsSequence(space, row).filter {
+                (it.index greater startExclusive) and (it.index lessEq end)
             }.toList()
         }
 
@@ -128,8 +191,16 @@ class DefaultBlockRepository : BlockRepository, KoinComponent {
             Unit
         }
 
-    private fun findBlocksInSpaceAsSequence(space: SpaceEntity, row: RowIndex? = null) =
-        database.blocks.filter { block ->
+    private fun findBlocksInSpaceAsSequence(space: SpaceEntity, row: RowIndex? = null, sorted: Boolean = true) =
+        database.blocks.let {
+            if (sorted) {
+                it.sortedByDescending { block ->
+                    block.index
+                }
+            } else {
+                it
+            }
+        }.filter { block ->
             (block.spaceId eq space.id).let {
                 if (row != null) {
                     it and (block.row eq row)

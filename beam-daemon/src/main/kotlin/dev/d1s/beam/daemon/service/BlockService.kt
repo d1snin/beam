@@ -16,10 +16,7 @@
 
 package dev.d1s.beam.daemon.service
 
-import dev.d1s.beam.commons.Block
-import dev.d1s.beam.commons.BlockId
-import dev.d1s.beam.commons.LanguageCode
-import dev.d1s.beam.commons.SpaceIdentifier
+import dev.d1s.beam.commons.*
 import dev.d1s.beam.commons.event.EntityUpdate
 import dev.d1s.beam.commons.event.EventReferences
 import dev.d1s.beam.commons.validation.Limits
@@ -96,7 +93,7 @@ class DefaultBlockService : BlockService, KoinComponent {
             translationService.verifyLocationsExist(block).getOrThrow()
 
             processBlockRow(block)
-            processBlockIndex(block)
+            processBlockIndexOnCreation(block)
 
             val addedBlock = blockRepository.addBlock(block).getOrThrow()
             val translatedBlock = translateOptionally(addedBlock, languageCode)
@@ -177,10 +174,11 @@ class DefaultBlockService : BlockService, KoinComponent {
             translationService.verifyLocationsExist(modification).getOrThrow()
 
             processBlockRow(modification)
-            processBlockIndex(modification)
+            processBlockIndexOnUpdate(modification, originalBlock)
 
             originalBlock.apply {
                 this.row = modification.row
+                this.index = modification.index
                 this.size = modification.size
                 this.entities = modification.entities
                 this.metadata = modification.metadata
@@ -205,6 +203,8 @@ class DefaultBlockService : BlockService, KoinComponent {
             val (block, blockDto) = getBlock(id, requireDto = true).getOrThrow()
             requireNotNull(blockDto)
 
+            processBlockIndexOnRemoval(block)
+
             blockRepository.removeBlock(block).getOrThrow()
 
             sendBlockRemovedEvent(blockDto)
@@ -227,7 +227,88 @@ class DefaultBlockService : BlockService, KoinComponent {
         rowService.createRowIfDoesntExist(block.row, block.space).getOrThrow()
     }
 
-    private suspend fun processBlockIndex(block: BlockEntity) {
+    private suspend fun processBlockIndexOnCreation(block: BlockEntity) {
+        val (index, latestIndex) = prepareBlockIndexProcessing(block)
+
+        val space = block.space
+        val row = block.row
+
+        when {
+            index == latestIndex + 1 -> {}
+            index <= latestIndex -> {
+                val blocksToUpdate =
+                    blockRepository.findBlocksInSpaceByRowWhichIndexIsGreaterOrEqualTo(space, row, index)
+                        .getOrThrow()
+
+                blocksToUpdate.forEach {
+                    it.index = it.requiredIndex + 1
+                }
+
+                blockRepository.updateBlocks(blocksToUpdate).getOrThrow()
+            }
+        }
+    }
+
+    private suspend fun processBlockIndexOnUpdate(block: BlockEntity, originalBlock: BlockEntity) {
+        val initialIndex = originalBlock.requiredIndex
+        val (index, _) = prepareBlockIndexProcessing(block)
+
+        val space = block.space
+        val row = block.row
+
+        when {
+            initialIndex < index -> {
+                val blocksToUpdate =
+                    blockRepository.findBlocksInSpaceByRowWhichIndexIsBetweenStartExclusive(
+                        space,
+                        row,
+                        initialIndex,
+                        index
+                    ).getOrThrow()
+
+                blocksToUpdate.forEach {
+                    it.index = it.requiredIndex - 1
+                }
+            }
+
+            initialIndex > index -> {
+                val blocksToUpdate =
+                    blockRepository.findBlocksInSpaceByRowWhichIndexIsBetweenEndExclusive(
+                        space,
+                        row,
+                        initialIndex,
+                        index
+                    ).getOrThrow()
+
+                blocksToUpdate.forEach {
+                    it.index = it.requiredIndex + 1
+                }
+            }
+        }
+
+        val blockWithNewIndex = blockRepository.findBlockInSpaceByRowAndIndex(space, row, index).getOrThrow()
+        blockWithNewIndex.index = initialIndex
+        blockRepository.updateBlock(blockWithNewIndex)
+    }
+
+    private suspend fun processBlockIndexOnRemoval(block: BlockEntity) {
+        val (index, _) = prepareBlockIndexProcessing(block)
+
+        val space = block.space
+        val row = block.row
+
+        val blocksToUpdate =
+            blockRepository.findBlocksInSpaceByRowWhichIndexIsGreater(space, row, index)
+                .getOrThrow()
+
+        blocksToUpdate.forEach {
+            it.index = it.requiredIndex - 1
+        }
+
+        blockRepository.updateBlocks(blocksToUpdate).getOrThrow()
+    }
+
+    private suspend fun prepareBlockIndexProcessing(block: BlockEntity): Pair<BlockIndex, BlockIndex> {
         val space = block.space
         val row = block.row
 
@@ -247,28 +328,15 @@ class DefaultBlockService : BlockService, KoinComponent {
             latestIndex = START_INDEX
         }
 
+        if (requiredIndex > (latestIndex + 1) || requiredIndex < START_INDEX) {
+            throw BadRequestException("Block index is out of bounds")
+        }
+
         logger.d {
             "Processing block index. index: $requiredIndex; latestIndex: $latestIndex"
         }
 
-        when {
-            requiredIndex == latestIndex + 1 -> {}
-            requiredIndex <= latestIndex -> {
-                val blocksToUpdate =
-                    blockRepository.findBlocksInSpaceByRowWhichIndexIsGreaterOrEqualTo(space, row, requiredIndex)
-                        .getOrThrow()
-
-                blocksToUpdate.forEach {
-                    it.index = it.requiredIndex + 1
-                }
-
-                blockRepository.updateBlocks(blocksToUpdate)
-            }
-
-            else -> {
-                throw BadRequestException("Block index is out of bounds")
-            }
-        }
+        return requiredIndex to latestIndex
     }
 
     // Я боюсь наступления вечера...
