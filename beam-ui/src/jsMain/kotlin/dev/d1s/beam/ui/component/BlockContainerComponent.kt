@@ -63,7 +63,10 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
         div(className = "container-fluid px-0 d-flex justify-content-center") {
             vPanel(className = "w-100") {
                 val batches = change.blocks.splitIntoBatches()
-                processBatches(batches, change)
+
+                if (batches.isNotEmpty()) {
+                    processBatches(batches, change)
+                }
             }
         }
     }
