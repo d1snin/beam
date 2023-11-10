@@ -52,7 +52,9 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
     override fun SimplePanel.render(): Effect {
         div().bind(currentSpaceContentChangeObservable.state) { change ->
             change?.let {
-                renderBlocks(it)
+                if (it.blocks.isNotEmpty()) {
+                    renderBlocks(it)
+                }
             }
         }
 
@@ -93,6 +95,8 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
         return rowBatches
     }
 
+    // "Лучше вообще ничего не говори"
+    // аххахахахаххахахахаххахахххахахаххахаххахаа
 
     private fun BlockBatch.splitIntoBatchesBySize(): List<BlockBatch> {
         val maxBlockSize = Size.MaxBlockSize.level
