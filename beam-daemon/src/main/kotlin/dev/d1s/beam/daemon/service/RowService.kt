@@ -22,6 +22,7 @@ import dev.d1s.beam.commons.event.EventReferences
 import dev.d1s.beam.daemon.configuration.DtoConverters
 import dev.d1s.beam.daemon.database.RowRepository
 import dev.d1s.beam.daemon.entity.RowEntity
+import dev.d1s.beam.daemon.entity.SpaceEntity
 import dev.d1s.beam.daemon.entity.asString
 import dev.d1s.exkt.dto.*
 import dev.d1s.ktor.events.server.WebSocketEventChannel
@@ -32,9 +33,12 @@ import org.lighthousegames.logging.logging
 
 interface RowService {
 
-    suspend fun createRow(row: RowEntity): ResultingEntityWithOptionalDto<RowEntity, Row>
+    suspend fun createRowIfDoesntExist(
+        index: RowIndex,
+        space: SpaceEntity
+    ): ResultingEntityWithOptionalDto<RowEntity, Row>
 
-    suspend fun getOrCreateRow(
+    suspend fun getRow(
         index: RowIndex,
         spaceIdentifier: SpaceIdentifier,
         requireDto: Boolean = false
@@ -64,21 +68,42 @@ class DefaultRowService : RowService, KoinComponent {
 
     private val logger = logging()
 
-    override suspend fun createRow(row: RowEntity): ResultingEntityWithOptionalDto<RowEntity, Row> =
+    override suspend fun createRowIfDoesntExist(
+        index: RowIndex,
+        space: SpaceEntity
+    ): ResultingEntityWithOptionalDto<RowEntity, Row> =
         runCatching {
+            val spaceId = space.id.toString()
+
             logger.d {
-                "Creating row ${row.asString}..."
+                "Creating row with index $index in space $spaceId..."
             }
 
-            val addedRow = rowRepository.addRow(row).getOrThrow()
-            val rowDto = rowDtoConverter.convertToDto(addedRow)
+            val existingRow = getRow(index, spaceId, requireDto = true).getOrNull()
 
-            sendRowCreatedEvent(rowDto)
+            if (existingRow == null) {
+                val row = RowEntity {
+                    this.index = index
+                    this.align = RowAlign.CENTER
+                    this.space = space
+                }
 
-            addedRow to rowDto
+                val addedRow = rowRepository.addRow(row).getOrThrow()
+                val rowDto = rowDtoConverter.convertToDto(addedRow)
+
+                sendRowCreatedEvent(rowDto)
+
+                addedRow to rowDto
+            } else {
+                logger.d {
+                    "Row already exists: ${existingRow.entity.asString}"
+                }
+
+                existingRow
+            }
         }
 
-    override suspend fun getOrCreateRow(
+    override suspend fun getRow(
         index: RowIndex,
         spaceIdentifier: SpaceIdentifier,
         requireDto: Boolean
@@ -90,21 +115,7 @@ class DefaultRowService : RowService, KoinComponent {
 
             val space = spaceService.getSpace(spaceIdentifier).getOrThrow().entity
 
-            var row = rowRepository.findRow(index, space).getOrNull()
-
-            if (row == null) {
-                logger.d {
-                    "Row not found. Creating it..."
-                }
-
-                val newRowEntity = RowEntity {
-                    this.index = index
-                    this.align = RowAlign.CENTER
-                    this.space = space
-                }
-
-                row = createRow(newRowEntity).getOrThrow().entity
-            }
+            val row = rowRepository.findRow(index, space).getOrThrow()
 
             row to rowDtoConverter.convertToDtoIf(row) {
                 requireDto
@@ -139,7 +150,7 @@ class DefaultRowService : RowService, KoinComponent {
                 "Updating row with index $index in space '$spaceIdentifier'"
             }
 
-            val (originalRow, originalRowDto) = getOrCreateRow(index, spaceIdentifier, requireDto = true).getOrThrow()
+            val (originalRow, originalRowDto) = getRow(index, spaceIdentifier, requireDto = true).getOrThrow()
             requireNotNull(originalRowDto)
 
             originalRow.apply {

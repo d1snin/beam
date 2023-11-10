@@ -224,7 +224,7 @@ class DefaultBlockService : BlockService, KoinComponent {
     }
 
     private suspend fun processBlockRow(block: BlockEntity) {
-        rowService.getOrCreateRow(block.row, block.space.id.toString()).getOrThrow()
+        rowService.createRowIfDoesntExist(block.row, block.space).getOrThrow()
     }
 
     private suspend fun processBlockIndex(block: BlockEntity) {
