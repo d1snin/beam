@@ -16,10 +16,12 @@
 
 package dev.d1s.beam.ui.component
 
+import dev.d1s.beam.commons.MetadataKeys
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.theme.setBackground
 import dev.d1s.beam.ui.theme.setTextColor
+import dev.d1s.beam.ui.util.currentSpace
 import dev.d1s.beam.ui.util.currentTranslationObservable
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
@@ -101,7 +103,21 @@ class RootComponent : Component.Root(), KoinComponent {
     private fun background() {
         bodyStyle {
             setBackground()
+
+            currentSpace?.let { space ->
+                val backgroundUrl = space.metadata[MetadataKeys.UI_SPACE_BACKGROUND]
+
+                backgroundUrl?.let {
+                    backgroundImage(it)
+                }
+            }
         }
+    }
+
+    private fun CSSStyleDeclaration.backgroundImage(url: String) {
+        backgroundImage = "url($url)"
+        backgroundSize = "cover"
+        backgroundRepeat = "no-repeat"
     }
 
     private fun SimplePanel.components() {

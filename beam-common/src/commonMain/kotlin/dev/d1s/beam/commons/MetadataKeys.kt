@@ -21,6 +21,7 @@ public object MetadataKeys {
     public const val BUNDLE_SPACE_KEYWORDS: MetadataKey = "bundle.space.keywords"
 
     public const val UI_SPACE_SHOW_STATUS: MetadataKey = "ui.space.show-status"
+    public const val UI_SPACE_BACKGROUND: MetadataKey = "ui.space.background"
 
     public const val UI_BLOCK_ID: MetadataKey = "ui.block.id"
     public const val UI_BLOCK_BARE: MetadataKey = "ui.block.bare"
