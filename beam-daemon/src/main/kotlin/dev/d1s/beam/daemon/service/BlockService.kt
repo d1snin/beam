@@ -286,9 +286,12 @@ class DefaultBlockService : BlockService, KoinComponent {
             }
         }
 
-        val blockWithNewIndex = blockRepository.findBlockInSpaceByRowAndIndex(space, row, index).getOrThrow()
-        blockWithNewIndex.index = initialIndex
-        blockRepository.updateBlock(blockWithNewIndex)
+        val blockWithNewIndex = blockRepository.findBlockInSpaceByRowAndIndex(space, row, index).getOrNull()
+
+        blockWithNewIndex?.let {
+            it.index = initialIndex
+            blockRepository.updateBlock(it)
+        }
     }
 
     private suspend fun processBlockIndexOnRemoval(block: BlockEntity) {
