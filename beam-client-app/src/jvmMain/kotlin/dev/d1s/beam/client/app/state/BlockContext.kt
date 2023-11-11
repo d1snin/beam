@@ -26,6 +26,8 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.lighthousegames.logging.logging
 
+internal const val DEFAULT_ROW = 0
+
 private val log = logging()
 
 public class BlockContext internal constructor(
@@ -89,7 +91,7 @@ public suspend fun SpaceContext.block(configure: suspend BlockContext.() -> Unit
         }
 
         val createdBlock = client.postBlock {
-            row = 0
+            row = this@block.currentRow
             index = null
             size = BlockSize.SMALL
             spaceId = space

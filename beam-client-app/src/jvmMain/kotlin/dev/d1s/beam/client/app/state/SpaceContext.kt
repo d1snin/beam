@@ -25,11 +25,11 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.lighthousegames.logging.logging
 
-private val log = logging()
-
 private const val DEFAULT_THEME = "catppuccin-mocha"
 
-public class SpaceContext internal constructor(
+private val log = logging()
+
+public open class SpaceContext internal constructor(
     initialSpace: Space,
     internal val processBlocks: Boolean,
     internal val client: BeamClient
@@ -37,6 +37,8 @@ public class SpaceContext internal constructor(
     private var internalSpace = initialSpace
 
     public val space: Space get() = internalSpace
+
+    internal var currentRow: RowIndex = DEFAULT_ROW
 
     private val operationLock = Mutex()
 
@@ -54,7 +56,7 @@ public class SpaceContext internal constructor(
         modifySpace(view = builtView)
     }
 
-    public suspend fun alignRow(rowIndex: RowIndex, align: RowAlign) {
+    public suspend fun alignRow(rowIndex: RowIndex = currentRow, align: RowAlign) {
         client.putRow(rowIndex, space.id) {
             this.align = align
         }.getOrThrow()
@@ -136,6 +138,22 @@ public suspend fun ApplicationContext.space(
     }
 
     val context = SpaceContext(space, processBlocks, client)
+
+    context.configure()
+}
+
+public suspend fun SpaceContext.row(
+    index: RowIndex,
+    align: RowAlign? = null,
+    configure: suspend SpaceContext.() -> Unit
+) {
+    val context = SpaceContext(space, processBlocks, client).apply {
+        currentRow = index
+    }
+
+    align?.let {
+        context.alignRow(align = align)
+    }
 
     context.configure()
 }
