@@ -20,6 +20,9 @@ Beam documentation lives [here](https://beam.d1s.dev). It is powered by itself!
 
 Please refer to [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md).
 
+### Sponsors
+[![](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png)](https://jb.gg/OpenSourceSupport)
+
 ### License
 
 ```

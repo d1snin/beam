@@ -197,8 +197,7 @@ Content-Type: application/json
         {
             "type": "space",
             "parameters": {
-                "identifier": "root",
-                "full_width": "true"
+                "identifier": "root"
             }
         },
         {
