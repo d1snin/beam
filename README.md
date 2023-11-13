@@ -22,11 +22,9 @@ Please refer to [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md).
 
 ### Sponsors
 
-<a href="https://jb.gg/OpenSourceSupport" width="100">
-    <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" width="25" alt="JetBrains logo"/>
-</a>
+<img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" width="25" alt="JetBrains logo"/>
 
-- JetBrains provides great and powerful Intellij IDEA Ultimate.
+- [JetBrains provides great and powerful Intellij IDEA Ultimate.](https://jb.gg/OpenSourceSupport)
 
 ### License
 
