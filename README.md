@@ -21,9 +21,11 @@ Beam documentation lives [here](https://beam.d1s.dev). It is powered by itself!
 Please refer to [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md).
 
 ### Sponsors
-<a href="https://jb.gg/OpenSourceSupport">
-    <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" width="50" alt="JetBrains logo"/>
+
+<a href="https://jb.gg/OpenSourceSupport" width="100"">
+    <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" width="25" alt="JetBrains logo"/>
 </a>
+
 - JetBrains provides great and powerful Intellij IDEA Ultimate.
 
 ### License
