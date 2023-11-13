@@ -26,7 +26,7 @@ fun <TSubject, TProperty> List<TSubject>.splitBy(
     var bufferProperty = selector(entities.first())
 
     fun executeBuffer() {
-        block(buffer, bufferProperty)
+        block(buffer.toList(), bufferProperty)
         buffer.clear()
     }
 

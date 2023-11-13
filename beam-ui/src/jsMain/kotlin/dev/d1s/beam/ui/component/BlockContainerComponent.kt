@@ -87,7 +87,7 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
 
         val rowBatches = buildList {
             blocks.splitBy(selector = { it.row }) { blocks, row ->
-                val batch = BlockBatch(row, blocks.toList())
+                val batch = BlockBatch(row, blocks)
                 add(batch)
             }
         }
@@ -96,7 +96,6 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
     }
 
     // "Лучше вообще ничего не говори"
-    // аххахахахаххахахахаххахахххахахаххахаххахаа
 
     private fun BlockBatch.splitIntoBatchesBySize(): List<BlockBatch> {
         val maxBlockSize = Size.MaxBlockSize.level

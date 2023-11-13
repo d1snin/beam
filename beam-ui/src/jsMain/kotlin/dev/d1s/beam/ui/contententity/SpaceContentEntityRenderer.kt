@@ -17,15 +17,11 @@
 package dev.d1s.beam.ui.contententity
 
 import dev.d1s.beam.client.BeamClient
-import dev.d1s.beam.commons.BlockSize
-import dev.d1s.beam.commons.contententity.ContentEntities
-import dev.d1s.beam.commons.contententity.ContentEntity
 import dev.d1s.beam.commons.contententity.SpaceContentEntityTypeDefinition
 import dev.d1s.beam.commons.contententity.get
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.component.SpaceCardComponent
 import dev.d1s.beam.ui.util.currentLanguageCode
-import dev.d1s.beam.ui.util.justifyContent
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.render
 import io.kvision.html.div
@@ -37,62 +33,22 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
 
-class SpaceContentEntityRenderer : ContentEntityRenderer, KoinComponent {
+class SpaceContentEntityRenderer : SingleContentEntityRenderer, KoinComponent {
 
     override val definition = SpaceContentEntityTypeDefinition
 
     private val client by inject<BeamClient>()
 
     private val renderingScope = CoroutineScope(Dispatchers.Main)
-
-    private val ContentEntity.fullWidth
-        get() = parameters[definition.fullWidth]?.toBooleanStrict() ?: false
-
-    override fun SimplePanel.render(context: SequenceContentEntityRenderingContext) {
-        val lgCols = if (context.block.size >= BlockSize.LARGE) 2 else 1
-
-        context.sequence.splitBy(selector = { it.fullWidth }) { entities, fullWidth ->
-            fun SimplePanel.renderSequence() {
-                renderSequence(entities, context, fullWidth)
-            }
-
-            if (fullWidth) {
-                renderSequence()
-            } else {
-                renderRow(lgCols, context) {
-                    renderSequence()
-                    separateContentEntities(context)
-                }
-            }
-        }
-    }
-
-    private fun SimplePanel.renderRow(
-        lgCols: Int,
-        context: SequenceContentEntityRenderingContext,
-        block: SimplePanel.() -> Unit
-    ) {
-        div(className = "w-100 row row-cols-1 row-cols-lg-$lgCols") {
-            justifyContent(context.alignment)
-
-            block()
-        }
-    }
-
-    private fun SimplePanel.renderSequence(
-        entities: ContentEntities,
-        context: SequenceContentEntityRenderingContext,
-        fullWidth: Boolean
-    ) {
-        entities.forEach { entity ->
-            asyncDiv {
-                renderSpaceCard(entity, context, fullWidth)
-            }
+    override fun SimplePanel.render(context: SingleContentEntityRenderingContext) {
+        asyncDiv {
+            renderSpaceCard(context)
+            separateContentEntity(context)
         }
     }
 
     private fun SimplePanel.asyncDiv(block: suspend SimplePanel.() -> Unit) {
-        div {
+        div(className = "w-100") {
             renderingScope.launch {
                 block()
             }
@@ -100,24 +56,19 @@ class SpaceContentEntityRenderer : ContentEntityRenderer, KoinComponent {
     }
 
     private suspend fun SimplePanel.renderSpaceCard(
-        entity: ContentEntity,
-        context: SequenceContentEntityRenderingContext,
-        fullWidth: Boolean
+        context: SingleContentEntityRenderingContext
     ) {
+        val entity = context.entity
+
         val spaceIdentifier = entity.parameters[definition.identifier]
         requireNotNull(spaceIdentifier)
 
-        val space = client.getSpace(spaceIdentifier, currentLanguageCode).getOrNull()
-
         val spaceCard = get<Component<SpaceCardComponent.Config>>(Qualifier.SpaceCardComponent)
-
-        if (fullWidth) {
-            separateContentEntity(entity, context)
-        }
+        val space = client.getSpace(spaceIdentifier, currentLanguageCode).getOrNull()
 
         render(spaceCard) {
             this.space.value = space
-            this.cardFullWidth.value = fullWidth
+            this.cardFullWidth.value = true
         }
     }
 }

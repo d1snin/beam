@@ -95,14 +95,15 @@ Content-Type: application/json
     "size": "MEDIUM",
     "entities": [
         {
-            "type": "void",
+            "type": "alert",
             "parameters": {
+                "text": "hello"
             }
         }
     ],
     "metadata": {
     },
-    "spaceId": "root"
+    "spaceId": "test-1"
 }
 
 ### GET Blocks

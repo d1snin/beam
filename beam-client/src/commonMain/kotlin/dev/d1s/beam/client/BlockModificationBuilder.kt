@@ -279,7 +279,6 @@ public fun ContentEntitiesBuilder.fullWidthAlert(
 
 public fun ContentEntitiesBuilder.space(
     identifier: SpaceIdentifier,
-    fullWidth: Boolean? = null,
     alignment: Alignment? = null,
     collapsed: Boolean? = null
 ) {
@@ -288,20 +287,8 @@ public fun ContentEntitiesBuilder.space(
 
         parametersWithCommons(alignment = alignment, collapsed = collapsed) {
             put(Space.identifier.name, identifier)
-
-            fullWidth?.let {
-                put(Space.fullWidth.name, it.toString())
-            }
         }
     }
-}
-
-public fun ContentEntitiesBuilder.fullWidthSpace(
-    identifier: SpaceIdentifier,
-    alignment: Alignment? = null,
-    collapsed: Boolean? = null
-) {
-    space(identifier, fullWidth = true, alignment = alignment, collapsed = collapsed)
 }
 
 public fun ContentEntitiesBuilder.image(

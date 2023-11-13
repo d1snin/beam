@@ -27,6 +27,5 @@ internal object SpaceContentEntityValidator :
         val validator = this@SpaceContentEntityValidator
 
         requireNotBlankText(validator, requiredDefinition.identifier)
-        requireCorrectBoolean(validator, requiredDefinition.fullWidth)
     }
 }

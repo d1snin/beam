@@ -28,15 +28,23 @@ fun SimplePanel.separateContentEntity(
     topMargin: Int? = null,
     bottomMargin: Int = 3,
 ) {
+    println("separateContentEntity contentEntity: $contentEntity")
+    println("separateContentEntity context: $context")
+
     val batch = context.batch
 
     val firstInBatch = contentEntity.isFirstIn(batch)
+    println("separateContentEntity firstInBatch: $firstInBatch")
     val lastInBatch = contentEntity.isLastIn(batch)
+    println("separateContentEntity lastInBatch: $lastInBatch")
 
     val lastInBlock = contentEntity.isLastIn(context.block.entities)
+    println("separateContentEntity lastInBlock: $lastInBlock")
 
     val topMarginLevel = topMargin?.takeIf { !firstInBatch } ?: 0
+    println("separateContentEntity topMarginLevel: $topMarginLevel")
     val bottomMarginLevel = bottomMargin.takeIf { !lastInBatch || !lastInBlock } ?: 0
+    println("separateContentEntity bottomMarginLevel: $bottomMarginLevel")
 
     addCssClass("mt-$topMarginLevel")
     addCssClass("mb-$bottomMarginLevel")
