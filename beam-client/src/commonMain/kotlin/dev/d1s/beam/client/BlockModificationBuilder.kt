@@ -38,7 +38,7 @@ public class BlockModificationBuilder() : ContentEntitiesBuilder() {
         index = modification.index
         size = modification.size
         entities = modification.entities.toMutableList()
-        metadataBuilder.metadata = modification.metadata.toMutableMap()
+        metadataBuilder.metadata(modification.metadata)
         spaceId = modification.spaceId
     }
 

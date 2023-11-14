@@ -23,6 +23,8 @@ public object MetadataKeys {
     public const val UI_SPACE_SHOW_STATUS: MetadataKey = "ui.space.show-status"
     public const val UI_SPACE_BACKGROUND: MetadataKey = "ui.space.background"
 
+    public const val UI_ROW_STRETCH: MetadataKey = "ui.row.stretch"
+
     public const val UI_BLOCK_ID: MetadataKey = "ui.block.id"
     public const val UI_BLOCK_BARE: MetadataKey = "ui.block.bare"
     public const val UI_BLOCK_LINK: MetadataKey = "ui.block.link"

@@ -21,7 +21,11 @@ import dev.d1s.beam.commons.*
 @BuilderDsl
 public class MetadataBuilder {
 
-    internal var metadata = metadataOf().toMutableMap()
+    internal var metadata: MutableMap<MetadataKey, MetadataValue> = metadataOf().toMutableMap()
+
+    public fun metadata(metadata: Metadata) {
+        this.metadata = metadata.toMutableMap()
+    }
 
     public fun metadata(key: MetadataKey, value: MetadataValue) {
         metadata[key] = value
@@ -40,6 +44,10 @@ public fun MetadataBuilder.setSpaceShowStatus(show: Boolean = true) {
 
 public fun MetadataBuilder.setSpaceBackground(background: String) {
     metadata(MetadataKeys.UI_SPACE_BACKGROUND, background)
+}
+
+public fun MetadataBuilder.setRowStretch(stretch: Boolean = true) {
+    metadata(MetadataKeys.UI_ROW_STRETCH, stretch.toString())
 }
 
 public fun MetadataBuilder.setBlockId(id: String) {

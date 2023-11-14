@@ -18,6 +18,7 @@ package dev.d1s.beam.client.app.state
 
 import dev.d1s.beam.client.BeamClient
 import dev.d1s.beam.client.MetadataBuilder
+import dev.d1s.beam.client.RowModificationBuilder
 import dev.d1s.beam.client.SpaceViewBuilder
 import dev.d1s.beam.client.app.ApplicationContext
 import dev.d1s.beam.commons.*
@@ -57,9 +58,13 @@ public open class SpaceContext internal constructor(
     }
 
     public suspend fun alignRow(rowIndex: RowIndex = currentRow, align: RowAlign) {
-        client.putRow(rowIndex, space.id) {
+        setRow(rowIndex) {
             this.align = align
-        }.getOrThrow()
+        }
+    }
+
+    public suspend fun setRow(rowIndex: RowIndex = currentRow, row: suspend RowModificationBuilder.() -> Unit) {
+        client.putRow(rowIndex, space.id, row).getOrThrow()
     }
 
     private suspend fun modifySpace(
@@ -145,6 +150,7 @@ public suspend fun ApplicationContext.space(
 public suspend fun SpaceContext.row(
     index: RowIndex,
     align: RowAlign? = null,
+    metadata: Metadata? = null,
     configure: suspend SpaceContext.() -> Unit
 ) {
     val context = SpaceContext(space, processBlocks, client).apply {
@@ -153,6 +159,14 @@ public suspend fun SpaceContext.row(
 
     align?.let {
         context.alignRow(align = align)
+    }
+
+    metadata?.let { meta ->
+        context.setRow {
+            metadata {
+                metadata(meta)
+            }
+        }
     }
 
     context.configure()
