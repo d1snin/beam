@@ -27,6 +27,7 @@ import dev.d1s.beam.daemon.entity.asString
 import dev.d1s.exkt.dto.*
 import dev.d1s.ktor.events.server.WebSocketEventChannel
 import dev.d1s.ktor.events.server.event
+import io.ktor.server.plugins.*
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.lighthousegames.logging.logging
@@ -116,7 +117,9 @@ class DefaultRowService : RowService, KoinComponent {
 
             val space = spaceService.getSpace(spaceIdentifier).getOrThrow().entity
 
-            val row = rowRepository.findRow(index, space).getOrThrow()
+            val row = rowRepository.findRow(index, space).getOrElse {
+                throw NotFoundException("Row not found")
+            }
 
             row to rowDtoConverter.convertToDtoIf(row) {
                 requireDto
