@@ -16,10 +16,7 @@
 
 package dev.d1s.beam.ui.component
 
-import dev.d1s.beam.commons.Block
-import dev.d1s.beam.commons.Blocks
-import dev.d1s.beam.commons.RowAlign
-import dev.d1s.beam.commons.RowIndex
+import dev.d1s.beam.commons.*
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.contententity.splitBy
 import dev.d1s.beam.ui.state.Observable
@@ -29,6 +26,7 @@ import dev.d1s.beam.ui.util.currentSpace
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
 import dev.d1s.exkt.kvision.component.render
+import io.kvision.core.AlignItems
 import io.kvision.core.JustifyContent
 import io.kvision.html.div
 import io.kvision.panel.SimplePanel
@@ -175,8 +173,9 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
 
             if (row != null) {
                 val justify = justifyContentByRowAlign(row.align)
+                val alignItems = alignItemsByRowStretchMetadata(row)
 
-                hPanel(className = "w-100", justify = justify) {
+                hPanel(className = "w-100", justify = justify, alignItems = alignItems) {
                     val blocks = batch.blocks
 
                     blocks.forEachIndexed { blockIndex, block ->
@@ -224,5 +223,12 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
             RowAlign.END -> JustifyContent.END
             RowAlign.CENTER -> JustifyContent.CENTER
             RowAlign.BETWEEN -> JustifyContent.SPACEBETWEEN
+        }
+
+    private fun alignItemsByRowStretchMetadata(row: Row) =
+        if (row.metadata[MetadataKeys.UI_ROW_STRETCH]?.toBooleanStrictOrNull() == false) {
+            AlignItems.START
+        } else {
+            AlignItems.STRETCH
         }
 }
