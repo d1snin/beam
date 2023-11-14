@@ -26,5 +26,6 @@ class RowModificationDtoConverter : DtoConverter<RowEntity, RowModification>, Ko
     override suspend fun convertToEntity(dto: RowModification) =
         RowEntity {
             align = dto.align
+            metadata = dto.metadata
         }
 }

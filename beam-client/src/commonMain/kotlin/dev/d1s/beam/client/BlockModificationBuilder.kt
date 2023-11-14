@@ -55,8 +55,8 @@ public class BlockModificationBuilder() : ContentEntitiesBuilder() {
             row ?: error("Block row is undefined"),
             index,
             size ?: error("Block size is undefined"),
-            buildContentEntities(),
-            metadataBuilder.buildMetadata(),
+            entities = buildContentEntities(),
+            metadata = metadataBuilder.buildMetadata(),
             spaceId ?: error("Block space id is undefined")
         )
 }

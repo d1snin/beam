@@ -16,6 +16,7 @@
 
 package dev.d1s.beam.daemon.entity
 
+import dev.d1s.beam.commons.Metadata
 import dev.d1s.beam.commons.RowAlign
 import dev.d1s.beam.commons.RowIndex
 import dev.d1s.exkt.ktorm.UuidIdentified
@@ -29,10 +30,12 @@ interface RowEntity : UuidIdentified<RowEntity> {
 
     var align: RowAlign
 
+    var metadata: Metadata
+
     var space: SpaceEntity
 
     companion object : Entity.Factory<RowEntity>()
 }
 
 val RowEntity.asString
-    get() = "RowEntity{index = $index, align = $align}"
+    get() = "RowEntity{index = $index, align = $align, metadata = $metadata}"

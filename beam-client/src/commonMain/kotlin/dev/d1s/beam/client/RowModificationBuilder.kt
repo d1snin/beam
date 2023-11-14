@@ -16,6 +16,8 @@
 
 package dev.d1s.beam.client
 
+import dev.d1s.beam.commons.MetadataKey
+import dev.d1s.beam.commons.MetadataValue
 import dev.d1s.beam.commons.RowAlign
 import dev.d1s.beam.commons.RowModification
 
@@ -24,6 +26,19 @@ public class RowModificationBuilder {
 
     public var align: RowAlign? = null
 
+    private val metadataBuilder = MetadataBuilder()
+
+    public fun metadata(key: MetadataKey, value: MetadataValue) {
+        metadataBuilder.metadata(key, value)
+    }
+
+    public fun metadata(build: MetadataBuilder.() -> Unit) {
+        metadataBuilder.apply(build)
+    }
+
     public fun buildRowModification(): RowModification =
-        RowModification(align ?: error("Row align is undefined"))
+        RowModification(
+            align ?: error("Row align is undefined"),
+            metadata = metadataBuilder.buildMetadata()
+        )
 }

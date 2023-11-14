@@ -35,7 +35,7 @@ public class RootSpaceModificationBuilder {
 
     public fun buildRootSpaceModification(): RootSpaceModification =
         RootSpaceModification(
-            metadataBuilder.buildMetadata(),
+            metadata = metadataBuilder.buildMetadata(),
             view ?: error("View is undefined")
         )
 }

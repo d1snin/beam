@@ -30,18 +30,22 @@ public fun RowQualifier(spaceId: SpaceId?, index: RowIndex): RowQualifier =
 public sealed interface AbstractRow {
 
     public val align: RowAlign
+
+    public val metadata: Metadata
 }
 
 @Serializable
 public data class Row(
     val index: RowIndex,
     override val align: RowAlign,
+    override val metadata: Metadata,
     val spaceId: SpaceId
 ) : AbstractRow
 
 @Serializable
 public data class RowModification(
-    override val align: RowAlign
+    override val align: RowAlign,
+    override val metadata: Metadata
 ) : AbstractRow
 
 public enum class RowAlign {

@@ -103,7 +103,7 @@ Content-Type: application/json
     ],
     "metadata": {
     },
-    "spaceId": "test-1"
+    "spaceId": "root"
 }
 
 ### GET Blocks
@@ -146,7 +146,8 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "align": "BETWEEN"
+    "align": "CENTER",
+    "metadata": {}
 }
 
 ### POST Translation

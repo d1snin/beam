@@ -85,6 +85,7 @@ class DefaultRowService : RowService, KoinComponent {
                 val row = RowEntity {
                     this.index = index
                     this.align = RowAlign.CENTER
+                    this.metadata = metadataOf()
                     this.space = space
                 }
 
@@ -155,6 +156,7 @@ class DefaultRowService : RowService, KoinComponent {
 
             originalRow.apply {
                 this.align = row.align
+                this.metadata = row.metadata
             }
 
             val updatedRow = rowRepository.updateRow(originalRow).getOrThrow()

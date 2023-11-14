@@ -28,6 +28,7 @@ class RowDtoConverter : DtoConverter<RowEntity, Row>, KoinComponent {
             Row(
                 index,
                 align,
+                metadata,
                 space.id.toString()
             )
         }

@@ -16,9 +16,11 @@
 
 package dev.d1s.beam.daemon.database
 
+import dev.d1s.beam.commons.Metadata
 import dev.d1s.beam.commons.RowAlign
 import dev.d1s.beam.daemon.entity.RowEntity
 import dev.d1s.exkt.ktorm.UuidIdentifiedEntities
+import org.ktorm.jackson.json
 import org.ktorm.schema.enum
 import org.ktorm.schema.int
 import org.ktorm.schema.uuid
@@ -32,6 +34,10 @@ object Rows : UuidIdentifiedEntities<RowEntity>(tableName = "row") {
 
     val align = enum<RowAlign>("align").bindTo {
         it.align
+    }
+
+    val metadata = json<Metadata>("metadata").bindTo {
+        it.metadata
     }
 
     val spaceId = uuid("space_id").references(Spaces) {
