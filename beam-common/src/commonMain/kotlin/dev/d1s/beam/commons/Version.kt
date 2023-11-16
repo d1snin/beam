@@ -18,4 +18,4 @@ package dev.d1s.beam.commons
 
 public typealias Version = String
 
-public const val VERSION: Version = "0.6.0"
+public const val VERSION: Version = "0.7.0"
