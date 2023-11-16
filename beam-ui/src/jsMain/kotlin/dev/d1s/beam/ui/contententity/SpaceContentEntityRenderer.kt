@@ -17,6 +17,8 @@
 package dev.d1s.beam.ui.contententity
 
 import dev.d1s.beam.client.BeamClient
+import dev.d1s.beam.commons.Space
+import dev.d1s.beam.commons.SpaceIdentifier
 import dev.d1s.beam.commons.contententity.SpaceContentEntityTypeDefinition
 import dev.d1s.beam.commons.contententity.get
 import dev.d1s.beam.ui.Qualifier
@@ -24,6 +26,7 @@ import dev.d1s.beam.ui.component.SpaceCardComponent
 import dev.d1s.beam.ui.util.currentLanguageCode
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.render
+import io.ktor.util.collections.*
 import io.kvision.html.div
 import io.kvision.panel.SimplePanel
 import kotlinx.coroutines.CoroutineScope
@@ -40,6 +43,9 @@ class SpaceContentEntityRenderer : SingleContentEntityRenderer, KoinComponent {
     private val client by inject<BeamClient>()
 
     private val renderingScope = CoroutineScope(Dispatchers.Main)
+
+    private val spaceCache = ConcurrentMap<SpaceIdentifier, Space?>()
+
     override fun SimplePanel.render(context: SingleContentEntityRenderingContext) {
         asyncDiv {
             renderSpaceCard(context)
@@ -64,7 +70,10 @@ class SpaceContentEntityRenderer : SingleContentEntityRenderer, KoinComponent {
         requireNotNull(spaceIdentifier)
 
         val spaceCard = get<Component<SpaceCardComponent.Config>>(Qualifier.SpaceCardComponent)
-        val space = client.getSpace(spaceIdentifier, currentLanguageCode).getOrNull()
+
+        val space = spaceCache.getOrPut(spaceIdentifier) {
+            client.getSpace(spaceIdentifier, currentLanguageCode).getOrNull()
+        }
 
         render(spaceCard) {
             this.space.value = space
