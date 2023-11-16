@@ -95,9 +95,23 @@ Content-Type: application/json
     "size": "MEDIUM",
     "entities": [
         {
-            "type": "alert",
+            "type": "void",
             "parameters": {
-                "text": "hello"
+                "height": "500"
+            }
+        },
+        {
+            "type": "text",
+            "parameters": {
+                "alignment": "center",
+                "value": "(**1**)(blue)",
+                "heading": "h1"
+            }
+        },
+        {
+            "type": "void",
+            "parameters": {
+                "height": "500"
             }
         }
     ],
@@ -107,7 +121,7 @@ Content-Type: application/json
 }
 
 ### GET Blocks
-GET http://localhost:8573/blocks?space=root&language=ru
+GET http://localhost:8573/blocks?space=root&limit=20&offset=0&language=ru
 
 ### PUT Block
 PUT http://localhost:8573/blocks/d35814a3-ab38-49bd-8a83-85d0b7d530ed
@@ -132,6 +146,10 @@ Content-Type: application/json
 
 ### DELETE Block
 DELETE http://localhost:8573/blocks/5989ded8-4101-4092-8c2d-443cf85bd96c
+Authorization: Bearer {{token}}
+
+### DELETE Blocks
+DELETE http://localhost:8573/blocks?space=root
 Authorization: Bearer {{token}}
 
 ### GET Row

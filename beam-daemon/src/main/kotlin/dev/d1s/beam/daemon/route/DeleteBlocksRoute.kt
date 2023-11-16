@@ -17,35 +17,41 @@
 package dev.d1s.beam.daemon.route
 
 import dev.d1s.beam.commons.Paths
+import dev.d1s.beam.daemon.exception.ForbiddenException
+import dev.d1s.beam.daemon.service.AuthService
 import dev.d1s.beam.daemon.service.BlockService
-import dev.d1s.beam.daemon.util.languageCodeQueryParameter
-import dev.d1s.beam.daemon.util.requiredLimitAndOffsetQueryParameters
 import dev.d1s.beam.daemon.util.requiredSpaceIdQueryParameter
-import dev.d1s.exkt.dto.requiredDto
 import dev.d1s.exkt.ktor.server.koin.configuration.Route
+import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 
-class GetBlocksRoute : Route, KoinComponent {
+class DeleteBlocksRoute : Route, KoinComponent {
 
-    override val qualifier = named("get-blocks-route")
+    override val qualifier = named("delete-blocks-route")
 
     private val blockService by inject<BlockService>()
 
+    private val authService by inject<AuthService>()
+
     override fun Routing.apply() {
-        get(Paths.GET_BLOCKS) {
-            val spaceIdentifier = call.requiredSpaceIdQueryParameter
-            val (limit, offset) = call.requiredLimitAndOffsetQueryParameters
-            val languageCode = call.languageCodeQueryParameter
+        authenticate {
+            delete(Paths.DELETE_BLOCKS) {
+                if (authService.isSpaceModificationAllowed(call)) {
+                    val spaceId = call.requiredSpaceIdQueryParameter
 
-            val foundBlocks =
-                blockService.getBlocks(spaceIdentifier, limit, offset, languageCode, requireDto = true).getOrThrow()
+                    blockService.removeAllBlocks(spaceIdentifier = spaceId).getOrThrow()
 
-            call.respond(foundBlocks.requiredDto)
+                    call.respond(HttpStatusCode.NoContent)
+                } else {
+                    throw ForbiddenException()
+                }
+            }
         }
     }
 }

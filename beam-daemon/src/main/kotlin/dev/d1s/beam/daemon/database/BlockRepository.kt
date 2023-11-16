@@ -23,6 +23,8 @@ import dev.d1s.beam.daemon.entity.BlockEntity
 import dev.d1s.beam.daemon.entity.SpaceEntity
 import dev.d1s.beam.daemon.entity.requiredIndex
 import dev.d1s.beam.daemon.util.withIoCatching
+import dev.d1s.exkt.ktorm.ExportedSequence
+import dev.d1s.exkt.ktorm.export
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.ktorm.database.Database
@@ -40,7 +42,9 @@ interface BlockRepository {
 
     suspend fun countBlocksInSpace(space: SpaceEntity): Result<Int>
 
-    suspend fun findBlocksInSpace(space: SpaceEntity): Result<BlockEntities>
+    suspend fun findBlocksInSpace(space: SpaceEntity, limit: Int, offset: Int): Result<ExportedSequence<BlockEntity>>
+
+    suspend fun findAllBlocksInSpace(space: SpaceEntity): Result<BlockEntities>
 
     suspend fun findLatestBlockIndexInSpaceByRow(space: SpaceEntity, row: RowIndex): Result<Int>
 
@@ -112,7 +116,16 @@ class DefaultBlockRepository : BlockRepository, KoinComponent {
             findBlocksInSpaceAsSequence(space, sorted = false).count()
         }
 
-    override suspend fun findBlocksInSpace(space: SpaceEntity): Result<BlockEntities> =
+    override suspend fun findBlocksInSpace(
+        space: SpaceEntity,
+        limit: Int,
+        offset: Int
+    ): Result<ExportedSequence<BlockEntity>> =
+        withIoCatching {
+            findBlocksInSpaceAsSequence(space, sorted = false).export(limit, offset)
+        }
+
+    override suspend fun findAllBlocksInSpace(space: SpaceEntity): Result<BlockEntities> =
         withIoCatching {
             findBlocksInSpaceAsSequence(space, sorted = false).toList()
         }

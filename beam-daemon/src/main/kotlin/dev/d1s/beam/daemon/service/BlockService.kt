@@ -19,14 +19,18 @@ package dev.d1s.beam.daemon.service
 import dev.d1s.beam.commons.*
 import dev.d1s.beam.commons.event.EntityUpdate
 import dev.d1s.beam.commons.event.EventReferences
-import dev.d1s.beam.commons.validation.Limits
 import dev.d1s.beam.daemon.configuration.DtoConverters
 import dev.d1s.beam.daemon.database.BlockRepository
+import dev.d1s.beam.daemon.entity.BlockEntities
 import dev.d1s.beam.daemon.entity.BlockEntity
 import dev.d1s.beam.daemon.entity.asString
 import dev.d1s.beam.daemon.entity.requiredIndex
-import dev.d1s.beam.daemon.exception.UnprocessableEntityException
-import dev.d1s.exkt.dto.*
+import dev.d1s.exkt.dto.DtoConverter
+import dev.d1s.exkt.dto.ResultingEntityWithOptionalDto
+import dev.d1s.exkt.dto.convertToDtoIf
+import dev.d1s.exkt.dto.entity
+import dev.d1s.exkt.ktorm.dto.ResultingExportedSequenceWithOptionalDto
+import dev.d1s.exkt.ktorm.dto.convertExportedSequenceToDtoIf
 import dev.d1s.ktor.events.server.WebSocketEventChannel
 import dev.d1s.ktor.events.server.event
 import io.ktor.server.plugins.*
@@ -50,9 +54,16 @@ interface BlockService {
 
     suspend fun getBlocks(
         spaceIdentifier: SpaceIdentifier,
+        limit: Int,
+        offset: Int,
         languageCode: LanguageCode? = null,
         requireDto: Boolean = false
-    ): ResultingEntityWithOptionalDtoList<BlockEntity, Block>
+    ): ResultingExportedSequenceWithOptionalDto<BlockEntity, Block>
+
+    suspend fun getAllBlocks(
+        spaceIdentifier: SpaceIdentifier,
+        languageCode: LanguageCode? = null
+    ): Result<BlockEntities>
 
     suspend fun updateBlock(
         id: BlockId,
@@ -61,6 +72,8 @@ interface BlockService {
     ): ResultingEntityWithOptionalDto<BlockEntity, Block>
 
     suspend fun removeBlock(id: BlockId): Result<Unit>
+
+    suspend fun removeAllBlocks(spaceIdentifier: SpaceIdentifier): Result<Unit>
 }
 
 class DefaultBlockService : BlockService, KoinComponent {
@@ -87,8 +100,6 @@ class DefaultBlockService : BlockService, KoinComponent {
             logger.d {
                 "Creating block ${block.asString}..."
             }
-
-            checkBlockLimit(block)
 
             translationService.verifyLocationsExist(block).getOrThrow()
 
@@ -131,9 +142,11 @@ class DefaultBlockService : BlockService, KoinComponent {
 
     override suspend fun getBlocks(
         spaceIdentifier: SpaceIdentifier,
+        limit: Int,
+        offset: Int,
         languageCode: LanguageCode?,
         requireDto: Boolean
-    ): ResultingEntityWithOptionalDtoList<BlockEntity, Block> =
+    ): ResultingExportedSequenceWithOptionalDto<BlockEntity, Block> =
         runCatching {
             logger.d {
                 "Obtaining blocks for space with unique identifier $spaceIdentifier..."
@@ -141,9 +154,9 @@ class DefaultBlockService : BlockService, KoinComponent {
 
             val (space, _) = spaceService.getSpace(spaceIdentifier).getOrThrow()
 
-            val blocks = blockRepository.findBlocksInSpace(space).getOrThrow()
+            val blocks = blockRepository.findBlocksInSpace(space, limit, offset).getOrThrow()
 
-            val sortedBlocks = blocks
+            val sortedBlocks = blocks.elements
                 .sortedBy {
                     it.index
                 }
@@ -153,9 +166,20 @@ class DefaultBlockService : BlockService, KoinComponent {
 
             val translatedBlocks = translateOptionally(sortedBlocks, languageCode)
 
-            translatedBlocks to blockDtoConverter.convertToDtoListIf(translatedBlocks) {
+            val translatedSequence = blocks.copy(elements = translatedBlocks)
+
+            translatedSequence to blockDtoConverter.convertExportedSequenceToDtoIf(translatedSequence) {
                 requireDto
             }
+        }
+
+    override suspend fun getAllBlocks(
+        spaceIdentifier: SpaceIdentifier,
+        languageCode: LanguageCode?
+    ): Result<BlockEntities> =
+        runCatching {
+            val space = spaceService.getSpace(spaceIdentifier).getOrThrow().entity
+            blockRepository.findAllBlocksInSpace(space).getOrThrow()
         }
 
     override suspend fun updateBlock(
@@ -210,18 +234,18 @@ class DefaultBlockService : BlockService, KoinComponent {
             sendBlockRemovedEvent(blockDto)
         }
 
-    private suspend fun checkBlockLimit(block: BlockEntity) {
-        val space = block.space
-        val count = blockRepository.countBlocksInSpace(space).getOrThrow()
-
-        if (count >= Limits.SPACE_MAX_CAPACITY) {
-            logger.w {
-                "Space ${space.id} reached its capacity. Unable to process block creation"
+    override suspend fun removeAllBlocks(spaceIdentifier: SpaceIdentifier): Result<Unit> =
+        runCatching {
+            logger.d {
+                "Removing all blocks associated with space '$spaceIdentifier'..."
             }
 
-            throw UnprocessableEntityException("Space capacity reached")
+            val blocks = getAllBlocks(spaceIdentifier).getOrThrow()
+
+            blocks.forEach { block ->
+                removeBlock(block.id.toString()).getOrThrow()
+            }
         }
-    }
 
     private suspend fun processBlockRow(block: BlockEntity) {
         rowService.createRowIfDoesntExist(block.row, block.space).getOrThrow()

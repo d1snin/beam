@@ -18,14 +18,24 @@ package dev.d1s.beam.ui.state
 
 import dev.d1s.beam.client.BeamClient
 import dev.d1s.beam.commons.*
+import dev.d1s.beam.ui.component.BlockContainerComponent
 import dev.d1s.beam.ui.util.*
+import dev.d1s.exkt.common.pagination.LimitAndOffset
+import dev.d1s.exkt.common.pagination.Paginator
+import io.kvision.html.div
+import io.kvision.panel.SimplePanel
 import io.kvision.state.ObservableValue
+import kotlinx.browser.document
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 data class SpaceContentChange(
     val rows: Rows,
-    val blocks: Blocks
+    val blocks: List<Block>
 ) {
     fun row(rowIndex: RowIndex) =
         rows.find {
@@ -33,7 +43,7 @@ data class SpaceContentChange(
         }
 }
 
-infix fun Rows?.with(blocks: Blocks?) =
+infix fun Rows?.with(blocks: List<Block>?) =
     this?.let { r ->
         blocks?.let { b ->
             SpaceContentChange(r, b)
@@ -46,12 +56,19 @@ class CurrentSpaceContentChangeObservable : Observable<SpaceContentChange?>, Koi
 
     private val client by inject<BeamClient>()
 
+    private val paginator = Paginator(pageLimit = BlockContainerComponent.PAGE_SIZE, currentPage = 1)
+
+    private val renderingScope = CoroutineScope(Dispatchers.Main)
+
     override fun monitor() =
         launchMonitor {
             val space = currentSpace
 
             if (space != null) {
-                handleSpaceContentUpdates(space.id)
+                val spaceId = space.id
+
+                handleSpaceContentUpdates(spaceId)
+                handleEndOfScroll(spaceId)
             } else {
                 setCurrentSpaceContent(change = null)
             }
@@ -61,6 +78,33 @@ class CurrentSpaceContentChangeObservable : Observable<SpaceContentChange?>, Koi
         setCurrentSpaceRows(change?.rows)
         setCurrentSpaceBlocks(change?.blocks)
         state.setState(change)
+    }
+
+    private suspend fun handleEndOfScroll(spaceId: SpaceId) {
+        val element = document.getElementById(END_OF_CONTENT_ID)
+
+        if (element != null) {
+            @Suppress("UNUSED_VARIABLE")
+            val handle = {
+                paginator.currentPage++
+
+                renderingScope.launch {
+                    actualizeCurrentSpaceContent(spaceId, usePagination = true)
+                }
+            }
+
+            @Suppress("JSUnresolvedReference")
+            js(
+                // language=javascript
+                "var options = { root: null, rootMargin: '0px', threshold: 1.0 }; " +
+                        "var callback = function (entries) { if (entries[0].isIntersecting === true) handle() }; " +
+                        "var observer = new IntersectionObserver(callback, options); " +
+                        "observer.observe(document.querySelector('#$END_OF_CONTENT_ID'))"
+            )
+        } else {
+            delay(50)
+            handleEndOfScroll(spaceId)
+        }
     }
 
     private suspend fun handleSpaceContentUpdates(spaceId: SpaceId) {
@@ -141,9 +185,21 @@ class CurrentSpaceContentChangeObservable : Observable<SpaceContentChange?>, Koi
         }
     }
 
-    private suspend fun actualizeCurrentSpaceContent(space: SpaceId) {
+    private suspend fun actualizeCurrentSpaceContent(space: SpaceId, usePagination: Boolean = false) {
         val rows = client.getRows(space).getOrNull()
-        val blocks = client.getBlocks(space, currentLanguageCode).getOrNull()
+
+        val limitAndOffset =
+            if (usePagination) {
+                paginator.limitAndOffset
+            } else {
+                paginator.currentPage = 1
+                LimitAndOffset(limit = BlockContainerComponent.PAGE_SIZE, offset = 0)
+            }
+
+        val fetchedBlocks =
+            client.getBlocks(space, limitAndOffset, currentLanguageCode).getOrNull()?.elements ?: listOf()
+
+        val blocks = if (usePagination) (currentBlocks ?: listOf()) + fetchedBlocks else fetchedBlocks
 
         val change = rows with blocks
 
@@ -160,5 +216,13 @@ class CurrentSpaceContentChangeObservable : Observable<SpaceContentChange?>, Koi
         if (row.spaceId == spaceId) {
             handler()
         }
+    }
+}
+
+private const val END_OF_CONTENT_ID = "end-of-content"
+
+fun SimplePanel.renderEndOfContent() {
+    div {
+        id = END_OF_CONTENT_ID
     }
 }

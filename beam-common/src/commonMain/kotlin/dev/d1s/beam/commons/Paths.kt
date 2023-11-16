@@ -43,6 +43,7 @@ public object Paths {
     public const val GET_BLOCKS: String = "/blocks"
     public const val PUT_BLOCK: String = "/blocks/{$ID_PARAMETER}"
     public const val DELETE_BLOCK: String = "/blocks/{$ID_PARAMETER}"
+    public const val DELETE_BLOCKS: String = "/blocks"
 
     public const val GET_ROW: String = "/rows/{${ID_PARAMETER}}"
     public const val GET_ROWS: String = "/rows"

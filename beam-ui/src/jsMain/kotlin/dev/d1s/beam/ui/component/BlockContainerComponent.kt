@@ -21,6 +21,7 @@ import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.contententity.splitBy
 import dev.d1s.beam.ui.state.Observable
 import dev.d1s.beam.ui.state.SpaceContentChange
+import dev.d1s.beam.ui.state.renderEndOfContent
 import dev.d1s.beam.ui.util.Size
 import dev.d1s.beam.ui.util.currentSpace
 import dev.d1s.exkt.kvision.component.Component
@@ -40,7 +41,7 @@ import kotlin.math.min
 
 private data class BlockBatch(
     val rowIndex: RowIndex,
-    val blocks: Blocks
+    val blocks: List<Block>
 )
 
 class BlockContainerComponent : Component<Unit>(), KoinComponent {
@@ -52,6 +53,7 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
             change?.let {
                 if (it.blocks.isNotEmpty()) {
                     renderBlocks(it)
+                    renderEndOfContent()
                 }
             }
         }
@@ -71,7 +73,7 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
         }
     }
 
-    private fun Blocks.splitIntoBatches(): List<BlockBatch> =
+    private fun List<Block>.splitIntoBatches(): List<BlockBatch> =
         buildList {
             splitIntoBatchesByRow().forEach {
                 it.splitIntoBatchesBySize().forEach { batchBySize ->
@@ -80,7 +82,7 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
             }
         }
 
-    private fun Blocks.splitIntoBatchesByRow(): List<BlockBatch> {
+    private fun List<Block>.splitIntoBatchesByRow(): List<BlockBatch> {
         val blocks = this@splitIntoBatchesByRow
 
         val rowBatches = buildList {
@@ -98,13 +100,13 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
     private fun BlockBatch.splitIntoBatchesBySize(): List<BlockBatch> {
         val maxBlockSize = Size.MaxBlockSize.level
 
-        val batches = mutableListOf<Blocks>()
+        val batches = mutableListOf<List<Block>>()
         val currentBatch = mutableListOf<Block>()
 
         fun Block.relativeSize() =
             min(size.level, maxBlockSize)
 
-        fun Blocks.totalSizeIncluding(block: Block) =
+        fun List<Block>.totalSizeIncluding(block: Block) =
             sumOf {
                 it.relativeSize()
             } + block.relativeSize()
@@ -144,7 +146,7 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
             it.blocks.getPaddingCount()
         }
 
-    private fun Blocks.getPaddingCount() =
+    private fun List<Block>.getPaddingCount() =
         size - 1
 
     private fun BlockBatch.getWidthCompensator(maxPaddingCount: Int): Double {
@@ -231,4 +233,9 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
         } else {
             AlignItems.STRETCH
         }
+
+    companion object {
+
+        const val PAGE_SIZE = 50
+    }
 }

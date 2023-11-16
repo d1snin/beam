@@ -21,8 +21,6 @@ import kotlinx.serialization.Serializable
 
 public typealias BlockId = String
 
-public typealias Blocks = List<Block>
-
 public typealias BlockIndex = Int
 
 public sealed interface AbstractBlock {

@@ -41,6 +41,7 @@ object Routing : ApplicationConfigurer {
             +GetBlocksRoute()
             +PutBlockRoute()
             +DeleteBlockRoute()
+            +DeleteBlocksRoute()
 
             +GetRowRoute()
             +GetRowsRoute()

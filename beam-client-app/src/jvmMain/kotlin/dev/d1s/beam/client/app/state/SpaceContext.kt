@@ -132,10 +132,7 @@ public suspend fun ApplicationContext.space(
     }
 
     if (processBlocks) {
-        val blocks = getBlocks(space.id).getOrThrow()
-        blocks.forEach {
-            deleteBlock(it.id).getOrThrow()
-        }
+        deleteBlocks(space.id).getOrThrow()
     }
 
     log.i {

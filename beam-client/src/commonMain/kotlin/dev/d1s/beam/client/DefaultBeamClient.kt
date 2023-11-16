@@ -1,5 +1,6 @@
 package dev.d1s.beam.client
 
+import dev.d1s.beam.client.response.Blocks
 import dev.d1s.beam.client.response.Spaces
 import dev.d1s.beam.commons.*
 import dev.d1s.beam.commons.event.EntityUpdate
@@ -201,13 +202,27 @@ public class DefaultBeamClient(
             languageCode
         )
 
-    public override suspend fun getBlocks(spaceId: SpaceIdentifier, languageCode: LanguageCode?): Result<Blocks> =
+    public override suspend fun getBlocks(
+        spaceId: SpaceIdentifier,
+        limitAndOffset: LimitAndOffset,
+        languageCode: LanguageCode?
+    ): Result<Blocks> =
         runCatching {
             httpClient.get(Paths.GET_BLOCKS) {
                 parameter(Paths.SPACE_ID_QUERY_PARAMETER, spaceId)
+                parameter(Paths.LIMIT_QUERY_PARAMETER, limitAndOffset.limit)
+                parameter(Paths.OFFSET_QUERY_PARAMETER, limitAndOffset.offset)
                 setLanguageCode(languageCode)
             }.body()
         }
+
+    public override suspend fun getBlocks(
+        spaceId: SpaceIdentifier,
+        limit: Int,
+        offset: Int,
+        languageCode: LanguageCode?
+    ): Result<Blocks> =
+        getBlocks(spaceId, LimitAndOffset(limit, offset), languageCode)
 
     override suspend fun putBlock(id: BlockId, block: BlockModification, languageCode: LanguageCode?): Result<Block> =
         runCatching {
@@ -244,6 +259,15 @@ public class DefaultBeamClient(
             val path = Paths.DELETE_BLOCK.replaceIdPlaceholder(id)
 
             httpClient.delete(path)
+        }
+
+    override suspend fun deleteBlocks(spaceId: SpaceIdentifier): Result<Unit> =
+        runCatching {
+            requireToken()
+
+            httpClient.delete(Paths.DELETE_BLOCKS) {
+                setSpaceId(spaceId)
+            }
         }
 
     override suspend fun getRow(index: RowIndex, spaceId: SpaceIdentifier): Result<Row> =

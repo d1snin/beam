@@ -17,11 +17,11 @@
 package dev.d1s.beam.ui.util
 
 import dev.d1s.beam.client.BeamClient
-import dev.d1s.beam.commons.Blocks
+import dev.d1s.beam.commons.Block
 import dev.d1s.beam.commons.Rows
 import dev.d1s.beam.commons.Space
-import dev.d1s.beam.ui.theme.setTextColor
-import io.kvision.panel.SimplePanel
+import dev.d1s.beam.ui.component.BlockContainerComponent
+import dev.d1s.exkt.common.pagination.LimitAndOffset
 import kotlinx.browser.window
 import org.koin.core.context.GlobalContext
 
@@ -44,7 +44,7 @@ val currentSpaceUrl get() = buildSpaceUrl(currentSpace?.slug)
 private var lateInitCurrentRows: Rows? = null
 val currentRows get() = lateInitCurrentRows
 
-private var lateInitCurrentBlocks: Blocks? = null
+private var lateInitCurrentBlocks: List<Block>? = null
 val currentBlocks get() = lateInitCurrentBlocks
 
 suspend fun initCurrentSpaceAndBlocks() {
@@ -52,7 +52,10 @@ suspend fun initCurrentSpaceAndBlocks() {
 
     currentSpace?.let {
         lateInitCurrentRows = client.getRows(it.id).getOrNull()
-        lateInitCurrentBlocks = client.getBlocks(it.id, currentLanguageCode).getOrNull()
+
+        val initialLimitAndOffset = LimitAndOffset(limit = BlockContainerComponent.PAGE_SIZE, offset = 0)
+        lateInitCurrentBlocks =
+            client.getBlocks(it.id, initialLimitAndOffset, currentLanguageCode).getOrNull()?.elements
     }
 }
 
@@ -60,15 +63,6 @@ fun setCurrentSpaceRows(rows: Rows?) {
     lateInitCurrentRows = rows
 }
 
-fun setCurrentSpaceBlocks(blocks: Blocks?) {
+fun setCurrentSpaceBlocks(blocks: List<Block>?) {
     lateInitCurrentBlocks = blocks
-}
-
-fun SimplePanel.renderSpaceLink(space: Space? = null, block: SimplePanel.() -> Unit) {
-    val url = space?.let { buildSpaceUrl(it.slug) } ?: currentSpaceUrl
-
-    renderFriendlyLink(url = url, className = "text-decoration-none") {
-        setTextColor()
-        block()
-    }
 }

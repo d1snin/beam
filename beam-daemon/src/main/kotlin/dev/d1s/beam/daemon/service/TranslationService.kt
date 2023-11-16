@@ -556,7 +556,7 @@ class DefaultTranslationService : TranslationService, KoinComponent {
         locations += GlobalTranslation.Locations
 
         spaceIdentifier?.let {
-            val (blocks, _) = blockService.getBlocks(it).getOrThrow()
+            val blocks = blockService.getAllBlocks(it).getOrThrow()
 
             blocks.forEach { block ->
                 locations += block.extractLocations()

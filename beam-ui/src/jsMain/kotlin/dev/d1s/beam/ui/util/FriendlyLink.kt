@@ -16,6 +16,8 @@
 
 package dev.d1s.beam.ui.util
 
+import dev.d1s.beam.commons.Space
+import dev.d1s.beam.ui.theme.setTextColor
 import io.kvision.html.Link
 import io.kvision.html.link
 import io.kvision.panel.SimplePanel
@@ -36,3 +38,12 @@ fun SimplePanel.renderFriendlyLink(
 
         init()
     }
+
+fun SimplePanel.renderSpaceLink(space: Space? = null, block: SimplePanel.() -> Unit) {
+    val url = space?.let { buildSpaceUrl(it.slug) } ?: currentSpaceUrl
+
+    renderFriendlyLink(url = url, className = "text-decoration-none") {
+        setTextColor()
+        block()
+    }
+}

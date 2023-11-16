@@ -16,6 +16,7 @@
 
 package dev.d1s.beam.client
 
+import dev.d1s.beam.client.response.Blocks
 import dev.d1s.beam.client.response.Spaces
 import dev.d1s.beam.commons.*
 import dev.d1s.beam.commons.event.EntityUpdate
@@ -88,7 +89,18 @@ public interface BeamClient {
         configure: suspend BlockModificationBuilder.() -> Unit
     ): Result<Block>
 
-    public suspend fun getBlocks(spaceId: SpaceIdentifier, languageCode: LanguageCode? = null): Result<Blocks>
+    public suspend fun getBlocks(
+        spaceId: SpaceIdentifier,
+        limitAndOffset: LimitAndOffset,
+        languageCode: LanguageCode? = null
+    ): Result<Blocks>
+
+    public suspend fun getBlocks(
+        spaceId: SpaceIdentifier,
+        limit: Int,
+        offset: Int,
+        languageCode: LanguageCode? = null
+    ): Result<Blocks>
 
     public suspend fun putBlock(
         id: BlockId,
@@ -103,6 +115,8 @@ public interface BeamClient {
     ): Result<Block>
 
     public suspend fun deleteBlock(id: BlockId): Result<Unit>
+
+    public suspend fun deleteBlocks(spaceId: SpaceIdentifier): Result<Unit>
 
     public suspend fun getRow(index: RowIndex, spaceId: SpaceIdentifier): Result<Row>
 
