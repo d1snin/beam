@@ -17,6 +17,7 @@
 package dev.d1s.beam.daemon.route
 
 import dev.d1s.beam.commons.Paths
+import dev.d1s.beam.daemon.configuration.jwtSubject
 import dev.d1s.beam.daemon.exception.ForbiddenException
 import dev.d1s.beam.daemon.service.AuthService
 import dev.d1s.beam.daemon.service.BlockService
@@ -42,9 +43,11 @@ class DeleteBlocksRoute : Route, KoinComponent {
     override fun Routing.apply() {
         authenticate {
             delete(Paths.DELETE_BLOCKS) {
-                if (authService.isSpaceModificationAllowed(call)) {
-                    val spaceId = call.requiredSpaceIdQueryParameter
+                val spaceId = call.requiredSpaceIdQueryParameter
 
+                val modificationAllowed = authService.isSpaceModificationAllowed(call.jwtSubject, spaceId).getOrThrow()
+
+                if (modificationAllowed) {
                     blockService.removeAllBlocks(spaceIdentifier = spaceId).getOrThrow()
 
                     call.respond(HttpStatusCode.NoContent)
