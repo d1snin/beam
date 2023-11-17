@@ -71,6 +71,6 @@ public enum class BlockSize {
 
     public companion object {
 
-        public const val HALF_LEVEL: Int = 0
+        public const val HALF_LEVEL: Int = 2
     }
 }
