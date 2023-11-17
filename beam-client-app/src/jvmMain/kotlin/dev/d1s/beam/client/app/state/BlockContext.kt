@@ -82,7 +82,7 @@ public class BlockContext internal constructor(
     }
 }
 
-public suspend fun SpaceContext.block(configure: suspend BlockContext.() -> Unit) {
+public suspend fun SpaceContext.block(configure: suspend BlockContext.() -> Unit): Block {
     val space = space.id
 
     log.i {
@@ -104,9 +104,11 @@ public suspend fun SpaceContext.block(configure: suspend BlockContext.() -> Unit
     )
 
     context.configure()
+
+    return context.block
 }
 
-public suspend fun SpaceContext.sizedBlock(size: BlockSize, configure: suspend BlockContext.() -> Unit) {
+public suspend fun SpaceContext.sizedBlock(size: BlockSize, configure: suspend BlockContext.() -> Unit): Block =
     block {
         setSize {
             size
@@ -114,13 +116,12 @@ public suspend fun SpaceContext.sizedBlock(size: BlockSize, configure: suspend B
 
         configure()
     }
-}
 
 public suspend fun SpaceContext.sizedBlockWithEntities(
     size: BlockSize,
     row: RowIndex? = null,
     configureEntities: suspend ContentEntitiesBuilder.() -> Unit
-) {
+): Block =
     sizedBlock(size) {
         row?.let {
             setRow { it }
@@ -128,48 +129,35 @@ public suspend fun SpaceContext.sizedBlockWithEntities(
 
         setEntities(configureEntities)
     }
-}
 
-public suspend fun SpaceContext.smallBlock(configure: suspend BlockContext.() -> Unit) {
+public suspend fun SpaceContext.smallBlock(configure: suspend BlockContext.() -> Unit): Block =
     sizedBlock(size = BlockSize.SMALL, configure)
-}
 
-public suspend fun SpaceContext.mediumBlock(configure: suspend BlockContext.() -> Unit) {
+public suspend fun SpaceContext.mediumBlock(configure: suspend BlockContext.() -> Unit): Block =
     sizedBlock(size = BlockSize.MEDIUM, configure)
-}
 
-public suspend fun SpaceContext.largeBlock(configure: suspend BlockContext.() -> Unit) {
+public suspend fun SpaceContext.largeBlock(configure: suspend BlockContext.() -> Unit): Block =
     sizedBlock(size = BlockSize.LARGE, configure)
-}
 
-public suspend fun SpaceContext.extraLargeBlock(configure: suspend BlockContext.() -> Unit) {
+public suspend fun SpaceContext.extraLargeBlock(configure: suspend BlockContext.() -> Unit): Block =
     sizedBlock(size = BlockSize.EXTRA_LARGE, configure)
-}
 
 public suspend fun SpaceContext.smallBlockWithEntities(
     row: RowIndex? = null,
     configureEntities: suspend ContentEntitiesBuilder.() -> Unit
-) {
-    sizedBlockWithEntities(size = BlockSize.SMALL, row, configureEntities)
-}
+): Block = sizedBlockWithEntities(size = BlockSize.SMALL, row, configureEntities)
 
 public suspend fun SpaceContext.mediumBlockWithEntities(
     row: RowIndex? = null,
     configureEntities: suspend ContentEntitiesBuilder.() -> Unit
-) {
-    sizedBlockWithEntities(size = BlockSize.MEDIUM, row, configureEntities)
-}
+): Block = sizedBlockWithEntities(size = BlockSize.MEDIUM, row, configureEntities)
 
 public suspend fun SpaceContext.largeBlockWithEntities(
     row: RowIndex? = null,
     configureEntities: suspend ContentEntitiesBuilder.() -> Unit
-) {
-    sizedBlockWithEntities(size = BlockSize.LARGE, row, configureEntities)
-}
+): Block = sizedBlockWithEntities(size = BlockSize.LARGE, row, configureEntities)
 
 public suspend fun SpaceContext.extraLargeBlockWithEntities(
     row: RowIndex? = null,
     configureEntities: suspend ContentEntitiesBuilder.() -> Unit
-) {
-    sizedBlockWithEntities(size = BlockSize.EXTRA_LARGE, row, configureEntities)
-}
+): Block = sizedBlockWithEntities(size = BlockSize.EXTRA_LARGE, row, configureEntities)

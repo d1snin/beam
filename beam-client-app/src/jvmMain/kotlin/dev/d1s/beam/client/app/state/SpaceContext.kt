@@ -100,7 +100,7 @@ public suspend fun ApplicationContext.space(
     spaceIdentifier: SpaceIdentifier = ROOT_SPACE_SLUG,
     processBlocks: Boolean = true,
     configure: suspend SpaceContext.() -> Unit
-) {
+): Space {
     var space = client.getSpace(spaceIdentifier).getOrNull()
 
     if (space == null) {
@@ -142,6 +142,8 @@ public suspend fun ApplicationContext.space(
     val context = SpaceContext(space, processBlocks, client)
 
     context.configure()
+
+    return context.space
 }
 
 public suspend fun SpaceContext.row(
