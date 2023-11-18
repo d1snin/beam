@@ -19,6 +19,7 @@ package dev.d1s.beam.ui.theme
 import com.catppuccin.kotlin.latte
 import dev.d1s.beam.commons.SpaceThemeDefinition
 import dev.d1s.beam.ui.resource.ResourceLocation
+import dev.d1s.beam.ui.util.SpinnerStyle
 import io.kvision.html.ButtonStyle
 
 object CatppuccinLatteTheme : CatppuccinTheme(SpaceThemeDefinition.CatppuccinLatte, latte) {
@@ -28,4 +29,6 @@ object CatppuccinLatteTheme : CatppuccinTheme(SpaceThemeDefinition.CatppuccinLat
     override val emptySpaceIcon = ResourceLocation.EMPTY_SPACE_DARK
 
     override val buttonStyle = ButtonStyle.OUTLINEDARK
+
+    override val spinnerStyle = SpinnerStyle.DARK
 }

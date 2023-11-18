@@ -18,6 +18,7 @@ package dev.d1s.beam.ui.theme
 
 import dev.d1s.beam.commons.SpaceThemeDefinition
 import dev.d1s.beam.ui.resource.ResourceLocation
+import dev.d1s.beam.ui.util.SpinnerStyle
 import io.kvision.core.Color
 import io.kvision.html.ButtonStyle
 
@@ -28,6 +29,8 @@ object GoldLightTheme : AbstractTheme(SpaceThemeDefinition.GoldLight) {
     override val emptySpaceIcon = ResourceLocation.EMPTY_SPACE_DARK
 
     override val buttonStyle = ButtonStyle.OUTLINEDARK
+
+    override val spinnerStyle = SpinnerStyle.DARK
 
     // https://colorpicker.me/#fbfbfb
     override val background = Color.hex(0xfbfbfb)

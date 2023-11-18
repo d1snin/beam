@@ -18,6 +18,7 @@ package dev.d1s.beam.ui.theme
 
 import dev.d1s.beam.commons.SpaceThemeDefinition
 import dev.d1s.beam.commons.Url
+import dev.d1s.beam.ui.util.SpinnerStyle
 import io.kvision.core.*
 import io.kvision.html.ButtonStyle
 import io.kvision.utils.px
@@ -30,6 +31,8 @@ abstract class AbstractTheme(val definition: SpaceThemeDefinition) {
     abstract val emptySpaceIcon: Url
 
     abstract val buttonStyle: ButtonStyle
+
+    abstract val spinnerStyle: SpinnerStyle
 
     abstract val background: Color
 

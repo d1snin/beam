@@ -29,6 +29,16 @@ fun SimplePanel.justifyContent(alignment: Alignment) {
     addCssClass(className)
 }
 
+fun SimplePanel.alignItems(alignment: Alignment) {
+    val className = when (alignment) {
+        Alignment.START -> "align-items-start"
+        Alignment.CENTER -> "align-items-center"
+        Alignment.END -> "align-items-end"
+    }
+
+    addCssClass(className)
+}
+
 fun SimplePanel.alignText(alignment: Alignment) {
     val className = when (alignment) {
         Alignment.START -> "text-start"
