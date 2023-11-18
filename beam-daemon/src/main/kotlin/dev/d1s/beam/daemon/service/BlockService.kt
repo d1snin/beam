@@ -260,15 +260,14 @@ class DefaultBlockService : BlockService, KoinComponent {
         when {
             index == latestIndex + 1 -> {}
             index <= latestIndex -> {
-                val blocksToUpdate =
-                    blockRepository.findBlocksInSpaceByRowWhichIndexIsGreaterOrEqualTo(space, row, index)
-                        .getOrThrow()
-
-                blocksToUpdate.forEach {
+                updateBlocks(
+                    fetch = {
+                        blockRepository.findBlocksInSpaceByRowWhichIndexIsGreaterOrEqualTo(space, row, index)
+                            .getOrThrow()
+                    }
+                ) {
                     it.index = it.requiredIndex + 1
                 }
-
-                blockRepository.updateBlocks(blocksToUpdate).getOrThrow()
             }
         }
     }
@@ -282,29 +281,31 @@ class DefaultBlockService : BlockService, KoinComponent {
 
         when {
             initialIndex < index -> {
-                val blocksToUpdate =
-                    blockRepository.findBlocksInSpaceByRowWhichIndexIsBetweenStartExclusive(
-                        space,
-                        row,
-                        initialIndex,
-                        index
-                    ).getOrThrow()
-
-                blocksToUpdate.forEach {
+                updateBlocks(
+                    fetch = {
+                        blockRepository.findBlocksInSpaceByRowWhichIndexIsBetweenStartExclusive(
+                            space,
+                            row,
+                            initialIndex,
+                            index
+                        ).getOrThrow()
+                    }
+                ) {
                     it.index = it.requiredIndex - 1
                 }
             }
 
             initialIndex > index -> {
-                val blocksToUpdate =
-                    blockRepository.findBlocksInSpaceByRowWhichIndexIsBetweenEndExclusive(
-                        space,
-                        row,
-                        index,
-                        initialIndex
-                    ).getOrThrow()
-
-                blocksToUpdate.forEach {
+                updateBlocks(
+                    fetch = {
+                        blockRepository.findBlocksInSpaceByRowWhichIndexIsBetweenEndExclusive(
+                            space,
+                            row,
+                            index,
+                            initialIndex
+                        ).getOrThrow()
+                    }
+                ) {
                     it.index = it.requiredIndex + 1
                 }
             }
@@ -317,15 +318,14 @@ class DefaultBlockService : BlockService, KoinComponent {
         val space = block.space
         val row = block.row
 
-        val blocksToUpdate =
-            blockRepository.findBlocksInSpaceByRowWhichIndexIsGreater(space, row, index)
-                .getOrThrow()
-
-        blocksToUpdate.forEach {
+        updateBlocks(
+            fetch = {
+                blockRepository.findBlocksInSpaceByRowWhichIndexIsGreater(space, row, index)
+                    .getOrThrow()
+            }
+        ) {
             it.index = it.requiredIndex - 1
         }
-
-        blockRepository.updateBlocks(blocksToUpdate).getOrThrow()
     }
 
     private suspend fun prepareBlockIndexProcessing(block: BlockEntity): Pair<BlockIndex, BlockIndex> {
@@ -357,6 +357,16 @@ class DefaultBlockService : BlockService, KoinComponent {
         }
 
         return requiredIndex to latestIndex
+    }
+
+    private suspend fun updateBlocks(fetch: suspend () -> BlockEntities, onEach: suspend (BlockEntity) -> Unit) {
+        val blocksToUpdate = fetch()
+
+        blocksToUpdate.forEach {
+            onEach(it)
+        }
+
+        blockRepository.updateBlocks(blocksToUpdate)
     }
 
     // Я боюсь наступления вечера...
