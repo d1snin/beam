@@ -73,7 +73,7 @@ class DefaultRowService : RowService, KoinComponent {
         index: RowIndex,
         space: SpaceEntity
     ): ResultingEntityWithOptionalDto<RowEntity, Row> =
-        runCatching {
+        rowRepository.withTransactionCatching {
             val spaceId = space.id.toString()
 
             logger.d {
@@ -149,7 +149,7 @@ class DefaultRowService : RowService, KoinComponent {
         spaceIdentifier: SpaceIdentifier,
         row: RowEntity
     ): ResultingEntityWithOptionalDto<RowEntity, Row> =
-        runCatching {
+        rowRepository.withTransactionCatching {
             logger.d {
                 "Updating row with index $index in space '$spaceIdentifier'"
             }

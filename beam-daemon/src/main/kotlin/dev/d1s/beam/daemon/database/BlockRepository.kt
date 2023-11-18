@@ -32,7 +32,7 @@ import org.ktorm.dsl.*
 import org.ktorm.entity.*
 import java.util.*
 
-interface BlockRepository {
+interface BlockRepository : AbstractRepository {
 
     suspend fun addBlock(block: BlockEntity): Result<BlockEntity>
 

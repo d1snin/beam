@@ -101,7 +101,7 @@ class DefaultSpaceService : SpaceService, KoinComponent {
         allowRootCreation: Boolean,
         languageCode: LanguageCode?
     ): ResultingEntityWithOptionalDto<SpaceEntity, SpaceWithToken> =
-        runCatching {
+        spaceRepository.withTransactionCatching {
             logger.d {
                 "Creating space ${space.asString}..."
             }
@@ -132,7 +132,7 @@ class DefaultSpaceService : SpaceService, KoinComponent {
         space: SpaceEntity,
         languageCode: LanguageCode?
     ): ResultingEntityWithOptionalDto<SpaceEntity, SpaceWithToken> =
-        runCatching {
+        spaceRepository.withTransactionCatching {
             logger.d {
                 "Creating root space..."
             }
@@ -212,7 +212,7 @@ class DefaultSpaceService : SpaceService, KoinComponent {
         modification: SpaceEntity,
         languageCode: LanguageCode?
     ): ResultingEntityWithOptionalDto<SpaceEntity, Space> =
-        runCatching {
+        spaceRepository.withTransactionCatching {
             logger.d {
                 "Updating space with unique identifier $uniqueIdentifier with data ${modification.asString}..."
             }
@@ -245,7 +245,7 @@ class DefaultSpaceService : SpaceService, KoinComponent {
         modification: SpaceEntity,
         languageCode: LanguageCode?
     ): ResultingEntityWithOptionalDto<SpaceEntity, Space> =
-        runCatching {
+        spaceRepository.withTransactionCatching {
             logger.d {
                 "Updating root space with data ${modification.asString}..."
             }
@@ -275,7 +275,7 @@ class DefaultSpaceService : SpaceService, KoinComponent {
         }
 
     override suspend fun removeSpace(uniqueIdentifier: SpaceIdentifier): Result<Unit> =
-        runCatching {
+        spaceRepository.withTransactionCatching {
             logger.d {
                 "Removing space with unique identifier $uniqueIdentifier..."
             }

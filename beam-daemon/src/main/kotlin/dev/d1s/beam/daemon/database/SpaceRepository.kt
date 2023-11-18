@@ -30,7 +30,7 @@ import org.ktorm.entity.add
 import org.ktorm.entity.find
 import java.util.*
 
-interface SpaceRepository {
+interface SpaceRepository : AbstractRepository {
 
     suspend fun addSpace(space: SpaceEntity): Result<SpaceEntity>
 

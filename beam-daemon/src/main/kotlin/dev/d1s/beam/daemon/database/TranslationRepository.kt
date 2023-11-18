@@ -32,7 +32,7 @@ import org.ktorm.entity.filter
 import org.ktorm.entity.find
 import org.ktorm.entity.toList
 
-interface TranslationRepository {
+interface TranslationRepository : AbstractRepository {
 
     suspend fun addTranslation(translation: TranslationEntity): Result<TranslationEntity>
 

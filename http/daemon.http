@@ -91,27 +91,15 @@ Content-Type: application/json
 
 {
     "row": 0,
-    "index": null,
+    "index": 0,
     "size": "MEDIUM",
     "entities": [
-        {
-            "type": "void",
-            "parameters": {
-                "height": "500"
-            }
-        },
         {
             "type": "text",
             "parameters": {
                 "alignment": "center",
                 "value": "(**1**)(blue)",
                 "heading": "h1"
-            }
-        },
-        {
-            "type": "void",
-            "parameters": {
-                "height": "500"
             }
         }
     ],

@@ -96,7 +96,7 @@ class DefaultBlockService : BlockService, KoinComponent {
         block: BlockEntity,
         languageCode: LanguageCode?
     ): ResultingEntityWithOptionalDto<BlockEntity, Block> =
-        runCatching {
+        blockRepository.withTransactionCatching {
             logger.d {
                 "Creating block ${block.asString}..."
             }
@@ -187,7 +187,7 @@ class DefaultBlockService : BlockService, KoinComponent {
         modification: BlockEntity,
         languageCode: LanguageCode?
     ): ResultingEntityWithOptionalDto<BlockEntity, Block> =
-        runCatching {
+        blockRepository.withTransactionCatching {
             logger.d {
                 "Updating block with ID $id with data ${modification.asString}..."
             }
@@ -219,7 +219,7 @@ class DefaultBlockService : BlockService, KoinComponent {
         }
 
     override suspend fun removeBlock(id: BlockId): Result<Unit> =
-        runCatching {
+        blockRepository.withTransactionCatching {
             logger.d {
                 "Removing block with ID $id..."
             }
@@ -235,7 +235,7 @@ class DefaultBlockService : BlockService, KoinComponent {
         }
 
     override suspend fun removeAllBlocks(spaceIdentifier: SpaceIdentifier): Result<Unit> =
-        runCatching {
+        blockRepository.withTransactionCatching {
             logger.d {
                 "Removing all blocks associated with space '$spaceIdentifier'..."
             }

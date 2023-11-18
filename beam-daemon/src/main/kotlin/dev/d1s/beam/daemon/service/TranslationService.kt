@@ -103,7 +103,7 @@ class DefaultTranslationService : TranslationService, KoinComponent {
         spaceIdentifier: SpaceIdentifier?,
         translation: TranslationEntity
     ): ResultingEntityWithOptionalDto<TranslationEntity, Translation> =
-        runCatching {
+        translationRepository.withTransactionCatching {
             logger.d {
                 "Creating translation ${translation.asString}..."
             }
@@ -239,7 +239,7 @@ class DefaultTranslationService : TranslationService, KoinComponent {
         languageCode: LanguageCode,
         modification: TranslationEntity
     ): ResultingEntityWithOptionalDto<TranslationEntity, Translation> =
-        runCatching {
+        translationRepository.withTransactionCatching {
             logger.d {
                 "Updating translation for space '$spaceIdentifier' in language '$languageCode'..."
             }
@@ -277,7 +277,7 @@ class DefaultTranslationService : TranslationService, KoinComponent {
         spaceIdentifier: SpaceIdentifier?,
         languageCode: LanguageCode
     ): Result<Unit> =
-        runCatching {
+        translationRepository.withTransactionCatching {
             logger.d {
                 "Removing translation for space '$spaceIdentifier' in language '$languageCode'..."
             }
