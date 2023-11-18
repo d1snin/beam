@@ -300,8 +300,8 @@ class DefaultBlockService : BlockService, KoinComponent {
                     blockRepository.findBlocksInSpaceByRowWhichIndexIsBetweenEndExclusive(
                         space,
                         row,
-                        initialIndex,
-                        index
+                        index,
+                        initialIndex
                     ).getOrThrow()
 
                 blocksToUpdate.forEach {
