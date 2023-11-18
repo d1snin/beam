@@ -92,13 +92,13 @@ Content-Type: application/json
 {
     "row": 0,
     "index": 0,
-    "size": "MEDIUM",
+    "size": "HALF",
     "entities": [
         {
             "type": "text",
             "parameters": {
                 "alignment": "center",
-                "value": "(**1**)(blue)",
+                "value": "(**0**)(blue)",
                 "heading": "h1"
             }
         }

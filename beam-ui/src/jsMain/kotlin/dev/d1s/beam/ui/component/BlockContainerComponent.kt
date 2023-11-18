@@ -48,6 +48,13 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
 
     private val currentSpaceContentChangeObservable by inject<Observable<SpaceContentChange?>>(Qualifier.CurrentSpaceContentChangeObservable)
 
+    private val BlockSize.safeLevel
+        get() = if (this == BlockSize.HALF) {
+            (Size.MaxBlockSize.level.toDouble() / 2.0)
+        } else {
+            level.toDouble()
+        }
+
     override fun SimplePanel.render(): Effect {
         div().bind(currentSpaceContentChangeObservable.state) { change ->
             change?.let {
@@ -98,13 +105,13 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
     // "Лучше вообще ничего не говори"
 
     private fun BlockBatch.splitIntoBatchesBySize(): List<BlockBatch> {
-        val maxBlockSize = Size.MaxBlockSize.level
+        val maxBlockSize = Size.MaxBlockSize.level.toDouble()
 
         val batches = mutableListOf<List<Block>>()
         val currentBatch = mutableListOf<Block>()
 
         fun Block.relativeSize() =
-            min(size.level, maxBlockSize)
+            min(size.safeLevel, maxBlockSize)
 
         fun List<Block>.totalSizeIncluding(block: Block) =
             sumOf {
