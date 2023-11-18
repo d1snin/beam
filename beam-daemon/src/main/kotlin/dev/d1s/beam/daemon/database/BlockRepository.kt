@@ -38,8 +38,6 @@ interface BlockRepository : AbstractRepository {
 
     suspend fun findBlockById(id: UUID): Result<BlockEntity>
 
-    suspend fun findBlockInSpaceByRowAndIndex(space: SpaceEntity, row: RowIndex, index: BlockIndex): Result<BlockEntity>
-
     suspend fun countBlocksInSpace(space: SpaceEntity): Result<Int>
 
     suspend fun findBlocksInSpace(space: SpaceEntity, limit: Int, offset: Int): Result<ExportedSequence<BlockEntity>>
@@ -98,17 +96,6 @@ class DefaultBlockRepository : BlockRepository, KoinComponent {
             database.blocks.find {
                 it.id eq id
             } ?: error("Block not found by ID '$id'")
-        }
-
-    override suspend fun findBlockInSpaceByRowAndIndex(
-        space: SpaceEntity,
-        row: RowIndex,
-        index: BlockIndex
-    ): Result<BlockEntity> =
-        withIoCatching {
-            database.blocks.find {
-                (it.spaceId eq space.id) and (it.row eq row) and (it.index eq index)
-            } ?: error("Block not found in space '${space.id}' by row $row and index $index")
         }
 
     override suspend fun countBlocksInSpace(space: SpaceEntity): Result<Int> =
