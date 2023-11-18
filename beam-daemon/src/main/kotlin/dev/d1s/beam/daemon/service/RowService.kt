@@ -150,6 +150,9 @@ class DefaultRowService : RowService, KoinComponent {
         row: RowEntity
     ): ResultingEntityWithOptionalDto<RowEntity, Row> =
         rowRepository.withTransactionCatching {
+            val space = spaceService.getSpace(spaceIdentifier).getOrThrow().entity
+            createRowIfDoesntExist(index, space).getOrThrow()
+
             logger.d {
                 "Updating row with index $index in space '$spaceIdentifier'"
             }
