@@ -109,7 +109,18 @@ class DefaultBlockRepository : BlockRepository, KoinComponent {
         offset: Int
     ): Result<ExportedSequence<BlockEntity>> =
         withIoCatching {
-            findBlocksInSpaceAsSequence(space, sorted = false).export(limit, offset)
+            findBlocksInSpaceAsSequence(space, sorted = false)
+                .export(
+                    limit,
+                    offset,
+                    clientTransform = {
+                        sortedBy {
+                            it.index
+                        }.sortedBy {
+                            it.row
+                        }
+                    }
+                )
         }
 
     override suspend fun findAllBlocksInSpace(space: SpaceEntity): Result<BlockEntities> =

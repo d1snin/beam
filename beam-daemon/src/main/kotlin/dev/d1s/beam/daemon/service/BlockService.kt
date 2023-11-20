@@ -156,16 +156,7 @@ class DefaultBlockService : BlockService, KoinComponent {
 
             val blocks = blockRepository.findBlocksInSpace(space, limit, offset).getOrThrow()
 
-            val sortedBlocks = blocks.elements
-                .sortedBy {
-                    it.index
-                }
-                .sortedBy {
-                    it.row
-                }
-
-            val translatedBlocks = translateOptionally(sortedBlocks, languageCode)
-
+            val translatedBlocks = translateOptionally(blocks.elements, languageCode)
             val translatedSequence = blocks.copy(elements = translatedBlocks)
 
             translatedSequence to blockDtoConverter.convertExportedSequenceToDtoIf(translatedSequence) {
