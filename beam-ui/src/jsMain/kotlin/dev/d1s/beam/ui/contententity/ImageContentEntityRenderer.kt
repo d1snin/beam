@@ -48,7 +48,7 @@ class ImageContentEntityRenderer : SingleContentEntityRenderer, KoinComponent {
                 separateContentEntity(context)
             }
 
-            showSpinnerOnLoading {
+            showSpinnerOnLoading(resourceUrl = src) {
                 image(src, description, responsive = true, className = "rounded") {
                     width?.let {
                         this.width = it.perc

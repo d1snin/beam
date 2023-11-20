@@ -23,32 +23,40 @@ import io.kvision.html.div
 import io.kvision.html.span
 import io.kvision.panel.SimplePanel
 
+private val processedResources = mutableSetOf<String>()
+
 enum class SpinnerStyle(val code: String) {
     LIGHT("light"), DARK("dark")
 }
 
-fun SimplePanel.showSpinnerOnLoading(block: () -> Widget) {
-    addCssClass("d-flex")
-    addCssClass("flex-column")
-    addCssClass("justify-content-center")
+fun SimplePanel.showSpinnerOnLoading(resourceUrl: String, block: () -> Widget) {
+    if (resourceUrl !in processedResources) {
+        addCssClass("d-flex")
+        addCssClass("flex-column")
+        addCssClass("justify-content-center")
 
-    div(className = "d-flex justify-content-center") {
-        val style = currentTheme.spinnerStyle
+        div(className = "d-flex justify-content-center") {
+            val style = currentTheme.spinnerStyle
 
-        val spinner = div(className = "spinner-border text-${style.code}") {
-            role = "status"
-            span("Loading...", className = "visually-hidden")
-        }
+            val spinner = div(className = "spinner-border text-${style.code}") {
+                role = "status"
+                span("Loading...", className = "visually-hidden")
+            }
 
-        val element = block()
+            val element = block()
 
-        element.apply {
-            addAfterInsertHook {
-                getElement()?.onload = {
-                    spinner.display = Display.NONE
-                    asDynamic()
+            element.apply {
+                addAfterInsertHook {
+                    getElement()?.onload = {
+                        spinner.display = Display.NONE
+                        asDynamic()
+                    }
                 }
             }
         }
+
+        processedResources += resourceUrl
+    } else {
+        block()
     }
 }

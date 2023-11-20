@@ -65,7 +65,7 @@ class EmbedContentEntityRenderer : SingleContentEntityRenderer, KoinComponent {
                 this.height = it.px
             }
 
-            showSpinnerOnLoading {
+            showSpinnerOnLoading(resourceUrl = url) {
                 iframe(
                     src = url
                 ) {

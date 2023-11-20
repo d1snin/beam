@@ -101,16 +101,10 @@ Content-Type: application/json
                 "url": "https://s3.d1s.dev/imageboard/AQADDdUxGw3nyEp9.jpg",
                 "width": "100"
             }
-        },
-        {
-            "type": "embed",
-            "parameters": {
-                "url": "https://www.openstreetmap.org/export/embed.html?bbox=73.3026695251465%2C61.22659383317754%2C73.46660614013673%2C61.27765817597264&amp;layer=mapnik",
-                "width": "100"
-            }
         }
     ],
     "metadata": {
+        "ui.block.image.fluid": "true"
     },
     "spaceId": "root"
 }
