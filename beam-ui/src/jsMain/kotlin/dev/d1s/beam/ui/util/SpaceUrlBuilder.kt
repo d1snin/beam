@@ -16,11 +16,18 @@
 
 package dev.d1s.beam.ui.util
 
+import dev.d1s.beam.commons.ROOT_SPACE_SLUG
 import dev.d1s.beam.commons.SpaceIdentifier
 import io.ktor.http.*
 import kotlinx.browser.window
 
+private const val DEFAULT_PATH = "/"
+
 fun buildSpaceUrl(spaceIdentifier: SpaceIdentifier? = null) =
     URLBuilder(window.location.href).apply {
-        set(path = spaceIdentifier ?: "/")
+        val path = spaceIdentifier?.let {
+            it.takeIf { it != ROOT_SPACE_SLUG }
+        } ?: DEFAULT_PATH
+
+        set(path = path)
     }.buildString()
