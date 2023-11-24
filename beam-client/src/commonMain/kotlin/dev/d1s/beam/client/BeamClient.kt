@@ -22,6 +22,7 @@ import dev.d1s.beam.commons.*
 import dev.d1s.beam.commons.event.EntityUpdate
 import dev.d1s.exkt.common.pagination.LimitAndOffset
 import dev.d1s.ktor.events.client.ClientWebSocketEvent
+import io.ktor.client.*
 import kotlinx.coroutines.Job
 
 public typealias BeamDaemonBaseUrl = String
@@ -35,6 +36,8 @@ public interface BeamClient {
     public val token: SpaceToken?
 
     public val resolver: SpaceResolver
+
+    public val httpClient: HttpClient
 
     public suspend fun getDaemonStatus(): Result<DaemonStatus>
 

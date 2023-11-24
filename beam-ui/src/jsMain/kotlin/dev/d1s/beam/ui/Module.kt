@@ -41,6 +41,7 @@ object Qualifier {
     val MaxBlockSizeChangeObservable = named("max-block-size-change-observable")
 
     val HeadingComponent = named("heading-component")
+    val DescriptiveCardComponent = named("descriptive-card-component")
     val SpaceCardComponent = named("space-card-component")
     val SpaceListingComponent = named("space-listing-component")
     val ExploreDropdownComponent = named("explore-dropdown-component")
@@ -59,6 +60,7 @@ object Qualifier {
     val SpaceContentEntityRenderer = named("space-content-entity-renderer")
     val ImageContentEntityRenderer = named("image-content-entity-renderer")
     val EmbedContentEntityRenderer = named("embed-content-entity-renderer")
+    val FileContentEntityRenderer = named("file-content-entity-renderer")
 
     val NotFoundFailureCardContent = named("not-found-failure-card-content")
     val EmptyFailureCardContent = named("empty-failure-card-content")
@@ -120,6 +122,10 @@ private fun Module.components() {
 
     factoryOf<Component<SpaceCardComponent.Config>>(::SpaceCardComponent) {
         qualifier = Qualifier.SpaceCardComponent
+    }
+
+    factoryOf<Component<DescriptiveCardComponent.Config>>(::DescriptiveCardComponent) {
+        qualifier = Qualifier.DescriptiveCardComponent
     }
 
     singleOf<Component<Unit>>(::SpaceListingComponent) {
@@ -186,6 +192,10 @@ private fun Module.contentEntityRenderers() {
 
     singleOf<ContentEntityRenderer>(::EmbedContentEntityRenderer) {
         qualifier = Qualifier.EmbedContentEntityRenderer
+    }
+
+    singleOf<ContentEntityRenderer>(::FileContentEntityRenderer) {
+        qualifier = Qualifier.FileContentEntityRenderer
     }
 }
 

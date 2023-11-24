@@ -6,7 +6,8 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "index": 0,
+    "row": 0,
+    "index": null,
     "size": "EXTRA_LARGE",
     "entities": [
         {
@@ -342,6 +343,20 @@ Content-Type: application/json
                 "text": "Test alert",
                 "icon": "info-circle-fill",
                 "style": "success"
+            }
+        },
+        {
+            "type": "text",
+            "parameters": {
+                "value": "File download test",
+                "heading": "h1"
+            }
+        },
+        {
+            "type": "file",
+            "parameters": {
+                "url": "https://http.cat/404",
+                "fileName": "404_cat.jpg"
             }
         }
     ],

@@ -370,6 +370,25 @@ public fun ContentEntitiesBuilder.fullWidthEmbed(
     embed(url, document, width = 100, height, alignment, collapsed)
 }
 
+public fun ContentEntitiesBuilder.file(
+    url: String,
+    fileName: String? = null,
+    alignment: Alignment? = null,
+    collapsed: Boolean? = null
+) {
+    entity {
+        type = File
+
+        parametersWithCommons(alignment = alignment, collapsed = collapsed) {
+            put(File.url.name, url)
+
+            fileName?.let {
+                put(File.fileName.name, it)
+            }
+        }
+    }
+}
+
 private fun ContentEntityBuilder.parametersWithCommons(
     alignment: Alignment?,
     collapsed: Boolean?,

@@ -17,52 +17,96 @@
 package dev.d1s.beam.ui.component
 
 import dev.d1s.beam.commons.Space
-import dev.d1s.beam.ui.contententity.renderStyledText
+import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.resource.ResourceLocation
-import dev.d1s.beam.ui.theme.setSecondaryText
 import dev.d1s.beam.ui.util.*
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
-import io.kvision.core.JustifyContent
-import io.kvision.core.TextDecoration
-import io.kvision.core.TextDecorationLine
-import io.kvision.core.onEvent
-import io.kvision.html.*
+import dev.d1s.exkt.kvision.component.render
+import io.kvision.html.image
 import io.kvision.panel.SimplePanel
-import io.kvision.panel.vPanel
-import io.kvision.utils.event
 import io.kvision.utils.px
-import io.kvision.utils.rem
 import kotlinx.atomicfu.atomic
 import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 
 class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinComponent {
 
     private val space
         get() = config.space.value ?: currentSpace
 
-    private var linkedContainer: SimplePanel? = null
-
     override fun SimplePanel.render(): Effect {
-        if (config.bare.value) {
-            renderContent()
-        } else {
-            renderCard()
+        val descriptiveCardComponent =
+            get<Component<DescriptiveCardComponent.Config>>(Qualifier.DescriptiveCardComponent)
+
+        render(descriptiveCardComponent) {
+            setTitle()
+            setDescription()
+            setUrl()
+            setBare()
+            setCardPadding()
+            setEnableHeading()
+            setCardFullWidth()
+            setIcon()
+            setImage()
         }
 
         return Effect.Success
     }
 
-    private fun SimplePanel.renderCard() {
-        val className =
-            "p-${config.cardPaddingLevel.value} ps-${config.cardStartPaddingLevel.value}" + if (config.cardFullWidth.value) {
-                " w-100"
-            } else {
-                ""
-            }
+    private fun DescriptiveCardComponent.Config.setTitle() {
+        val spaceTitle = space?.view?.title ?: currentTranslation.defaultTitle
+        title.value = spaceTitle
+    }
 
-        this@renderCard.renderCard(className, usePageBackground = true) {
-            renderContent()
+    private fun DescriptiveCardComponent.Config.setDescription() {
+        space?.view?.description?.let {
+            description.value = it
+        }
+    }
+
+    private fun DescriptiveCardComponent.Config.setUrl() {
+        val spaceUrl = space?.let { buildSpaceUrl(it.slug) } ?: currentSpaceUrl
+        url.value = spaceUrl
+    }
+
+    private fun DescriptiveCardComponent.Config.setBare() {
+        config.bare.value?.let {
+            bare.value = it
+        }
+    }
+
+    private fun DescriptiveCardComponent.Config.setCardPadding() {
+        config.cardPaddingLevel.value?.let {
+            cardPaddingLevel.value = it
+        }
+
+        config.cardStartPaddingLevel.value?.let {
+            cardStartPaddingLevel.value = it
+        }
+    }
+
+    private fun DescriptiveCardComponent.Config.setEnableHeading() {
+        config.enableHeading.value?.let {
+            enableHeading.value = it
+        }
+    }
+
+    private fun DescriptiveCardComponent.Config.setCardFullWidth() {
+        config.cardFullWidth.value?.let {
+            cardFullWidth.value = it
+        }
+    }
+
+    private fun DescriptiveCardComponent.Config.setIcon() {
+        icon.value = "bi bi-box-arrow-up-right"
+    }
+
+    private fun DescriptiveCardComponent.Config.setImage() {
+        image {
+            image(space?.view?.icon ?: ResourceLocation.ICON, alt = currentTranslation.iconAlt) {
+                width = config.iconWidth.value
+            }
         }
     }
 
@@ -70,114 +114,19 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
     // За себя. За нее. За наше будущее.
     // Что с нами будет?
 
-    private fun SimplePanel.renderContent() {
-        renderLinkedContainer {
-            renderIcon()
-            renderSpaceInfo()
-
-            if (!config.bare.value) {
-                renderOpenIcon()
-            }
-        }
-    }
-
-    private fun SimplePanel.renderLinkedContainer(block: SimplePanel.() -> Unit) {
-        renderSpaceLink(space) {
-            div(className = "d-flex align-items-center") {
-                linkedContainer = this
-
-                block()
-            }
-        }
-    }
-
-    private fun SimplePanel.renderOpenIcon() {
-        div(className = "ms-auto me-2") {
-            fontSize = 1.2.rem
-
-            icon("bi bi-box-arrow-up-right")
-        }
-    }
-
-    private fun SimplePanel.renderIcon() {
-        renderSpaceLink(space) {
-            renderImage()
-        }
-    }
-
-    private fun SimplePanel.renderImage() {
-        image(space?.view?.icon ?: ResourceLocation.ICON, alt = currentTranslation.iconAlt) {
-            width = config.iconWidth.value
-        }
-    }
-
-    private fun SimplePanel.renderSpaceInfo() {
-        renderVPanel {
-            renderTitle()
-            renderDescription()
-        }
-    }
-
-    private fun SimplePanel.renderVPanel(block: SimplePanel.() -> Unit) {
-        vPanel(justify = JustifyContent.CENTER, className = "mx-3") {
-            block()
-        }
-    }
-
-    private fun SimplePanel.renderTitle() {
-        p(className = "mb-0") {
-            val headingClass = if (config.enableHeading.value) {
-                "h2"
-            } else {
-                "fs-bold"
-            }
-
-            addCssClass(headingClass)
-
-            val title = space?.view?.title ?: currentTranslation.defaultTitle
-            renderStyledText(title)
-
-            underlineOnHover()
-        }
-    }
-
-    private fun SimplePanel.renderDescription() {
-        space?.view?.description?.let {
-            span {
-                fontSize = 0.8.rem
-
-                setSecondaryText()
-
-                renderStyledText(it)
-            }
-        }
-    }
-
-    private fun SimplePanel.underlineOnHover() {
-        linkedContainer?.onEvent {
-            event("mouseenter") {
-                textDecoration = TextDecoration(TextDecorationLine.UNDERLINE)
-            }
-
-            event("mouseleave") {
-                textDecoration = TextDecoration(TextDecorationLine.NONE)
-            }
-        }
-    }
-
     class Config {
 
         val space = atomic<Space?>(null)
 
-        val bare = atomic(false)
+        val bare = atomic<Boolean?>(null)
 
-        val cardPaddingLevel = atomic(2)
-        val cardStartPaddingLevel = atomic(3)
+        val cardPaddingLevel = atomic<Int?>(null)
+        val cardStartPaddingLevel = atomic<Int?>(null)
 
         val iconWidth = atomic(30.px)
 
-        val enableHeading = atomic(false)
+        val enableHeading = atomic<Boolean?>(null)
 
-        val cardFullWidth = atomic(false)
+        val cardFullWidth = atomic<Boolean?>(null)
     }
 }

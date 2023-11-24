@@ -16,7 +16,6 @@
 
 package dev.d1s.beam.ui.util
 
-import dev.d1s.beam.commons.Space
 import dev.d1s.beam.ui.theme.setTextColor
 import io.kvision.html.Link
 import io.kvision.html.link
@@ -28,6 +27,8 @@ fun SimplePanel.renderFriendlyLink(
     icon: String? = null,
     className: String? = null,
     external: Boolean = false,
+    download: Boolean = false,
+    downloadName: String? = null,
     init: Link.() -> Unit = {}
 ) =
     link(label, url, icon = icon, className = className) {
@@ -36,13 +37,27 @@ fun SimplePanel.renderFriendlyLink(
             setAttribute("rel", "noopener noreferrer")
         }
 
+        if (download) {
+            setAttribute("download", downloadName ?: "")
+        }
+
         init()
     }
 
-fun SimplePanel.renderSpaceLink(space: Space? = null, block: SimplePanel.() -> Unit) {
-    val url = space?.let { buildSpaceUrl(it.slug) } ?: currentSpaceUrl
-
-    renderFriendlyLink(url = url, className = "text-decoration-none") {
+fun SimplePanel.renderUnstyledLink(
+    url: String,
+    external: Boolean = false,
+    download: Boolean = false,
+    downloadName: String? = null,
+    block: SimplePanel.() -> Unit
+) {
+    renderFriendlyLink(
+        url = url,
+        className = "text-decoration-none",
+        external = external,
+        download = download,
+        downloadName = downloadName
+    ) {
         setTextColor()
         block()
     }

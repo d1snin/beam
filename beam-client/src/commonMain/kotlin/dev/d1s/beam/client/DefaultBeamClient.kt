@@ -36,7 +36,7 @@ public class DefaultBeamClient(
         DefaultSpaceResolver(this)
     }
 
-    private val httpClient = HttpClient {
+    override val httpClient: HttpClient = HttpClient {
         install(ContentNegotiation) {
             json()
         }

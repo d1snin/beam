@@ -39,7 +39,8 @@ private val definitions = listOf(
     AlertContentEntityTypeDefinition,
     SpaceContentEntityTypeDefinition,
     ImageContentEntityTypeDefinition,
-    EmbedContentEntityTypeDefinition
+    EmbedContentEntityTypeDefinition,
+    FileContentEntityTypeDefinition
 )
 
 public fun definition(name: ContentEntityTypeName): ContentEntityTypeDefinition? =
@@ -54,3 +55,4 @@ public val Alert: AlertContentEntityTypeDefinition = AlertContentEntityTypeDefin
 public val Space: SpaceContentEntityTypeDefinition = SpaceContentEntityTypeDefinition
 public val Image: ImageContentEntityTypeDefinition = ImageContentEntityTypeDefinition
 public val Embed: EmbedContentEntityTypeDefinition = EmbedContentEntityTypeDefinition
+public val File: FileContentEntityTypeDefinition = FileContentEntityTypeDefinition
