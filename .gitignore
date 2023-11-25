@@ -52,6 +52,8 @@ beam-bundle/src/main/resources/static/404_light.svg
 beam-bundle/src/main/resources/static/404_dark.svg
 beam-bundle/src/main/resources/static/empty_space_light.svg
 beam-bundle/src/main/resources/static/empty_space_dark.svg
+beam-bundle/src/main/resources/static/lost_connection_light.svg
+beam-bundle/src/main/resources/static/lost_connection_dark.svg
 
 ### Private HTTP parameters
 http-client.private.env.json
