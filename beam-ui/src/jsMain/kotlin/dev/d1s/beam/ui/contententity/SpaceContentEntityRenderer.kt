@@ -77,7 +77,7 @@ class SpaceContentEntityRenderer : SingleContentEntityRenderer, KoinComponent {
 
         render(spaceCard) {
             this.space.value = space
-            this.cardFullWidth.value = true
+            this.fullWidth.value = true
         }
     }
 }

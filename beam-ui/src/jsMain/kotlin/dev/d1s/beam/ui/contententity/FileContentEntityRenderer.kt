@@ -65,7 +65,7 @@ class FileContentEntityRenderer : SingleContentEntityRenderer, KoinComponent {
     }
 
     private fun DescriptiveCardComponent.Config.setCardFullWidth() {
-        cardFullWidth.value = true
+        fullWidth.value = true
     }
 
     private fun DescriptiveCardComponent.Config.setImage() {

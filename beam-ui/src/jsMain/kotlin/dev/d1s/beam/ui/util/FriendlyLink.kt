@@ -46,6 +46,7 @@ fun SimplePanel.renderFriendlyLink(
 
 fun SimplePanel.renderUnstyledLink(
     url: String,
+    className: String? = null,
     external: Boolean = false,
     download: Boolean = false,
     downloadName: String? = null,
@@ -53,7 +54,7 @@ fun SimplePanel.renderUnstyledLink(
 ) {
     renderFriendlyLink(
         url = url,
-        className = "text-decoration-none",
+        className = "text-decoration-none" + (className?.let { " $it" } ?: ""),
         external = external,
         download = download,
         downloadName = downloadName

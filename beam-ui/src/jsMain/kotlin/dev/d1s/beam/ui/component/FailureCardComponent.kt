@@ -45,7 +45,10 @@ class FailureCardComponent : Component<FailureCardComponent.Config>(::Config), K
                 renderCardInContainer {
                     image(content)
                     text(content)
-                    spaceListing()
+
+                    if (mode != Mode.LOST_CONNECTION) {
+                        spaceListing()
+                    }
                 }
             }
         }

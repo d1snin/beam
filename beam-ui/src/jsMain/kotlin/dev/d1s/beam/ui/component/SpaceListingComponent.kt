@@ -145,6 +145,7 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
 
                 render(spaceCard) {
                     this.space.value = space
+                    this.fullHeight.value = true
                 }
             }
         }

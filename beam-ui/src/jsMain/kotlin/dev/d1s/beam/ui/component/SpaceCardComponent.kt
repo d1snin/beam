@@ -46,7 +46,7 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
             setBare()
             setCardPadding()
             setEnableHeading()
-            setCardFullWidth()
+            setSize()
             setIcon()
             setImage()
         }
@@ -92,9 +92,13 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
         }
     }
 
-    private fun DescriptiveCardComponent.Config.setCardFullWidth() {
-        config.cardFullWidth.value?.let {
-            cardFullWidth.value = it
+    private fun DescriptiveCardComponent.Config.setSize() {
+        config.fullWidth.value?.let {
+            fullWidth.value = it
+        }
+
+        config.fullHeight.value?.let {
+            fullHeight.value = it
         }
     }
 
@@ -127,6 +131,7 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
 
         val enableHeading = atomic<Boolean?>(null)
 
-        val cardFullWidth = atomic<Boolean?>(null)
+        val fullWidth = atomic<Boolean?>(null)
+        val fullHeight = atomic<Boolean?>(null)
     }
 }

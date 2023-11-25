@@ -52,11 +52,9 @@ class DescriptiveCardComponent : Component<DescriptiveCardComponent.Config>(::Co
 
     private fun SimplePanel.renderCard() {
         val className =
-            "p-${config.cardPaddingLevel.value} ps-${config.cardStartPaddingLevel.value}" + if (config.cardFullWidth.value) {
-                " w-100"
-            } else {
-                ""
-            }
+            ("d-flex align-items-center p-${config.cardPaddingLevel.value} ps-${config.cardStartPaddingLevel.value}" +
+                    if (config.fullWidth.value) " w-100" else "") +
+                    if (config.fullHeight.value) " h-100" else ""
 
         this@renderCard.renderCard(className, usePageBackground = true) {
             renderContent()
@@ -75,7 +73,7 @@ class DescriptiveCardComponent : Component<DescriptiveCardComponent.Config>(::Co
     }
 
     private fun SimplePanel.renderOptionallyLinkedContainer(block: SimplePanel.() -> Unit) {
-        renderOptionalLink {
+        renderOptionalLink(fullWidth = true) {
             div(className = "d-flex align-items-center") {
                 linkedContainer = this
 
@@ -160,12 +158,15 @@ class DescriptiveCardComponent : Component<DescriptiveCardComponent.Config>(::Co
         }
     }
 
-    private fun SimplePanel.renderOptionalLink(block: SimplePanel.() -> Unit) {
+    private fun SimplePanel.renderOptionalLink(fullWidth: Boolean = false, block: SimplePanel.() -> Unit) {
         val url = config.url.value
+
+        val className = if (fullWidth) "w-100" else ""
 
         if (url != null) {
             renderUnstyledLink(
                 url = url,
+                className = className,
                 external = config.external.value,
                 download = config.download.value,
                 downloadName = config.downloadName.value
@@ -198,7 +199,8 @@ class DescriptiveCardComponent : Component<DescriptiveCardComponent.Config>(::Co
 
         val enableHeading = atomic(false)
 
-        val cardFullWidth = atomic(false)
+        val fullWidth = atomic(false)
+        val fullHeight = atomic(false)
 
         val imageInit = atomic<(SimplePanel.() -> Unit)?>(null)
 
