@@ -28,6 +28,8 @@ object CatppuccinFrappeTheme : CatppuccinTheme(SpaceThemeDefinition.CatppuccinFr
 
     override val emptySpaceIcon = ResourceLocation.EMPTY_SPACE_LIGHT
 
+    override val lostConnectionIcon = ResourceLocation.LOST_CONNECTION_LIGHT
+
     override val buttonStyle = ButtonStyle.OUTLINELIGHT
 
     override val spinnerStyle = SpinnerStyle.LIGHT

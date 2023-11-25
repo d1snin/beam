@@ -28,6 +28,8 @@ object CatppuccinLatteTheme : CatppuccinTheme(SpaceThemeDefinition.CatppuccinLat
 
     override val emptySpaceIcon = ResourceLocation.EMPTY_SPACE_DARK
 
+    override val lostConnectionIcon = ResourceLocation.LOST_CONNECTION_DARK
+
     override val buttonStyle = ButtonStyle.OUTLINEDARK
 
     override val spinnerStyle = SpinnerStyle.DARK

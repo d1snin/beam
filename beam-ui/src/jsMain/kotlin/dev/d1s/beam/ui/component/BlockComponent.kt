@@ -193,12 +193,12 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
             onEvent {
                 event("hide.bs.collapse") {
                     opened = false
-                    clicked.setState(opened)
+                    clicked.value = opened
                 }
 
                 event("show.bs.collapse") {
                     opened = true
-                    clicked.setState(opened)
+                    clicked.value = opened
                 }
             }
 

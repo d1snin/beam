@@ -30,6 +30,8 @@ abstract class AbstractTheme(val definition: SpaceThemeDefinition) {
 
     abstract val emptySpaceIcon: Url
 
+    abstract val lostConnectionIcon: Url
+
     abstract val buttonStyle: ButtonStyle
 
     abstract val spinnerStyle: SpinnerStyle

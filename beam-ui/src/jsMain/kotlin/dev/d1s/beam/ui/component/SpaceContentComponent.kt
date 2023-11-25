@@ -18,9 +18,11 @@ package dev.d1s.beam.ui.component
 
 import dev.d1s.beam.commons.BlockSize
 import dev.d1s.beam.ui.Qualifier
+import dev.d1s.beam.ui.client.DaemonStatusWithPing
 import dev.d1s.beam.ui.state.Observable
 import dev.d1s.beam.ui.state.SpaceContentChange
 import dev.d1s.beam.ui.util.currentSpace
+import dev.d1s.beam.ui.util.subscribeSkipping
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
 import dev.d1s.exkt.kvision.component.render
@@ -37,6 +39,8 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
 
     private val maxBlockSizeChangeObservable by inject<Observable<BlockSize>>(Qualifier.MaxBlockSizeChangeObservable)
 
+    private val daemonStatusWithPingObservable by inject<Observable<DaemonStatusWithPing?>>(Qualifier.DaemonStatusWithPingObservable)
+
     private val blockContainerComponent by inject<Component<Unit>>(Qualifier.BlockContainerComponent)
 
     private val failureCardComponent by inject<Component<FailureCardComponent.Config>>(Qualifier.FailureCardComponent)
@@ -46,8 +50,11 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
     override fun SimplePanel.render(): Effect {
         div(className = "container-fluid") {
             div().bind(maxBlockSizeChangeObservable.state) {
+                render(failureCardComponent)
+
                 handleNotFound()
                 handleEmptySpace()
+                handleLostDaemonConnection()
                 renderSpaceContent()
             }
         }
@@ -55,34 +62,41 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
         return Effect.Success
     }
 
-    private fun SimplePanel.handleNotFound() {
-        if (currentSpace == null) {
-            renderNotFoundCard()
-        }
-    }
-
-    private fun SimplePanel.handleEmptySpace() {
-        div().bind(currentSpaceContentChangeObservable.state) { change ->
-            if (change?.blocks?.isEmpty() == true) {
-                showBlockContainer.setState(false)
-
-                renderEmptySpaceCard()
-            } else {
-                showBlockContainer.setState(true)
+    private fun handleNotFound() {
+        showBlockContainer.subscribe { show ->
+            if (currentSpace == null && show) {
+                failureCardComponent.apply {
+                    mode.value = FailureCardComponent.Mode.NOT_FOUND
+                }
             }
         }
     }
 
+    private fun handleEmptySpace() {
+        currentSpaceContentChangeObservable.state.subscribe { change ->
+            if (change?.blocks?.isEmpty() == true) {
+                setStateSafe(show = false)
 
-    private fun SimplePanel.renderNotFoundCard() {
-        render(failureCardComponent) {
-            mode.value = FailureCardComponent.Mode.NOT_FOUND
+                failureCardComponent.apply {
+                    mode.value = FailureCardComponent.Mode.EMPTY_SPACE
+                }
+            } else {
+                setStateSafe(show = true)
+            }
         }
     }
 
-    private fun SimplePanel.renderEmptySpaceCard() {
-        render(failureCardComponent) {
-            mode.value = FailureCardComponent.Mode.EMPTY_SPACE
+    private fun handleLostDaemonConnection() {
+        daemonStatusWithPingObservable.state.subscribeSkipping { status ->
+            if (status == null) {
+                setStateSafe(show = false)
+
+                failureCardComponent.apply {
+                    mode.value = FailureCardComponent.Mode.LOST_CONNECTION
+                }
+            } else {
+                setStateSafe(show = true)
+            }
         }
     }
 
@@ -91,6 +105,18 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
             if (show) {
                 render(blockContainerComponent)
             }
+        }
+    }
+
+    private fun setStateSafe(show: Boolean) {
+        if (showBlockContainer.value != show) {
+            if (show) {
+                failureCardComponent.apply {
+                    mode.value = FailureCardComponent.Mode.NONE
+                }
+            }
+
+            showBlockContainer.value = show
         }
     }
 }

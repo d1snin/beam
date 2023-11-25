@@ -23,8 +23,9 @@ import dev.d1s.exkt.kvision.component.Effect
 import dev.d1s.exkt.kvision.component.render
 import io.kvision.html.div
 import io.kvision.panel.SimplePanel
+import io.kvision.state.ObservableValue
+import io.kvision.state.bind
 import io.kvision.utils.px
-import kotlinx.atomicfu.atomic
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -36,24 +37,26 @@ class FailureCardComponent : Component<FailureCardComponent.Config>(::Config), K
         getKoin().getAll<FailureCardContent>()
     }
 
-    private val content: FailureCardContent
-        get() {
-            val mode = config.mode.value
-
-            return contents.find {
-                it.mode == mode
-            } ?: error("$mode is unsupported")
-        }
-
     override fun SimplePanel.render(): Effect {
-        renderCardInContainer {
-            image()
-            text()
-            spaceListing()
+        div().bind(config.mode) { mode ->
+            if (mode != Mode.NONE) {
+                val content = getContent(mode)
+
+                renderCardInContainer {
+                    image(content)
+                    text(content)
+                    spaceListing()
+                }
+            }
         }
 
         return Effect.Success
     }
+
+    private fun getContent(mode: Mode) =
+        contents.find {
+            it.mode == mode
+        } ?: error("$mode is unsupported")
 
     private fun SimplePanel.renderCardInContainer(block: SimplePanel.() -> Unit) {
         div(className = "container d-flex justify-content-center") {
@@ -65,13 +68,13 @@ class FailureCardComponent : Component<FailureCardComponent.Config>(::Config), K
         }
     }
 
-    private fun SimplePanel.image() {
+    private fun SimplePanel.image(content: FailureCardContent) {
         with(content) {
             image()
         }
     }
 
-    private fun SimplePanel.text() {
+    private fun SimplePanel.text(content: FailureCardContent) {
         with(content) {
             text()
         }
@@ -83,11 +86,11 @@ class FailureCardComponent : Component<FailureCardComponent.Config>(::Config), K
 
     enum class Mode {
 
-        NOT_FOUND, EMPTY_SPACE
+        NONE, NOT_FOUND, EMPTY_SPACE, LOST_CONNECTION
     }
 
     class Config {
 
-        val mode = atomic(Mode.NOT_FOUND)
+        val mode = ObservableValue(Mode.NONE)
     }
 }

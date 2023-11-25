@@ -32,7 +32,7 @@ class MaxBlockSizeChangeObservable : Observable<BlockSize>, KoinComponent {
                 val maxBlockSize = Size.MaxBlockSize
 
                 if (state.value != maxBlockSize) {
-                    state.setState(maxBlockSize)
+                    state.value = maxBlockSize
                 }
             }
         }

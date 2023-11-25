@@ -64,6 +64,7 @@ object Qualifier {
 
     val NotFoundFailureCardContent = named("not-found-failure-card-content")
     val EmptyFailureCardContent = named("empty-failure-card-content")
+    val LostConnectionFailureCardContent = named("lost-connection-failure-card-content")
 }
 
 fun setupModule() {
@@ -210,5 +211,9 @@ private fun Module.failureCardContents() {
 
     singleOf<FailureCardContent>(::EmptyFailureCardContent) {
         qualifier = Qualifier.EmptyFailureCardContent
+    }
+
+    singleOf<FailureCardContent>(::LostConnectionFailureCardContent) {
+        qualifier = Qualifier.LostConnectionFailureCardContent
     }
 }

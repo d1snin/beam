@@ -101,7 +101,9 @@ tasks.register<Copy>("grabResources") {
         "../img/404_light.svg",
         "../img/404_dark.svg",
         "../img/empty_space_light.svg",
-        "../img/empty_space_dark.svg"
+        "../img/empty_space_dark.svg",
+        "../img/lost_connection_light.svg",
+        "../img/lost_connection_dark.svg"
     )
     into("src/main/resources/static")
 }
@@ -113,7 +115,9 @@ tasks.register<Delete>("cleanResources") {
         "src/main/resources/static/404_light.svg",
         "src/main/resources/static/404_dark.svg",
         "src/main/resources/static/empty_space_light.svg",
-        "src/main/resources/static/empty_space_dark.svg"
+        "src/main/resources/static/empty_space_dark.svg",
+        "src/main/resources/static/lost_connection_light.svg",
+        "src/main/resources/static/lost_connection_dark.svg"
     )
 }
 

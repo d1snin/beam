@@ -77,7 +77,7 @@ class CurrentSpaceContentChangeObservable : Observable<SpaceContentChange?>, Koi
     fun setCurrentSpaceContent(change: SpaceContentChange?) {
         setCurrentSpaceRows(change?.rows)
         setCurrentSpaceBlocks(change?.blocks)
-        state.setState(change)
+        state.value = change
     }
 
     private suspend fun handleEndOfScroll(spaceId: SpaceId) {

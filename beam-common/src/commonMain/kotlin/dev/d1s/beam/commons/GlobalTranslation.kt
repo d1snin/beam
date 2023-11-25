@@ -39,6 +39,11 @@ public object GlobalTranslation {
     public const val LOCATION_FAILURE_CARD_EMPTY_SPACE_MESSAGE: TextLocation =
         "ui.failure-card.empty-space.message"
 
+    public const val LOCATION_FAILURE_CARD_LOST_CONNECTION_ICON_ALT: TextLocation =
+        "ui.failure-card.lost-connection.icon-alt"
+    public const val LOCATION_FAILURE_CARD_LOST_CONNECTION_MESSAGE: TextLocation =
+        "ui.failure-card.lost-connection.message"
+
     public const val LOCATION_FOOTER_LANGUAGE_SWITCHER_MESSAGE: TextLocation = "ui.footer.language-switcher.message"
 
     public const val LOCATION_SPACE_LISTING_MESSAGE: TextLocation = "ui.space-listing.message"
@@ -59,6 +64,8 @@ public object GlobalTranslation {
         LOCATION_FAILURE_CARD_NOT_FOUND_MESSAGE,
         LOCATION_FAILURE_CARD_EMPTY_SPACE_ICON_ALT,
         LOCATION_FAILURE_CARD_EMPTY_SPACE_MESSAGE,
+        LOCATION_FAILURE_CARD_LOST_CONNECTION_ICON_ALT,
+        LOCATION_FAILURE_CARD_LOST_CONNECTION_MESSAGE,
         LOCATION_FOOTER_LANGUAGE_SWITCHER_MESSAGE,
         LOCATION_SPACE_LISTING_MESSAGE,
         LOCATION_SPACE_LISTING_FETCH_MORE_BUTTON,
@@ -82,6 +89,8 @@ public object GlobalTranslation {
             LOCATION_FAILURE_CARD_NOT_FOUND_MESSAGE to "We couldn't find anything.",
             LOCATION_FAILURE_CARD_EMPTY_SPACE_ICON_ALT to "Empty space icon",
             LOCATION_FAILURE_CARD_EMPTY_SPACE_MESSAGE to "This space seems to be empty.",
+            LOCATION_FAILURE_CARD_LOST_CONNECTION_ICON_ALT to "Lost connection icon",
+            LOCATION_FAILURE_CARD_LOST_CONNECTION_MESSAGE to "We've lost connection to the server.",
             LOCATION_FOOTER_LANGUAGE_SWITCHER_MESSAGE to "Switch language...",
             LOCATION_SPACE_LISTING_MESSAGE to "Explore the spaces on this instance:",
             LOCATION_SPACE_LISTING_FETCH_MORE_BUTTON to "Load more",

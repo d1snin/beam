@@ -25,4 +25,7 @@ object ResourceLocation {
 
     const val EMPTY_SPACE_LIGHT = "/empty_space_light.svg"
     const val EMPTY_SPACE_DARK = "/empty_space_dark.svg"
+
+    const val LOST_CONNECTION_LIGHT = "/lost_connection_light.svg"
+    const val LOST_CONNECTION_DARK = "/lost_connection_dark.svg"
 }
