@@ -92,19 +92,15 @@ Content-Type: application/json
 {
     "row": 0,
     "index": null,
-    "size": "EXTRA_LARGE",
+    "size": "MEDIUM",
     "entities": [
         {
-            "type": "image",
+            "type": "void",
             "parameters": {
-                "alignment": "center",
-                "url": "https://s3.d1s.dev/imageboard/AQADDdUxGw3nyEp9.jpg",
-                "width": "100"
             }
         }
     ],
     "metadata": {
-        "ui.block.image.fluid": "true"
     },
     "spaceId": "root"
 }

@@ -182,7 +182,8 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
 
             if (row != null) {
                 val justify = justifyContentByRowAlign(row.align)
-                val alignItems = alignItemsByRowStretchMetadata(row)
+
+                val alignItems = alignItemsByRowStretchMetadata(row, last = batch == batches.last())
 
                 hPanel(className = "w-100", justify = justify, alignItems = alignItems) {
                     val blocks = batch.blocks
@@ -234,12 +235,17 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
             RowAlign.BETWEEN -> JustifyContent.SPACEBETWEEN
         }
 
-    private fun alignItemsByRowStretchMetadata(row: Row) =
-        if (row.metadata[MetadataKeys.UI_ROW_STRETCH]?.toBooleanStrictOrNull() == false) {
+    private fun alignItemsByRowStretchMetadata(row: Row, last: Boolean): AlignItems {
+        val stretchBlocks = row.metadata[MetadataKeys.UI_ROW_STRETCH]?.toBooleanStrictOrNull() != false
+        val stretchLastBlocks = currentSpace?.metadata?.get(MetadataKeys.UI_SPACE_STRETCH_LAST_BLOCKS)
+            ?.toBooleanStrictOrNull() == true
+
+        return if (!stretchBlocks || (last && !stretchLastBlocks)) {
             AlignItems.START
         } else {
             AlignItems.STRETCH
         }
+    }
 
     companion object {
 

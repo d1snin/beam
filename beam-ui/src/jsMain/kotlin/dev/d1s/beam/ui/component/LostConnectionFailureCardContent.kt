@@ -16,7 +16,6 @@
 
 package dev.d1s.beam.ui.component
 
-import dev.d1s.beam.ui.resource.ResourceLocation
 import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.util.currentTranslation
 import dev.d1s.beam.ui.util.failureCardLostConnectionIconAlt
@@ -25,20 +24,10 @@ import io.kvision.html.image
 import io.kvision.panel.SimplePanel
 import io.kvision.utils.perc
 import org.koin.core.component.KoinComponent
-import org.w3c.dom.Image
 
 class LostConnectionFailureCardContent : FailureCardContent(), KoinComponent {
 
     override val mode = FailureCardComponent.Mode.LOST_CONNECTION
-
-    init {
-        // preload
-        val lostConnectionLight = Image()
-        lostConnectionLight.src = ResourceLocation.LOST_CONNECTION_LIGHT
-
-        val lostConnectionDark = Image()
-        lostConnectionDark.src = ResourceLocation.LOST_CONNECTION_DARK
-    }
 
     override fun SimplePanel.image() {
         image(
