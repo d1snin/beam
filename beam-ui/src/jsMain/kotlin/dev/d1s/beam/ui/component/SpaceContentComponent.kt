@@ -33,6 +33,14 @@ import io.kvision.state.bind
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
+private data class ShowBlockContainer(
+    val notFound: Boolean = false,
+    val emptySpace: Boolean = false,
+    val lostConnection: Boolean = false
+) {
+    val allPassing = !notFound && !emptySpace && !lostConnection
+}
+
 class SpaceContentComponent : Component<Unit>(), KoinComponent {
 
     private val currentSpaceContentChangeObservable by inject<Observable<SpaceContentChange?>>(Qualifier.CurrentSpaceContentChangeObservable)
@@ -45,7 +53,7 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
 
     private val failureCardComponent by inject<Component<FailureCardComponent.Config>>(Qualifier.FailureCardComponent)
 
-    private val showBlockContainer = ObservableValue(true)
+    private val showBlockContainerState = ObservableValue(ShowBlockContainer())
 
     override fun SimplePanel.render(): Effect {
         div(className = "container-fluid") {
@@ -63,60 +71,49 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
     }
 
     private fun handleNotFound() {
-        showBlockContainer.subscribe { show ->
-            if (currentSpace == null && show) {
-                failureCardComponent.apply {
-                    mode.value = FailureCardComponent.Mode.NOT_FOUND
-                }
-            }
-        }
+        val notFound = currentSpace == null
+        setStateSafe(notFound = notFound)
     }
 
     private fun handleEmptySpace() {
         currentSpaceContentChangeObservable.state.subscribe { change ->
-            if (change?.blocks?.isEmpty() == true) {
-                setStateSafe(show = false)
-
-                failureCardComponent.apply {
-                    mode.value = FailureCardComponent.Mode.EMPTY_SPACE
-                }
-            } else {
-                setStateSafe(show = true)
-            }
+            val emptySpace = change?.blocks?.isEmpty() == true
+            setStateSafe(emptySpace = emptySpace)
         }
     }
 
     private fun handleLostDaemonConnection() {
         daemonStatusWithPingObservable.state.subscribeSkipping { status ->
-            if (status == null) {
-                setStateSafe(show = false)
-
-                failureCardComponent.apply {
-                    mode.value = FailureCardComponent.Mode.LOST_CONNECTION
-                }
-            } else {
-                setStateSafe(show = true)
-            }
+            val lostConnection = status == null
+            setStateSafe(lostConnection = lostConnection)
         }
     }
 
     private fun SimplePanel.renderSpaceContent() {
-        div().bind(showBlockContainer) { show ->
-            if (show) {
+        div().bind(showBlockContainerState) { show ->
+            if (show.allPassing) {
                 render(blockContainerComponent)
             }
         }
     }
 
-    private fun setStateSafe(show: Boolean) {
-        if (showBlockContainer.value != show) {
-            if (show) {
-                failureCardComponent.apply {
-                    mode.value = FailureCardComponent.Mode.NONE
-                }
-            }
+    private fun setStateSafe(
+        notFound: Boolean = showBlockContainerState.value.notFound,
+        emptySpace: Boolean = showBlockContainerState.value.emptySpace,
+        lostConnection: Boolean = showBlockContainerState.value.lostConnection
+    ) {
+        val show = ShowBlockContainer(notFound, emptySpace, lostConnection)
 
-            showBlockContainer.value = show
+        failureCardComponent.apply {
+            mode.value = when {
+                show.notFound -> FailureCardComponent.Mode.NOT_FOUND
+                show.emptySpace -> FailureCardComponent.Mode.EMPTY_SPACE
+                show.lostConnection -> FailureCardComponent.Mode.LOST_CONNECTION
+
+                else -> FailureCardComponent.Mode.NONE
+            }
         }
+
+        showBlockContainerState.value = show
     }
 }
