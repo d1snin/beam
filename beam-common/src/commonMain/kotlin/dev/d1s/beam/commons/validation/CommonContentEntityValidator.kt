@@ -16,24 +16,24 @@
 
 package dev.d1s.beam.commons.validation
 
+import dev.d1s.beam.commons.contententity.AbstractContentEntity
 import dev.d1s.beam.commons.contententity.Alignment
 import dev.d1s.beam.commons.contententity.CommonContentEntityTypeDefinition
 import dev.d1s.beam.commons.contententity.CommonParameters
-import dev.d1s.beam.commons.contententity.ContentEntity
 import dev.d1s.beam.commons.util.lowercaseName
 import io.konform.validation.ValidationBuilder
 
 internal object CommonContentEntityValidator :
     ContentEntityValidator<CommonContentEntityTypeDefinition>(global = true) {
 
-    override fun ValidationBuilder<ContentEntity>.validate() {
+    override fun ValidationBuilder<AbstractContentEntity>.validate() {
         val validator = this@CommonContentEntityValidator
 
         requireCorrectAlignment()
         requireCorrectBoolean(validator, CommonParameters.COLLAPSED)
     }
 
-    private fun ValidationBuilder<ContentEntity>.requireCorrectAlignment() {
+    private fun ValidationBuilder<AbstractContentEntity>.requireCorrectAlignment() {
         val validator = this@CommonContentEntityValidator
 
         val alignments = Alignment.entries.map {

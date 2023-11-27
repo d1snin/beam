@@ -21,7 +21,7 @@ import dev.d1s.beam.commons.*
 @BuilderDsl
 public class MetadataBuilder {
 
-    internal var metadata: MutableMap<MetadataKey, MetadataValue> = metadataOf().toMutableMap()
+    internal var metadata: MutableMetadata = metadataOf().toMutableMap()
 
     public fun metadata(metadata: Metadata) {
         this.metadata = metadata.toMutableMap()

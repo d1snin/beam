@@ -16,9 +16,12 @@
 
 package dev.d1s.beam.commons.contententity
 
+import dev.d1s.beam.commons.Metadata
 import kotlinx.serialization.Serializable
 
+public typealias AbstractContentEntities = List<AbstractContentEntity>
 public typealias ContentEntities = List<ContentEntity>
+public typealias ContentEntityModifications = List<ContentEntityModification>
 
 public typealias ContentEntityTypeName = String
 
@@ -27,11 +30,25 @@ public typealias ContentEntityParameterValue = String
 public typealias ContentEntityParameters = Map<ContentEntityParameterName, ContentEntityParameterValue>
 public typealias ContentEntityParameter = Map.Entry<ContentEntityParameterName, ContentEntityParameterValue>
 
+public sealed interface AbstractContentEntity {
+
+    public val type: ContentEntityTypeName
+
+    public val parameters: ContentEntityParameters
+}
+
 @Serializable
 public data class ContentEntity(
-    val type: ContentEntityTypeName,
-    val parameters: ContentEntityParameters
-)
+    override val type: ContentEntityTypeName,
+    override val parameters: ContentEntityParameters,
+    val metadata: Metadata
+) : AbstractContentEntity
+
+@Serializable
+public data class ContentEntityModification(
+    override val type: ContentEntityTypeName,
+    override val parameters: ContentEntityParameters
+) : AbstractContentEntity
 
 public operator fun ContentEntityParameters.get(definition: ContentEntityParameterDefinition): ContentEntityParameterValue? =
     this[definition.name]

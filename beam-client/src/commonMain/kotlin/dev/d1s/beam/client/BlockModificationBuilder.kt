@@ -37,7 +37,7 @@ public class BlockModificationBuilder() : ContentEntitiesBuilder() {
         row = modification.row
         index = modification.index
         size = modification.size
-        entities = modification.entities.toMutableList()
+        entityModifications = modification.entities.toMutableList()
         metadataBuilder.metadata(modification.metadata)
         spaceId = modification.spaceId
     }
@@ -55,14 +55,14 @@ public class BlockModificationBuilder() : ContentEntitiesBuilder() {
             row ?: error("Block row is undefined"),
             index,
             size ?: error("Block size is undefined"),
-            entities = buildContentEntities(),
+            entities = buildContentEntityModifications(),
             metadata = metadataBuilder.buildMetadata(),
             spaceId ?: error("Block space id is undefined")
         )
 }
 
 @BuilderDsl
-public class ContentEntityBuilder {
+public class ContentEntityModificationBuilder {
 
     public var type: ContentEntityTypeDefinition? = null
 
@@ -76,8 +76,8 @@ public class ContentEntityBuilder {
         parameters = mapOf(*pairs)
     }
 
-    public fun buildContentEntity(): ContentEntity =
-        ContentEntity(
+    public fun buildContentEntityModification(): ContentEntityModification =
+        ContentEntityModification(
             type?.name ?: error("Content entity type is undefined"),
             parameters
         )
@@ -86,13 +86,13 @@ public class ContentEntityBuilder {
 @BuilderDsl
 public open class ContentEntitiesBuilder {
 
-    public var entities: MutableList<ContentEntity> = mutableListOf()
+    public var entityModifications: MutableList<ContentEntityModification> = mutableListOf()
 
-    public fun entity(build: ContentEntityBuilder.() -> Unit) {
-        entities += ContentEntityBuilder().apply(build).buildContentEntity()
+    public fun entity(build: ContentEntityModificationBuilder.() -> Unit) {
+        entityModifications += ContentEntityModificationBuilder().apply(build).buildContentEntityModification()
     }
 
-    public fun buildContentEntities(): ContentEntities = entities
+    public fun buildContentEntityModifications(): ContentEntityModifications = entityModifications
 }
 
 public fun ContentEntitiesBuilder.void(height: Int? = null, alignment: Alignment? = null, collapsed: Boolean? = null) {
@@ -389,7 +389,7 @@ public fun ContentEntitiesBuilder.file(
     }
 }
 
-private fun ContentEntityBuilder.parametersWithCommons(
+private fun ContentEntityModificationBuilder.parametersWithCommons(
     alignment: Alignment?,
     collapsed: Boolean?,
     build: MutableMap<ContentEntityParameterName, ContentEntityParameterValue>.() -> Unit

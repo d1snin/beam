@@ -14,22 +14,18 @@
  * limitations under the License.
  */
 
-package dev.d1s.beam.commons.validation
+package dev.d1s.beam.daemon.converter
 
-import dev.d1s.beam.commons.contententity.AbstractContentEntity
-import io.konform.validation.Validation
-import io.konform.validation.ValidationBuilder
+import dev.d1s.beam.commons.contententity.ContentEntity
+import dev.d1s.beam.commons.contententity.ContentEntityModification
+import dev.d1s.beam.commons.metadataOf
+import dev.d1s.exkt.dto.DtoConverter
+import org.koin.core.component.KoinComponent
 
-internal val validateContentEntity: Validation<AbstractContentEntity> = Validation {
-    runValidators()
-}
+class ContentEntityModificationDtoConverter : DtoConverter<ContentEntity, ContentEntityModification>, KoinComponent {
 
-private fun ValidationBuilder<AbstractContentEntity>.runValidators() {
-    val validators = ContentEntityValidator.validators
-
-    validators.forEach { validator ->
-        with(validator) {
-            validate()
+    override suspend fun convertToEntity(dto: ContentEntityModification) =
+        with(dto) {
+            ContentEntity(type, parameters, metadataOf())
         }
-    }
 }

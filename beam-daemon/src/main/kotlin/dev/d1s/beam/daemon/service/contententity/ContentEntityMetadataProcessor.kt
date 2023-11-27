@@ -14,22 +14,15 @@
  * limitations under the License.
  */
 
-package dev.d1s.beam.commons.validation
+package dev.d1s.beam.daemon.service.contententity
 
-import dev.d1s.beam.commons.contententity.AbstractContentEntity
-import io.konform.validation.Validation
-import io.konform.validation.ValidationBuilder
+import dev.d1s.beam.commons.MutableMetadata
+import dev.d1s.beam.commons.contententity.ContentEntity
+import dev.d1s.beam.commons.contententity.ContentEntityTypeDefinition
 
-internal val validateContentEntity: Validation<AbstractContentEntity> = Validation {
-    runValidators()
-}
+interface ContentEntityMetadataProcessor {
 
-private fun ValidationBuilder<AbstractContentEntity>.runValidators() {
-    val validators = ContentEntityValidator.validators
+    val type: ContentEntityTypeDefinition
 
-    validators.forEach { validator ->
-        with(validator) {
-            validate()
-        }
-    }
+    suspend fun populate(entity: ContentEntity, metadata: MutableMetadata)
 }

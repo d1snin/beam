@@ -41,11 +41,13 @@ object BeamDaemonApplication : ServerApplication(), KoinComponent {
         Services,
         Repositories,
         DtoConverters,
+        ContentEntityMetadataProcessors,
         Routing,
         WebSocketEvents,
         Cors,
         RateLimit,
         StatusPages,
+        HttpClient,
         Di
     )
 

@@ -17,6 +17,7 @@
 package dev.d1s.beam.commons
 
 public typealias Metadata = Map<MetadataKey, MetadataValue>
+public typealias MutableMetadata = MutableMap<MetadataKey, MetadataValue>
 public typealias MetadataEntry = Map.Entry<MetadataKey, MetadataValue>
 public typealias MetadataKey = String
 public typealias MetadataValue = String

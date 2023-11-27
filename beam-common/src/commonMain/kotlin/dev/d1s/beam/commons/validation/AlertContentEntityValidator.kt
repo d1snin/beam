@@ -16,9 +16,9 @@
 
 package dev.d1s.beam.commons.validation
 
+import dev.d1s.beam.commons.contententity.AbstractContentEntity
 import dev.d1s.beam.commons.contententity.AlertContentEntityTypeDefinition
 import dev.d1s.beam.commons.contententity.AlertStyle
-import dev.d1s.beam.commons.contententity.ContentEntity
 import dev.d1s.beam.commons.util.lowercaseName
 import io.konform.validation.ValidationBuilder
 
@@ -27,7 +27,7 @@ internal object AlertContentEntityValidator :
 
     private val textBoundary = 1..1000
 
-    override fun ValidationBuilder<ContentEntity>.validate() {
+    override fun ValidationBuilder<AbstractContentEntity>.validate() {
         val validator = this@AlertContentEntityValidator
 
         requireCorrectBoundary(validator, requiredDefinition.text, textBoundary, stringLengthMode = true)
@@ -37,7 +37,7 @@ internal object AlertContentEntityValidator :
         requireCorrectHeight(validator, requiredDefinition.height)
     }
 
-    private fun ValidationBuilder<ContentEntity>.requireCorrectStyle() {
+    private fun ValidationBuilder<AbstractContentEntity>.requireCorrectStyle() {
         val validator = this@AlertContentEntityValidator
 
         val styles = AlertStyle.entries.map {

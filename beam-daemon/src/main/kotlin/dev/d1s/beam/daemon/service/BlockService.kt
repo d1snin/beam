@@ -17,6 +17,9 @@
 package dev.d1s.beam.daemon.service
 
 import dev.d1s.beam.commons.*
+import dev.d1s.beam.commons.contententity.ContentEntities
+import dev.d1s.beam.commons.contententity.ContentEntityTypeName
+import dev.d1s.beam.commons.contententity.definition
 import dev.d1s.beam.commons.event.EntityUpdate
 import dev.d1s.beam.commons.event.EventReferences
 import dev.d1s.beam.daemon.configuration.DtoConverters
@@ -25,6 +28,7 @@ import dev.d1s.beam.daemon.entity.BlockEntities
 import dev.d1s.beam.daemon.entity.BlockEntity
 import dev.d1s.beam.daemon.entity.asString
 import dev.d1s.beam.daemon.entity.requiredIndex
+import dev.d1s.beam.daemon.service.contententity.ContentEntityMetadataProcessor
 import dev.d1s.exkt.dto.DtoConverter
 import dev.d1s.exkt.dto.ResultingEntityWithOptionalDto
 import dev.d1s.exkt.dto.convertToDtoIf
@@ -36,6 +40,7 @@ import dev.d1s.ktor.events.server.event
 import io.ktor.server.plugins.*
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import org.koin.core.context.GlobalContext
 import org.lighthousegames.logging.logging
 import java.util.*
 
@@ -90,6 +95,10 @@ class DefaultBlockService : BlockService, KoinComponent {
 
     private val translationService by inject<TranslationService>()
 
+    private val contentEntityMetadataProcessors by lazy {
+        GlobalContext.get().getAll<ContentEntityMetadataProcessor>()
+    }
+
     private val logger = logging()
 
     override suspend fun createBlock(
@@ -106,7 +115,9 @@ class DefaultBlockService : BlockService, KoinComponent {
             processBlockRow(block)
             processBlockIndexOnCreation(block)
 
-            val addedBlock = blockRepository.addBlock(block).getOrThrow()
+            val processedBlock = block.populateContentEntityMetadata()
+
+            val addedBlock = blockRepository.addBlock(processedBlock).getOrThrow()
             val translatedBlock = translateOptionally(addedBlock, languageCode)
             val translatedBlockDto = blockDtoConverter.convertToDto(translatedBlock)
 
@@ -195,7 +206,7 @@ class DefaultBlockService : BlockService, KoinComponent {
                 this.row = modification.row
                 this.index = modification.index
                 this.size = modification.size
-                this.entities = modification.entities
+                this.entities = populateContentEntityMetadata(modification.entities)
                 this.metadata = modification.metadata
                 this.space = modification.space
             }
@@ -373,6 +384,40 @@ class DefaultBlockService : BlockService, KoinComponent {
         blocks.map { block ->
             translateOptionally(block, languageCode)
         }
+
+    private suspend fun BlockEntity.populateContentEntityMetadata() =
+        apply {
+            entities = populateContentEntityMetadata(entities)
+        }
+
+    private suspend fun populateContentEntityMetadata(entities: ContentEntities) =
+        entities.map {
+            var entity = it
+
+            val optionalProcessor = contentEntityMetadataProcessorByType(entity.type)
+
+            optionalProcessor?.let { processor ->
+                val metadata = entity.metadata.toMutableMap()
+
+                processor.populate(entity, metadata)
+
+                entity = entity.copy(metadata = metadata)
+            }
+
+            entity
+        }.also {
+            logger.d {
+                "Populated content entity metadata: $it"
+            }
+        }
+
+    private fun contentEntityMetadataProcessorByType(typeName: ContentEntityTypeName): ContentEntityMetadataProcessor? {
+        val definition = definition(typeName) ?: error("content entity definition not found")
+
+        return contentEntityMetadataProcessors.find {
+            it.type == definition
+        }
+    }
 
     private suspend fun sendBlockCreatedEvent(blockDto: Block) {
         val event = event(EventReferences.blockCreated) {

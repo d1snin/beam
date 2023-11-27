@@ -404,7 +404,7 @@ class DefaultTranslationService : TranslationService, KoinComponent {
 
         entities.forEach { entity ->
             val modifiedParameters = entity.translateParameters(translation)
-            modifiedEntities += ContentEntity(entity.type, modifiedParameters)
+            modifiedEntities += ContentEntity(entity.type, modifiedParameters, entity.metadata)
         }
 
         return modifiedEntities

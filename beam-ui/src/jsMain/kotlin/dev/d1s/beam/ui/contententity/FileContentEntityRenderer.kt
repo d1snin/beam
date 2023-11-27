@@ -16,6 +16,8 @@
 
 package dev.d1s.beam.ui.contententity
 
+import dev.d1s.beam.commons.MetadataKeys
+import dev.d1s.beam.commons.contententity.ContentEntity
 import dev.d1s.beam.commons.contententity.FileContentEntityTypeDefinition
 import dev.d1s.beam.commons.contententity.get
 import dev.d1s.beam.ui.Qualifier
@@ -28,13 +30,15 @@ import io.kvision.panel.SimplePanel
 import io.kvision.utils.rem
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
+import kotlin.math.pow
 
 class FileContentEntityRenderer : SingleContentEntityRenderer, KoinComponent {
 
     override val definition = FileContentEntityTypeDefinition
 
     override fun SimplePanel.render(context: SingleContentEntityRenderingContext) {
-        val parameters = context.entity.parameters
+        val entity = context.entity
+        val parameters = entity.parameters
 
         val url = parameters[definition.url]
         requireNotNull(url)
@@ -47,6 +51,7 @@ class FileContentEntityRenderer : SingleContentEntityRenderer, KoinComponent {
 
         render(descriptiveCardComponent) {
             setTitle(fileName)
+            setDescription(entity)
             setUrl(url, fileName)
             setCardFullWidth()
             setImage()
@@ -55,6 +60,15 @@ class FileContentEntityRenderer : SingleContentEntityRenderer, KoinComponent {
 
     private fun DescriptiveCardComponent.Config.setTitle(fileName: String) {
         title.value = fileName
+    }
+
+    private fun DescriptiveCardComponent.Config.setDescription(entity: ContentEntity) {
+        val size = entity.metadata[MetadataKeys.FILE_CONTENT_ENTITY_SIZE]?.toLongOrNull()
+        val formattedSize = size?.formatByteLength()
+
+        formattedSize?.let {
+            description.value = it
+        }
     }
 
     private fun DescriptiveCardComponent.Config.setUrl(fileUrl: String, fileName: String) {
@@ -73,6 +87,28 @@ class FileContentEntityRenderer : SingleContentEntityRenderer, KoinComponent {
             fontSize = 2.0.rem
             icon("bi bi-download")
         }
+    }
+
+    private fun Long.formatByteLength(): String {
+        val units = arrayOf("B", "KB", "MB", "GB", "TB")
+        var size = toDouble()
+        var unitIndex = 0
+
+        while (size >= 1024 && unitIndex < units.size - 1) {
+            size /= 1024
+            unitIndex++
+        }
+
+        val formattedSize = if (size % 1 == 0.0) {
+            size.toInt().toString()
+        } else {
+            val decimalPlaces = 2
+            val multiplier = 10.0.pow(decimalPlaces)
+            val roundedSize = kotlin.math.round(size * multiplier) / multiplier
+            roundedSize.toString()
+        }
+
+        return "$formattedSize ${units[unitIndex]}"
     }
 
     private companion object {

@@ -16,7 +16,7 @@
 
 package dev.d1s.beam.commons.validation
 
-import dev.d1s.beam.commons.contententity.ContentEntity
+import dev.d1s.beam.commons.contententity.AbstractContentEntity
 import dev.d1s.beam.commons.contententity.Heading
 import dev.d1s.beam.commons.contententity.TextContentEntityTypeDefinition
 import dev.d1s.beam.commons.util.lowercaseName
@@ -25,7 +25,7 @@ import io.konform.validation.ValidationBuilder
 internal object TextContentEntityValidator :
     ContentEntityValidator<TextContentEntityTypeDefinition>(TextContentEntityTypeDefinition) {
 
-    override fun ValidationBuilder<ContentEntity>.validate() {
+    override fun ValidationBuilder<AbstractContentEntity>.validate() {
         val validator = this@TextContentEntityValidator
 
         requireNotBlankText(validator, requiredDefinition.value)
@@ -33,7 +33,7 @@ internal object TextContentEntityValidator :
         requireHeading()
     }
 
-    private fun ValidationBuilder<ContentEntity>.requireHeading() {
+    private fun ValidationBuilder<AbstractContentEntity>.requireHeading() {
         val validator = this@TextContentEntityValidator
 
         val headings = Heading.entries.map {

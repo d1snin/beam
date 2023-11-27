@@ -16,9 +16,9 @@
 
 package dev.d1s.beam.commons.validation
 
+import dev.d1s.beam.commons.contententity.AbstractContentEntity
 import dev.d1s.beam.commons.contententity.ButtonLinkContentEntityTypeDefinition
 import dev.d1s.beam.commons.contententity.ButtonStyle
-import dev.d1s.beam.commons.contententity.ContentEntity
 import dev.d1s.beam.commons.util.lowercaseName
 import io.konform.validation.ValidationBuilder
 
@@ -27,7 +27,7 @@ internal object ButtonLinkContentEntityValidator :
 
     private val textBoundary = 1..100
 
-    override fun ValidationBuilder<ContentEntity>.validate() {
+    override fun ValidationBuilder<AbstractContentEntity>.validate() {
         val validator = this@ButtonLinkContentEntityValidator
 
         requireCorrectBoundary(validator, requiredDefinition.text, textBoundary, stringLengthMode = true)
@@ -38,7 +38,7 @@ internal object ButtonLinkContentEntityValidator :
         requireCorrectHeight(validator, requiredDefinition.height)
     }
 
-    private fun ValidationBuilder<ContentEntity>.requireCorrectStyle() {
+    private fun ValidationBuilder<AbstractContentEntity>.requireCorrectStyle() {
         val validator = this@ButtonLinkContentEntityValidator
 
         val styles = ButtonStyle.entries.map {

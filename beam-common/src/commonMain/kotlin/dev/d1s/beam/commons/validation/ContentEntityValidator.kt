@@ -16,7 +16,7 @@
 
 package dev.d1s.beam.commons.validation
 
-import dev.d1s.beam.commons.contententity.ContentEntity
+import dev.d1s.beam.commons.contententity.AbstractContentEntity
 import dev.d1s.beam.commons.contententity.ContentEntityTypeDefinition
 import io.konform.validation.ValidationBuilder
 
@@ -33,9 +33,9 @@ internal abstract class ContentEntityValidator<in D : ContentEntityTypeDefinitio
             "Content entity definition for validator is not set"
         }
 
-    abstract fun ValidationBuilder<ContentEntity>.validate()
+    abstract fun ValidationBuilder<AbstractContentEntity>.validate()
 
-    fun ValidationBuilder<ContentEntity>.addTypedConstraint(errorMessage: String, test: (ContentEntity) -> Boolean) {
+    fun ValidationBuilder<AbstractContentEntity>.addTypedConstraint(errorMessage: String, test: (AbstractContentEntity) -> Boolean) {
         addConstraint(errorMessage) { entity ->
             val entityType = entity.type
 

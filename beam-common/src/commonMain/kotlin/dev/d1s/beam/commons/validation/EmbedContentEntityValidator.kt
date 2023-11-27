@@ -16,14 +16,14 @@
 
 package dev.d1s.beam.commons.validation
 
-import dev.d1s.beam.commons.contententity.ContentEntity
+import dev.d1s.beam.commons.contententity.AbstractContentEntity
 import dev.d1s.beam.commons.contententity.EmbedContentEntityTypeDefinition
 import io.konform.validation.ValidationBuilder
 
 internal object EmbedContentEntityValidator :
     ContentEntityValidator<EmbedContentEntityTypeDefinition>(EmbedContentEntityTypeDefinition) {
 
-    override fun ValidationBuilder<ContentEntity>.validate() {
+    override fun ValidationBuilder<AbstractContentEntity>.validate() {
         val validator = this@EmbedContentEntityValidator
 
         requireCorrectUrl(validator, requiredDefinition.url)

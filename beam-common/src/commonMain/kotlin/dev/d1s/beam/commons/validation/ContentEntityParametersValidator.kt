@@ -16,24 +16,24 @@
 
 package dev.d1s.beam.commons.validation
 
-import dev.d1s.beam.commons.contententity.ContentEntity
+import dev.d1s.beam.commons.contententity.AbstractContentEntity
 import dev.d1s.beam.commons.contententity.definition
 import io.konform.validation.ValidationBuilder
 
 internal object ContentEntityParametersValidator : ContentEntityValidator<Nothing>(global = true) {
 
-    override fun ValidationBuilder<ContentEntity>.validate() {
+    override fun ValidationBuilder<AbstractContentEntity>.validate() {
         requireDefinition()
         requireParameters()
     }
 
-    private fun ValidationBuilder<ContentEntity>.requireDefinition() {
+    private fun ValidationBuilder<AbstractContentEntity>.requireDefinition() {
         addConstraint("content entity does not exist") { entity ->
             entity.definition() != null
         }
     }
 
-    private fun ValidationBuilder<ContentEntity>.requireParameters() {
+    private fun ValidationBuilder<AbstractContentEntity>.requireParameters() {
         addConstraint("missing parameters") { entity ->
             val definition = entity.definition()
 
@@ -48,5 +48,5 @@ internal object ContentEntityParametersValidator : ContentEntityValidator<Nothin
         }
     }
 
-    private fun ContentEntity.definition() = definition(type)
+    private fun AbstractContentEntity.definition() = definition(type)
 }

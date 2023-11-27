@@ -67,6 +67,9 @@ dependencies {
     implementation("dev.d1s:ktor-server-liquibase:$ktorServerLiquibaseVersion")
     implementation("dev.d1s.ktor-ws-events:ktor-ws-events-server:$ktorWsEventsVersion")
 
+    implementation("io.ktor:ktor-client-core:$ktorVersion")
+    implementation("io.ktor:ktor-client-cio:$ktorVersion")
+
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
     implementation("org.lighthousegames:logging:$kmLogVersion")
 

@@ -30,4 +30,6 @@ public object MetadataKeys {
     public const val UI_BLOCK_BARE: MetadataKey = "ui.block.bare"
     public const val UI_BLOCK_LINK: MetadataKey = "ui.block.link"
     public const val UI_BLOCK_IMAGE_ENTITY_FLUID: MetadataKey = "ui.block.image.fluid"
+
+    public const val FILE_CONTENT_ENTITY_SIZE: MetadataKey = "file.size"
 }

@@ -16,7 +16,9 @@
 
 package dev.d1s.beam.commons
 
+import dev.d1s.beam.commons.contententity.AbstractContentEntities
 import dev.d1s.beam.commons.contententity.ContentEntities
+import dev.d1s.beam.commons.contententity.ContentEntityModifications
 import kotlinx.serialization.Serializable
 
 public typealias BlockId = String
@@ -31,7 +33,7 @@ public sealed interface AbstractBlock {
 
     public val size: BlockSize
 
-    public val entities: ContentEntities
+    public val entities: AbstractContentEntities
 
     public val metadata: Metadata
 
@@ -54,7 +56,7 @@ public data class BlockModification(
     override val row: RowIndex,
     override val index: BlockIndex?,
     override val size: BlockSize,
-    override val entities: ContentEntities,
+    override val entities: ContentEntityModifications,
     override val metadata: Metadata,
     override val spaceId: SpaceId
 ) : AbstractBlock

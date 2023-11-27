@@ -22,6 +22,8 @@ import dev.d1s.beam.client.MetadataBuilder
 import dev.d1s.beam.client.void
 import dev.d1s.beam.commons.*
 import dev.d1s.beam.commons.contententity.ContentEntities
+import dev.d1s.beam.commons.contententity.ContentEntityModification
+import dev.d1s.beam.commons.contententity.ContentEntityModifications
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.lighthousegames.logging.logging
@@ -53,7 +55,7 @@ public class BlockContext internal constructor(
     }
 
     public suspend fun setEntities(entities: suspend ContentEntitiesBuilder.() -> Unit) {
-        val builtEntities = ContentEntitiesBuilder().apply { entities() }.buildContentEntities()
+        val builtEntities = ContentEntitiesBuilder().apply { entities() }.buildContentEntityModifications()
         modifyBlock(entities = builtEntities)
     }
 
@@ -66,7 +68,7 @@ public class BlockContext internal constructor(
         row: RowIndex = block.row,
         index: BlockIndex? = block.index,
         size: BlockSize = block.size,
-        entities: ContentEntities = block.entities,
+        entities: ContentEntityModifications = block.entities.toModifications(),
         metadata: Metadata = block.metadata,
     ) {
         operationLock.withLock {
@@ -161,3 +163,8 @@ public suspend fun SpaceContext.extraLargeBlockWithEntities(
     row: RowIndex? = null,
     configureEntities: suspend ContentEntitiesBuilder.() -> Unit
 ): Block = sizedBlockWithEntities(size = BlockSize.EXTRA_LARGE, row, configureEntities)
+
+private fun ContentEntities.toModifications() =
+    map {
+        ContentEntityModification(it.type, it.parameters)
+    }

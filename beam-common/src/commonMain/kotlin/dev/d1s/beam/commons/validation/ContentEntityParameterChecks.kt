@@ -16,7 +16,7 @@
 
 package dev.d1s.beam.commons.validation
 
-import dev.d1s.beam.commons.contententity.ContentEntity
+import dev.d1s.beam.commons.contententity.AbstractContentEntity
 import dev.d1s.beam.commons.contententity.ContentEntityParameterDefinition
 import dev.d1s.beam.commons.contententity.ContentEntityParameterName
 import dev.d1s.beam.commons.contententity.get
@@ -25,7 +25,7 @@ import io.konform.validation.ValidationBuilder
 private val widthBoundary = 1..100
 private val heightBoundary = 1..1200
 
-internal fun ValidationBuilder<ContentEntity>.requireCorrectWidth(
+internal fun ValidationBuilder<AbstractContentEntity>.requireCorrectWidth(
     validator: ContentEntityValidator<*>,
     parameterDefinition: ContentEntityParameterDefinition
 ) {
@@ -33,7 +33,7 @@ internal fun ValidationBuilder<ContentEntity>.requireCorrectWidth(
     requireCorrectBoundary(validator, parameterDefinition, widthBoundary)
 }
 
-internal fun ValidationBuilder<ContentEntity>.requireCorrectHeight(
+internal fun ValidationBuilder<AbstractContentEntity>.requireCorrectHeight(
     validator: ContentEntityValidator<*>,
     parameterDefinition: ContentEntityParameterDefinition
 ) {
@@ -41,7 +41,7 @@ internal fun ValidationBuilder<ContentEntity>.requireCorrectHeight(
     requireCorrectBoundary(validator, parameterDefinition, heightBoundary)
 }
 
-internal fun ValidationBuilder<ContentEntity>.requireCorrectUrl(
+internal fun ValidationBuilder<AbstractContentEntity>.requireCorrectUrl(
     validator: ContentEntityValidator<*>,
     parameterDefinition: ContentEntityParameterDefinition
 ) {
@@ -56,7 +56,7 @@ internal fun ValidationBuilder<ContentEntity>.requireCorrectUrl(
     }
 }
 
-internal fun ValidationBuilder<ContentEntity>.requireCorrectInt(
+internal fun ValidationBuilder<AbstractContentEntity>.requireCorrectInt(
     validator: ContentEntityValidator<*>,
     parameterDefinition: ContentEntityParameterDefinition
 ) {
@@ -69,7 +69,7 @@ internal fun ValidationBuilder<ContentEntity>.requireCorrectInt(
     }
 }
 
-internal fun ValidationBuilder<ContentEntity>.requireCorrectBoundary(
+internal fun ValidationBuilder<AbstractContentEntity>.requireCorrectBoundary(
     validator: ContentEntityValidator<*>,
     parameterDefinition: ContentEntityParameterDefinition,
     boundary: IntRange,
@@ -90,7 +90,7 @@ internal fun ValidationBuilder<ContentEntity>.requireCorrectBoundary(
     }
 }
 
-internal fun ValidationBuilder<ContentEntity>.requireNotBlankText(
+internal fun ValidationBuilder<AbstractContentEntity>.requireNotBlankText(
     validator: ContentEntityValidator<*>,
     parameterDefinition: ContentEntityParameterDefinition
 ) {
@@ -103,7 +103,7 @@ internal fun ValidationBuilder<ContentEntity>.requireNotBlankText(
     }
 }
 
-internal fun ValidationBuilder<ContentEntity>.requireCorrectBoolean(
+internal fun ValidationBuilder<AbstractContentEntity>.requireCorrectBoolean(
     validator: ContentEntityValidator<*>,
     parameterName: ContentEntityParameterName
 ) {
@@ -118,14 +118,7 @@ internal fun ValidationBuilder<ContentEntity>.requireCorrectBoolean(
     }
 }
 
-internal fun ValidationBuilder<ContentEntity>.requireCorrectBoolean(
-    validator: ContentEntityValidator<*>,
-    parameterDefinition: ContentEntityParameterDefinition
-) {
-    requireCorrectBoolean(validator, parameterDefinition.name)
-}
-
-internal fun ValidationBuilder<ContentEntity>.requireAnyText(
+internal fun ValidationBuilder<AbstractContentEntity>.requireAnyText(
     validator: ContentEntityValidator<*>,
     parameterName: ContentEntityParameterName,
     texts: List<String>
@@ -145,7 +138,7 @@ internal fun ValidationBuilder<ContentEntity>.requireAnyText(
     }
 }
 
-internal fun ValidationBuilder<ContentEntity>.requireAnyText(
+internal fun ValidationBuilder<AbstractContentEntity>.requireAnyText(
     validator: ContentEntityValidator<*>,
     parameterDefinition: ContentEntityParameterDefinition,
     texts: List<String>
