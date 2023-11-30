@@ -20,7 +20,7 @@ import dev.d1s.beam.commons.contententity.ImageContentEntityTypeDefinition
 import dev.d1s.beam.commons.contententity.get
 import dev.d1s.beam.ui.util.alignItems
 import dev.d1s.beam.ui.util.isFluidImage
-import dev.d1s.beam.ui.util.showSpinnerOnLoading
+import dev.d1s.beam.ui.util.renderSpinnerOnLoading
 import io.kvision.html.div
 import io.kvision.html.image
 import io.kvision.panel.SimplePanel
@@ -48,7 +48,7 @@ class ImageContentEntityRenderer : SingleContentEntityRenderer, KoinComponent {
                 separateContentEntity(context)
             }
 
-            showSpinnerOnLoading(resourceUrl = src) {
+            renderSpinnerOnLoading(resourceUrl = src) {
                 image(src, description, responsive = true, className = "rounded") {
                     width?.let {
                         this.width = it.perc

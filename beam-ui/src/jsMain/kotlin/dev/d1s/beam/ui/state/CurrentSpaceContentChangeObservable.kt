@@ -20,15 +20,14 @@ import dev.d1s.beam.client.BeamClient
 import dev.d1s.beam.commons.*
 import dev.d1s.beam.ui.component.BlockContainerComponent
 import dev.d1s.beam.ui.util.*
-import dev.d1s.exkt.common.pagination.LimitAndOffset
 import dev.d1s.exkt.common.pagination.Paginator
 import io.kvision.html.div
 import io.kvision.panel.SimplePanel
 import io.kvision.state.ObservableValue
-import kotlinx.browser.document
+import io.kvision.state.bind
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -50,6 +49,9 @@ infix fun Rows?.with(blocks: List<Block>?) =
         }
     }
 
+private val showEndOfContentSpinner = ObservableValue(true)
+private val endOfContent = ObservableValue<SimplePanel?>(null)
+
 class CurrentSpaceContentChangeObservable : Observable<SpaceContentChange?>, KoinComponent {
 
     override val state = ObservableValue(currentRows with currentBlocks)
@@ -60,6 +62,10 @@ class CurrentSpaceContentChangeObservable : Observable<SpaceContentChange?>, Koi
 
     private val renderingScope = CoroutineScope(Dispatchers.Main)
 
+    private val endOfContentLastOnScreenState = atomic(false)
+
+    private val incrementPaginator = atomic(true)
+
     override fun monitor() =
         launchMonitor {
             val space = currentSpace
@@ -68,7 +74,7 @@ class CurrentSpaceContentChangeObservable : Observable<SpaceContentChange?>, Koi
                 val spaceId = space.id
 
                 handleSpaceContentUpdates(spaceId)
-                handleEndOfScroll(spaceId)
+                handleEndOfContent(spaceId)
             } else {
                 setCurrentSpaceContent(change = null)
             }
@@ -80,30 +86,36 @@ class CurrentSpaceContentChangeObservable : Observable<SpaceContentChange?>, Koi
         state.value = change
     }
 
-    private suspend fun handleEndOfScroll(spaceId: SpaceId) {
-        val element = document.getElementById(END_OF_CONTENT_ID)
+    private fun handleEndOfContent(spaceId: SpaceId) {
+        endOfContent.subscribeSkipping { _ ->
+            handleEndOfContentOnScreen(spaceId)
 
-        if (element != null) {
-            @Suppress("UNUSED_VARIABLE")
-            val handle = {
-                paginator.currentPage++
-
-                renderingScope.launch {
-                    actualizeCurrentSpaceContent(spaceId, usePagination = true)
-                }
+            onScrollOrResize {
+                handleEndOfContentOnScreen(spaceId)
             }
+        }
+    }
 
-            @Suppress("JSUnresolvedReference")
-            js(
-                // language=javascript
-                "var options = { root: null, rootMargin: '0px', threshold: 1.0 }; " +
-                        "var callback = function (entries) { if (entries[0].isIntersecting === true) handle() }; " +
-                        "var observer = new IntersectionObserver(callback, options); " +
-                        "observer.observe(document.querySelector('#$END_OF_CONTENT_ID'))"
-            )
+    private fun handleEndOfContentOnScreen(spaceId: SpaceId) {
+        val element = endOfContent.value?.getElement() ?: return
+
+        fun handle() {
+            val previouslyOnScreen = endOfContentLastOnScreenState.value
+
+            if (!previouslyOnScreen) {
+                renderingScope.launch {
+                    actualizeCurrentSpaceContent(spaceId)
+                }
+
+                endOfContentLastOnScreenState.value = true
+            }
+        }
+
+        if (element.isOnScreen) {
+            handle()
+            showEndOfContentSpinner.value = false
         } else {
-            delay(50)
-            handleEndOfScroll(spaceId)
+            endOfContentLastOnScreenState.value = false
         }
     }
 
@@ -120,7 +132,7 @@ class CurrentSpaceContentChangeObservable : Observable<SpaceContentChange?>, Koi
             val block = it.data
 
             ifSpaceMatches(block, spaceId) {
-                actualizeCurrentSpaceContent(spaceId)
+                processSpaceContentUpdate(spaceId)
             }
         }
     }
@@ -130,7 +142,7 @@ class CurrentSpaceContentChangeObservable : Observable<SpaceContentChange?>, Koi
             val block = event.data.new
 
             ifSpaceMatches(block, spaceId) {
-                actualizeCurrentSpaceContent(spaceId)
+                processSpaceContentUpdate(spaceId)
             }
         }
     }
@@ -170,7 +182,7 @@ class CurrentSpaceContentChangeObservable : Observable<SpaceContentChange?>, Koi
             val block = it.data
 
             ifSpaceMatches(block, spaceId) {
-                actualizeCurrentSpaceContent(spaceId)
+                processSpaceContentUpdate(spaceId)
             }
         }
     }
@@ -180,31 +192,62 @@ class CurrentSpaceContentChangeObservable : Observable<SpaceContentChange?>, Koi
             val row = it.data.new
 
             ifSpaceMatches(row, spaceId) {
-                actualizeCurrentSpaceContent(spaceId)
+                processSpaceContentUpdate(spaceId)
             }
         }
     }
 
-    private suspend fun actualizeCurrentSpaceContent(space: SpaceId, usePagination: Boolean = false) {
-        val rows = client.getRows(space).getOrNull()
+    private suspend fun processSpaceContentUpdate(space: SpaceId) {
+        actualizeCurrentSpaceContent(space, reload = true)
+        handleEndOfContentOnScreen(space)
+    }
 
-        val limitAndOffset =
-            if (usePagination) {
-                paginator.limitAndOffset
-            } else {
-                paginator.currentPage = 1
-                LimitAndOffset(limit = BlockContainerComponent.PAGE_SIZE, offset = 0)
+    private suspend fun actualizeCurrentSpaceContent(space: SpaceId, reload: Boolean = false) {
+        suspend fun fetchBlocks() =
+            client.getBlocks(space, paginator.limitAndOffset, currentLanguageCode).getOrNull()?.elements ?: listOf()
+
+        val blocks = if (reload) {
+            buildList {
+                (1..paginator.currentPage).forEach { page ->
+                    paginator.currentPage = page
+
+                    val fetchedBlocks = fetchBlocks()
+
+                    addAll(fetchedBlocks)
+                }
+
+                incrementPaginator.value = true
+            }
+        } else {
+            if (incrementPaginator.value) {
+                paginator.currentPage++
             }
 
-        val fetchedBlocks =
-            client.getBlocks(space, limitAndOffset, currentLanguageCode).getOrNull()?.elements ?: listOf()
+            val fetchedBlocks = fetchBlocks()
 
-        val blocks = if (usePagination) (currentBlocks ?: listOf()) + fetchedBlocks else fetchedBlocks
+            val fetchedBlocksNotEmpty = fetchedBlocks.isNotEmpty()
+
+            incrementPaginator.value = fetchedBlocksNotEmpty
+            showEndOfContentSpinner.value = fetchedBlocksNotEmpty
+
+            (currentBlocks ?: listOf()) + fetchedBlocks
+        }
+
+        val rows = client.getRows(space).getOrNull()
 
         val change = rows with blocks
 
         setCurrentSpaceContent(change)
     }
+
+    // "хочу плакать"
+    // "хочу плакать"
+    // "хочу плакать"
+    // "хочу плакать"
+    // "хочу плакать"
+    // "хочу плакать"
+    // "хочу плакать"
+    // ну так я что блять ебаный ты сыр
 
     private inline fun ifSpaceMatches(block: Block, spaceId: SpaceId, handler: () -> Unit) {
         if (block.spaceId == spaceId) {
@@ -219,10 +262,18 @@ class CurrentSpaceContentChangeObservable : Observable<SpaceContentChange?>, Koi
     }
 }
 
-private const val END_OF_CONTENT_ID = "end-of-content"
-
 fun SimplePanel.renderEndOfContent() {
-    div {
-        id = END_OF_CONTENT_ID
+    div().bind(showEndOfContentSpinner) { show ->
+        if (show) {
+            addCssClass("mt-5")
+            addCssClass("d-flex")
+            addCssClass("justify-content-center")
+
+            renderSpinner()
+        }
+
+        addAfterInsertHook {
+            endOfContent.value = this
+        }
     }
 }

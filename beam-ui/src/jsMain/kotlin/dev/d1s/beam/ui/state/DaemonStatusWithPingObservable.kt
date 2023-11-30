@@ -19,6 +19,8 @@ package dev.d1s.beam.ui.state
 import dev.d1s.beam.ui.client.DaemonConnector
 import dev.d1s.beam.ui.client.DaemonStatusWithPing
 import io.kvision.state.ObservableValue
+import kotlinx.atomicfu.atomic
+import kotlinx.browser.window
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import org.koin.core.component.KoinComponent
@@ -30,12 +32,21 @@ class DaemonStatusWithPingObservable : Observable<DaemonStatusWithPing?>, KoinCo
 
     private val daemonConnector by inject<DaemonConnector>()
 
+    private val initialized = atomic(false)
+
     override fun monitor(): Job =
         launchMonitor(loop = true) {
             val status = daemonConnector.getDaemonStatus()
 
-            if (state.value != status) {
+            val currentStatus = state.value
+            if (currentStatus != status) {
+                if (currentStatus == null && initialized.value) {
+                    window.location.reload()
+                }
+
                 state.value = status
+
+                initialized.value = true
             }
 
             delay(DaemonCheckDelay)

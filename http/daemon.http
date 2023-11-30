@@ -92,20 +92,11 @@ Content-Type: application/json
 {
     "row": 0,
     "index": null,
-    "size": "EXTRA_LARGE",
+    "size": "MEDIUM",
     "entities": [
         {
-            "type": "text",
+            "type": "void",
             "parameters": {
-                "value": "(File download test)(blue)",
-                "heading": "display_3"
-            }
-        },
-        {
-            "type": "file",
-            "parameters": {
-                "url": "https://http.cat/404",
-                "fileName": "404_cat.jpg"
             }
         }
     ],

@@ -106,9 +106,10 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
 
         failureCardComponent.apply {
             mode.value = when {
+                // priority matters
+                show.lostConnection -> FailureCardComponent.Mode.LOST_CONNECTION
                 show.notFound -> FailureCardComponent.Mode.NOT_FOUND
                 show.emptySpace -> FailureCardComponent.Mode.EMPTY_SPACE
-                show.lostConnection -> FailureCardComponent.Mode.LOST_CONNECTION
 
                 else -> FailureCardComponent.Mode.NONE
             }

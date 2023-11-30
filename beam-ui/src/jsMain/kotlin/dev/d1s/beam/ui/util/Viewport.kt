@@ -18,6 +18,18 @@ package dev.d1s.beam.ui.util
 
 import kotlinx.browser.document
 import kotlinx.browser.window
+import org.w3c.dom.Element
 import kotlin.math.max
 
+val vh get() = max(document.documentElement?.clientHeight ?: 0, window.innerHeight)
 val vw get() = max(document.documentElement?.clientWidth ?: 0, window.innerWidth)
+
+val Element.isOnScreen
+    get() = getBoundingClientRect().let {
+        it.top >= 0 && it.left >= 0 && it.bottom <= vh && it.right <= vw
+    }
+
+fun onScrollOrResize(block: () -> Unit) {
+    window.addEventListener("scroll", { _ -> block() })
+    window.addEventListener("resize", { _ -> block() })
+}

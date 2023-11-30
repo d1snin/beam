@@ -20,7 +20,7 @@ import dev.d1s.beam.commons.contententity.ContentEntity
 import dev.d1s.beam.commons.contententity.EmbedContentEntityTypeDefinition
 import dev.d1s.beam.commons.contententity.get
 import dev.d1s.beam.ui.util.justifyContent
-import dev.d1s.beam.ui.util.showSpinnerOnLoading
+import dev.d1s.beam.ui.util.renderSpinnerOnLoading
 import io.kvision.core.Border
 import io.kvision.core.BorderStyle
 import io.kvision.core.Position
@@ -65,7 +65,7 @@ class EmbedContentEntityRenderer : SingleContentEntityRenderer, KoinComponent {
                 this.height = it.px
             }
 
-            showSpinnerOnLoading(resourceUrl = url) {
+            renderSpinnerOnLoading(resourceUrl = url) {
                 iframe(
                     src = url
                 ) {

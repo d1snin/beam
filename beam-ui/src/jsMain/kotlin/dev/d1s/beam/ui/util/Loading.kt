@@ -29,20 +29,15 @@ enum class SpinnerStyle(val code: String) {
     LIGHT("light"), DARK("dark")
 }
 
-fun SimplePanel.showSpinnerOnLoading(resourceUrl: String, block: () -> Widget) {
+fun SimplePanel.renderSpinnerOnLoading(resourceUrl: String, block: () -> Widget) {
     if (resourceUrl !in processedResources) {
         addCssClass("d-flex")
         addCssClass("flex-column")
         addCssClass("justify-content-center")
+        addCssClass("align-items-center")
 
         div(className = "d-flex justify-content-center") {
-            val style = currentTheme.spinnerStyle
-
-            val spinner = div(className = "spinner-border text-${style.code}") {
-                role = "status"
-                span("Loading...", className = "visually-hidden")
-            }
-
+            val spinner = renderSpinner()
             val element = block()
 
             element.apply {
@@ -60,3 +55,9 @@ fun SimplePanel.showSpinnerOnLoading(resourceUrl: String, block: () -> Widget) {
         block()
     }
 }
+
+fun SimplePanel.renderSpinner(): SimplePanel =
+    div(className = "spinner-border text-${currentTheme.spinnerStyle.code}") {
+        role = "status"
+        span("Loading...", className = "visually-hidden")
+    }
