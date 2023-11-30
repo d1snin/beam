@@ -42,7 +42,7 @@ fun SimplePanel.renderSpinnerOnLoading(resourceUrl: String, block: () -> Widget)
 
             element.apply {
                 addAfterInsertHook {
-                    getElement()?.onload = {
+                    getElement()?.onloadstart = {
                         spinner.display = Display.NONE
                         asDynamic()
                     }
