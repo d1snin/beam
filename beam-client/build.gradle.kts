@@ -67,7 +67,7 @@ kotlin {
 
                 api("dev.d1s.ktor-ws-events:ktor-ws-events-client:$ktorWsEventsVersion")
 
-                implementation("dev.d1s.exkt:exkt-common:$exktVersion")
+                api("dev.d1s.exkt:exkt-common:$exktVersion")
 
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion")
             }
