@@ -64,7 +64,7 @@ class CurrentSpaceContentChangeObservable : Observable<SpaceContentChange?>, Koi
 
     private val endOfContentLastOnScreenState = atomic(false)
 
-    private val incrementPaginator = atomic(true)
+    private val enableOnScrollHandler = atomic(true)
 
     override fun monitor() =
         launchMonitor {
@@ -91,7 +91,9 @@ class CurrentSpaceContentChangeObservable : Observable<SpaceContentChange?>, Koi
             handleEndOfContentOnScreen(spaceId)
 
             onScrollOrResize {
-                handleEndOfContentOnScreen(spaceId)
+                if (enableOnScrollHandler.value) {
+                    handleEndOfContentOnScreen(spaceId)
+                }
             }
         }
     }
@@ -216,10 +218,10 @@ class CurrentSpaceContentChangeObservable : Observable<SpaceContentChange?>, Koi
                     addAll(fetchedBlocks)
                 }
 
-                incrementPaginator.value = true
+                enableOnScrollHandler.value = true
             }
         } else {
-            if (incrementPaginator.value) {
+            if (enableOnScrollHandler.value) {
                 paginator.currentPage++
             }
 
@@ -227,7 +229,7 @@ class CurrentSpaceContentChangeObservable : Observable<SpaceContentChange?>, Koi
 
             val fetchedBlocksNotEmpty = fetchedBlocks.isNotEmpty()
 
-            incrementPaginator.value = fetchedBlocksNotEmpty
+            enableOnScrollHandler.value = fetchedBlocksNotEmpty
             showEndOfContentSpinner.value = fetchedBlocksNotEmpty
 
             (currentBlocks ?: listOf()) + fetchedBlocks

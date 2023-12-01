@@ -376,7 +376,7 @@ class DefaultBlockService : BlockService, KoinComponent {
     private suspend fun translateOptionally(block: BlockEntity, languageCode: LanguageCode?) =
         block.apply {
             languageCode?.let {
-                translationService.translateBlock(block = this, languageCode = it).getOrThrow()
+                translationService.translateBlock(block = this, languageCode = it)
             }
         }
 
