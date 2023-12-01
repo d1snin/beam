@@ -325,7 +325,7 @@ class DefaultSpaceService : SpaceService, KoinComponent {
     private suspend fun translateOptionally(space: SpaceEntity, languageCode: LanguageCode?) =
         space.apply {
             languageCode?.let {
-                translationService.translateSpace(space = this, languageCode = it)
+                translationService.translateSpace(space = this, languageCode = it).getOrThrow()
             }
         }
 
