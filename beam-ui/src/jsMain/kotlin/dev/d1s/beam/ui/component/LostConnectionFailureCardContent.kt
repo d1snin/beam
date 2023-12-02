@@ -16,7 +16,9 @@
 
 package dev.d1s.beam.ui.component
 
+import dev.d1s.beam.ui.resource.ResourceLocation
 import dev.d1s.beam.ui.theme.currentTheme
+import dev.d1s.beam.ui.util.PreloadedResources
 import dev.d1s.beam.ui.util.currentTranslation
 import dev.d1s.beam.ui.util.failureCardLostConnectionIconAlt
 import dev.d1s.beam.ui.util.failureCardLostConnectionMessage
@@ -30,19 +32,20 @@ class LostConnectionFailureCardContent : FailureCardContent(), KoinComponent {
     override val mode = FailureCardComponent.Mode.LOST_CONNECTION
 
     override fun SimplePanel.image() {
+        val iconBase64 = when (currentTheme.lostConnectionIcon) {
+            ResourceLocation.LOST_CONNECTION_LIGHT -> PreloadedResources.LostConnectionImageLightBase64
+            ResourceLocation.LOST_CONNECTION_DARK -> PreloadedResources.LostConnectionImageDarkBase64
+            else -> error("Unrecognized icon")
+        }
+
+        val source = "data:image/svg+xml;base64, $iconBase64"
+
         image(
-            currentTheme.lostConnectionIcon,
+            src = source,
             alt = currentTranslation.failureCardLostConnectionIconAlt,
             className = "mb-4 mb-lg-5 align-self-center"
         ) {
             width = 35.perc
-
-            addAfterInsertHook {
-                getElement()?.onerror = { _, _, _, _, _ ->
-                    visible = false
-                    asDynamic()
-                }
-            }
         }
     }
 

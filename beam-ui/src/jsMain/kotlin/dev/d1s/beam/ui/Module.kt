@@ -26,7 +26,10 @@ import dev.d1s.beam.ui.contententity.*
 import dev.d1s.beam.ui.state.*
 import dev.d1s.beam.ui.theme.CurrentTheme
 import dev.d1s.beam.ui.theme.DefaultCurrentTheme
+import dev.d1s.beam.ui.util.buildSpaceUrl
 import dev.d1s.exkt.kvision.component.Component
+import io.ktor.client.*
+import io.ktor.client.plugins.*
 import org.koin.core.context.GlobalContext.startKoin
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
@@ -75,6 +78,7 @@ fun setupModule() {
 
 private val mainModule = module {
     beamClient()
+    httpClient()
     daemonConnector()
     currentTheme()
     observables()
@@ -87,6 +91,16 @@ private val mainModule = module {
 private fun Module.beamClient() {
     single {
         buildBeamClient()
+    }
+}
+
+private fun Module.httpClient() {
+    single {
+        HttpClient {
+            defaultRequest {
+                url(buildSpaceUrl())
+            }
+        }
     }
 }
 

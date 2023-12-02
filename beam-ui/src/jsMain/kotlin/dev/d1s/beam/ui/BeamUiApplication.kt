@@ -17,6 +17,7 @@
 package dev.d1s.beam.ui
 
 import dev.d1s.beam.ui.state.ObservableLauncher
+import dev.d1s.beam.ui.util.PreloadedResources
 import dev.d1s.beam.ui.util.initCurrentSpaceAndBlocks
 import dev.d1s.beam.ui.util.initCurrentTranslation
 import dev.d1s.exkt.kvision.component.Component
@@ -40,6 +41,8 @@ class BeamUiApplication : Application(), KoinComponent {
 
     override fun start() {
         mainCoroutineScope.launch {
+            PreloadedResources.init()
+
             initCurrentTranslation()
             initCurrentSpaceAndBlocks()
 
