@@ -371,8 +371,6 @@ class DefaultBlockService : BlockService, KoinComponent {
         blockRepository.updateBlocks(blocksToUpdate)
     }
 
-    // Я боюсь наступления вечера...
-
     private suspend fun translateOptionally(block: BlockEntity, languageCode: LanguageCode?) =
         block.apply {
             languageCode?.let {

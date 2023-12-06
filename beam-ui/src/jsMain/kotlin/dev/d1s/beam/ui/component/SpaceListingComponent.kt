@@ -151,10 +151,6 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
         }
     }
 
-    // Что было раньше? Раньше было горячо или холодно?
-    // Почему это переносит меня в то время с такой силой и болью в груди?
-    // Было плохо или хорошо? Стало хуже или лучше?
-
     private fun SimplePanel.renderSpaceRow(spaces: List<Space>, block: SimplePanel.() -> Unit) {
         val lgCols = if (spaces.size == 1) 1 else 2
 

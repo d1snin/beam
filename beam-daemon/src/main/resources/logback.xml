@@ -4,7 +4,10 @@
             <pattern>%d{YYYY-MM-dd HH:mm:ss.SSS} %-5level - %msg%n</pattern>
         </encoder>
     </appender>
+
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
     </root>
+
+    <logger name="dev.d1s.ktor.events.server" level="ERROR"/>
 </configuration>

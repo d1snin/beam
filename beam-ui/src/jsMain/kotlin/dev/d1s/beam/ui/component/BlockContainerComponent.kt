@@ -102,8 +102,6 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
         return rowBatches
     }
 
-    // "Лучше вообще ничего не говори"
-
     private fun BlockBatch.splitIntoBatchesBySize(): List<BlockBatch> {
         val maxBlockSize = Size.MaxBlockSize.level.toDouble()
 

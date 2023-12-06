@@ -69,8 +69,6 @@ class RootComponent : Component.Root(), KoinComponent {
         }
     }
 
-    // Тошно.
-
     private fun SimplePanel.display() {
         addCssClass("d-flex")
         addCssClass("flex-column")

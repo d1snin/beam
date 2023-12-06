@@ -204,14 +204,6 @@ class DefaultTranslationService : TranslationService, KoinComponent {
             throw UnprocessableEntityException("Couldn't resolve translation")
         }
 
-    // Боже, да что с ней происходит?
-    // Она же... кто она вообще?
-    // Разве это та, кого я полюбил?
-    // Почему то, что было в прошлом так сильно отзывается в настоящем?
-    // Ты не можешь отпустить это, ты будто живешь только этим.
-    // Да, мы - результат сложения событий прошлого.
-    // Но...
-
     override suspend fun getTranslations(
         spaceIdentifier: SpaceIdentifier?,
         requireDto: Boolean

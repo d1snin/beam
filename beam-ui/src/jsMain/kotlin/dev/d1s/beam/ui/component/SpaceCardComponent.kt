@@ -114,10 +114,6 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
         }
     }
 
-    // Господи. Мне страшно. Я боюсь за все.
-    // За себя. За нее. За наше будущее.
-    // Что с нами будет?
-
     class Config {
 
         val space = atomic<Space?>(null)
