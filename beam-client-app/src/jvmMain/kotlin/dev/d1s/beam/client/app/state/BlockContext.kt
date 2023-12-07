@@ -72,7 +72,14 @@ public class BlockContext internal constructor(
         metadata: Metadata = block.metadata,
     ) {
         operationLock.withLock {
-            val modification = BlockModification(row, index, size, entities, metadata, block.spaceId)
+            val validIndex =
+                if (row != block.row && index == block.index) {
+                    null
+                } else {
+                    index
+                }
+
+            val modification = BlockModification(row, validIndex, size, entities, metadata, block.spaceId)
 
             log.d {
                 "Modifying block with the following data: $modification"
