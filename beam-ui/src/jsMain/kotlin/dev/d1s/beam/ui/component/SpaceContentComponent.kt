@@ -115,6 +115,8 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
             }
         }
 
-        showBlockContainerState.value = show
+        if (showBlockContainerState.value != show) {
+            showBlockContainerState.value = show
+        }
     }
 }

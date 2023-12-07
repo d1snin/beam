@@ -178,8 +178,16 @@ class CurrentSpaceContentChangeObservable : Observable<SpaceContentChange?>, Koi
         suspend fun fetchBlocks() =
             client.getBlocks(space, paginator.limitAndOffset, currentLanguageCode).getOrNull()?.elements ?: listOf()
 
-        val blocks = if (reload) {
-            buildList {
+        suspend fun setSpaceContent(blocks: List<Block>) {
+            val rows = client.getRows(space).getOrNull()
+
+            val change = rows with blocks
+
+            setCurrentSpaceContent(change)
+        }
+
+        if (reload) {
+            val blocks = buildList {
                 (1..paginator.currentPage).forEach { page ->
                     paginator.currentPage = page
 
@@ -190,6 +198,8 @@ class CurrentSpaceContentChangeObservable : Observable<SpaceContentChange?>, Koi
 
                 enableOnScrollHandler.value = true
             }
+
+            setSpaceContent(blocks)
         } else {
             if (enableOnScrollHandler.value) {
                 paginator.currentPage++
@@ -202,14 +212,11 @@ class CurrentSpaceContentChangeObservable : Observable<SpaceContentChange?>, Koi
             enableOnScrollHandler.value = fetchedBlocksNotEmpty
             showEndOfContentSpinner.value = fetchedBlocksNotEmpty
 
-            (currentBlocks ?: listOf()) + fetchedBlocks
+            if (fetchedBlocksNotEmpty) {
+                val blocks = (currentBlocks ?: listOf()) + fetchedBlocks
+                setSpaceContent(blocks)
+            }
         }
-
-        val rows = client.getRows(space).getOrNull()
-
-        val change = rows with blocks
-
-        setCurrentSpaceContent(change)
     }
 
     private inline fun ifSpaceMatches(block: Block, spaceId: SpaceId, handler: () -> Unit) {
