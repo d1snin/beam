@@ -48,6 +48,7 @@ fun SimplePanel.renderSpinnerOnLoading(resourceUrl: String, block: () -> Widget)
                     }
 
                     getElement()?.apply {
+                        onload = stopSpinner
                         onloadend = stopSpinner
                     }
                 }
