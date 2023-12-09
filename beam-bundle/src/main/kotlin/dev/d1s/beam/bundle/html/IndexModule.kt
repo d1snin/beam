@@ -16,22 +16,13 @@
 
 package dev.d1s.beam.bundle.html
 
+import kotlinx.html.BODY
 import kotlinx.html.HEAD
-import kotlinx.html.script
-import kotlinx.html.styleLink
+import kotlinx.html.HTML
 
-typealias Dependency = HEAD.() -> Unit
+interface IndexModule {
 
-val Dependencies = listOf<Dependency>(
-    {
-        styleLink("https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css")
-    },
-    {
-        styleLink("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css")
-    },
-    {
-        script {
-            src = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
-        }
-    }
-)
+    fun HTML.render(renderParameters: RenderParameters) {}
+    fun HEAD.render(renderParameters: RenderParameters) {}
+    fun BODY.render(renderParameters: RenderParameters) {}
+}

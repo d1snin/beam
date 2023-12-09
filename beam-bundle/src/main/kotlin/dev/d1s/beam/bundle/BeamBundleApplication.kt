@@ -41,6 +41,7 @@ object BeamBundleApplication : ServerApplication(), KoinComponent {
         ApplicationConfigBean,
         BeamClient,
         Services,
+        IndexModules,
         HtmlRenderer,
         Di
     )

@@ -16,15 +16,16 @@
 
 package dev.d1s.beam.bundle.html
 
-import dev.d1s.beam.bundle.configuration.daemonHttpAddress
-import dev.d1s.beam.bundle.configuration.daemonWsAddress
 import dev.d1s.beam.bundle.response.Defaults
-import dev.d1s.beam.commons.*
-import io.ktor.server.config.*
+import dev.d1s.beam.commons.Html
+import dev.d1s.beam.commons.Space
+import dev.d1s.beam.commons.SpaceFavicon
+import dev.d1s.beam.commons.SpaceIconUrl
+import dev.d1s.exkt.common.withEach
 import kotlinx.html.*
 import kotlinx.html.stream.createHTML
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import org.koin.core.context.GlobalContext
 
 data class RenderParameters(
     val space: Space?,
@@ -56,66 +57,29 @@ interface IndexHtmlRenderer {
 
 class DefaultIndexHtmlRenderer : IndexHtmlRenderer, KoinComponent {
 
-    private val config by inject<ApplicationConfig>()
+    private val indexModules by lazy {
+        GlobalContext.get().getAll<IndexModule>()
+    }
 
     override fun renderIndex(renderParameters: RenderParameters): Html =
         createHTML().html {
             lang = "en"
 
+            indexModules.withEach {
+                render(renderParameters)
+            }
+
             renderHead(renderParameters)
-            renderBody()
+            renderBody(renderParameters)
         }
 
     private fun HTML.renderHead(renderParameters: RenderParameters) {
         head {
-            title(renderParameters.title)
-            meta("title", renderParameters.title)
-
-            renderParameters.description?.let {
-                meta("description", it)
+            indexModules.withEach {
+                render(renderParameters)
             }
 
-            val keywords = renderParameters.space?.metadata?.get(MetadataKeys.BUNDLE_SPACE_KEYWORDS)
-            if (!keywords.isNullOrBlank()) {
-                meta("keywords", keywords)
-            }
-
-            meta("charset", "utf-8")
-            meta("viewport", "width=device-width, initial-scale=1")
-
-            renderParameters.urlPreview?.let { preview ->
-                meta("og:type", "website")
-                meta("og:site_name", preview.siteName)
-                meta("og:title", preview.title)
-                meta("og:description", preview.description)
-                meta("og:image", preview.image)
-
-                meta("twitter:card", preview.type)
-                meta("twitter:title", preview.title)
-                meta("twitter:description", preview.description)
-                meta("twitter:image", preview.image)
-            }
-
-            meta(DaemonConnectorMeta.HTTP, config.daemonHttpAddress)
-            meta(DaemonConnectorMeta.WS, config.daemonWsAddress)
-
-            val favicon = renderParameters.favicon
-
-            link(rel = "apple-touch-icon", href = favicon.appleTouch) {
-                sizes = "180x180"
-            }
-
-            link(rel = "icon", type = "image/png", href = favicon.faviconIco)
-
-            link(rel = "icon", type = "image/png", href = favicon.favicon16) {
-                sizes = "16x16"
-            }
-
-            link(rel = "icon", type = "image/png", href = favicon.favicon32) {
-                sizes = "32x32"
-            }
-
-            dependencies.forEach { dependency ->
+            Dependencies.forEach { dependency ->
                 dependency()
             }
 
@@ -125,10 +89,14 @@ class DefaultIndexHtmlRenderer : IndexHtmlRenderer, KoinComponent {
         }
     }
 
-    private fun HTML.renderBody() {
+    private fun HTML.renderBody(renderParameters: RenderParameters) {
         body {
             div {
                 id = "root"
+            }
+
+            indexModules.withEach {
+                render(renderParameters)
             }
         }
     }

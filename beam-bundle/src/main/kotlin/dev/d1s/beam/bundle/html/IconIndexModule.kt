@@ -17,21 +17,26 @@
 package dev.d1s.beam.bundle.html
 
 import kotlinx.html.HEAD
-import kotlinx.html.script
-import kotlinx.html.styleLink
+import kotlinx.html.link
+import org.koin.core.component.KoinComponent
 
-typealias Dependency = HEAD.() -> Unit
+class IconIndexModule : IndexModule, KoinComponent {
 
-val Dependencies = listOf<Dependency>(
-    {
-        styleLink("https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css")
-    },
-    {
-        styleLink("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css")
-    },
-    {
-        script {
-            src = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+    override fun HEAD.render(renderParameters: RenderParameters) {
+        val favicon = renderParameters.favicon
+
+        link(rel = "apple-touch-icon", href = favicon.appleTouch) {
+            sizes = "180x180"
+        }
+
+        link(rel = "icon", type = "image/png", href = favicon.faviconIco)
+
+        link(rel = "icon", type = "image/png", href = favicon.favicon16) {
+            sizes = "16x16"
+        }
+
+        link(rel = "icon", type = "image/png", href = favicon.favicon32) {
+            sizes = "32x32"
         }
     }
-)
+}
