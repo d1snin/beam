@@ -144,7 +144,7 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
                 val spaceCard = get<Component<SpaceCardComponent.Config>>(Qualifier.SpaceCardComponent)
 
                 render(spaceCard) {
-                    this.space.value = space
+                    this.spaceIdentifier.value = space.id
                     this.fullHeight.value = true
                 }
             }
