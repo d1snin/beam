@@ -22,6 +22,7 @@ public object MetadataKeys {
 
     public const val UI_SPACE_SHOW_STATUS: MetadataKey = "ui.space.show-status"
     public const val UI_SPACE_BACKGROUND: MetadataKey = "ui.space.background"
+    public const val UI_SPACE_BACKGROUND_FIXED: MetadataKey = "ui.space.background.fixed"
     public const val UI_SPACE_STRETCH_LAST_BLOCKS: MetadataKey = "ui.space.stretch-last-blocks"
 
     public const val UI_ROW_STRETCH: MetadataKey = "ui.row.stretch"

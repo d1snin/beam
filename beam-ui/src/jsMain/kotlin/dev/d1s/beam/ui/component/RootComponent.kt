@@ -104,18 +104,25 @@ class RootComponent : Component.Root(), KoinComponent {
 
             currentSpace?.let { space ->
                 val backgroundUrl = space.metadata[MetadataKeys.UI_SPACE_BACKGROUND]
+                val fixedBackground =
+                    space.metadata[MetadataKeys.UI_SPACE_BACKGROUND_FIXED]?.toBooleanStrictOrNull() == true
 
                 backgroundUrl?.let {
-                    backgroundImage(it)
+                    backgroundImage(url = it, fixed = fixedBackground)
                 }
             }
         }
     }
 
-    private fun CSSStyleDeclaration.backgroundImage(url: String) {
+    private fun CSSStyleDeclaration.backgroundImage(url: String, fixed: Boolean) {
         backgroundImage = "url($url)"
         backgroundSize = "cover"
         backgroundRepeat = "no-repeat"
+
+        if (fixed) {
+            backgroundPosition = "center"
+            backgroundAttachment = "fixed"
+        }
     }
 
     private fun SimplePanel.components() {

@@ -46,6 +46,10 @@ public fun MetadataBuilder.setSpaceBackground(background: String) {
     metadata(MetadataKeys.UI_SPACE_BACKGROUND, background)
 }
 
+public fun MetadataBuilder.setSpaceBackgroundFixed(fixed: Boolean = true) {
+    metadata(MetadataKeys.UI_SPACE_BACKGROUND_FIXED, fixed.toString())
+}
+
 public fun MetadataBuilder.setSpaceStretchLastBlocks(stretch: Boolean = true) {
     metadata(MetadataKeys.UI_SPACE_STRETCH_LAST_BLOCKS, stretch.toString())
 }
