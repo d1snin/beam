@@ -83,9 +83,15 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
     }
 
     private fun handleLostDaemonConnection() {
+        var lastState = true
+
         daemonStatusWithPingObservable.state.subscribeSkipping { status ->
             val lostConnection = status == null
-            setStateSafe(lostConnection = lostConnection)
+
+            if (lastState != lostConnection) {
+                lastState = lostConnection
+                setStateSafe(lostConnection = lostConnection)
+            }
         }
     }
 
