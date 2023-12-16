@@ -14,15 +14,11 @@
  * limitations under the License.
  */
 
-package dev.d1s.beam.commons.validation
+package dev.d1s.beam.daemon.util
 
-public object Limits {
+import io.ktor.server.config.*
 
-    public const val VIEW_TITLE_MAX_LENGTH: Int = 100
-    public const val VIEW_DESCRIPTION_MAX_LENGTH: Int = 700
-
-    public const val METADATA_MAX_LENGTH: Int = 100
-    public const val METADATA_VALUE_MAX_LENGTH: Int = 500
-
-    public const val BLOCK_MAX_CAPACITY: Int = 100
-}
+val ApplicationConfig.securityAllowPublicSpaces
+    get() = property("security.allow-public-spaces")
+        .getString()
+        .toBooleanStrict()

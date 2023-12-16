@@ -16,7 +16,8 @@
 
 package dev.d1s.beam.ui.component
 
-import dev.d1s.beam.commons.MetadataKeys
+import dev.d1s.beam.commons.spaceBackground
+import dev.d1s.beam.commons.spaceBackgroundFixed
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.theme.setBackground
@@ -103,12 +104,10 @@ class RootComponent : Component.Root(), KoinComponent {
             setBackground()
 
             currentSpace?.let { space ->
-                val backgroundUrl = space.metadata[MetadataKeys.UI_SPACE_BACKGROUND]
-                val fixedBackground =
-                    space.metadata[MetadataKeys.UI_SPACE_BACKGROUND_FIXED]?.toBooleanStrictOrNull() == true
+                val backgroundUrl = space.metadata.spaceBackground
 
                 backgroundUrl?.let {
-                    backgroundImage(url = it, fixed = fixedBackground)
+                    backgroundImage(url = it, fixed = space.metadata.spaceBackgroundFixed)
                 }
             }
         }

@@ -26,11 +26,23 @@ import io.ktor.server.config.*
 import org.koin.core.module.Module
 import org.ktorm.database.Database
 import org.ktorm.support.postgresql.PostgreSqlDialect
+import javax.sql.DataSource
 
 object Database : ApplicationConfigurer {
 
     override fun Application.configure(module: Module, config: ApplicationConfig) {
-        val hikariDataSource = HikariDataSource().apply {
+        val hikariDataSource = initDataSource(config)
+        val database = connect(hikariDataSource)
+
+        migrate(database, config)
+
+        module.single {
+            database
+        }
+    }
+
+    private fun initDataSource(config: ApplicationConfig) =
+        HikariDataSource().apply {
             config.requiredJdbcProperties.let {
                 jdbcUrl = it.url
                 username = it.user
@@ -38,20 +50,18 @@ object Database : ApplicationConfigurer {
             }
         }
 
-        val database = Database.connect(
-            dataSource = hikariDataSource,
+    private fun connect(dataSource: DataSource) =
+        Database.connect(
+            dataSource = dataSource,
             dialect = PostgreSqlDialect()
         )
 
+    private fun Application.migrate(database: Database, config: ApplicationConfig) {
         database.useConnection {
             install(LiquibaseMigrations) {
                 changeLogPath = config.changeLogPath
                 connection = it
             }
-        }
-
-        module.single {
-            database
         }
     }
 }

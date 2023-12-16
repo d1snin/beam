@@ -17,10 +17,7 @@
 package dev.d1s.beam.bundle.html
 
 import dev.d1s.beam.bundle.response.Defaults
-import dev.d1s.beam.commons.Html
-import dev.d1s.beam.commons.Space
-import dev.d1s.beam.commons.SpaceFavicon
-import dev.d1s.beam.commons.SpaceIconUrl
+import dev.d1s.beam.commons.*
 import dev.d1s.exkt.common.withEach
 import kotlinx.html.*
 import kotlinx.html.stream.createHTML
@@ -29,6 +26,7 @@ import org.koin.core.context.GlobalContext
 
 data class RenderParameters(
     val space: Space?,
+    val languageCode: LanguageCode?,
     val title: String,
     val description: String?,
     val icon: SpaceIconUrl?,
@@ -63,7 +61,7 @@ class DefaultIndexHtmlRenderer : IndexHtmlRenderer, KoinComponent {
 
     override fun renderIndex(renderParameters: RenderParameters): Html =
         createHTML().html {
-            lang = "en"
+            lang = renderParameters.languageCode ?: Defaults.LANGUAGE_CODE
 
             indexModules.withEach {
                 render(renderParameters)

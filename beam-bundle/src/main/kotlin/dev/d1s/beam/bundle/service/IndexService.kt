@@ -23,10 +23,7 @@ import dev.d1s.beam.bundle.html.RenderParameters
 import dev.d1s.beam.bundle.html.UrlPreviewMetaTags
 import dev.d1s.beam.bundle.response.Defaults
 import dev.d1s.beam.client.BeamClient
-import dev.d1s.beam.commons.Space
-import dev.d1s.beam.commons.SpaceFavicon
-import dev.d1s.beam.commons.SpaceIdentifier
-import dev.d1s.beam.commons.SpaceUrlPreview
+import dev.d1s.beam.commons.*
 import io.ktor.client.plugins.*
 import io.ktor.http.*
 import org.koin.core.component.KoinComponent
@@ -60,43 +57,53 @@ class DefaultIndexService : IndexService, KoinComponent {
             "Resolving space $spaceId..."
         }
 
-        spaceId ?: return notFoundSpace()
+        spaceId ?: return resolveNotAvailableSpace()
 
         val languageCode = resolveLanguageCode(spaceId)
         val spaceResult = client.getSpace(spaceId, languageCode)
 
         spaceResult.onFailure {
-            logger.d {
-                "Failure fetching space. Message: ${it.message}"
+            logger.e(it) {
+                "Failed to fetch space"
             }
 
-            return if (it is ClientRequestException && it.response.status == HttpStatusCode.NotFound) {
-                logger.d {
-                    "Got 404"
-                }
-
-                notFoundSpace()
-            } else {
-                logger.d {
-                    "Got something other than 404"
-                }
-
-                notFoundSpace("Beam Space not available")
-            }
+            return resolveFailedSpace(err = it)
         }
 
-        val space = spaceResult.getOrThrow()
+        spaceResult.onSuccess {
+            return resolveFoundSpace(
+                space = it,
+                languageCode = languageCode,
+                request = request
+            )
+        }
 
-        return foundSpace(space, request)
+        return resolveNotAvailableSpace()
     }
 
-    private fun notFoundSpace(message: String = "Beam Space not found"): ResolvedSpace {
+    private fun resolveFailedSpace(err: Throwable) =
+        if (err is ClientRequestException && err.response.status == HttpStatusCode.NotFound) {
+            logger.d {
+                "Got 404"
+            }
+
+            resolveNotAvailableSpace()
+        } else {
+            logger.d {
+                "Got something other than 404"
+            }
+
+            resolveNotAvailableSpace(message = Defaults.TITLE_NOT_AVAILABLE)
+        }
+
+    private fun resolveNotAvailableSpace(message: String = Defaults.TITLE_NOT_FOUND): ResolvedSpace {
         logger.d {
             "Resolving with unavailable space. Message: $message"
         }
 
         val parameters = RenderParameters(
             space = null,
+            languageCode = null,
             title = message,
             description = null,
             icon = Defaults.ICON,
@@ -109,7 +116,7 @@ class DefaultIndexService : IndexService, KoinComponent {
         return ResolvedSpace(space = null, html)
     }
 
-    private fun foundSpace(space: Space, request: SpaceRequest): ResolvedSpace {
+    private fun resolveFoundSpace(space: Space, languageCode: LanguageCode?, request: SpaceRequest): ResolvedSpace {
         logger.d {
             "Resolving with found space by identifier ${request.spaceIdentifier}..."
         }
@@ -122,20 +129,23 @@ class DefaultIndexService : IndexService, KoinComponent {
 
         val preview = view.preview
 
+        val previewType = when (preview?.type) {
+            SpaceUrlPreview.Type.DEFAULT -> UrlPreviewMetaTags.TYPE_SUMMARY
+            SpaceUrlPreview.Type.LARGE -> UrlPreviewMetaTags.TYPE_SUMMARY_LARGE_IMAGE
+            else -> Defaults.PREVIEW_TYPE
+        }
+
         val urlPreview = UrlPreviewMetaTags(
             siteName = Defaults.SITE_NAME,
             title,
             description,
             image = preview?.image ?: icon,
-            type = when (preview?.type) {
-                SpaceUrlPreview.Type.DEFAULT -> UrlPreviewMetaTags.TYPE_SUMMARY
-                SpaceUrlPreview.Type.LARGE -> UrlPreviewMetaTags.TYPE_SUMMARY_LARGE_IMAGE
-                else -> Defaults.PREVIEW_TYPE
-            }
+            type = previewType
         )
 
         val parameters = RenderParameters(
             space,
+            languageCode,
             title,
             description,
             icon,
@@ -153,10 +163,5 @@ class DefaultIndexService : IndexService, KoinComponent {
     }
 
     private suspend fun resolveLanguageCode(spaceId: SpaceIdentifier) =
-        client.getResolvedTranslation(spaceId, LANGUAGE).getOrNull()?.languageCode
-
-    private companion object {
-
-        private const val LANGUAGE = "en"
-    }
+        client.getResolvedTranslation(spaceId, Defaults.LANGUAGE_CODE).getOrNull()?.languageCode
 }

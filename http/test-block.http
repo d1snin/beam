@@ -14,7 +14,7 @@ Content-Type: application/json
             "type": "text",
             "parameters": {
                 "value": "(Test first-level display heading)(blue)",
-                "heading": "display_1"
+                "heading": "display1"
             }
         },
         {
@@ -28,7 +28,7 @@ Content-Type: application/json
             "type": "text",
             "parameters": {
                 "value": "Test second-level display heading",
-                "heading": "display_2"
+                "heading": "display2"
             }
         },
         {
@@ -42,7 +42,7 @@ Content-Type: application/json
             "type": "text",
             "parameters": {
                 "value": "Test third-level display heading",
-                "heading": "display_3"
+                "heading": "display3"
             }
         },
         {

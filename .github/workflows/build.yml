@@ -42,6 +42,18 @@ jobs:
           name: beam-client
           path: "./beam-client/build/libs"
 
+      - name: Upload Client App Artifact
+        uses: actions/upload-artifact@v3.0.0
+        with:
+          name: beam-client-app
+          path: "./beam-client-app/build/libs"
+
+      - name: Upload Common Artifact
+        uses: actions/upload-artifact@v3.0.0
+        with:
+          name: beam-common
+          path: "./beam-common/build/libs"
+
       - name: Upload Daemon Artifact
         uses: actions/upload-artifact@v3.0.0
         with:

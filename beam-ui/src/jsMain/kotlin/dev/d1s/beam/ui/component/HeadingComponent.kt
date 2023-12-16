@@ -16,7 +16,7 @@
 
 package dev.d1s.beam.ui.component
 
-import dev.d1s.beam.commons.MetadataKeys
+import dev.d1s.beam.commons.spaceShowStatus
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.util.currentSpace
 import dev.d1s.exkt.kvision.component.Component
@@ -72,9 +72,9 @@ class HeadingComponent : Component<Unit>(), KoinComponent {
         div(className = "align-self-center mt-5 mt-lg-0") {
             visible = false
 
-            val showStatus = currentSpace?.metadata?.get(MetadataKeys.UI_SPACE_SHOW_STATUS)?.toBooleanStrictOrNull()
+            val showStatus = currentSpace?.metadata.spaceShowStatus
 
-            if (showStatus != false) {
+            if (showStatus) {
                 render(daemonStatusComponent)
                 visible = true
             }

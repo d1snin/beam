@@ -26,7 +26,7 @@ public data object TextContentEntityTypeDefinition : CommonContentEntityTypeDefi
 }
 
 public enum class Heading {
-    H1, H2, H3, DISPLAY_1, DISPLAY_2, DISPLAY_3;
+    H1, H2, H3, DISPLAY1, DISPLAY2, DISPLAY3;
 
     public companion object {
 

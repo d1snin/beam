@@ -91,8 +91,8 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
             Heading.H1 -> "h1"
             Heading.H2 -> "h3"
             Heading.H3 -> "h5"
-            Heading.DISPLAY_1 -> "display-1"
-            Heading.DISPLAY_2 -> "display-3"
-            Heading.DISPLAY_3 -> "display-5"
+            Heading.DISPLAY1 -> "display-1"
+            Heading.DISPLAY2 -> "display-3"
+            Heading.DISPLAY3 -> "display-5"
         }
 }

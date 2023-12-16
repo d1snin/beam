@@ -22,6 +22,7 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.config.*
 import io.ktor.server.plugins.*
+import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
 import kotlinx.serialization.Serializable
 import org.koin.core.module.Module
@@ -31,24 +32,31 @@ object StatusPages : ApplicationConfigurer {
 
     override fun Application.configure(module: Module, config: ApplicationConfig) {
         install(StatusPagesPlugin) {
-            exception<Throwable> { call, throwable ->
-                val status = when (throwable) {
-                    is BadRequestException -> HttpStatusCode.BadRequest
-                    is NotFoundException -> HttpStatusCode.NotFound
-                    is HttpStatusException -> throwable.status
-                    else -> HttpStatusCode.InternalServerError.also {
-                        throwable.printStackTrace()
-                    }
+            handleExceptions()
+            handleStatuses()
+        }
+    }
+
+    private fun StatusPagesConfig.handleExceptions() {
+        exception<Throwable> { call, throwable ->
+            val status = when (throwable) {
+                is BadRequestException -> HttpStatusCode.BadRequest
+                is NotFoundException -> HttpStatusCode.NotFound
+                is HttpStatusException -> throwable.status
+                else -> HttpStatusCode.InternalServerError.also {
+                    throwable.printStackTrace()
                 }
-
-                val message = throwable.toMessage(status)
-                call.respond(status, message)
             }
 
-            status(HttpStatusCode.BadRequest, HttpStatusCode.NotFound, HttpStatusCode.Unauthorized) { call, status ->
-                val message = Message(status.description)
-                call.respond(message)
-            }
+            val message = throwable.toMessage(status)
+            call.respond(status, message)
+        }
+    }
+
+    private fun StatusPagesConfig.handleStatuses() {
+        status(HttpStatusCode.BadRequest, HttpStatusCode.NotFound, HttpStatusCode.Unauthorized) { call, status ->
+            val message = Message(status.description)
+            call.respond(message)
         }
     }
 

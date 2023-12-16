@@ -164,7 +164,7 @@ public fun ContentEntitiesBuilder.firstDisplay(
     alignment: Alignment? = null,
     collapsed: Boolean? = null
 ) {
-    heading(value, level = Heading.DISPLAY_1, alignment = alignment, collapsed = collapsed)
+    heading(value, level = Heading.DISPLAY1, alignment = alignment, collapsed = collapsed)
 }
 
 public fun ContentEntitiesBuilder.secondDisplay(
@@ -172,7 +172,7 @@ public fun ContentEntitiesBuilder.secondDisplay(
     alignment: Alignment? = null,
     collapsed: Boolean? = null
 ) {
-    heading(value, level = Heading.DISPLAY_2, alignment = alignment, collapsed = collapsed)
+    heading(value, level = Heading.DISPLAY2, alignment = alignment, collapsed = collapsed)
 }
 
 public fun ContentEntitiesBuilder.thirdDisplay(
@@ -180,7 +180,7 @@ public fun ContentEntitiesBuilder.thirdDisplay(
     alignment: Alignment? = null,
     collapsed: Boolean? = null
 ) {
-    heading(value, level = Heading.DISPLAY_3, alignment = alignment, collapsed = collapsed)
+    heading(value, level = Heading.DISPLAY3, alignment = alignment, collapsed = collapsed)
 }
 
 public fun ContentEntitiesBuilder.buttonLink(

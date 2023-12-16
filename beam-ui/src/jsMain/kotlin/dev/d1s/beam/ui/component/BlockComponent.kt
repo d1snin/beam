@@ -17,7 +17,9 @@
 package dev.d1s.beam.ui.component
 
 import dev.d1s.beam.commons.Block
-import dev.d1s.beam.commons.MetadataKeys
+import dev.d1s.beam.commons.blockBare
+import dev.d1s.beam.commons.blockId
+import dev.d1s.beam.commons.blockLink
 import dev.d1s.beam.commons.contententity.CommonParameters
 import dev.d1s.beam.commons.contententity.ContentEntities
 import dev.d1s.beam.commons.contententity.ContentEntity
@@ -58,9 +60,6 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
     }
 
     private fun SimplePanel.renderBlockCard(block: Block) {
-        val isBare = block.metadata[MetadataKeys.UI_BLOCK_BARE]
-            ?.toBooleanStrictOrNull() == true
-
         var containerConfigured = false
 
         fun SimplePanel.configureContainer() {
@@ -85,7 +84,10 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
         }
 
         fun SimplePanel.renderCard() {
-            renderCard("flex-column justify-content-start overflow-hidden", bare = isBare) {
+            renderCard(
+                "flex-column justify-content-start overflow-hidden",
+                bare = block.metadata.blockBare
+            ) {
                 configureContainer()
                 configurePadding(block)
 
@@ -95,9 +97,7 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
             }
         }
 
-        val link = block.metadata[MetadataKeys.UI_BLOCK_LINK]
-
-        link?.let {
+        block.metadata.blockLink?.let {
             renderFriendlyLink(url = it, external = true) {
                 configureContainer()
                 renderCard()
@@ -128,9 +128,7 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
     }
 
     private fun SimplePanel.setOptionalBlockId(block: Block) {
-        val blockElementId = block.metadata[MetadataKeys.UI_BLOCK_ID]
-
-        blockElementId?.let {
+        block.metadata.blockId?.let {
             if (it.isNotBlank() && !it.contains(" ")) {
                 id = it
             }

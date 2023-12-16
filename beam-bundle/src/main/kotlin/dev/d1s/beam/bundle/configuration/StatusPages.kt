@@ -43,16 +43,20 @@ object StatusPages : ApplicationConfigurer, KoinComponent {
                     "Handling $status. Path: ${call.request.path()}"
                 }
 
-                val request = SpaceRequest(spaceIdentifier = null, call)
-
-                val resolvedSpace = indexService.resolveSpace(request)
-
-                logger.d {
-                    "Responding..."
-                }
-
-                call.respondHtml(resolvedSpace.html)
+                call.handleNotFound()
             }
         }
+    }
+
+    private suspend fun ApplicationCall.handleNotFound() {
+        val request = SpaceRequest(spaceIdentifier = null, call = this)
+
+        val resolvedSpace = indexService.resolveSpace(request)
+
+        logger.d {
+            "Responding not found..."
+        }
+
+        respondHtml(resolvedSpace.html)
     }
 }

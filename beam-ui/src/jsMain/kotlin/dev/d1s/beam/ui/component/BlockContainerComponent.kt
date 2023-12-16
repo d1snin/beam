@@ -234,9 +234,8 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
         }
 
     private fun alignItemsByRowStretchMetadata(row: Row, last: Boolean): AlignItems {
-        val stretchBlocks = row.metadata[MetadataKeys.UI_ROW_STRETCH]?.toBooleanStrictOrNull() != false
-        val stretchLastBlocks = currentSpace?.metadata?.get(MetadataKeys.UI_SPACE_STRETCH_LAST_BLOCKS)
-            ?.toBooleanStrictOrNull() == true
+        val stretchBlocks = row.metadata.rowStretch
+        val stretchLastBlocks = currentSpace?.metadata.spaceStretchLastBlocks
 
         return if (!stretchBlocks || (last && !stretchLastBlocks)) {
             AlignItems.START

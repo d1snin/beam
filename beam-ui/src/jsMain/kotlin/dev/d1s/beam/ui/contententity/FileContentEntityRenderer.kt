@@ -16,10 +16,10 @@
 
 package dev.d1s.beam.ui.contententity
 
-import dev.d1s.beam.commons.MetadataKeys
 import dev.d1s.beam.commons.contententity.ContentEntity
 import dev.d1s.beam.commons.contententity.FileContentEntityTypeDefinition
 import dev.d1s.beam.commons.contententity.get
+import dev.d1s.beam.commons.fileContentEntitySize
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.component.DescriptiveCardComponent
 import dev.d1s.exkt.kvision.component.Component
@@ -63,7 +63,7 @@ class FileContentEntityRenderer : SingleContentEntityRenderer, KoinComponent {
     }
 
     private fun DescriptiveCardComponent.Config.setDescription(entity: ContentEntity) {
-        val size = entity.metadata[MetadataKeys.FILE_CONTENT_ENTITY_SIZE]?.toLongOrNull()
+        val size = entity.metadata.fileContentEntitySize
         val formattedSize = size?.formatByteLength()
 
         formattedSize?.let {

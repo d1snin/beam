@@ -20,7 +20,11 @@ import dev.d1s.beam.bundle.html.UrlPreviewMetaTags
 
 object Defaults {
 
+    const val LANGUAGE_CODE = "en"
+
     const val TITLE = "Beam Space"
+    const val TITLE_NOT_FOUND = "Beam Space not found"
+    const val TITLE_NOT_AVAILABLE = "Beam Space not available"
     const val DESCRIPTION = "Explore this public space created on Beam."
 
     const val SITE_NAME = "Beam"

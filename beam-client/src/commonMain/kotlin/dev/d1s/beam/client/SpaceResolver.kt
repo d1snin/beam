@@ -17,6 +17,7 @@
 package dev.d1s.beam.client
 
 import dev.d1s.beam.commons.LanguageCode
+import dev.d1s.beam.commons.ROOT_SPACE_SLUG
 import dev.d1s.beam.commons.Space
 import dev.d1s.beam.commons.SpaceIdentifier
 import io.ktor.http.*
@@ -44,7 +45,7 @@ public class DefaultSpaceResolver(private val client: BeamClient) : SpaceResolve
         }
 
         return when (segments.size) {
-            0 -> "root"
+            0 -> ROOT_SPACE_SLUG
             1 -> segments.first()
             else -> null
         }

@@ -19,7 +19,7 @@ package dev.d1s.beam.bundle.html
 import dev.d1s.beam.bundle.configuration.daemonHttpAddress
 import dev.d1s.beam.bundle.configuration.daemonWsAddress
 import dev.d1s.beam.commons.DaemonConnectorMeta
-import dev.d1s.beam.commons.MetadataKeys
+import dev.d1s.beam.commons.spaceKeywords
 import io.ktor.server.config.*
 import kotlinx.html.HEAD
 import kotlinx.html.meta
@@ -39,7 +39,7 @@ class CommonHeadParametersIndexModule : IndexModule, KoinComponent {
             meta("description", it)
         }
 
-        val keywords = renderParameters.space?.metadata?.get(MetadataKeys.BUNDLE_SPACE_KEYWORDS)
+        val keywords = renderParameters.space?.metadata?.spaceKeywords
         if (!keywords.isNullOrBlank()) {
             meta("keywords", keywords)
         }

@@ -43,26 +43,33 @@ object Security : ApplicationConfigurer, KoinComponent {
             jwt {
                 realm = config.jwtRealm
 
-                val verifier = JWT.require(jwtAlgorithm)
-                    .withIssuer(config.jwtIssuer)
-                    .build()
+                val verifier = buildVerifier(config)
 
                 verifier(verifier)
 
-                validate { credential ->
-                    val payload = credential.payload
-                    val subject = payload.subject
+                validate()
+            }
+        }
+    }
 
-                    if (
-                        subject != null
-                        && subject.isNotBlank()
-                        && spaceService.spaceExists(subject).getOrThrow()
-                    ) {
-                        JWTPrincipal(payload)
-                    } else {
-                        null
-                    }
-                }
+    private fun buildVerifier(config: ApplicationConfig) =
+        JWT.require(jwtAlgorithm)
+            .withIssuer(config.jwtIssuer)
+            .build()
+
+    private fun JWTAuthenticationProvider.Config.validate() {
+        validate { credential ->
+            val payload = credential.payload
+            val subject = payload.subject
+
+            if (
+                subject != null
+                && subject.isNotBlank()
+                && spaceService.spaceExists(subject).getOrThrow()
+            ) {
+                JWTPrincipal(payload)
+            } else {
+                null
             }
         }
     }

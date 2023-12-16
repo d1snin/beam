@@ -119,8 +119,7 @@ public class DefaultBeamClient(
     public override suspend fun getSpaces(limitAndOffset: LimitAndOffset, languageCode: LanguageCode?): Result<Spaces> =
         runCatching {
             httpClient.get(Paths.GET_SPACES) {
-                parameter(Paths.LIMIT_QUERY_PARAMETER, limitAndOffset.limit)
-                parameter(Paths.OFFSET_QUERY_PARAMETER, limitAndOffset.offset)
+                setLimitAndOffset(limitAndOffset)
                 setLanguageCode(languageCode)
             }.body()
         }
@@ -209,9 +208,8 @@ public class DefaultBeamClient(
     ): Result<Blocks> =
         runCatching {
             httpClient.get(Paths.GET_BLOCKS) {
-                parameter(Paths.SPACE_ID_QUERY_PARAMETER, spaceId)
-                parameter(Paths.LIMIT_QUERY_PARAMETER, limitAndOffset.limit)
-                parameter(Paths.OFFSET_QUERY_PARAMETER, limitAndOffset.offset)
+                setSpaceId(spaceId)
+                setLimitAndOffset(limitAndOffset)
                 setLanguageCode(languageCode)
             }.body()
         }
@@ -484,32 +482,38 @@ public class DefaultBeamClient(
         parameter(Paths.SPACE_ID_QUERY_PARAMETER, spaceId)
     }
 
+    private fun HttpRequestBuilder.setLimitAndOffset(limitAndOffset: LimitAndOffset) {
+        parameter(Paths.LIMIT_QUERY_PARAMETER, limitAndOffset.limit)
+        parameter(Paths.OFFSET_QUERY_PARAMETER, limitAndOffset.offset)
+    }
+
     private fun String.replaceLanguageCodePlaceholder(languageCode: LanguageCode) =
         replacePlaceholders(Paths.LANGUAGE_CODE_PARAMETER to languageCode)
 
     private inline fun <reified T> handleWsEvents(
         reference: EventReference,
         crossinline handler: suspend (ClientWebSocketEvent<T>) -> Unit
-    ) = runCatching {
-        requireWsBaseUrl()
+    ) =
+        runCatching {
+            requireWsBaseUrl()
 
-        eventHandlingScope.launch {
-            httpClient.webSocketEvents(reference) {
-                while (true) {
-                    val event = try {
-                        receiveWebSocketEvent<T>()
-                    } catch (e: Throwable) {
-                        e.printStackTrace()
-                        delay(5.seconds)
+            eventHandlingScope.launch {
+                httpClient.webSocketEvents(reference) {
+                    while (true) {
+                        val event = try {
+                            receiveWebSocketEvent<T>()
+                        } catch (e: Throwable) {
+                            e.printStackTrace()
+                            delay(5.seconds)
 
-                        continue
+                            continue
+                        }
+
+                        handler(event)
                     }
-
-                    handler(event)
                 }
             }
         }
-    }
 
     private fun requireWsBaseUrl() =
         requireNotNull(wsBaseUrl) {

@@ -44,11 +44,7 @@ class FileContentEntityMetadataProcessor : ContentEntityMetadataProcessor, KoinC
             "File url: $url"
         }
 
-        val contentLength = runCatching {
-            httpClient.head(url).contentLength()
-        }.onFailure {
-            it.printStackTrace()
-        }.getOrNull()
+        val contentLength = fetchContentLength(url)
 
         log.d {
             "Content length: $contentLength"
@@ -58,4 +54,11 @@ class FileContentEntityMetadataProcessor : ContentEntityMetadataProcessor, KoinC
             metadata[MetadataKeys.FILE_CONTENT_ENTITY_SIZE] = it.toString()
         }
     }
+
+    private suspend fun fetchContentLength(url: String) =
+        runCatching {
+            httpClient.head(url).contentLength()
+        }.onFailure {
+            it.printStackTrace()
+        }.getOrNull()
 }

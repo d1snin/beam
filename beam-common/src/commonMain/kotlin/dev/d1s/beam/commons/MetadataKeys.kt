@@ -34,3 +34,42 @@ public object MetadataKeys {
 
     public const val FILE_CONTENT_ENTITY_SIZE: MetadataKey = "file.size"
 }
+
+public val Metadata.spaceKeywords: MetadataValue?
+    get() = get(MetadataKeys.BUNDLE_SPACE_KEYWORDS)
+
+public val Metadata?.spaceShowStatus: Boolean
+    get() = getBooleanOrTrue(MetadataKeys.UI_SPACE_SHOW_STATUS)
+
+public val Metadata.spaceBackground: MetadataValue?
+    get() = get(MetadataKeys.UI_SPACE_BACKGROUND)
+
+public val Metadata?.spaceBackgroundFixed: Boolean
+    get() = getBooleanOrFalse(MetadataKeys.UI_SPACE_BACKGROUND_FIXED)
+
+public val Metadata?.spaceStretchLastBlocks: Boolean
+    get() = getBooleanOrFalse(MetadataKeys.UI_SPACE_STRETCH_LAST_BLOCKS)
+
+public val Metadata?.rowStretch: Boolean
+    get() = getBooleanOrTrue(MetadataKeys.UI_ROW_STRETCH)
+
+public val Metadata.blockId: MetadataValue?
+    get() = get(MetadataKeys.UI_BLOCK_ID)
+
+public val Metadata?.blockBare: Boolean
+    get() = getBooleanOrFalse(MetadataKeys.UI_BLOCK_BARE)
+
+public val Metadata.blockLink: MetadataValue?
+    get() = get(MetadataKeys.UI_BLOCK_LINK)
+
+public val Metadata?.blockImageEntityFluid: Boolean
+    get() = getBooleanOrFalse(MetadataKeys.UI_BLOCK_IMAGE_ENTITY_FLUID)
+
+public val Metadata.fileContentEntitySize: Long?
+    get() = get(MetadataKeys.FILE_CONTENT_ENTITY_SIZE)?.toLongOrNull()
+
+private fun Metadata?.getBooleanOrTrue(key: MetadataKey) =
+    this?.get(key)?.toBooleanStrictOrNull() ?: true
+
+private fun Metadata?.getBooleanOrFalse(key: MetadataKey) =
+    this?.get(key)?.toBooleanStrictOrNull() ?: false

@@ -17,7 +17,7 @@
 package dev.d1s.beam.ui.util
 
 import dev.d1s.beam.commons.Block
-import dev.d1s.beam.commons.MetadataKeys
+import dev.d1s.beam.commons.blockImageEntityFluid
 import dev.d1s.beam.commons.contententity.Image
 
 fun Block.isFluidImage(): Boolean {
@@ -26,8 +26,7 @@ fun Block.isFluidImage(): Boolean {
     val isImage = entities.size == 1
             && entities.first().type == Image.name
 
-    val isFluid = metadata[MetadataKeys.UI_BLOCK_IMAGE_ENTITY_FLUID]
-        ?.toBooleanStrictOrNull() == true
+    val isFluid = metadata.blockImageEntityFluid
 
     return isImage && isFluid
 }

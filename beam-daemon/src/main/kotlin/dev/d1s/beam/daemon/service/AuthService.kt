@@ -43,8 +43,6 @@ interface AuthService {
     suspend fun isBlockModificationAllowed(call: ApplicationCall): Boolean
 
     suspend fun isBlockModificationAllowed(subject: SpaceId, block: BlockId): Result<Boolean>
-
-    fun arePublicSpacesAllowed(): Boolean
 }
 
 class DefaultAuthService : AuthService, KoinComponent {
@@ -89,7 +87,4 @@ class DefaultAuthService : AuthService, KoinComponent {
 
             subjectSpace.isRoot || blockToModify.space.id == subjectSpace.id
         }
-
-    override fun arePublicSpacesAllowed(): Boolean =
-        config.property("security.allow-public-spaces").getString().toBooleanStrict()
 }

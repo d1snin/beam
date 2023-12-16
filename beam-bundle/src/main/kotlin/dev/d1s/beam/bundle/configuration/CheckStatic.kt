@@ -29,8 +29,12 @@ object CheckStatic : EnvironmentConfigurer {
 
     override fun ApplicationEngineEnvironmentBuilder.configure(module: Module, config: ApplicationConfig) {
         requiredResources.forEach { resource ->
-            val path = "${StaticResources.STATIC_PACKAGE}/$resource"
-            classLoader.getResource(path) ?: error("Couldn't locate required resource at $path")
+            checkResourceExists(resource)
         }
+    }
+
+    private fun ApplicationEngineEnvironmentBuilder.checkResourceExists(resource: String) {
+        val path = "${StaticResources.STATIC_PACKAGE}/$resource"
+        classLoader.getResource(path) ?: error("Couldn't locate required resource at $path")
     }
 }

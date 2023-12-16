@@ -108,7 +108,7 @@ public suspend fun ApplicationContext.space(
             "Couldn't access space '$spaceIdentifier'. Creating it..."
         }
 
-        if (spaceIdentifier == "root") {
+        if (spaceIdentifier == ROOT_SPACE_SLUG) {
             space = postRootSpace {
                 view {
                     theme = DEFAULT_THEME

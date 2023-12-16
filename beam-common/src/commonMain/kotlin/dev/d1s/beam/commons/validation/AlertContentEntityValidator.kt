@@ -25,12 +25,10 @@ import io.konform.validation.ValidationBuilder
 internal object AlertContentEntityValidator :
     ContentEntityValidator<AlertContentEntityTypeDefinition>(AlertContentEntityTypeDefinition) {
 
-    private val textBoundary = 1..1000
-
     override fun ValidationBuilder<AbstractContentEntity>.validate() {
         val validator = this@AlertContentEntityValidator
 
-        requireCorrectBoundary(validator, requiredDefinition.text, textBoundary, stringLengthMode = true)
+        requireNotBlankText(validator, requiredDefinition.text)
         requireNotBlankText(validator, requiredDefinition.icon)
         requireCorrectStyle()
         requireCorrectWidth(validator, requiredDefinition.width)
