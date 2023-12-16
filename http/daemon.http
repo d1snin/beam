@@ -92,7 +92,7 @@ Content-Type: application/json
 {
     "row": 0,
     "index": null,
-    "size": "MEDIUM",
+    "size": "EXTRA_LARGE",
     "entities": [
         {
             "type": "space",

@@ -22,6 +22,7 @@ import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.component.SpaceCardComponent
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.render
+import io.kvision.html.div
 import io.kvision.panel.SimplePanel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
@@ -31,8 +32,10 @@ class SpaceContentEntityRenderer : SingleContentEntityRenderer, KoinComponent {
     override val definition = SpaceContentEntityTypeDefinition
 
     override fun SimplePanel.render(context: SingleContentEntityRenderingContext) {
-        renderSpaceCard(context)
-        separateContentEntity(context)
+        div(className = "w-100") {
+            renderSpaceCard(context)
+            separateContentEntity(context)
+        }
     }
 
     private fun SimplePanel.renderSpaceCard(
