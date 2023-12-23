@@ -22,10 +22,11 @@ import dev.d1s.beam.commons.contententity.get
 import dev.d1s.beam.commons.fileContentEntitySize
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.component.DescriptiveCardComponent
+import dev.d1s.beam.ui.util.Icons
+import dev.d1s.exkt.kvision.bootstrap.bootstrapIcon
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.render
 import io.ktor.http.*
-import io.kvision.html.icon
 import io.kvision.panel.SimplePanel
 import io.kvision.utils.rem
 import org.koin.core.component.KoinComponent
@@ -85,7 +86,7 @@ class FileContentEntityRenderer : SingleContentEntityRenderer, KoinComponent {
     private fun DescriptiveCardComponent.Config.setImage() {
         image {
             fontSize = 2.0.rem
-            icon("bi bi-download")
+            bootstrapIcon(Icons.DOWNLOAD)
         }
     }
 

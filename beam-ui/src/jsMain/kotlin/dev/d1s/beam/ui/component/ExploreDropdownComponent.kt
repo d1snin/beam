@@ -22,15 +22,14 @@ import dev.d1s.beam.ui.state.Observable
 import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.theme.setOutline
 import dev.d1s.beam.ui.theme.setOverlay
+import dev.d1s.beam.ui.util.*
 import dev.d1s.beam.ui.util.Size.sizeOf
-import dev.d1s.beam.ui.util.currentTranslation
-import dev.d1s.beam.ui.util.exploreDropdownCallout
+import dev.d1s.exkt.kvision.bootstrap.p3
+import dev.d1s.exkt.kvision.bootstrap.shadow
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
 import dev.d1s.exkt.kvision.component.LazyEffect
 import dev.d1s.exkt.kvision.component.render
-import io.kvision.html.button
-import io.kvision.html.div
 import io.kvision.panel.SimplePanel
 import io.kvision.state.bind
 import io.kvision.utils.px
@@ -44,7 +43,7 @@ class ExploreDropdownComponent : Component<Unit>(), KoinComponent {
     private val spaceListingComponent by inject<Component<Unit>>(Qualifier.SpaceListingComponent)
 
     override fun SimplePanel.render(): Effect {
-        div(className = "dropdown") {
+        renderDropdown {
             visible = false
 
             renderButton()
@@ -55,24 +54,19 @@ class ExploreDropdownComponent : Component<Unit>(), KoinComponent {
     }
 
     private fun SimplePanel.renderButton() {
-        button(
-            currentTranslation.exploreDropdownCallout,
+        renderDropdownToggler(
             style = currentTheme.buttonStyle,
-            className = "btn-sm dropdown-toggle"
+            offset = "0,20"
         ) {
-            setButtonAttributes()
+            +currentTranslation.exploreDropdownCallout
         }
     }
 
-    private fun SimplePanel.setButtonAttributes() {
-        setAttribute("data-bs-toggle", "dropdown")
-        setAttribute("data-bs-auto-close", "outside")
-        setAttribute("data-bs-offset", "0,20")
-        setAttribute("aria-expanded", "false")
-    }
-
     private fun SimplePanel.renderMenu() {
-        div(className = "dropdown-menu shadow p-3").bind(maxBlockSizeChangeObservable.state) { maxBlockSize ->
+        renderDropdownMenu().bind(maxBlockSizeChangeObservable.state) { maxBlockSize ->
+            shadow()
+            p3()
+
             setMenuWidth(maxBlockSize)
             setOutline()
             setOverlay()

@@ -24,6 +24,11 @@ import dev.d1s.beam.ui.state.SpaceContentChange
 import dev.d1s.beam.ui.state.renderEndOfContent
 import dev.d1s.beam.ui.util.Size
 import dev.d1s.beam.ui.util.currentSpace
+import dev.d1s.beam.ui.util.renderFluidContainer
+import dev.d1s.exkt.kvision.bootstrap.dFlex
+import dev.d1s.exkt.kvision.bootstrap.justifyContentCenter
+import dev.d1s.exkt.kvision.bootstrap.px0
+import dev.d1s.exkt.kvision.bootstrap.w100
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
 import dev.d1s.exkt.kvision.component.render
@@ -69,8 +74,14 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
     }
 
     private fun SimplePanel.renderBlocks(change: SpaceContentChange) {
-        div(className = "container-fluid px-0 d-flex justify-content-center") {
-            vPanel(className = "w-100") {
+        renderFluidContainer {
+            px0()
+            dFlex()
+            justifyContentCenter()
+
+            vPanel {
+                w100()
+
                 val batches = change.blocks.splitIntoBatches()
 
                 if (batches.isNotEmpty()) {
@@ -180,10 +191,11 @@ class BlockContainerComponent : Component<Unit>(), KoinComponent {
 
             if (row != null) {
                 val justify = justifyContentByRowAlign(row.align)
-
                 val alignItems = alignItemsByRowStretchMetadata(row, last = batch == batches.last())
 
-                hPanel(className = "w-100", justify = justify, alignItems = alignItems) {
+                hPanel(justify = justify, alignItems = alignItems) {
+                    w100()
+
                     val blocks = batch.blocks
 
                     blocks.forEachIndexed { blockIndex, block ->

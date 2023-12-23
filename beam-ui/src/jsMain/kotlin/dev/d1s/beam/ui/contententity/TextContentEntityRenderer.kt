@@ -18,6 +18,7 @@ package dev.d1s.beam.ui.contententity
 
 import dev.d1s.beam.commons.contententity.*
 import dev.d1s.beam.ui.util.alignText
+import dev.d1s.exkt.kvision.bootstrap.*
 import io.kvision.html.p
 import io.kvision.panel.SimplePanel
 import org.koin.core.component.KoinComponent
@@ -64,9 +65,8 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
         }
 
         heading?.let {
-            val className = it.toBootstrapHeadingClass()
-
-            p(className = className) {
+            p {
+                setHeading(it)
                 init()
                 separateContentEntity(contentEntity, context, topMargin = 4, bottomMargin = 2)
             }
@@ -74,7 +74,9 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
     }
 
     private fun SimplePanel.paragraph(block: SimplePanel.() -> Unit) {
-        p(className = "mb-0") {
+        p {
+            mb0()
+
             block()
         }
     }
@@ -86,13 +88,14 @@ class TextContentEntityRenderer : ContentEntityRenderer, KoinComponent {
         renderStyledText(content)
     }
 
-    private fun Heading.toBootstrapHeadingClass() =
-        when (this) {
-            Heading.H1 -> "h1"
-            Heading.H2 -> "h3"
-            Heading.H3 -> "h5"
-            Heading.DISPLAY1 -> "display-1"
-            Heading.DISPLAY2 -> "display-3"
-            Heading.DISPLAY3 -> "display-5"
+    private fun SimplePanel.setHeading(heading: Heading) {
+        when (heading) {
+            Heading.H1 -> h1()
+            Heading.H2 -> h3()
+            Heading.H3 -> h5()
+            Heading.DISPLAY1 -> display1()
+            Heading.DISPLAY2 -> display3()
+            Heading.DISPLAY3 -> display5()
         }
+    }
 }

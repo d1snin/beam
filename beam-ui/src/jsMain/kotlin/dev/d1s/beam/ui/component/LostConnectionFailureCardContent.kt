@@ -22,6 +22,10 @@ import dev.d1s.beam.ui.util.PreloadedResources
 import dev.d1s.beam.ui.util.currentTranslation
 import dev.d1s.beam.ui.util.failureCardLostConnectionIconAlt
 import dev.d1s.beam.ui.util.failureCardLostConnectionMessage
+import dev.d1s.exkt.kvision.bootstrap.Breakpoint
+import dev.d1s.exkt.kvision.bootstrap.alignSelfCenter
+import dev.d1s.exkt.kvision.bootstrap.mb4
+import dev.d1s.exkt.kvision.bootstrap.mb5
 import io.kvision.html.image
 import io.kvision.panel.SimplePanel
 import io.kvision.utils.perc
@@ -42,9 +46,12 @@ class LostConnectionFailureCardContent : FailureCardContent(), KoinComponent {
 
         image(
             src = source,
-            alt = currentTranslation.failureCardLostConnectionIconAlt,
-            className = "mb-4 mb-lg-5 align-self-center"
+            alt = currentTranslation.failureCardLostConnectionIconAlt
         ) {
+            mb4()
+            mb5(breakpoint = Breakpoint.LG)
+            alignSelfCenter()
+
             width = 35.perc
         }
     }

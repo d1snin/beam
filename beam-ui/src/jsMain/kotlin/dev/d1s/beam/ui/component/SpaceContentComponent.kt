@@ -22,6 +22,7 @@ import dev.d1s.beam.ui.client.DaemonStatusWithPing
 import dev.d1s.beam.ui.state.Observable
 import dev.d1s.beam.ui.state.SpaceContentChange
 import dev.d1s.beam.ui.util.currentSpace
+import dev.d1s.beam.ui.util.renderFluidContainer
 import dev.d1s.beam.ui.util.subscribeSkipping
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
@@ -56,7 +57,7 @@ class SpaceContentComponent : Component<Unit>(), KoinComponent {
     private val showBlockContainerState = ObservableValue(ShowBlockContainer())
 
     override fun SimplePanel.render(): Effect {
-        div(className = "container-fluid") {
+        renderFluidContainer {
             div().bind(maxBlockSizeChangeObservable.state) {
                 render(failureCardComponent)
 

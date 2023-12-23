@@ -22,6 +22,7 @@ import dev.d1s.beam.commons.SpaceIdentifier
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.resource.ResourceLocation
 import dev.d1s.beam.ui.util.*
+import dev.d1s.exkt.kvision.bootstrap.w100
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
 import dev.d1s.exkt.kvision.component.render
@@ -70,7 +71,9 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
     }
 
     private fun SimplePanel.asyncDiv(block: suspend SimplePanel.() -> Unit) {
-        div(className = "w-100") {
+        div {
+            w100()
+
             fetchingScope.launch {
                 block()
             }
@@ -133,7 +136,7 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
     }
 
     private fun DescriptiveCardComponent.Config.setIcon() {
-        icon.value = "bi bi-box-arrow-up-right"
+        icon.value = Icons.BOX_ARROW_UP_RIGHT
     }
 
     private fun DescriptiveCardComponent.Config.setImage(space: Space?) {

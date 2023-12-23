@@ -19,8 +19,10 @@ package dev.d1s.beam.ui.contententity
 import dev.d1s.beam.commons.contententity.AlertContentEntityTypeDefinition
 import dev.d1s.beam.commons.contententity.AlertStyle
 import dev.d1s.beam.commons.contententity.get
-import dev.d1s.beam.ui.util.iconWithMargin
 import dev.d1s.beam.ui.util.justifyContent
+import dev.d1s.beam.ui.util.renderCard
+import dev.d1s.beam.ui.util.renderCardBody
+import dev.d1s.exkt.kvision.bootstrap.*
 import io.kvision.html.div
 import io.kvision.html.span
 import io.kvision.panel.SimplePanel
@@ -33,7 +35,10 @@ class AlertContentEntityRenderer : SingleContentEntityRenderer, KoinComponent {
     override val definition = AlertContentEntityTypeDefinition
 
     override fun SimplePanel.render(context: SingleContentEntityRenderingContext) {
-        div(className = "d-flex w-100") {
+        div {
+            dFlex()
+            w100()
+
             justifyContent(context.alignment)
 
             renderAlertCard(context)
@@ -57,7 +62,12 @@ class AlertContentEntityRenderer : SingleContentEntityRenderer, KoinComponent {
 
         val styleCode = style.code
 
-        div(className = "card border-${styleCode} bg-transparent overflow-hidden") {
+        renderCard {
+            addCssClass("border-${styleCode}")
+
+            bgTransparent()
+            overflowHidden()
+
             width?.let {
                 this.width = width.perc
             }
@@ -66,10 +76,17 @@ class AlertContentEntityRenderer : SingleContentEntityRenderer, KoinComponent {
                 this.height = height.px
             }
 
-            div(className = "card-body text-$styleCode") {
-                div(className = "h-100 d-flex justify-content-start align-items-center") {
+            renderCardBody {
+                addCssClass("text-$styleCode")
+
+                div {
+                    h100()
+                    dFlex()
+                    justifyContentStart()
+                    alignItemsCenter()
+
                     icon?.let {
-                        iconWithMargin("bi bi-$it")
+                        bootstrapIconWithMargin(it)
                     }
 
                     span(text)

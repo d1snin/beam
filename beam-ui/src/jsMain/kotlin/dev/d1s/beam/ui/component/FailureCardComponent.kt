@@ -18,6 +18,8 @@ package dev.d1s.beam.ui.component
 
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.util.Size
+import dev.d1s.beam.ui.util.renderContainer
+import dev.d1s.exkt.kvision.bootstrap.*
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
 import dev.d1s.exkt.kvision.component.render
@@ -62,10 +64,20 @@ class FailureCardComponent : Component<FailureCardComponent.Config>(::Config), K
         } ?: error("$mode is unsupported")
 
     private fun SimplePanel.renderCardInContainer(block: SimplePanel.() -> Unit) {
-        div(className = "container d-flex justify-content-center") {
+        renderContainer {
+            dFlex()
+            justifyContentCenter()
+
             maxWidth = Size.Lg.px
 
-            renderCard(className = "d-flex flex-column justify-content-center w-100 p-4 pt-5") {
+            renderStyledCard {
+                dFlex()
+                flexColumn()
+                justifyContentCenter()
+                w100()
+                p4()
+                pt5()
+
                 block()
             }
         }

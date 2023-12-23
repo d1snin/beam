@@ -18,7 +18,9 @@ package dev.d1s.beam.ui.component
 
 import dev.d1s.beam.ui.contententity.renderStyledText
 import dev.d1s.beam.ui.theme.setSecondaryText
+import dev.d1s.beam.ui.util.Events
 import dev.d1s.beam.ui.util.renderUnstyledLink
+import dev.d1s.exkt.kvision.bootstrap.*
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
 import io.kvision.core.JustifyContent
@@ -26,7 +28,6 @@ import io.kvision.core.TextDecoration
 import io.kvision.core.TextDecorationLine
 import io.kvision.core.onEvent
 import io.kvision.html.div
-import io.kvision.html.icon
 import io.kvision.html.p
 import io.kvision.html.span
 import io.kvision.panel.SimplePanel
@@ -44,19 +45,23 @@ class DescriptiveCardComponent : Component<DescriptiveCardComponent.Config>(::Co
         if (config.bare.value) {
             renderContent()
         } else {
-            renderCard()
+            renderContentCard()
         }
 
         return Effect.Success
     }
 
-    private fun SimplePanel.renderCard() {
-        val className =
-            ("d-flex align-items-center p-${config.cardPaddingLevel.value} ps-${config.cardStartPaddingLevel.value}" +
-                    if (config.fullWidth.value) " w-100" else "") +
-                    if (config.fullHeight.value) " h-100" else ""
+    private fun SimplePanel.renderContentCard() {
+        this@renderContentCard.renderStyledCard(usePageBackground = true) {
+            dFlex()
+            alignItemsCenter()
 
-        this@renderCard.renderCard(className, usePageBackground = true) {
+            addCssClass("p-${config.cardPaddingLevel.value}")
+            addCssClass("ps-${config.cardStartPaddingLevel.value}")
+
+            if (config.fullWidth.value) w100()
+            if (config.fullHeight.value) h100()
+
             renderContent()
         }
     }
@@ -74,7 +79,10 @@ class DescriptiveCardComponent : Component<DescriptiveCardComponent.Config>(::Co
 
     private fun SimplePanel.renderOptionallyLinkedContainer(block: SimplePanel.() -> Unit) {
         renderOptionalLink(fullWidth = true) {
-            div(className = "d-flex align-items-center") {
+            div {
+                dFlex()
+                alignItemsCenter()
+
                 linkedContainer = this
 
                 block()
@@ -84,10 +92,13 @@ class DescriptiveCardComponent : Component<DescriptiveCardComponent.Config>(::Co
 
     private fun SimplePanel.renderIcon() {
         config.icon.value?.let { icon ->
-            div(className = "ms-auto me-2") {
+            div {
+                msAuto()
+                me2()
+
                 fontSize = 1.2.rem
 
-                icon(icon)
+                bootstrapIcon(icon)
             }
         }
     }
@@ -97,7 +108,12 @@ class DescriptiveCardComponent : Component<DescriptiveCardComponent.Config>(::Co
 
         image?.let {
             renderOptionalLink {
-                div(className = "d-flex h-100 justify-content-center align-items-center") {
+                div {
+                    dFlex()
+                    h100()
+                    justifyContentCenter()
+                    alignItemsCenter()
+
                     image()
                 }
             }
@@ -112,20 +128,22 @@ class DescriptiveCardComponent : Component<DescriptiveCardComponent.Config>(::Co
     }
 
     private fun SimplePanel.renderVPanel(block: SimplePanel.() -> Unit) {
-        vPanel(justify = JustifyContent.CENTER, className = "mx-3") {
+        vPanel(justify = JustifyContent.CENTER) {
+            mx3()
+
             block()
         }
     }
 
     private fun SimplePanel.renderTitle() {
-        p(className = "mb-0") {
-            val headingClass = if (config.enableHeading.value) {
-                "h2"
-            } else {
-                "fs-bold"
-            }
+        p {
+            mb0()
 
-            addCssClass(headingClass)
+            if (config.enableHeading.value) {
+                h2()
+            } else {
+                fwBold()
+            }
 
             val title = config.title.value ?: error("Title is not set")
             renderStyledText(title)
@@ -148,11 +166,11 @@ class DescriptiveCardComponent : Component<DescriptiveCardComponent.Config>(::Co
 
     private fun SimplePanel.underlineOnHover() {
         linkedContainer?.onEvent {
-            event("mouseenter") {
+            event(Events.MOUSEENTER) {
                 textDecoration = TextDecoration(TextDecorationLine.UNDERLINE)
             }
 
-            event("mouseleave") {
+            event(Events.MOUSELEAVE) {
                 textDecoration = TextDecoration(TextDecorationLine.NONE)
             }
         }
@@ -161,16 +179,17 @@ class DescriptiveCardComponent : Component<DescriptiveCardComponent.Config>(::Co
     private fun SimplePanel.renderOptionalLink(fullWidth: Boolean = false, block: SimplePanel.() -> Unit) {
         val url = config.url.value
 
-        val className = if (fullWidth) "w-100" else ""
-
         if (url != null) {
             renderUnstyledLink(
                 url = url,
-                className = className,
                 external = config.external.value,
                 download = config.download.value,
                 downloadName = config.downloadName.value
             ) {
+                if (fullWidth) {
+                    w100()
+                }
+
                 block()
             }
         } else {

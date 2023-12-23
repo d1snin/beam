@@ -16,6 +16,8 @@
 
 package dev.d1s.beam.ui.component
 
+import dev.d1s.exkt.kvision.bootstrap.h3
+import dev.d1s.exkt.kvision.bootstrap.mb0
 import io.kvision.html.p
 import io.kvision.panel.SimplePanel
 
@@ -29,5 +31,8 @@ abstract class FailureCardContent {
 }
 
 fun SimplePanel.failureCardText(text: String) {
-    p(text, className = "mb-0 h3")
+    p(text) {
+        mb0()
+        h3()
+    }
 }

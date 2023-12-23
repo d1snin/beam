@@ -19,6 +19,8 @@ package dev.d1s.beam.ui.component
 import dev.d1s.beam.commons.spaceShowStatus
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.util.currentSpace
+import dev.d1s.beam.ui.util.renderFluidContainer
+import dev.d1s.exkt.kvision.bootstrap.*
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
 import dev.d1s.exkt.kvision.component.render
@@ -36,7 +38,15 @@ class HeadingComponent : Component<Unit>(), KoinComponent {
     private val daemonStatusComponent by inject<Component<Unit>>(Qualifier.DaemonStatusComponent)
 
     override fun SimplePanel.render(): Effect {
-        div(className = "container-fluid px-3 mt-3 mb-5 d-flex flex-column flex-lg-row justify-content-lg-between") {
+        renderFluidContainer {
+            px3()
+            mt3()
+            mb5()
+            dFlex()
+            flexColumn()
+            flexRow(breakpoint = Breakpoint.LG)
+            justifyContentBetween(breakpoint = Breakpoint.LG)
+
             renderSpaceHeading()
             renderDaemonStatus()
         }
@@ -45,7 +55,10 @@ class HeadingComponent : Component<Unit>(), KoinComponent {
     }
 
     private fun SimplePanel.renderSpaceHeading() {
-        div(className = "d-flex align-items-center") {
+        div {
+            dFlex()
+            alignItemsCenter()
+
             renderSpaceCard()
             renderExploreDropdown()
         }
@@ -54,7 +67,9 @@ class HeadingComponent : Component<Unit>(), KoinComponent {
     private fun SimplePanel.renderSpaceCard() {
         val spaceCard = get<Component<SpaceCardComponent.Config>>(Qualifier.SpaceCardComponent)
 
-        div(className = "me-2") {
+        div {
+            me2()
+
             render(spaceCard) {
                 bare.value = true
                 cardPaddingLevel.value = 4
@@ -69,7 +84,11 @@ class HeadingComponent : Component<Unit>(), KoinComponent {
     }
 
     private fun SimplePanel.renderDaemonStatus() {
-        div(className = "align-self-center mt-5 mt-lg-0") {
+        div {
+            alignSelfCenter()
+            mt5()
+            mt0(breakpoint = Breakpoint.LG)
+
             visible = false
 
             val showStatus = currentSpace?.metadata.spaceShowStatus

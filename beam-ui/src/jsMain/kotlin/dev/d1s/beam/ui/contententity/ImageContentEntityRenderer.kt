@@ -21,6 +21,8 @@ import dev.d1s.beam.commons.contententity.get
 import dev.d1s.beam.ui.util.alignItems
 import dev.d1s.beam.ui.util.isFluidImage
 import dev.d1s.beam.ui.util.renderSpinnerOnLoading
+import dev.d1s.exkt.kvision.bootstrap.mt0
+import dev.d1s.exkt.kvision.bootstrap.w100
 import io.kvision.html.div
 import io.kvision.html.image
 import io.kvision.panel.SimplePanel
@@ -66,11 +68,13 @@ class ImageContentEntityRenderer : SingleContentEntityRenderer, KoinComponent {
         context: SingleContentEntityRenderingContext,
         configure: SimplePanel.() -> Unit
     ) {
-        div(className = "w-100") {
+        div {
+            w100()
+
             alignItems(context.alignment)
 
             if (context.isFirst()) {
-                addCssClass("mt-0")
+                mt0()
             }
 
             configure()

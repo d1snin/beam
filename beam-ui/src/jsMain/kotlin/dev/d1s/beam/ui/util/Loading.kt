@@ -17,6 +17,10 @@
 package dev.d1s.beam.ui.util
 
 import dev.d1s.beam.ui.theme.currentTheme
+import dev.d1s.exkt.kvision.bootstrap.alignItemsCenter
+import dev.d1s.exkt.kvision.bootstrap.dFlex
+import dev.d1s.exkt.kvision.bootstrap.flexColumn
+import dev.d1s.exkt.kvision.bootstrap.justifyContentCenter
 import io.kvision.core.Display
 import io.kvision.core.Widget
 import io.kvision.html.div
@@ -31,12 +35,15 @@ enum class SpinnerStyle(val code: String) {
 
 fun SimplePanel.renderSpinnerOnLoading(resourceUrl: String, block: () -> Widget) {
     if (resourceUrl !in processedResources) {
-        addCssClass("d-flex")
-        addCssClass("flex-column")
-        addCssClass("justify-content-center")
-        addCssClass("align-items-center")
+        dFlex()
+        flexColumn()
+        justifyContentCenter()
+        alignItemsCenter()
 
-        div(className = "d-flex justify-content-center") {
+        div {
+            dFlex()
+            justifyContentCenter()
+
             val spinner = renderSpinner()
             val element = block()
 

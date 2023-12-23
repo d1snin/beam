@@ -20,6 +20,10 @@ import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.util.currentTranslation
 import dev.d1s.beam.ui.util.failureCardEmptySpaceIconAlt
 import dev.d1s.beam.ui.util.failureCardEmptySpaceMessage
+import dev.d1s.exkt.kvision.bootstrap.Breakpoint
+import dev.d1s.exkt.kvision.bootstrap.alignSelfCenter
+import dev.d1s.exkt.kvision.bootstrap.mb4
+import dev.d1s.exkt.kvision.bootstrap.mb5
 import io.kvision.html.image
 import io.kvision.panel.SimplePanel
 import io.kvision.utils.perc
@@ -33,8 +37,11 @@ class EmptyFailureCardContent : FailureCardContent(), KoinComponent {
         image(
             currentTheme.emptySpaceIcon,
             alt = currentTranslation.failureCardEmptySpaceIconAlt,
-            className = "mb-4 mb-lg-5 align-self-center"
         ) {
+            mb4()
+            mb5(breakpoint = Breakpoint.LG)
+            alignSelfCenter()
+
             width = 35.perc
         }
     }

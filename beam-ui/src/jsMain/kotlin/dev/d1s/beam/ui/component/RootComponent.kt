@@ -24,6 +24,8 @@ import dev.d1s.beam.ui.theme.setBackground
 import dev.d1s.beam.ui.theme.setTextColor
 import dev.d1s.beam.ui.util.currentSpace
 import dev.d1s.beam.ui.util.currentTranslationObservable
+import dev.d1s.exkt.kvision.bootstrap.dFlex
+import dev.d1s.exkt.kvision.bootstrap.flexColumn
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
 import dev.d1s.exkt.kvision.component.render
@@ -71,8 +73,8 @@ class RootComponent : Component.Root(), KoinComponent {
     }
 
     private fun SimplePanel.display() {
-        addCssClass("d-flex")
-        addCssClass("flex-column")
+        dFlex()
+        flexColumn()
     }
 
     private fun SimplePanel.font() {

@@ -16,20 +16,18 @@
 
 package dev.d1s.beam.ui.util
 
-import kotlinx.browser.document
-import kotlinx.browser.window
-import org.w3c.dom.Element
-import kotlin.math.max
+object Icons {
 
-val vh get() = max(document.documentElement?.clientHeight ?: 0, window.innerHeight)
-val vw get() = max(document.documentElement?.clientWidth ?: 0, window.innerWidth)
+    const val CHEVRON_DOWN = "chevron-down"
+    const val CHEVRON_RIGHT = "chevron-right"
 
-val Element.isOnScreen
-    get() = getBoundingClientRect().let {
-        it.top >= 0 && it.left >= 0 && it.bottom <= vh && it.right <= vw
-    }
+    const val CLOUD = "cloud"
 
-fun onScrollOrResize(block: () -> Unit) {
-    window.addEventListener(Events.SCROLL, { _ -> block() })
-    window.addEventListener(Events.RESIZE, { _ -> block() })
+    const val TRANSLATE = "translate"
+
+    const val GLOBE_AMERICAS = "globe-americas"
+
+    const val BOX_ARROW_UP_RIGHT = "box-arrow-up-right"
+
+    const val DOWNLOAD = "download"
 }

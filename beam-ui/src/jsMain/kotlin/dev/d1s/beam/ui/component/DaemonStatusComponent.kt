@@ -21,6 +21,7 @@ import dev.d1s.beam.ui.client.DaemonStatusWithPing
 import dev.d1s.beam.ui.state.Observable
 import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.util.*
+import dev.d1s.exkt.kvision.bootstrap.*
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
 import io.kvision.core.Color
@@ -52,7 +53,11 @@ class DaemonStatusComponent : Component<Unit>(), KoinComponent {
     }
 
     private fun SimplePanel.renderStatusCard(status: DaemonStatusWithPing?) {
-        renderCard(className = "d-flex align-items-center px-2") {
+        renderStyledCard {
+            dFlex()
+            alignItemsCenter()
+            px2()
+
             if (status != null) {
                 renderConnectedState(status)
             } else {
@@ -100,11 +105,11 @@ class DaemonStatusComponent : Component<Unit>(), KoinComponent {
         div {
             fontSize = 1.rem
             color = iconColor
-            iconWithMargin("bi bi-cloud")
+            bootstrapIconWithMargin(Icons.CLOUD)
         }
     }
 
     private fun SimplePanel.renderText(text: String) {
-        span(text, className = "me-2")
+        span(text) { me2() }
     }
 }

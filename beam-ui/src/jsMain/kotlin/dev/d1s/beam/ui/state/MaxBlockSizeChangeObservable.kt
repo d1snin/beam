@@ -17,6 +17,7 @@
 package dev.d1s.beam.ui.state
 
 import dev.d1s.beam.commons.BlockSize
+import dev.d1s.beam.ui.util.Events
 import dev.d1s.beam.ui.util.Size
 import io.kvision.state.ObservableValue
 import kotlinx.browser.window
@@ -38,5 +39,5 @@ class MaxBlockSizeChangeObservable : Observable<BlockSize>, KoinComponent {
         }
 
     private fun onResize(block: () -> Unit) =
-        window.addEventListener("resize", { _ -> block() }, true)
+        window.addEventListener(Events.RESIZE, { _ -> block() }, true)
 }

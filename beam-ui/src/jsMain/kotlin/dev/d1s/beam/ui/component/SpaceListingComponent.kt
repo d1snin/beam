@@ -25,6 +25,7 @@ import dev.d1s.beam.ui.theme.setSecondaryBlue
 import dev.d1s.beam.ui.theme.setSecondaryText
 import dev.d1s.beam.ui.util.*
 import dev.d1s.exkt.common.pagination.Paginator
+import dev.d1s.exkt.kvision.bootstrap.*
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
 import dev.d1s.exkt.kvision.component.MutableLazyEffectState
@@ -131,7 +132,10 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
     }
 
     private fun SimplePanel.renderSpaceListingMessage() {
-        p(currentTranslation.spaceListingMessage, className = "fs-bold mb-0") {
+        p(currentTranslation.spaceListingMessage) {
+            fwBold()
+            mb0()
+
             fontSize = 1.1.rem
 
             setSecondaryText()
@@ -154,13 +158,8 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
     private fun SimplePanel.renderSpaceRow(spaces: List<Space>, block: SimplePanel.() -> Unit) {
         val lgCols = if (spaces.size == 1) 1 else 2
 
-        div(className = "row row-cols-1 row-cols-lg-$lgCols g-3 mt-0") {
-            block()
-        }
-    }
-
-    private fun SimplePanel.renderCol(block: SimplePanel.() -> Unit) {
-        div(className = "col") {
+        renderRow(cols = "1", lgCols = lgCols.toString(), gap = 3) {
+            mt0()
             block()
         }
     }
@@ -209,7 +208,12 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
         }
 
     private fun SimplePanel.renderFetchMoreButton() {
-        div(className = "d-flex w-100 justify-content-center mt-2") {
+        div {
+            dFlex()
+            w100()
+            justifyContentCenter()
+            mt2()
+
             button(currentTranslation.spaceListingFetchMoreButton, style = ButtonStyle.LINK) {
                 setSecondaryBlue()
                 handleButtonClick()

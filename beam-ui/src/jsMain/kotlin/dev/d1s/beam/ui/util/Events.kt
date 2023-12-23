@@ -16,10 +16,14 @@
 
 package dev.d1s.beam.ui.util
 
-import io.kvision.html.icon
-import io.kvision.panel.SimplePanel
+object Events {
 
-fun SimplePanel.iconWithMargin(icon: String, margin: Int = 2, className: String? = null) {
-    val classList = "$icon me-$margin" + (className?.let { " $it" } ?: "")
-    icon(classList)
+    const val COLLAPSE_HIDE = "hide.bs.collapse"
+    const val COLLAPSE_SHOW = "show.bs.collapse"
+
+    const val MOUSEENTER = "mouseenter"
+    const val MOUSELEAVE = "mouseleave"
+
+    const val SCROLL = "scroll"
+    const val RESIZE = "resize"
 }

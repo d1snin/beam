@@ -17,6 +17,7 @@
 package dev.d1s.beam.ui.util
 
 import dev.d1s.beam.ui.theme.setTextColor
+import dev.d1s.exkt.kvision.bootstrap.textDecorationNone
 import io.kvision.html.Link
 import io.kvision.html.link
 import io.kvision.panel.SimplePanel
@@ -46,7 +47,6 @@ fun SimplePanel.renderFriendlyLink(
 
 fun SimplePanel.renderUnstyledLink(
     url: String,
-    className: String? = null,
     external: Boolean = false,
     download: Boolean = false,
     downloadName: String? = null,
@@ -54,11 +54,12 @@ fun SimplePanel.renderUnstyledLink(
 ) {
     renderFriendlyLink(
         url = url,
-        className = "text-decoration-none" + (className?.let { " $it" } ?: ""),
         external = external,
         download = download,
         downloadName = downloadName
     ) {
+        textDecorationNone()
+
         setTextColor()
         block()
     }

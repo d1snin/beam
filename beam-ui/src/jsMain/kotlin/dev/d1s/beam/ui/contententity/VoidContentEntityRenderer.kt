@@ -19,6 +19,7 @@ package dev.d1s.beam.ui.contententity
 import dev.d1s.beam.commons.contententity.VoidContentEntityTypeDefinition
 import dev.d1s.beam.commons.contententity.get
 import dev.d1s.beam.ui.util.Size
+import dev.d1s.exkt.kvision.bootstrap.w100
 import io.kvision.html.div
 import io.kvision.panel.SimplePanel
 import io.kvision.utils.px
@@ -33,7 +34,8 @@ class VoidContentEntityRenderer : SingleContentEntityRenderer, KoinComponent {
     override fun SimplePanel.render(context: SingleContentEntityRenderingContext) {
         val height = context.entity.parameters[definition.height]?.toIntOrNull() ?: defaultHeight
 
-        div(className = "w-100") {
+        div {
+            w100()
             this.height = height.px
         }
     }

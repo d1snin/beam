@@ -17,34 +17,29 @@
 package dev.d1s.beam.ui.util
 
 import dev.d1s.beam.commons.contententity.Alignment
+import dev.d1s.exkt.kvision.bootstrap.*
 import io.kvision.panel.SimplePanel
 
 fun SimplePanel.justifyContent(alignment: Alignment) {
-    val className = when (alignment) {
-        Alignment.START -> "justify-content-start"
-        Alignment.CENTER -> "justify-content-center"
-        Alignment.END -> "justify-content-end"
+    when (alignment) {
+        Alignment.START -> justifyContentStart()
+        Alignment.CENTER -> justifyContentCenter()
+        Alignment.END -> justifyContentEnd()
     }
-
-    addCssClass(className)
 }
 
 fun SimplePanel.alignItems(alignment: Alignment) {
-    val className = when (alignment) {
-        Alignment.START -> "align-items-start"
-        Alignment.CENTER -> "align-items-center"
-        Alignment.END -> "align-items-end"
+    when (alignment) {
+        Alignment.START -> alignItemsStart()
+        Alignment.CENTER -> alignItemsCenter()
+        Alignment.END -> alignItemsEnd()
     }
-
-    addCssClass(className)
 }
 
 fun SimplePanel.alignText(alignment: Alignment) {
-    val className = when (alignment) {
-        Alignment.START -> "text-start"
-        Alignment.CENTER -> "text-center"
-        Alignment.END -> "text-end"
+    when (alignment) {
+        Alignment.START -> textStart()
+        Alignment.CENTER -> textCenter()
+        Alignment.END -> textEnd()
     }
-
-    addCssClass(className)
 }

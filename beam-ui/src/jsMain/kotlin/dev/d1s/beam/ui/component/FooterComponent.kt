@@ -22,6 +22,8 @@ import dev.d1s.beam.ui.theme.setSecondaryText
 import dev.d1s.beam.ui.util.currentSpace
 import dev.d1s.beam.ui.util.currentTranslation
 import dev.d1s.beam.ui.util.defaultRemark
+import dev.d1s.beam.ui.util.renderFluidContainer
+import dev.d1s.exkt.kvision.bootstrap.*
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
 import dev.d1s.exkt.kvision.component.render
@@ -36,7 +38,14 @@ class FooterComponent : Component<Unit>(), KoinComponent {
     private val languageSwitcherComponent by inject<Component<Unit>>(Qualifier.LanguageSwitcherComponent)
 
     override fun SimplePanel.render(): Effect {
-        div(className = "container-fluid pt-5 pb-2 mt-auto d-flex justify-content-between align-items-center") {
+        renderFluidContainer {
+            pt5()
+            pb2()
+            mtAuto()
+            dFlex()
+            justifyContentBetween()
+            alignItemsCenter()
+
             renderRemark()
             renderLanguageSwitcherComponent()
         }

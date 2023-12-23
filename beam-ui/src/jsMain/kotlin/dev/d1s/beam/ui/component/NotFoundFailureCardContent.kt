@@ -20,6 +20,10 @@ import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.util.currentTranslation
 import dev.d1s.beam.ui.util.failureCardNotFoundIconAlt
 import dev.d1s.beam.ui.util.failureCardNotFoundMessage
+import dev.d1s.exkt.kvision.bootstrap.Breakpoint
+import dev.d1s.exkt.kvision.bootstrap.mb4
+import dev.d1s.exkt.kvision.bootstrap.mb5
+import dev.d1s.exkt.kvision.bootstrap.w100
 import io.kvision.html.image
 import io.kvision.panel.SimplePanel
 import org.koin.core.component.KoinComponent
@@ -31,9 +35,12 @@ class NotFoundFailureCardContent : FailureCardContent(), KoinComponent {
     override fun SimplePanel.image() {
         image(
             currentTheme.notFoundIcon,
-            alt = currentTranslation.failureCardNotFoundIconAlt,
-            className = "w-100 mb-4 mb-lg-5"
-        )
+            alt = currentTranslation.failureCardNotFoundIconAlt
+        ) {
+            w100()
+            mb4()
+            mb5(breakpoint = Breakpoint.LG)
+        }
     }
 
     override fun SimplePanel.text() {

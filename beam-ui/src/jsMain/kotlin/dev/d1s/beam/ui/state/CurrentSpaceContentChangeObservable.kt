@@ -21,6 +21,9 @@ import dev.d1s.beam.commons.*
 import dev.d1s.beam.ui.component.BlockContainerComponent
 import dev.d1s.beam.ui.util.*
 import dev.d1s.exkt.common.pagination.Paginator
+import dev.d1s.exkt.kvision.bootstrap.dFlex
+import dev.d1s.exkt.kvision.bootstrap.justifyContentCenter
+import dev.d1s.exkt.kvision.bootstrap.mt5
 import io.kvision.html.div
 import io.kvision.panel.SimplePanel
 import io.kvision.state.ObservableValue
@@ -235,9 +238,9 @@ class CurrentSpaceContentChangeObservable : Observable<SpaceContentChange?>, Koi
 fun SimplePanel.renderEndOfContent() {
     div().bind(showEndOfContentSpinner) { show ->
         if (show) {
-            addCssClass("mt-5")
-            addCssClass("d-flex")
-            addCssClass("justify-content-center")
+            mt5()
+            dFlex()
+            justifyContentCenter()
 
             renderSpinner()
         }

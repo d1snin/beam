@@ -28,6 +28,7 @@ import dev.d1s.beam.ui.contententity.splitBy
 import dev.d1s.beam.ui.util.*
 import dev.d1s.beam.ui.util.Size.MaxBlockSize
 import dev.d1s.beam.ui.util.Size.sizeOf
+import dev.d1s.exkt.kvision.bootstrap.*
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
 import io.kvision.core.onEvent
@@ -49,11 +50,13 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
     private val collapsedContentId
         get() = COLLAPSED_CONTENT_ID + collapsedContentCounter
 
-    override fun SimplePanel.render(): Effect {
-        val block = requireNotNull(config.block.value) {
+    private val block by lazy {
+        requireNotNull(config.block.value) {
             "Block isn't set"
         }
+    }
 
+    override fun SimplePanel.render(): Effect {
         renderBlockCard(block)
 
         return Effect.Success
@@ -67,8 +70,8 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
                 applyMargin()
             }
 
-            addCssClass("w-100")
-            addCssClass("d-flex")
+            w100()
+            dFlex()
 
             val blockSize = if (config.single.value) {
                 sizeOf(MaxBlockSize).px
@@ -83,11 +86,12 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
             containerConfigured = true
         }
 
-        fun SimplePanel.renderCard() {
-            renderCard(
-                "flex-column justify-content-start overflow-hidden",
-                bare = block.metadata.blockBare
-            ) {
+        fun SimplePanel.renderBlockCard() {
+            renderStyledCard(bare = block.metadata.blockBare) {
+                flexColumn()
+                justifyContentStart()
+                overflowHidden()
+
                 configureContainer()
                 configurePadding(block)
 
@@ -100,16 +104,16 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
         block.metadata.blockLink?.let {
             renderFriendlyLink(url = it, external = true) {
                 configureContainer()
-                renderCard()
+                renderBlockCard()
             }
-        } ?: renderCard()
+        } ?: renderBlockCard()
     }
 
     private fun SimplePanel.configurePadding(block: Block) {
         if (block.isFluidImage()) {
-            addCssClass("p-0")
+            p0()
         } else {
-            addCssClass("p-3")
+            p3()
         }
     }
 
@@ -165,36 +169,37 @@ class BlockComponent : Component<BlockComponent.Config>(::Config), KoinComponent
         val contentId = collapsedContentId
 
         div().bind(clicked) {
-            renderFriendlyLink(
-                url = "#$contentId",
-                className = "fw-bold"
-            ) {
+            renderFriendlyLink(url = "#$contentId") {
+                fwBold()
+
                 role = "button"
                 setAttribute("data-bs-toggle", "collapse")
                 setAttribute("aria-expanded", "false")
                 setAttribute("aria-controls", contentId)
 
                 val icon = if (opened) {
-                    "chevron-down"
+                    Icons.CHEVRON_DOWN
                 } else {
-                    "chevron-right"
+                    Icons.CHEVRON_RIGHT
                 }
 
-                iconWithMargin("bi bi-$icon", margin = 1)
+                bootstrapIconWithMargin(icon, margin = 1)
                 span(currentTranslation.blockCollapsedContentEntityButtonMessage)
 
                 opacity = if (opened) 0.6 else 1.0
             }
         }
 
-        div(className = "mt-2 collapse") {
+        renderCollapsedContainer {
+            mt2()
+
             onEvent {
-                event("hide.bs.collapse") {
+                event(Events.COLLAPSE_HIDE) {
                     opened = false
                     clicked.value = opened
                 }
 
-                event("show.bs.collapse") {
+                event(Events.COLLAPSE_SHOW) {
                     opened = true
                     clicked.value = opened
                 }

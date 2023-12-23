@@ -19,34 +19,27 @@ package dev.d1s.beam.ui.component
 import dev.d1s.beam.ui.theme.setBackground
 import dev.d1s.beam.ui.theme.setOutline
 import dev.d1s.beam.ui.theme.setOverlay
+import dev.d1s.exkt.kvision.bootstrap.rounded
+import dev.d1s.exkt.kvision.bootstrap.shadow
 import io.kvision.html.div
 import io.kvision.panel.SimplePanel
 
-fun SimplePanel.renderCard(
-    className: String? = null,
+fun SimplePanel.renderStyledCard(
     usePageBackground: Boolean = false,
     bare: Boolean = false,
     block: (SimplePanel.() -> Unit)? = null
-): SimplePanel {
-    val classes = buildList {
-        className?.let {
-            add(it)
-        }
-
+): SimplePanel =
+    div {
         if (!bare) {
-            add("rounded shadow")
-        }
-    }.joinToString(" ")
+            rounded()
+            shadow()
 
-    return div(className = classes) {
-        if (!bare) {
             setOutline()
             setBackground(usePageBackground)
         }
 
         block?.invoke(this)
     }
-}
 
 private fun SimplePanel.setBackground(usePageBackground: Boolean) {
     if (usePageBackground) {

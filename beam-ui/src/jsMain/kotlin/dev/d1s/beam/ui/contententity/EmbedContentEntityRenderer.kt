@@ -21,6 +21,10 @@ import dev.d1s.beam.commons.contententity.EmbedContentEntityTypeDefinition
 import dev.d1s.beam.commons.contententity.get
 import dev.d1s.beam.ui.util.justifyContent
 import dev.d1s.beam.ui.util.renderSpinnerOnLoading
+import dev.d1s.exkt.kvision.bootstrap.dFlex
+import dev.d1s.exkt.kvision.bootstrap.overflowHidden
+import dev.d1s.exkt.kvision.bootstrap.rounded
+import dev.d1s.exkt.kvision.bootstrap.w100
 import io.kvision.core.Border
 import io.kvision.core.BorderStyle
 import io.kvision.core.Position
@@ -36,7 +40,10 @@ class EmbedContentEntityRenderer : SingleContentEntityRenderer, KoinComponent {
     override val definition = EmbedContentEntityTypeDefinition
 
     override fun SimplePanel.render(context: SingleContentEntityRenderingContext) {
-        div(className = "d-flex w-100") {
+        div {
+            dFlex()
+            w100()
+
             justifyContent(context.alignment)
 
             renderIframe(context.entity)
@@ -58,7 +65,10 @@ class EmbedContentEntityRenderer : SingleContentEntityRenderer, KoinComponent {
 
         val calculatedWidth = (width ?: 100).perc
 
-        div(className = "rounded overflow-hidden") {
+        div {
+            rounded()
+            overflowHidden()
+
             this.width = calculatedWidth
 
             height?.let {

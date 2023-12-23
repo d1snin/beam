@@ -24,10 +24,12 @@ import dev.d1s.beam.ui.theme.setOutline
 import dev.d1s.beam.ui.theme.setOverlay
 import dev.d1s.beam.ui.theme.setTextColor
 import dev.d1s.beam.ui.util.*
+import dev.d1s.exkt.kvision.bootstrap.bootstrapIconWithMargin
+import dev.d1s.exkt.kvision.bootstrap.shadow
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
 import io.kvision.core.onClick
-import io.kvision.html.*
+import io.kvision.html.div
 import io.kvision.panel.SimplePanel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -51,7 +53,7 @@ class LanguageSwitcherComponent : Component<Unit>(), KoinComponent {
                 return@launchDiv
             }
 
-            renderDropup(translations)
+            renderDropupMenu(translations)
         }
 
         return effect
@@ -65,28 +67,27 @@ class LanguageSwitcherComponent : Component<Unit>(), KoinComponent {
         }
     }
 
-    private fun SimplePanel.renderDropup(translations: Translations) {
-        div(className = "dropup") {
+    private fun SimplePanel.renderDropupMenu(translations: Translations) {
+        renderDropup {
             renderButton()
             renderDropdownMenu(translations)
         }
     }
 
     private fun SimplePanel.renderButton() {
-        button(
-            text = "",
+        renderDropdownToggler(
             style = currentTheme.buttonStyle,
-            className = "btn-sm dropdown-toggle"
+            offset = "0,10"
         ) {
-            setButtonAttributes()
-
-            iconWithMargin("bi bi-translate")
+            bootstrapIconWithMargin(Icons.TRANSLATE)
             +currentTranslation.footerLanguageSwitcherMessage
         }
     }
 
     private fun SimplePanel.renderDropdownMenu(translations: Translations) {
-        ul(className = "dropdown-menu shadow") {
+        renderDropdownMenu {
+            shadow()
+
             setOutline()
             setOverlay()
 
@@ -96,12 +97,6 @@ class LanguageSwitcherComponent : Component<Unit>(), KoinComponent {
         }
     }
 
-    private fun SimplePanel.setButtonAttributes() {
-        setAttribute("data-bs-toggle", "dropdown")
-        setAttribute("data-bs-offset", "0,10")
-        setAttribute("aria-expanded", "false")
-    }
-
     private fun SimplePanel.renderDropdownItem(translation: Translation) {
         renderDropdownItem {
             setStyle("--bs-dropdown-link-hover-bg", currentTheme.background.asString())
@@ -109,19 +104,11 @@ class LanguageSwitcherComponent : Component<Unit>(), KoinComponent {
 
             setAttribute("type", "button")
 
-            iconWithMargin("bi bi-globe-americas")
+            bootstrapIconWithMargin(Icons.GLOBE_AMERICAS)
             +translation.languageName
 
             onClick {
                 setCurrentTranslation(translation)
-            }
-        }
-    }
-
-    private fun SimplePanel.renderDropdownItem(block: SimplePanel. () -> Unit) {
-        li {
-            tag(TAG.BUTTON, className = "dropdown-item") {
-                block()
             }
         }
     }

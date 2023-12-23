@@ -17,9 +17,10 @@
 package dev.d1s.beam.ui.contententity
 
 import dev.d1s.beam.commons.contententity.*
-import dev.d1s.beam.ui.util.iconWithMargin
 import dev.d1s.beam.ui.util.justifyContent
-import dev.d1s.beam.ui.util.renderFriendlyLink
+import dev.d1s.beam.ui.util.renderExternalButtonLink
+import dev.d1s.beam.ui.util.renderRow
+import dev.d1s.exkt.kvision.bootstrap.*
 import io.kvision.html.div
 import io.kvision.html.span
 import io.kvision.panel.SimplePanel
@@ -53,7 +54,7 @@ class ButtonLinkContentEntityRenderer : ContentEntityRenderer, KoinComponent {
         if (sized) {
             renderEach(fullWidth = true)
         } else {
-            div(className = "row row-cols-auto g-2") {
+            renderRow(cols = "auto", gap = 2) {
                 justifyContent(context.alignment)
 
                 renderEach(fullWidth = false)
@@ -84,7 +85,10 @@ class ButtonLinkContentEntityRenderer : ContentEntityRenderer, KoinComponent {
         val height = parameters[definition.height]?.toInt()
 
         fun SimplePanel.render() {
-            div(className = "d-flex mt-0") {
+            div {
+                dFlex()
+                mt0()
+
                 width?.let {
                     this.width = width.perc
                 }
@@ -93,16 +97,21 @@ class ButtonLinkContentEntityRenderer : ContentEntityRenderer, KoinComponent {
                     this.height = height.px
                 }
 
-                renderFriendlyLink(
+                renderExternalButtonLink(
                     url = url,
-                    className = "w-100 h-100 btn btn-outline-${style.code}",
-                    external = true
+                    style = style
                 ) {
-                    role = "button"
+                    w100()
+                    h100()
 
-                    div(className = "h-100 d-flex justify-content-center align-items-center") {
+                    div {
+                        h100()
+                        dFlex()
+                        justifyContentCenter()
+                        alignItemsCenter()
+
                         icon?.let {
-                            iconWithMargin("bi bi-$it")
+                            bootstrapIconWithMargin(it)
                         }
 
                         span(text)
@@ -116,7 +125,10 @@ class ButtonLinkContentEntityRenderer : ContentEntityRenderer, KoinComponent {
         }
 
         if (fullWidth) {
-            div(className = "d-flex w-100") {
+            div {
+                dFlex()
+                w100()
+
                 justifyContent(context.alignment)
 
                 render()
