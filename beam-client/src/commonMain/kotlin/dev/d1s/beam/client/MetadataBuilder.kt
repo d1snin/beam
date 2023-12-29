@@ -74,6 +74,6 @@ public fun MetadataBuilder.setBlockImageEntityFluid(fluid: Boolean = true) {
     metadata(MetadataKeys.UI_BLOCK_IMAGE_ENTITY_FLUID, fluid.toString())
 }
 
-public fun MetadataBuilder.setButtonLinkEntityGrow(grow: Boolean = true) {
+public fun MetadataBuilder.setBlockButtonLinkEntityGrow(grow: Boolean = true) {
     metadata(MetadataKeys.UI_BLOCK_BUTTON_LINK_ENTITY_GROW, grow.toString())
 }
