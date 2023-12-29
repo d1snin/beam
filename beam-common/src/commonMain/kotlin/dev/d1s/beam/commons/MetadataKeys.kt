@@ -30,7 +30,9 @@ public object MetadataKeys {
     public const val UI_BLOCK_ID: MetadataKey = "ui.block.id"
     public const val UI_BLOCK_BARE: MetadataKey = "ui.block.bare"
     public const val UI_BLOCK_LINK: MetadataKey = "ui.block.link"
+
     public const val UI_BLOCK_IMAGE_ENTITY_FLUID: MetadataKey = "ui.block.image.fluid"
+    public const val UI_BLOCK_BUTTON_LINK_ENTITY_GROW: MetadataKey = "ui.block.button-link.grow"
 
     public const val FILE_CONTENT_ENTITY_SIZE: MetadataKey = "file.size"
 }
@@ -64,6 +66,9 @@ public val Metadata.blockLink: MetadataValue?
 
 public val Metadata?.blockImageEntityFluid: Boolean
     get() = getBooleanOrFalse(MetadataKeys.UI_BLOCK_IMAGE_ENTITY_FLUID)
+
+public val Metadata?.blockButtonLinkEntityGrow: Boolean
+    get() = getBooleanOrFalse(MetadataKeys.UI_BLOCK_BUTTON_LINK_ENTITY_GROW)
 
 public val Metadata.fileContentEntitySize: Long?
     get() = get(MetadataKeys.FILE_CONTENT_ENTITY_SIZE)?.toLongOrNull()

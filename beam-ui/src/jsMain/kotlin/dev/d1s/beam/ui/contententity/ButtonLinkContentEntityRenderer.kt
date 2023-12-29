@@ -16,6 +16,7 @@
 
 package dev.d1s.beam.ui.contententity
 
+import dev.d1s.beam.commons.blockButtonLinkEntityGrow
 import dev.d1s.beam.commons.contententity.*
 import dev.d1s.beam.ui.util.justifyContent
 import dev.d1s.beam.ui.util.renderExternalButtonLink
@@ -88,6 +89,10 @@ class ButtonLinkContentEntityRenderer : ContentEntityRenderer, KoinComponent {
             div {
                 dFlex()
                 mt0()
+
+                if (!fullWidth && context.block.metadata.blockButtonLinkEntityGrow) {
+                    flexGrow1()
+                }
 
                 width?.let {
                     this.width = width.perc
