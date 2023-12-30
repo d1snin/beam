@@ -34,11 +34,13 @@ object GoldLightTheme : AbstractTheme(SpaceThemeDefinition.GoldLight) {
 
     override val spinnerStyle = SpinnerStyle.DARK
 
+    override val shadow = false
+
     // https://colorpicker.me/#fbfbfb
     override val background = Color.hex(0xfbfbfb)
 
-    // https://colorpicker.me/#e9e9e9
-    override val overlay = Color.hex(0xe9e9e9)
+    // https://colorpicker.me/#fbfbfb
+    override val overlay = Color.hex(0xfbfbfb)
 
     // https://colorpicker.me/#ffef00
     override val outline = Color.hex(0xffef00)

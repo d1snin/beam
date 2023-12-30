@@ -23,6 +23,8 @@ import io.kvision.core.Color
 
 abstract class CatppuccinTheme(definition: SpaceThemeDefinition, palette: Palette) : AbstractTheme(definition) {
 
+    override val shadow = true
+
     override val background = palette.base.color
 
     override val overlay = palette.surface0.color

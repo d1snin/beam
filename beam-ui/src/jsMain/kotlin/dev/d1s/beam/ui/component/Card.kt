@@ -16,6 +16,7 @@
 
 package dev.d1s.beam.ui.component
 
+import dev.d1s.beam.ui.theme.currentTheme
 import dev.d1s.beam.ui.theme.setBackground
 import dev.d1s.beam.ui.theme.setOutline
 import dev.d1s.beam.ui.theme.setOverlay
@@ -32,7 +33,10 @@ fun SimplePanel.renderStyledCard(
     div {
         if (!bare) {
             rounded()
-            shadow()
+
+            if (currentTheme.shadow) {
+                shadow()
+            }
 
             setOutline()
             setBackground(usePageBackground)

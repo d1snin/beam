@@ -34,6 +34,8 @@ object AccentDarkTheme : AbstractTheme(SpaceThemeDefinition.AccentDark) {
 
     override val spinnerStyle = SpinnerStyle.LIGHT
 
+    override val shadow = true
+
     // https://colorpicker.me/#151515
     override val background = Color.hex(0x151515)
 

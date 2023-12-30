@@ -36,6 +36,8 @@ abstract class AbstractTheme(val definition: SpaceThemeDefinition) {
 
     abstract val spinnerStyle: SpinnerStyle
 
+    abstract val shadow: Boolean
+
     abstract val background: Color
 
     abstract val overlay: Color

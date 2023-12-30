@@ -34,6 +34,8 @@ object BarbieTheme : AbstractTheme(SpaceThemeDefinition.Barbie) {
 
     override val spinnerStyle = SpinnerStyle.DARK
 
+    override val shadow = true
+
     // https://colorpicker.me/#facde5
     override val background = Color.hex(0xfacde5)
 
