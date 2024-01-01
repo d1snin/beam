@@ -31,7 +31,7 @@ Please refer to [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md).
 ### License
 
 ```
-Copyright 2023 Mikhail Titov <me@d1s.dev>
+Copyright 2023-2024 Mikhail Titov <me@d1s.dev>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
