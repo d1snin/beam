@@ -69,7 +69,7 @@ fun SimplePanel.renderSpinnerOnLoading(resourceUrl: String, block: () -> Widget)
 }
 
 fun SimplePanel.renderSpinner(): SimplePanel =
-    div(className = "spinner-border text-${currentTheme.spinnerStyle.code}") {
+    div(className = "spinner-border my-3 text-${currentTheme.spinnerStyle.code}") {
         role = "status"
         span("Loading...", className = "visually-hidden")
     }
