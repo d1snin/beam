@@ -29,7 +29,7 @@ public object Paths {
 
     public const val LANGUAGE_CODE_QUERY_PARAMETER: String = "language"
 
-    public const val GET_DAEMON_STATUS_ROUTE: String = "/status"
+    public const val GET_DAEMON_STATUS: String = "/status"
 
     public const val POST_SPACE: String = "/spaces"
     public const val POST_ROOT_SPACE: String = "/spaces/root"

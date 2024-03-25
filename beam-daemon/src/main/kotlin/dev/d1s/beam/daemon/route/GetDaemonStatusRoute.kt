@@ -32,7 +32,7 @@ class GetDaemonStatusRoute : Route, KoinComponent {
     override val qualifier = named("get-daemon-status-route")
 
     override fun Routing.apply() {
-        get(Paths.GET_DAEMON_STATUS_ROUTE) {
+        get(Paths.GET_DAEMON_STATUS) {
             val status = DaemonStatus(VERSION, DaemonState.UP)
             call.respond(status)
         }

@@ -84,7 +84,7 @@ public class DefaultBeamClient(
 
     override suspend fun getDaemonStatus(): Result<DaemonStatus> =
         runCatching {
-            httpClient.get(Paths.GET_DAEMON_STATUS_ROUTE).body()
+            httpClient.get(Paths.GET_DAEMON_STATUS).body()
         }
 
     public override suspend fun postSpace(
