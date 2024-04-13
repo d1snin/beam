@@ -16,6 +16,7 @@
 
 package dev.d1s.beam.bundle.html
 
+import dev.d1s.beam.bundle.configuration.ApplicationConfigBean
 import dev.d1s.beam.bundle.configuration.daemonHttpAddress
 import dev.d1s.beam.bundle.configuration.daemonWsAddress
 import dev.d1s.beam.commons.DaemonConnectorMeta
@@ -29,7 +30,7 @@ import org.koin.core.component.inject
 
 class CommonHeadParametersIndexModule : IndexModule, KoinComponent {
 
-    private val config by inject<ApplicationConfig>()
+    private val config by inject<ApplicationConfig>(ApplicationConfigBean.Qualifier)
 
     override fun HEAD.render(renderParameters: RenderParameters) {
         title(renderParameters.title)

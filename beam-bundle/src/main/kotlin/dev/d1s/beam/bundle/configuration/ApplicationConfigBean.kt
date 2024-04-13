@@ -16,16 +16,29 @@
 
 package dev.d1s.beam.bundle.configuration
 
+import com.typesafe.config.ConfigFactory
 import dev.d1s.exkt.ktor.server.koin.configuration.ApplicationConfigurer
 import io.ktor.server.application.*
 import io.ktor.server.config.*
+import org.koin.core.component.KoinComponent
 import org.koin.core.module.Module
+import org.koin.core.qualifier.named
 
-object ApplicationConfigBean : ApplicationConfigurer {
+object ApplicationConfigBean : ApplicationConfigurer, KoinComponent {
+
+    val Qualifier = named("bundle-config")
 
     override fun Application.configure(module: Module, config: ApplicationConfig) {
-        module.single {
-            config
+        val bundleConfig = loadConfig()
+
+        module.single(qualifier = Qualifier) {
+            bundleConfig
         }
+    }
+
+    private fun loadConfig(): ApplicationConfig {
+        val config = ConfigFactory.load("bundle")
+
+        return HoconApplicationConfig(config)
     }
 }

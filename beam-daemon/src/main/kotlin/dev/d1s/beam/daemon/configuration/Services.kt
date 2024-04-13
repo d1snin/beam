@@ -16,6 +16,8 @@
 
 package dev.d1s.beam.daemon.configuration
 
+import dev.d1s.beam.client.BeamClient
+import dev.d1s.beam.daemon.client.BridgedBeamClient
 import dev.d1s.beam.daemon.service.*
 import dev.d1s.exkt.ktor.server.koin.configuration.ApplicationConfigurer
 import io.ktor.server.application.*
@@ -32,6 +34,8 @@ object Services : ApplicationConfigurer {
             singleOf<RowService>(::DefaultRowService)
             singleOf<SpaceService>(::DefaultSpaceService)
             singleOf<TranslationService>(::DefaultTranslationService)
+
+            singleOf<BeamClient>(::BridgedBeamClient)
         }
     }
 }

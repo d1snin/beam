@@ -17,6 +17,7 @@
 package dev.d1s.beam.daemon
 
 import com.typesafe.config.ConfigFactory
+import dev.d1s.beam.bundle.configuration.BeamBundle
 import dev.d1s.beam.daemon.configuration.*
 import dev.d1s.exkt.ktor.server.koin.configuration.Configurers
 import dev.d1s.exkt.ktor.server.koin.configuration.ServerApplication
@@ -48,7 +49,8 @@ object BeamDaemonApplication : ServerApplication(), KoinComponent {
         RateLimit,
         StatusPages,
         HttpClient,
-        Di
+        BeamBundle,
+        Di,
     )
 
     private val serverReady: Mutex = Mutex(locked = true)

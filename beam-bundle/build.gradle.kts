@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
+import org.jetbrains.kotlin.config.ExplicitApiMode
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    application
     kotlin("jvm")
-    id("io.ktor.plugin")
 }
 
 java {
@@ -39,8 +38,8 @@ dependencies {
 
     implementation(project(":beam-client"))
 
-    implementation("dev.d1s.exkt:exkt-common:$exktVersion")
-    implementation("dev.d1s.exkt:exkt-ktor-server:$exktVersion")
+    api("dev.d1s.exkt:exkt-common:$exktVersion")
+    api("dev.d1s.exkt:exkt-ktor-server:$exktVersion")
     implementation("dev.d1s.exkt:exkt-ktor-server-koin:$exktVersion")
 
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
@@ -54,71 +53,8 @@ dependencies {
     implementation("io.insert-koin:koin-logger-slf4j:$koinVersion")
 }
 
-application {
-    mainClass.set("dev.d1s.beam.bundle.MainKt")
-}
-
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_17.majorVersion
     }
 }
-
-ktor {
-    docker {
-        localImageName.set(project.name)
-    }
-}
-
-tasks.register<Copy>("grabJs") {
-    from("../beam-ui/build/dist/js/productionExecutable/main.bundle.js")
-    into("src/main/resources/static")
-}
-
-tasks["processResources"].dependsOn(tasks["grabJs"])
-
-tasks.register<Delete>("cleanJs") {
-    delete("src/main/resources/static/main.bundle.js")
-}
-
-tasks["clean"].dependsOn(tasks["cleanJs"])
-
-tasks.register<Copy>("grabConfig") {
-    from("../config/bundle.conf")
-    into("src/main/resources")
-}
-
-tasks["processResources"].dependsOn(tasks["grabConfig"])
-
-tasks.register<Delete>("cleanConfig") {
-    delete("src/main/resources/bundle.conf")
-}
-
-tasks["clean"].dependsOn(tasks["cleanConfig"])
-
-tasks.register<Copy>("grabResources") {
-    from(
-        "../img/404_light.svg",
-        "../img/404_dark.svg",
-        "../img/empty_space_light.svg",
-        "../img/empty_space_dark.svg",
-        "../img/lost_connection_light.svg",
-        "../img/lost_connection_dark.svg"
-    )
-    into("src/main/resources/static")
-}
-
-tasks["processResources"].dependsOn(tasks["grabResources"])
-
-tasks.register<Delete>("cleanResources") {
-    delete(
-        "src/main/resources/static/404_light.svg",
-        "src/main/resources/static/404_dark.svg",
-        "src/main/resources/static/empty_space_light.svg",
-        "src/main/resources/static/empty_space_dark.svg",
-        "src/main/resources/static/lost_connection_light.svg",
-        "src/main/resources/static/lost_connection_dark.svg"
-    )
-}
-
-tasks["clean"].dependsOn(tasks["cleanResources"])

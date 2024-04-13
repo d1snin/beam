@@ -20,11 +20,14 @@ import dev.d1s.exkt.ktor.server.koin.configuration.ApplicationConfigurer
 import io.ktor.server.application.*
 import io.ktor.server.config.*
 import org.koin.core.module.Module
+import org.koin.core.qualifier.named
 
 object ApplicationConfigBean : ApplicationConfigurer {
 
+    val Qualifier = named("daemon-config")
+
     override fun Application.configure(module: Module, config: ApplicationConfig) {
-        module.single {
+        module.single(qualifier = Qualifier) {
             config
         }
     }

@@ -21,6 +21,7 @@ import dev.d1s.beam.commons.BlockId
 import dev.d1s.beam.commons.SpaceId
 import dev.d1s.beam.commons.SpaceIdentifier
 import dev.d1s.beam.commons.SpaceToken
+import dev.d1s.beam.daemon.configuration.ApplicationConfigBean
 import dev.d1s.beam.daemon.configuration.Security
 import dev.d1s.beam.daemon.configuration.jwtIssuer
 import dev.d1s.beam.daemon.configuration.jwtSubject
@@ -47,7 +48,7 @@ interface AuthService {
 
 class DefaultAuthService : AuthService, KoinComponent {
 
-    private val config by inject<ApplicationConfig>()
+    private val config by inject<ApplicationConfig>(qualifier = ApplicationConfigBean.Qualifier)
 
     private val jwtIssuer by lazy {
         config.jwtIssuer

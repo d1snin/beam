@@ -20,6 +20,7 @@ import dev.d1s.beam.commons.Paths
 import dev.d1s.beam.commons.ROOT_SPACE_SLUG
 import dev.d1s.beam.commons.SpaceModification
 import dev.d1s.beam.commons.validation.validateSpace
+import dev.d1s.beam.daemon.configuration.ApplicationConfigBean
 import dev.d1s.beam.daemon.configuration.DtoConverters
 import dev.d1s.beam.daemon.configuration.jwtSubject
 import dev.d1s.beam.daemon.entity.SpaceEntity
@@ -53,7 +54,7 @@ class PostSpaceRoute : Route, KoinComponent {
 
     private val authService by inject<AuthService>()
 
-    private val config by inject<ApplicationConfig>()
+    private val config by inject<ApplicationConfig>(qualifier = ApplicationConfigBean.Qualifier)
 
     private val spaceModificationDtoConverter by inject<DtoConverter<SpaceEntity, SpaceModification>>(DtoConverters.SpaceModificationDtoConverterQualifier)
 

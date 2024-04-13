@@ -40,20 +40,26 @@ out/
 .env
 
 ### Generated bundle file ###
-beam-bundle/src/main/resources/static/main.bundle.js
+beam-daemon/src/main/resources/static/main.bundle.js
 
 ### Grabbed Configurations ###
-beam-bundle/src/main/resources/bundle.conf
 beam-daemon/src/main/resources/changelog.json
 beam-daemon/src/main/resources/daemon.conf
+beam-daemon/src/main/resources/bundle.conf
 
 ### Grabbed Resources ###
-beam-bundle/src/main/resources/static/404_light.svg
-beam-bundle/src/main/resources/static/404_dark.svg
-beam-bundle/src/main/resources/static/empty_space_light.svg
-beam-bundle/src/main/resources/static/empty_space_dark.svg
-beam-bundle/src/main/resources/static/lost_connection_light.svg
-beam-bundle/src/main/resources/static/lost_connection_dark.svg
+beam-daemon/src/main/resources/static/404_light.svg
+beam-daemon/src/main/resources/static/404_dark.svg
+beam-daemon/src/main/resources/static/empty_space_light.svg
+beam-daemon/src/main/resources/static/empty_space_dark.svg
+beam-daemon/src/main/resources/static/lost_connection_light.svg
+beam-daemon/src/main/resources/static/lost_connection_dark.svg
+beam-daemon/src/main/resources/static/favicon.ico
+beam-daemon/src/main/resources/static/favicon-16x16.png
+beam-daemon/src/main/resources/static/favicon-32x32.png
+beam-daemon/src/main/resources/static/icon.png
+beam-daemon/src/main/resources/static/apple-touch-icon.png
+beam-daemon/src/main/resources/static/robots.txt
 
 ### Private HTTP parameters
 http-client.private.env.json

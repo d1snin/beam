@@ -16,6 +16,7 @@
 
 package dev.d1s.beam.bundle.html
 
+import dev.d1s.beam.bundle.configuration.ApplicationConfigBean
 import dev.d1s.beam.bundle.util.counterVkAds
 import io.ktor.server.config.*
 import kotlinx.html.HEAD
@@ -25,7 +26,7 @@ import org.koin.core.component.inject
 
 class CounterScriptIndexModule : IndexModule, KoinComponent {
 
-    private val config by inject<ApplicationConfig>()
+    private val config by inject<ApplicationConfig>(ApplicationConfigBean.Qualifier)
 
     override fun HEAD.render(renderParameters: RenderParameters) {
         config.counterVkAds?.let {

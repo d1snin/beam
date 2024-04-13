@@ -16,24 +16,24 @@
 
 package dev.d1s.beam.bundle.configuration
 
-import dev.d1s.exkt.ktor.server.koin.configuration.EnvironmentConfigurer
+import dev.d1s.exkt.ktor.server.koin.configuration.ApplicationConfigurer
+import io.ktor.server.application.*
 import io.ktor.server.config.*
-import io.ktor.server.engine.*
 import org.koin.core.module.Module
 
-object CheckStatic : EnvironmentConfigurer {
+object CheckStatic : ApplicationConfigurer {
 
     private val requiredResources = listOf(
         "main.bundle.js"
     )
 
-    override fun ApplicationEngineEnvironmentBuilder.configure(module: Module, config: ApplicationConfig) {
+    override fun Application.configure(module: Module, config: ApplicationConfig) {
         requiredResources.forEach { resource ->
-            checkResourceExists(resource)
+            environment.checkResourceExists(resource)
         }
     }
 
-    private fun ApplicationEngineEnvironmentBuilder.checkResourceExists(resource: String) {
+    private fun ApplicationEnvironment.checkResourceExists(resource: String) {
         val path = "${StaticResources.STATIC_PACKAGE}/$resource"
         classLoader.getResource(path) ?: error("Couldn't locate required resource at $path")
     }

@@ -53,6 +53,8 @@ dependencies {
     implementation("dev.d1s.exkt:exkt-konform:$exktVersion")
 
     implementation(project(":beam-common"))
+    implementation(project(":beam-client"))
+    implementation(project(":beam-bundle"))
 
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
     implementation("io.ktor:ktor-server-auth:$ktorVersion")
@@ -101,15 +103,34 @@ ktor {
     }
 }
 
+tasks.register<Copy>("grabJs") {
+    from("../beam-ui/build/dist/js/productionExecutable/main.bundle.js")
+    into("src/main/resources/static")
+}
+
+tasks["processResources"].dependsOn(tasks["grabJs"])
+
+tasks.register<Delete>("cleanJs") {
+    delete("src/main/resources/static/main.bundle.js")
+}
+
+tasks["clean"].dependsOn(tasks["cleanJs"])
+
 tasks.register<Copy>("grabConfig") {
-    from("../config/daemon.conf")
+    from(
+        "../config/daemon.conf",
+        "../config/bundle.conf"
+    )
     into("src/main/resources")
 }
 
 tasks["processResources"].dependsOn(tasks["grabConfig"])
 
 tasks.register<Delete>("cleanConfig") {
-    delete("src/main/resources/daemon.conf")
+    delete(
+        "src/main/resources/daemon.conf",
+        "src/main/resources/bundle.conf"
+    )
 }
 
 tasks["clean"].dependsOn(tasks["cleanConfig"])
@@ -126,3 +147,36 @@ tasks.register<Delete>("cleanDbChangelog") {
 }
 
 tasks["clean"].dependsOn(tasks["cleanDbChangelog"])
+
+tasks.register<Copy>("grabResources") {
+    from(
+        "../static/apple-touch-icon.png",
+        "../static/favicon.ico",
+        "../static/favicon-16x16.png",
+        "../static/favicon-32x32.png",
+        "../static/icon.png",
+        "../static/robots.txt",
+        "../static/404_light.svg",
+        "../static/404_dark.svg",
+        "../static/empty_space_light.svg",
+        "../static/empty_space_dark.svg",
+        "../static/lost_connection_light.svg",
+        "../static/lost_connection_dark.svg"
+    )
+    into("src/main/resources/static")
+}
+
+tasks["processResources"].dependsOn(tasks["grabResources"])
+
+tasks.register<Delete>("cleanResources") {
+    delete(
+        "src/main/resources/static/404_light.svg",
+        "src/main/resources/static/404_dark.svg",
+        "src/main/resources/static/empty_space_light.svg",
+        "src/main/resources/static/empty_space_dark.svg",
+        "src/main/resources/static/lost_connection_light.svg",
+        "src/main/resources/static/lost_connection_dark.svg"
+    )
+}
+
+tasks["clean"].dependsOn(tasks["cleanResources"])

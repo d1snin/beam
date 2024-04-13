@@ -16,47 +16,47 @@
 
 package dev.d1s.beam.bundle.configuration
 
-import dev.d1s.beam.bundle.entity.SpaceRequest
-import dev.d1s.beam.bundle.service.IndexService
-import dev.d1s.beam.bundle.util.respondHtml
 import dev.d1s.exkt.ktor.server.koin.configuration.ApplicationConfigurer
-import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.config.*
-import io.ktor.server.plugins.statuspages.StatusPages
-import io.ktor.server.request.*
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import org.koin.core.module.Module
 import org.lighthousegames.logging.logging
 
-object StatusPages : ApplicationConfigurer, KoinComponent {
-
-    private val indexService by inject<IndexService>()
+object BeamBundle : ApplicationConfigurer {
 
     private val logger = logging()
 
     override fun Application.configure(module: Module, config: ApplicationConfig) {
-        install(StatusPages) {
-            status(HttpStatusCode.NotFound) { call, status ->
-                logger.d {
-                    "Handling $status. Path: ${call.request.path()}"
-                }
-
-                call.handleNotFound()
-            }
-        }
-    }
-
-    private suspend fun ApplicationCall.handleNotFound() {
-        val request = SpaceRequest(spaceIdentifier = null, call = this)
-
-        val resolvedSpace = indexService.resolveSpace(request)
-
-        logger.d {
-            "Responding not found..."
+        logger.i {
+            "Installing Beam Bundle..."
         }
 
-        respondHtml(resolvedSpace.html)
+        with(CheckStatic) {
+            configure(module, config)
+        }
+
+        with(Routing) {
+            configure(module, config)
+        }
+
+        with(StaticResources) {
+            configure(module, config)
+        }
+
+        with(ApplicationConfigBean) {
+            configure(module, config)
+        }
+
+        with(Services) {
+            configure(module, config)
+        }
+
+        with(IndexModules) {
+            configure(module, config)
+        }
+
+        with(HtmlRenderer) {
+            configure(module, config)
+        }
     }
 }
