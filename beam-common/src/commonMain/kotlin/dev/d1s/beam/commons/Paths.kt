@@ -31,6 +31,8 @@ public object Paths {
 
     public const val DAEMON_BASE: String = "/api"
 
+    public const val EVENTS: String = "/api/events"
+
     public const val GET_DAEMON_STATUS: String = "/api/status"
 
     public const val POST_SPACE: String = "/api/spaces"

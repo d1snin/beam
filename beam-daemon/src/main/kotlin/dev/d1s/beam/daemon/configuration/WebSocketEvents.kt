@@ -16,6 +16,7 @@
 
 package dev.d1s.beam.daemon.configuration
 
+import dev.d1s.beam.commons.Paths
 import dev.d1s.exkt.ktor.server.koin.configuration.ApplicationConfigurer
 import dev.d1s.ktor.events.server.WebSocketEventChannel
 import dev.d1s.ktor.events.server.WebSocketEvents
@@ -35,7 +36,7 @@ object WebSocketEvents : ApplicationConfigurer {
         }
 
         routing {
-            webSocketEvents()
+            webSocketEvents(route = Paths.EVENTS)
         }
 
         module.single {

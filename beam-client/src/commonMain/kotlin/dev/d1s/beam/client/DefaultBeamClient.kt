@@ -514,7 +514,7 @@ public class DefaultBeamClient(
             requireWsBaseUrl()
 
             eventHandlingScope.launch {
-                httpClient.webSocketEvents(reference) {
+                httpClient.webSocketEvents(reference, path = Paths.EVENTS) {
                     while (true) {
                         val event = try {
                             receiveWebSocketEvent<T>()
