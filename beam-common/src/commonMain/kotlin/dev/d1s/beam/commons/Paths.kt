@@ -16,6 +16,8 @@
 
 package dev.d1s.beam.commons
 
+import dev.d1s.ktor.events.commons.util.Routes
+
 public object Paths {
 
     public const val ID_PARAMETER: String = "id"
@@ -31,7 +33,7 @@ public object Paths {
 
     public const val DAEMON_BASE: String = "/api"
 
-    public const val EVENTS: String = "/api/events"
+    public const val EVENTS: String = "/api/events/{${Routes.GROUP_PATH_PARAMETER}}"
 
     public const val GET_DAEMON_STATUS: String = "/api/status"
 
