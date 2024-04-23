@@ -22,6 +22,7 @@ import dev.d1s.beam.bundle.service.IndexService
 import dev.d1s.beam.bundle.util.respondHtml
 import dev.d1s.beam.client.BeamClient
 import dev.d1s.exkt.ktor.server.koin.configuration.Route
+import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.*
 import io.ktor.server.request.*
@@ -59,14 +60,9 @@ class IndexRoute : Route, KoinComponent {
     }
 
     private suspend fun resolveSpace(call: ApplicationCall): ResolvedSpace {
-        val url = call.url()
+        call.log()
 
-        logger.i {
-            val origin = call.request.origin
-            "New space request on $url from ${origin.remoteAddress}:${origin.remotePort} (${call.request.userAgent() ?: "no user agent"})"
-        }
-
-        val spaceIdentifier = client.resolver.resolveIdentifier(url)
+        val spaceIdentifier = client.resolver.resolveIdentifier(call.url())
 
         logger.d {
             "Space identifier: $spaceIdentifier"
@@ -75,5 +71,21 @@ class IndexRoute : Route, KoinComponent {
         val request = SpaceRequest(spaceIdentifier, call)
 
         return indexService.resolveSpace(request)
+    }
+
+    private fun ApplicationCall.log() {
+        logger.i {
+            val origin = request.origin
+
+            val host = origin.remotePort
+            val port = origin.remotePort
+
+            val forwardedHost = request.headers[HttpHeaders.XForwardedHost] ?: "no forwarded host"
+            val forwardedPort = request.headers[HttpHeaders.XForwardedPort] ?: "no forwarded port"
+
+            val userAgent = request.userAgent() ?: "no user agent"
+
+            "New space request on ${url()} from $host:$port ($forwardedHost:$forwardedPort) ($userAgent)"
+        }
     }
 }
