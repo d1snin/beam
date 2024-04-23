@@ -29,13 +29,8 @@
         </layout>
     </appender>
 
-    <root level="ERROR">
+    <root level="INFO,WARN,ERROR">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="TELEGRAM"/>
     </root>
-
-    <logger name="dev.d1s.beam" level="INFO,WARN,ERROR">
-        <appender-ref ref="STDOUT"/>
-        <appender-ref ref="TELEGRAM"/>
-    </logger>
 </configuration>
