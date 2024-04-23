@@ -38,6 +38,7 @@ dependencies {
 
     val logbackVersion: String by project
     val kmLogVersion: String by project
+    val telegramLogbackVersion: String by project
 
     val hikariVersion: String by project
     val postgresqlVersion: String by project
@@ -75,6 +76,7 @@ dependencies {
 
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
     implementation("org.lighthousegames:logging:$kmLogVersion")
+    implementation("com.github.paolodenti:telegram-logback:$telegramLogbackVersion")
 
     implementation("com.zaxxer:HikariCP:$hikariVersion")
     implementation("org.postgresql:postgresql:$postgresqlVersion")

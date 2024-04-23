@@ -23,6 +23,8 @@ import dev.d1s.beam.bundle.util.respondHtml
 import dev.d1s.beam.client.BeamClient
 import dev.d1s.exkt.ktor.server.koin.configuration.Route
 import io.ktor.server.application.*
+import io.ktor.server.plugins.*
+import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import io.ktor.server.util.*
 import org.koin.core.component.KoinComponent
@@ -59,8 +61,9 @@ class IndexRoute : Route, KoinComponent {
     private suspend fun resolveSpace(call: ApplicationCall): ResolvedSpace {
         val url = call.url()
 
-        logger.d {
-            "URL: $url"
+        logger.i {
+            val origin = call.request.origin
+            "New space request on $url from ${origin.remoteAddress}:${origin.remotePort} (${call.request.userAgent() ?: "no user agent"})"
         }
 
         val spaceIdentifier = client.resolver.resolveIdentifier(url)
