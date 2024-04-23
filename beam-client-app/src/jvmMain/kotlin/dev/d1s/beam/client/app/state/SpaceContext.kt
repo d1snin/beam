@@ -113,7 +113,7 @@ public suspend fun ApplicationContext.space(
                 view {
                     theme = DEFAULT_THEME
                 }
-            }.getOrThrow().toSpace()
+            }.getOrThrow()
         } else {
             space = postSpace {
                 slug = spaceIdentifier
@@ -121,7 +121,7 @@ public suspend fun ApplicationContext.space(
                 view {
                     theme = DEFAULT_THEME
                 }
-            }.getOrThrow().toSpace()
+            }.getOrThrow()
         }
     }
 
