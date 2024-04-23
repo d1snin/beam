@@ -47,20 +47,18 @@ interface SpaceService {
         space: SpaceEntity,
         allowRootCreation: Boolean = false,
         languageCode: LanguageCode? = null
-    ): ResultingEntityWithOptionalDto<SpaceEntity, SpaceWithToken>
+    ): ResultingEntityWithOptionalDto<SpaceEntity, Space>
 
     suspend fun createRootSpace(
         space: SpaceEntity,
         languageCode: LanguageCode? = null
-    ): ResultingEntityWithOptionalDto<SpaceEntity, SpaceWithToken>
+    ): ResultingEntityWithOptionalDto<SpaceEntity, Space>
 
     suspend fun getSpace(
         uniqueIdentifier: SpaceIdentifier,
         languageCode: LanguageCode? = null,
         requireDto: Boolean = false
     ): ResultingEntityWithOptionalDto<SpaceEntity, Space>
-
-    suspend fun spaceExists(uniqueIdentifier: String): Result<Boolean>
 
     suspend fun getSpaces(
         limit: Int,
@@ -91,8 +89,6 @@ class DefaultSpaceService : SpaceService, KoinComponent {
 
     private val eventChannel by inject<WebSocketEventChannel>()
 
-    private val authService by inject<AuthService>()
-
     private val translationService by inject<TranslationService>()
 
     private val logger = logging()
@@ -100,7 +96,7 @@ class DefaultSpaceService : SpaceService, KoinComponent {
         space: SpaceEntity,
         allowRootCreation: Boolean,
         languageCode: LanguageCode?
-    ): ResultingEntityWithOptionalDto<SpaceEntity, SpaceWithToken> =
+    ): ResultingEntityWithOptionalDto<SpaceEntity, Space> =
         spaceRepository.withTransactionCatching {
             logger.d {
                 "Creating space ${space.asString}..."
@@ -123,15 +119,13 @@ class DefaultSpaceService : SpaceService, KoinComponent {
 
             sendSpaceCreatedEvent(translatedSpaceDto)
 
-            val token = authService.createToken(space)
-
-            translatedSpace to translatedSpace.toSpaceWithToken(token)
+            translatedSpace to translatedSpaceDto
         }
 
     override suspend fun createRootSpace(
         space: SpaceEntity,
         languageCode: LanguageCode?
-    ): ResultingEntityWithOptionalDto<SpaceEntity, SpaceWithToken> =
+    ): ResultingEntityWithOptionalDto<SpaceEntity, Space> =
         spaceRepository.withTransactionCatching {
             logger.d {
                 "Creating root space..."
@@ -172,19 +166,6 @@ class DefaultSpaceService : SpaceService, KoinComponent {
             translatedSpace to spaceDtoConverter.convertToDtoIf(translatedSpace) {
                 requireDto
             }
-        }
-
-    override suspend fun spaceExists(uniqueIdentifier: SpaceIdentifier): Result<Boolean> =
-        runCatching {
-            val error = getSpace(uniqueIdentifier).exceptionOrNull()
-
-            error?.let {
-                if (it is NotFoundException) {
-                    false
-                } else {
-                    throw it
-                }
-            } ?: true
         }
 
     override suspend fun getSpaces(
@@ -360,16 +341,4 @@ class DefaultSpaceService : SpaceService, KoinComponent {
         }
         eventChannel.send(event)
     }
-
-    private fun SpaceEntity.toSpaceWithToken(token: SpaceToken) =
-        SpaceWithToken(
-            id.toString(),
-            createdAt.toString(),
-            updatedAt.toString(),
-            slug,
-            metadata,
-            view,
-            role,
-            token
-        )
 }

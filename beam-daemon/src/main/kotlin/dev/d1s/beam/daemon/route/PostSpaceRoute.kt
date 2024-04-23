@@ -17,18 +17,12 @@
 package dev.d1s.beam.daemon.route
 
 import dev.d1s.beam.commons.Paths
-import dev.d1s.beam.commons.ROOT_SPACE_SLUG
 import dev.d1s.beam.commons.SpaceModification
 import dev.d1s.beam.commons.validation.validateSpace
-import dev.d1s.beam.daemon.configuration.ApplicationConfigBean
 import dev.d1s.beam.daemon.configuration.DtoConverters
-import dev.d1s.beam.daemon.configuration.jwtSubject
 import dev.d1s.beam.daemon.entity.SpaceEntity
-import dev.d1s.beam.daemon.exception.ForbiddenException
-import dev.d1s.beam.daemon.service.AuthService
 import dev.d1s.beam.daemon.service.SpaceService
 import dev.d1s.beam.daemon.util.languageCodeQueryParameter
-import dev.d1s.beam.daemon.util.securityAllowPublicSpaces
 import dev.d1s.beam.daemon.validation.orThrow
 import dev.d1s.exkt.dto.DtoConverter
 import dev.d1s.exkt.dto.requiredDto
@@ -36,15 +30,12 @@ import dev.d1s.exkt.ktor.server.koin.configuration.Route
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
-import io.ktor.server.config.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.ktor.util.pipeline.*
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
-import io.ktor.server.routing.Route as KtorRoute
 
 class PostSpaceRoute : Route, KoinComponent {
 
@@ -52,48 +43,22 @@ class PostSpaceRoute : Route, KoinComponent {
 
     private val spaceService by inject<SpaceService>()
 
-    private val authService by inject<AuthService>()
-
-    private val config by inject<ApplicationConfig>(qualifier = ApplicationConfigBean.Qualifier)
-
     private val spaceModificationDtoConverter by inject<DtoConverter<SpaceEntity, SpaceModification>>(DtoConverters.SpaceModificationDtoConverterQualifier)
 
     override fun Routing.apply() {
-        if (config.securityAllowPublicSpaces) {
-            withRouteConfig {
-                process()
-            }
-        } else {
-            authenticate {
-                withRouteConfig {
-                    val spaceModificationAllowed =
-                        authService.isSpaceModificationAllowed(call.jwtSubject, ROOT_SPACE_SLUG)
-                            .getOrThrow()
+        authenticate {
+            post(Paths.POST_SPACE) {
+                val body = call.receive<SpaceModification>()
+                validateSpace(body).orThrow()
 
-                    if (spaceModificationAllowed) {
-                        process()
-                    } else {
-                        throw ForbiddenException()
-                    }
-                }
+                val space = spaceModificationDtoConverter.convertToEntity(body)
+
+                val languageCode = call.languageCodeQueryParameter
+
+                val createdSpace = spaceService.createSpace(space, languageCode = languageCode).getOrThrow()
+
+                call.respond(HttpStatusCode.Created, createdSpace.requiredDto)
             }
         }
-    }
-
-    private fun KtorRoute.withRouteConfig(body: suspend PipelineContext<Unit, ApplicationCall>.(Unit) -> Unit) {
-        post(Paths.POST_SPACE, body)
-    }
-
-    private suspend fun PipelineContext<Unit, ApplicationCall>.process() {
-        val body = call.receive<SpaceModification>()
-        validateSpace(body).orThrow()
-
-        val space = spaceModificationDtoConverter.convertToEntity(body)
-
-        val languageCode = call.languageCodeQueryParameter
-
-        val createdSpace = spaceService.createSpace(space, languageCode = languageCode).getOrThrow()
-
-        call.respond(HttpStatusCode.Created, createdSpace.requiredDto)
     }
 }

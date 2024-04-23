@@ -20,10 +20,7 @@ import dev.d1s.beam.commons.BlockModification
 import dev.d1s.beam.commons.Paths
 import dev.d1s.beam.commons.validation.validateBlock
 import dev.d1s.beam.daemon.configuration.DtoConverters
-import dev.d1s.beam.daemon.configuration.jwtSubject
 import dev.d1s.beam.daemon.entity.BlockEntity
-import dev.d1s.beam.daemon.exception.ForbiddenException
-import dev.d1s.beam.daemon.service.AuthService
 import dev.d1s.beam.daemon.service.BlockService
 import dev.d1s.beam.daemon.util.languageCodeQueryParameter
 import dev.d1s.beam.daemon.util.requiredIdParameter
@@ -46,8 +43,6 @@ class PutBlockRoute : Route, KoinComponent {
 
     private val blockService by inject<BlockService>()
 
-    private val authService by inject<AuthService>()
-
     private val blockModificationDtoConverter by inject<DtoConverter<BlockEntity, BlockModification>>(DtoConverters.BlockModificationDtoConverterQualifier)
 
     override fun Routing.apply() {
@@ -56,21 +51,13 @@ class PutBlockRoute : Route, KoinComponent {
                 val body = call.receive<BlockModification>()
                 validateBlock(body).orThrow()
 
-                val blockModificationAllowed = authService.isBlockModificationAllowed(call)
-                val spaceModificationAllowed =
-                    authService.isSpaceModificationAllowed(call.jwtSubject, body.spaceId).getOrThrow()
+                val block = blockModificationDtoConverter.convertToEntity(body)
 
-                if (blockModificationAllowed && spaceModificationAllowed) {
-                    val block = blockModificationDtoConverter.convertToEntity(body)
+                val blockId = call.requiredIdParameter
+                val languageCode = call.languageCodeQueryParameter
+                val updatedBlock = blockService.updateBlock(blockId, block, languageCode).getOrThrow()
 
-                    val blockId = call.requiredIdParameter
-                    val languageCode = call.languageCodeQueryParameter
-                    val updatedBlock = blockService.updateBlock(blockId, block, languageCode).getOrThrow()
-
-                    call.respond(updatedBlock.requiredDto)
-                } else {
-                    throw ForbiddenException()
-                }
+                call.respond(updatedBlock.requiredDto)
             }
         }
     }

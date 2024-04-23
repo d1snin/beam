@@ -1,7 +1,7 @@
 # Test blocks
 
 ### POST Block with all available entities
-POST http://localhost:8573/blocks
+POST http://localhost:8573/api/blocks
 Authorization: Bearer {{token}}
 Content-Type: application/json
 

@@ -17,14 +17,10 @@
 package dev.d1s.beam.daemon.route
 
 import dev.d1s.beam.commons.Paths
-import dev.d1s.beam.commons.ROOT_SPACE_SLUG
 import dev.d1s.beam.commons.RootSpaceModification
 import dev.d1s.beam.commons.validation.validateRootSpace
 import dev.d1s.beam.daemon.configuration.DtoConverters
-import dev.d1s.beam.daemon.configuration.jwtSubject
 import dev.d1s.beam.daemon.entity.SpaceEntity
-import dev.d1s.beam.daemon.exception.ForbiddenException
-import dev.d1s.beam.daemon.service.AuthService
 import dev.d1s.beam.daemon.service.SpaceService
 import dev.d1s.beam.daemon.util.languageCodeQueryParameter
 import dev.d1s.beam.daemon.validation.orThrow
@@ -46,31 +42,22 @@ class PutRootSpaceRoute : Route, KoinComponent {
 
     private val spaceService by inject<SpaceService>()
 
-    private val authService by inject<AuthService>()
-
     private val rootSpaceModificationDtoConverter
             by inject<DtoConverter<SpaceEntity, RootSpaceModification>>(DtoConverters.RootSpaceModificationDtoConverterQualifier)
 
     override fun Routing.apply() {
         authenticate {
             put(Paths.PUT_ROOT_SPACE) {
-                val spaceModificationAllowed =
-                    authService.isSpaceModificationAllowed(call.jwtSubject, ROOT_SPACE_SLUG).getOrThrow()
+                val body = call.receive<RootSpaceModification>()
+                validateRootSpace(body).orThrow()
 
-                if (spaceModificationAllowed) {
-                    val body = call.receive<RootSpaceModification>()
-                    validateRootSpace(body).orThrow()
+                val space = rootSpaceModificationDtoConverter.convertToEntity(body)
 
-                    val space = rootSpaceModificationDtoConverter.convertToEntity(body)
+                val languageCode = call.languageCodeQueryParameter
 
-                    val languageCode = call.languageCodeQueryParameter
+                val updatedSpace = spaceService.updateRootSpace(space, languageCode).getOrThrow()
 
-                    val updatedSpace = spaceService.updateRootSpace(space, languageCode).getOrThrow()
-
-                    call.respond(updatedSpace.requiredDto)
-                } else {
-                    throw ForbiddenException()
-                }
+                call.respond(updatedSpace.requiredDto)
             }
         }
     }

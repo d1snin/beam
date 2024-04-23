@@ -90,7 +90,7 @@ public class DefaultBeamClient(
     public override suspend fun postSpace(
         space: SpaceModification,
         languageCode: LanguageCode?
-    ): Result<SpaceWithToken> =
+    ): Result<Space> =
         runCatching {
             httpClient.post(Paths.POST_SPACE) {
                 contentType(ContentType.Application.Json)
@@ -102,13 +102,13 @@ public class DefaultBeamClient(
     public override suspend fun postSpace(
         languageCode: LanguageCode?,
         configure: suspend SpaceModificationBuilder.() -> Unit
-    ): Result<SpaceWithToken> =
+    ): Result<Space> =
         postSpace(SpaceModificationBuilder().apply { configure() }.buildSpaceModification(), languageCode)
 
     public override suspend fun postRootSpace(
         space: RootSpaceModification,
         languageCode: LanguageCode?
-    ): Result<SpaceWithToken> =
+    ): Result<Space> =
         runCatching {
             httpClient.post(Paths.POST_ROOT_SPACE) {
                 contentType(ContentType.Application.Json)
@@ -120,7 +120,7 @@ public class DefaultBeamClient(
     public override suspend fun postRootSpace(
         languageCode: LanguageCode?,
         configure: suspend RootSpaceModificationBuilder.() -> Unit
-    ): Result<SpaceWithToken> =
+    ): Result<Space> =
         postRootSpace(RootSpaceModificationBuilder().apply { configure() }.buildRootSpaceModification(), languageCode)
 
     public override suspend fun getSpace(id: SpaceIdentifier, languageCode: LanguageCode?): Result<Space> =

@@ -20,10 +20,7 @@ import dev.d1s.beam.commons.Paths
 import dev.d1s.beam.commons.TranslationModification
 import dev.d1s.beam.commons.validation.validateTranslation
 import dev.d1s.beam.daemon.configuration.DtoConverters
-import dev.d1s.beam.daemon.configuration.jwtSubject
 import dev.d1s.beam.daemon.entity.TranslationEntity
-import dev.d1s.beam.daemon.exception.ForbiddenException
-import dev.d1s.beam.daemon.service.AuthService
 import dev.d1s.beam.daemon.service.TranslationService
 import dev.d1s.beam.daemon.util.spaceIdQueryParameter
 import dev.d1s.exkt.dto.DtoConverter
@@ -45,8 +42,6 @@ class PostTranslationRoute : Route, KoinComponent {
 
     private val translationService by inject<TranslationService>()
 
-    private val authService by inject<AuthService>()
-
     private val translationModificationDtoConverter by inject<DtoConverter<TranslationEntity, TranslationModification>>(
         DtoConverters.TranslationModificationDtoConverterQualifier
     )
@@ -59,21 +54,11 @@ class PostTranslationRoute : Route, KoinComponent {
 
                 val spaceId = call.spaceIdQueryParameter
 
-                val spaceModificationAllowed =
-                    authService.isSpaceModificationAllowed(
-                        call.jwtSubject,
-                        spaceId ?: TranslationService.GLOBAL_TRANSLATION_PERMITTED_SPACE
-                    ).getOrThrow()
+                val translation = translationModificationDtoConverter.convertToEntity(body)
 
-                if (spaceModificationAllowed) {
-                    val translation = translationModificationDtoConverter.convertToEntity(body)
+                val createdTranslation = translationService.createTranslation(spaceId, translation).getOrThrow()
 
-                    val createdTranslation = translationService.createTranslation(spaceId, translation).getOrThrow()
-
-                    call.respond(HttpStatusCode.Created, createdTranslation.requiredDto)
-                } else {
-                    throw ForbiddenException()
-                }
+                call.respond(HttpStatusCode.Created, createdTranslation.requiredDto)
             }
         }
     }

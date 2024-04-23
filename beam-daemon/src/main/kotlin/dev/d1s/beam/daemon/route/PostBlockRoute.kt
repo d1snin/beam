@@ -20,10 +20,7 @@ import dev.d1s.beam.commons.BlockModification
 import dev.d1s.beam.commons.Paths
 import dev.d1s.beam.commons.validation.validateBlock
 import dev.d1s.beam.daemon.configuration.DtoConverters
-import dev.d1s.beam.daemon.configuration.jwtSubject
 import dev.d1s.beam.daemon.entity.BlockEntity
-import dev.d1s.beam.daemon.exception.ForbiddenException
-import dev.d1s.beam.daemon.service.AuthService
 import dev.d1s.beam.daemon.service.BlockService
 import dev.d1s.beam.daemon.util.languageCodeQueryParameter
 import dev.d1s.beam.daemon.validation.orThrow
@@ -46,8 +43,6 @@ class PostBlockRoute : Route, KoinComponent {
 
     private val blockService by inject<BlockService>()
 
-    private val authService by inject<AuthService>()
-
     private val blockModificationDtoConverter by inject<DtoConverter<BlockEntity, BlockModification>>(DtoConverters.BlockModificationDtoConverterQualifier)
 
     override fun Routing.apply() {
@@ -56,19 +51,12 @@ class PostBlockRoute : Route, KoinComponent {
                 val body = call.receive<BlockModification>()
                 validateBlock(body).orThrow()
 
-                val spaceModificationAllowed =
-                    authService.isSpaceModificationAllowed(call.jwtSubject, body.spaceId).getOrThrow()
+                val block = blockModificationDtoConverter.convertToEntity(body)
 
-                if (spaceModificationAllowed) {
-                    val block = blockModificationDtoConverter.convertToEntity(body)
+                val languageCode = call.languageCodeQueryParameter
+                val createdBlock = blockService.createBlock(block, languageCode).getOrThrow()
 
-                    val languageCode = call.languageCodeQueryParameter
-                    val createdBlock = blockService.createBlock(block, languageCode).getOrThrow()
-
-                    call.respond(HttpStatusCode.Created, createdBlock.requiredDto)
-                } else {
-                    throw ForbiddenException()
-                }
+                call.respond(HttpStatusCode.Created, createdBlock.requiredDto)
             }
         }
     }

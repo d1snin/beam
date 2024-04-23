@@ -29,7 +29,6 @@ object Services : ApplicationConfigurer {
 
     override fun Application.configure(module: Module, config: ApplicationConfig) {
         module.apply {
-            singleOf<AuthService>(::DefaultAuthService)
             singleOf<BlockService>(::DefaultBlockService)
             singleOf<RowService>(::DefaultRowService)
             singleOf<SpaceService>(::DefaultSpaceService)

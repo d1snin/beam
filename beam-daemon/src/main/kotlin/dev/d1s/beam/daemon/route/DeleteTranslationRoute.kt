@@ -17,9 +17,6 @@
 package dev.d1s.beam.daemon.route
 
 import dev.d1s.beam.commons.Paths
-import dev.d1s.beam.daemon.configuration.jwtSubject
-import dev.d1s.beam.daemon.exception.ForbiddenException
-import dev.d1s.beam.daemon.service.AuthService
 import dev.d1s.beam.daemon.service.TranslationService
 import dev.d1s.beam.daemon.util.requiredLanguageCodeParameter
 import dev.d1s.beam.daemon.util.spaceIdQueryParameter
@@ -39,26 +36,15 @@ class DeleteTranslationRoute : Route, KoinComponent {
 
     private val translationService by inject<TranslationService>()
 
-    private val authService by inject<AuthService>()
-
     override fun Routing.apply() {
         authenticate {
             delete(Paths.DELETE_TRANSLATION) {
                 val spaceId = call.spaceIdQueryParameter
                 val languageCode = call.requiredLanguageCodeParameter
 
-                val spaceModificationAllowed = authService.isSpaceModificationAllowed(
-                    call.jwtSubject,
-                    spaceId ?: TranslationService.GLOBAL_TRANSLATION_PERMITTED_SPACE
-                ).getOrThrow()
+                translationService.removeTranslation(spaceId, languageCode).getOrThrow()
 
-                if (spaceModificationAllowed) {
-                    translationService.removeTranslation(spaceId, languageCode).getOrThrow()
-
-                    call.respond(HttpStatusCode.NoContent)
-                } else {
-                    throw ForbiddenException()
-                }
+                call.respond(HttpStatusCode.NoContent)
             }
         }
     }

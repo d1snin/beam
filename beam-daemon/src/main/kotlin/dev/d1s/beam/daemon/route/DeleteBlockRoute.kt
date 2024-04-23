@@ -17,8 +17,6 @@
 package dev.d1s.beam.daemon.route
 
 import dev.d1s.beam.commons.Paths
-import dev.d1s.beam.daemon.exception.ForbiddenException
-import dev.d1s.beam.daemon.service.AuthService
 import dev.d1s.beam.daemon.service.BlockService
 import dev.d1s.beam.daemon.util.requiredIdParameter
 import dev.d1s.exkt.ktor.server.koin.configuration.Route
@@ -37,19 +35,13 @@ class DeleteBlockRoute : Route, KoinComponent {
 
     private val blockService by inject<BlockService>()
 
-    private val authService by inject<AuthService>()
-
     override fun Routing.apply() {
         authenticate {
             delete(Paths.DELETE_BLOCK) {
-                if (authService.isBlockModificationAllowed(call)) {
-                    val blockId = call.requiredIdParameter
-                    blockService.removeBlock(blockId).getOrThrow()
+                val blockId = call.requiredIdParameter
+                blockService.removeBlock(blockId).getOrThrow()
 
-                    call.respond(HttpStatusCode.NoContent)
-                } else {
-                    throw ForbiddenException()
-                }
+                call.respond(HttpStatusCode.NoContent)
             }
         }
     }

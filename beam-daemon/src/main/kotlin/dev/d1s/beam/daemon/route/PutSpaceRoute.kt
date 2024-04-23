@@ -21,8 +21,6 @@ import dev.d1s.beam.commons.SpaceModification
 import dev.d1s.beam.commons.validation.validateSpace
 import dev.d1s.beam.daemon.configuration.DtoConverters
 import dev.d1s.beam.daemon.entity.SpaceEntity
-import dev.d1s.beam.daemon.exception.ForbiddenException
-import dev.d1s.beam.daemon.service.AuthService
 import dev.d1s.beam.daemon.service.SpaceService
 import dev.d1s.beam.daemon.util.languageCodeQueryParameter
 import dev.d1s.beam.daemon.util.requiredIdParameter
@@ -45,28 +43,22 @@ class PutSpaceRoute : Route, KoinComponent {
 
     private val spaceService by inject<SpaceService>()
 
-    private val authService by inject<AuthService>()
-
     private val spaceModificationDtoConverter by inject<DtoConverter<SpaceEntity, SpaceModification>>(DtoConverters.SpaceModificationDtoConverterQualifier)
 
     override fun Routing.apply() {
         authenticate {
             put(Paths.PUT_SPACE) {
-                if (authService.isSpaceModificationAllowed(call)) {
-                    val body = call.receive<SpaceModification>()
-                    validateSpace(body).orThrow()
+                val body = call.receive<SpaceModification>()
+                validateSpace(body).orThrow()
 
-                    val space = spaceModificationDtoConverter.convertToEntity(body)
+                val space = spaceModificationDtoConverter.convertToEntity(body)
 
-                    val spaceIdentifier = call.requiredIdParameter
-                    val languageCode = call.languageCodeQueryParameter
+                val spaceIdentifier = call.requiredIdParameter
+                val languageCode = call.languageCodeQueryParameter
 
-                    val updatedSpace = spaceService.updateSpace(spaceIdentifier, space, languageCode).getOrThrow()
+                val updatedSpace = spaceService.updateSpace(spaceIdentifier, space, languageCode).getOrThrow()
 
-                    call.respond(updatedSpace.requiredDto)
-                } else {
-                    throw ForbiddenException()
-                }
+                call.respond(updatedSpace.requiredDto)
             }
         }
     }

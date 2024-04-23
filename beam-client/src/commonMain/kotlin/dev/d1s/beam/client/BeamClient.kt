@@ -41,22 +41,22 @@ public interface BeamClient {
 
     public suspend fun getDaemonStatus(): Result<DaemonStatus>
 
-    public suspend fun postSpace(space: SpaceModification, languageCode: LanguageCode? = null): Result<SpaceWithToken>
+    public suspend fun postSpace(space: SpaceModification, languageCode: LanguageCode? = null): Result<Space>
 
     public suspend fun postSpace(
         languageCode: LanguageCode? = null,
         configure: suspend SpaceModificationBuilder.() -> Unit
-    ): Result<SpaceWithToken>
+    ): Result<Space>
 
     public suspend fun postRootSpace(
         space: RootSpaceModification,
         languageCode: LanguageCode? = null
-    ): Result<SpaceWithToken>
+    ): Result<Space>
 
     public suspend fun postRootSpace(
         languageCode: LanguageCode? = null,
         configure: suspend RootSpaceModificationBuilder.() -> Unit
-    ): Result<SpaceWithToken>
+    ): Result<Space>
 
     public suspend fun getSpace(id: SpaceIdentifier, languageCode: LanguageCode? = null): Result<Space>
 

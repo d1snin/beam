@@ -1,7 +1,7 @@
 # Beam Daemon
 
 ### POST Space
-POST http://localhost:8573/spaces
+POST http://localhost:8573/api/spaces
 Content-Type: application/json
 
 {
@@ -19,7 +19,7 @@ Content-Type: application/json
 }
 
 ### POST Root Space
-POST http://localhost:8573/spaces/root
+POST http://localhost:8573/api/spaces/root
 Content-Type: application/json
 
 {
@@ -36,13 +36,13 @@ Content-Type: application/json
 }
 
 ### GET Space
-GET http://localhost:8573/spaces/root?language=en
+GET http://localhost:8573/api/spaces/root?language=en
 
 ### GET Spaces
-GET http://localhost:8573/spaces?limit=10&offset=0
+GET http://localhost:8573/api/spaces?limit=10&offset=0
 
 ### PUT Space
-PUT http://localhost:8573/spaces/test-1
+PUT http://localhost:8573/api/spaces/test-1
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -62,7 +62,7 @@ Content-Type: application/json
 }
 
 ### PUT Root Space
-PUT http://localhost:8573/spaces/root
+PUT http://localhost:8573/api/spaces/root
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -81,11 +81,11 @@ Content-Type: application/json
 }
 
 ### DELETE Space
-DELETE http://localhost:8573/spaces/test-1
+DELETE http://localhost:8573/api/spaces/test-1
 Authorization: Bearer {{token}}
 
 ### POST Block
-POST http://localhost:8573/blocks
+POST http://localhost:8573/api/blocks
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -107,10 +107,10 @@ Content-Type: application/json
 }
 
 ### GET Blocks
-GET http://localhost:8573/blocks?space=root&limit=20&offset=0&language=ru
+GET http://localhost:8573/api/blocks?space=root&limit=20&offset=0&language=ru
 
 ### PUT Block
-PUT http://localhost:8573/blocks/d35814a3-ab38-49bd-8a83-85d0b7d530ed
+PUT http://localhost:8573/api/blocks/d35814a3-ab38-49bd-8a83-85d0b7d530ed
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -131,21 +131,21 @@ Content-Type: application/json
 }
 
 ### DELETE Block
-DELETE http://localhost:8573/blocks/5989ded8-4101-4092-8c2d-443cf85bd96c
+DELETE http://localhost:8573/api/blocks/5989ded8-4101-4092-8c2d-443cf85bd96c
 Authorization: Bearer {{token}}
 
 ### DELETE Blocks
-DELETE http://localhost:8573/blocks?space=root
+DELETE http://localhost:8573/api/blocks?space=root
 Authorization: Bearer {{token}}
 
 ### GET Row
-GET http://localhost:8573/rows/0?space=root
+GET http://localhost:8573/api/rows/0?space=root
 
 ### GET Rows
-GET http://localhost:8573/rows?space=root
+GET http://localhost:8573/api/rows?space=root
 
 ### PUT Row
-PUT http://localhost:8573/rows/0?space=root
+PUT http://localhost:8573/api/rows/0?space=root
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -155,7 +155,7 @@ Content-Type: application/json
 }
 
 ### POST Translation
-POST http://localhost:8573/translations?space=root
+POST http://localhost:8573/api/translations?space=root
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -188,16 +188,16 @@ Content-Type: application/json
 }
 
 ### GET Translation
-GET http://localhost:8573/translations/en?space=
+GET http://localhost:8573/api/translations/en?space=
 
 ### GET Resolved Translation
-GET http://localhost:8573/translation?language=al&space=root
+GET http://localhost:8573/api/translation?language=al&space=root
 
 ### GET Translations
-GET http://localhost:8573/translations?space=test-1
+GET http://localhost:8573/api/translations?space=test-1
 
 ### PUT Translation
-PUT http://localhost:8573/translations/ru?space=root
+PUT http://localhost:8573/api/translations/ru?space=root
 Content-Type: application/json
 
 {
@@ -229,5 +229,5 @@ Content-Type: application/json
 }
 
 ### DELETE Translation
-DELETE http://localhost:8573/translations/ru?space=root
+DELETE http://localhost:8573/api/translations/ru?space=root
 Authorization: Bearer {{token}}

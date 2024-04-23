@@ -17,8 +17,6 @@
 package dev.d1s.beam.daemon.route
 
 import dev.d1s.beam.commons.Paths
-import dev.d1s.beam.daemon.exception.ForbiddenException
-import dev.d1s.beam.daemon.service.AuthService
 import dev.d1s.beam.daemon.service.SpaceService
 import dev.d1s.beam.daemon.util.requiredIdParameter
 import dev.d1s.exkt.ktor.server.koin.configuration.Route
@@ -37,19 +35,13 @@ class DeleteSpaceRoute : Route, KoinComponent {
 
     private val spaceService by inject<SpaceService>()
 
-    private val authService by inject<AuthService>()
-
     override fun Routing.apply() {
         authenticate {
             delete(Paths.DELETE_SPACE) {
-                if (authService.isSpaceModificationAllowed(call)) {
-                    val spaceIdentifier = call.requiredIdParameter
-                    spaceService.removeSpace(spaceIdentifier).getOrThrow()
+                val spaceIdentifier = call.requiredIdParameter
+                spaceService.removeSpace(spaceIdentifier).getOrThrow()
 
-                    call.respond(HttpStatusCode.NoContent)
-                } else {
-                    throw ForbiddenException()
-                }
+                call.respond(HttpStatusCode.NoContent)
             }
         }
     }

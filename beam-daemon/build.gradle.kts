@@ -34,6 +34,7 @@ dependencies {
     val ktorVersion: String by project
     val ktorServerLiquibaseVersion: String by project
     val ktorWsEventsVersion: String by project
+    val ktorStaticAuthVersion: String by project
 
     val logbackVersion: String by project
     val kmLogVersion: String by project
@@ -58,7 +59,6 @@ dependencies {
 
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
     implementation("io.ktor:ktor-server-auth:$ktorVersion")
-    implementation("io.ktor:ktor-server-auth-jwt:$ktorVersion")
     implementation("io.ktor:ktor-server-rate-limit:$ktorVersion")
     implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-server-cors:$ktorVersion")
@@ -68,6 +68,7 @@ dependencies {
     implementation("dev.d1s.exkt:exkt-ktor-server-postgres-support:$exktVersion")
     implementation("dev.d1s:ktor-server-liquibase:$ktorServerLiquibaseVersion")
     implementation("dev.d1s.ktor-ws-events:ktor-ws-events-server:$ktorWsEventsVersion")
+    implementation("dev.d1s:ktor-static-authentication:$ktorStaticAuthVersion")
 
     implementation("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-client-cio:$ktorVersion")

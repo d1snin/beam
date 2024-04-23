@@ -51,7 +51,7 @@ class BridgedBeamClient : BeamClient, KoinComponent {
             DaemonStatus(VERSION, DaemonState.UP)
         }
 
-    override suspend fun postSpace(space: SpaceModification, languageCode: LanguageCode?): Result<SpaceWithToken> =
+    override suspend fun postSpace(space: SpaceModification, languageCode: LanguageCode?): Result<Space> =
         readOnlyError()
 
     override suspend fun postSpace(
