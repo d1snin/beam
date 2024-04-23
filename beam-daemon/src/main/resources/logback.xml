@@ -29,7 +29,7 @@
         </layout>
     </appender>
 
-    <root level="INFO,WARN,ERROR">
+    <root level="INFO">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="TELEGRAM"/>
     </root>
