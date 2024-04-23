@@ -77,15 +77,12 @@ class IndexRoute : Route, KoinComponent {
         logger.i {
             val origin = request.origin
 
-            val host = origin.remotePort
+            val host = origin.remoteHost
             val port = origin.remotePort
-
-            val forwardedHost = request.headers[HttpHeaders.XForwardedHost] ?: "no forwarded host"
-            val forwardedPort = request.headers[HttpHeaders.XForwardedPort] ?: "no forwarded port"
 
             val userAgent = request.userAgent() ?: "no user agent"
 
-            "New space request on ${url()} from $host:$port ($forwardedHost:$forwardedPort) ($userAgent)"
+            "New space request on ${url()} from $host:$port ($userAgent)"
         }
     }
 }
