@@ -2,6 +2,7 @@
 
 ### POST Space
 POST http://localhost:8573/api/spaces
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
@@ -12,8 +13,8 @@ Content-Type: application/json
         "icon": null,
         "favicon": null,
         "preview": null,
-        "title": "Test space 1",
-        "description": "Test space instance.",
+        "title": "test",
+        "description": "test",
         "remark": null
     }
 }
@@ -36,7 +37,7 @@ Content-Type: application/json
 }
 
 ### GET Space
-GET http://localhost:8573/api/spaces/root?language=en
+GET http://localhost:8573/api/spaces/917824b0-3b07-42f3-951a-dc81e30fde18?language=en
 
 ### GET Spaces
 GET http://localhost:8573/api/spaces?limit=10&offset=0
@@ -55,8 +56,8 @@ Content-Type: application/json
         "icon": null,
         "favicon": null,
         "preview": null,
-        "title": "Test space",
-        "description": "${root.custom}",
+        "title": "${test-1.title}",
+        "description": "${test-1.description}",
         "remark": null
     }
 }
@@ -155,12 +156,12 @@ Content-Type: application/json
 }
 
 ### POST Translation
-POST http://localhost:8573/api/translations?space=root
+POST http://localhost:8573/api/translations?space=test-1
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "languageCode": "ru",
+    "languageCode": "en",
     "languageName": null,
     "default": false,
     "translations": {
@@ -175,15 +176,14 @@ Content-Type: application/json
         "ui.failure-card.not-found.message": "Мы ничего не нашли.",
         "ui.failure-card.empty-space.icon-alt": "Иконка пустого пространства",
         "ui.failure-card.empty-space.message": "Эта страница выглядит пустой.",
-        "ui.footer.message.first-part": "Работает на движке",
-        "ui.footer.message.second-part": "Beam",
-        "ui.footer.source-code-link.message": "Исходный код на GitHub",
-        "ui.footer.source-code-link.url": "https://github.com/d1snin/beam",
+        "ui.failure-card.lost-connection.icon-alt": "Иконка потерянного соединения",
+        "ui.failure-card.lost-connection.message": "Соединение с сервером прервано...",
         "ui.footer.language-switcher.message": "Поменять язык...",
         "ui.space-listing.message": "Другие страницы:",
         "ui.space-listing.fetch-more-button": "Загрузить больше",
         "ui.block.collapsed-content-entity.button.message": "Подробнее",
-        "root.custom": "ru"
+        "test-1.title": "en title",
+        "test-1.description": "en description"
     }
 }
 

@@ -54,9 +54,7 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
 
     private val beamClient by inject<BeamClient>()
 
-    private val emptySpaces: FetchedSpaces = listOf<Space>() to 0
-
-    private val spaces = ObservableValue(emptySpaces)
+    private val spaces = ObservableValue(emptyList)
 
     private val paginator by lazy {
         val limit = if (currentSpace != null) PAGE_LIMIT + 1 else PAGE_LIMIT
@@ -110,7 +108,7 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
 
     private fun SimplePanel.reset() {
         getChildren().forEach { it.dispose() }
-        spaces.value = emptySpaces
+        spaces.value = emptyList
         paginator.currentPage = 0
         initialized.value = false
     }
@@ -232,5 +230,7 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
     private companion object {
 
         private const val PAGE_LIMIT = 4
+
+        private val emptyList: FetchedSpaces = listOf<Space>() to 0
     }
 }
