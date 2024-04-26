@@ -79,9 +79,7 @@ class IndexRoute : Route, KoinComponent {
             val host = origin.remoteHost
             val port = origin.remotePort
 
-            val userAgent = request.userAgent() ?: "no user agent"
-
-            "New space request on ${url()} from $host:$port ($userAgent)"
+            "New space request on ${url()} from $host:$port ${request.headers}"
         }
     }
 }
