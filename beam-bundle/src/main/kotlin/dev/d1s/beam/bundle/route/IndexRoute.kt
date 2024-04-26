@@ -24,7 +24,6 @@ import dev.d1s.beam.client.BeamClient
 import dev.d1s.exkt.ktor.server.koin.configuration.Route
 import io.ktor.server.application.*
 import io.ktor.server.plugins.*
-import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import io.ktor.server.util.*
 import org.koin.core.component.KoinComponent
@@ -79,7 +78,7 @@ class IndexRoute : Route, KoinComponent {
             val host = origin.remoteHost
             val port = origin.remotePort
 
-            "New space request on ${url()} from $host:$port ${request.headers}"
+            "New space request on ${url()} from $host:$port (headers: ${request.headers.entries()})"
         }
     }
 }
