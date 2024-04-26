@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   beam-daemon:
     image: beam-daemon:latest
