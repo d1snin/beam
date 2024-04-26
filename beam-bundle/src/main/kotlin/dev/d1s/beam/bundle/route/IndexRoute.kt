@@ -19,6 +19,7 @@ package dev.d1s.beam.bundle.route
 import dev.d1s.beam.bundle.entity.ResolvedSpace
 import dev.d1s.beam.bundle.entity.SpaceRequest
 import dev.d1s.beam.bundle.service.IndexService
+import dev.d1s.beam.bundle.util.asString
 import dev.d1s.beam.bundle.util.respondHtml
 import dev.d1s.beam.client.BeamClient
 import dev.d1s.exkt.ktor.server.koin.configuration.Route
@@ -78,7 +79,7 @@ class IndexRoute : Route, KoinComponent {
             val host = origin.remoteHost
             val port = origin.remotePort
 
-            "New space request on ${url()} from $host:$port (headers: ${request.headers.entries()})"
+            "New space request on ${url()} from $host:$port (headers: ${request.headers.asString()}"
         }
     }
 }
