@@ -101,6 +101,10 @@ class RootComponent : Component.Root(), KoinComponent {
         setStyle(PClass.HOVER) {
             textDecoration = TextDecoration(TextDecorationLine.UNDERLINE)
         }
+
+        setStyle(PClass.FOCUS) {
+            setStyle("outline", "none")
+        }
     }
 
     private fun background() {

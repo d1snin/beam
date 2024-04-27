@@ -55,7 +55,6 @@ class HeadingComponent : Component<Unit>(), KoinComponent {
 
     private fun SimplePanel.renderSpaceHeading() {
         div {
-            w25()
             dFlex()
             alignItemsCenter()
             justifyContentBetween()
