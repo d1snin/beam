@@ -18,6 +18,9 @@ package dev.d1s.beam.ui.util
 
 object Icons {
 
+    const val LIST = "list"
+    const val CLOSE = "x"
+
     const val CHEVRON_DOWN = "chevron-down"
     const val CHEVRON_RIGHT = "chevron-right"
 

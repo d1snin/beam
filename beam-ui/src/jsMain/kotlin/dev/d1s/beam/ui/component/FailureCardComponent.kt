@@ -33,7 +33,7 @@ import org.koin.core.component.inject
 
 class FailureCardComponent : Component<FailureCardComponent.Config>(::Config), KoinComponent {
 
-    private val spaceListingComponent by inject<Component<Unit>>(Qualifier.SpaceListingComponent)
+    private val spaceListingComponent by inject<Component<SpaceListingComponent.Config>>(Qualifier.SpaceListingComponent)
 
     private val contents by lazy {
         getKoin().getAll<FailureCardContent>()

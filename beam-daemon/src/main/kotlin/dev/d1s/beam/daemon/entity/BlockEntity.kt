@@ -46,7 +46,8 @@ interface BlockEntity : UuidIdentified<BlockEntity> {
 val BlockEntity.asString
     get() = "BlockEntity{row = $row, index = $index, size = $size, entities = $entities, metadata = $metadata}"
 
-val BlockEntity.requiredIndex get() =
-    requireNotNull(index) {
-        "Block (entity) index is not set"
-    }
+val BlockEntity.requiredIndex
+    get() =
+        requireNotNull(index) {
+            "Block (entity) index is not set"
+        }

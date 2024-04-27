@@ -16,6 +16,9 @@
 
 package dev.d1s.beam.ui.util
 
+import dev.d1s.exkt.kvision.bootstrap.bootstrapIcon
+import dev.d1s.exkt.kvision.bootstrap.fs1
+import dev.d1s.exkt.kvision.bootstrap.me4
 import io.kvision.html.*
 import io.kvision.panel.SimplePanel
 
@@ -25,8 +28,16 @@ fun SimplePanel.renderContainer(block: SimplePanel.() -> Unit = {}) =
 fun SimplePanel.renderFluidContainer(block: SimplePanel.() -> Unit = {}) =
     div(className = "container-fluid", init = block)
 
-fun SimplePanel.renderDropdown(block: SimplePanel.() -> Unit = {}) =
-    div(className = "dropdown", init = block)
+fun SimplePanel.renderOffCanvas(block: SimplePanel.() -> Unit = {}) =
+    div(className = "offcanvas offcanvas-start") {
+        tabindex = -1
+
+        block()
+    }
+
+fun SimplePanel.renderOffCanvasBody(block: SimplePanel.() -> Unit) {
+    div(className = "offcanvas-body", init = block)
+}
 
 fun SimplePanel.renderDropdownToggler(style: ButtonStyle, offset: String, block: SimplePanel.() -> Unit = {}) =
     button(text = "", style = style, className = "btn-sm dropdown-toggle") {
@@ -34,6 +45,19 @@ fun SimplePanel.renderDropdownToggler(style: ButtonStyle, offset: String, block:
         setAttribute("data-bs-auto-close", "outside")
         setAttribute("data-bs-offset", offset)
         setAttribute("aria-expanded", "false")
+
+        block()
+    }
+
+fun SimplePanel.renderOffCanvasToggle(target: String, block: SimplePanel.() -> Unit = {}) =
+    renderUnstyledLink(url = "#$target") {
+        fs1()
+        me4()
+
+        role = "button"
+        setAttribute("data-bs-toggle", "offcanvas")
+
+        bootstrapIcon(Icons.LIST)
 
         block()
     }

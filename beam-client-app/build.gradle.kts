@@ -44,7 +44,7 @@ kotlin {
                 val koinVersion: String by project
 
                 val dispatchVersion: String by project
-                
+
                 api(project(":beam-client"))
 
                 implementation("org.lighthousegames:logging:$kmLogVersion")

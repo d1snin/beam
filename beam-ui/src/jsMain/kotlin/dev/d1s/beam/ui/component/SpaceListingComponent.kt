@@ -50,7 +50,7 @@ import org.koin.core.component.inject
 private typealias TotalElements = Int
 private typealias FetchedSpaces = Pair<List<Space>, TotalElements>
 
-class SpaceListingComponent : Component<Unit>(), KoinComponent {
+class SpaceListingComponent : Component<SpaceListingComponent.Config>(::Config), KoinComponent {
 
     private val beamClient by inject<BeamClient>()
 
@@ -154,7 +154,7 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
     }
 
     private fun SimplePanel.renderSpaceRow(spaces: List<Space>, block: SimplePanel.() -> Unit) {
-        val lgCols = if (spaces.size == 1) 1 else 2
+        val lgCols = if (spaces.size == 1 || config.singleColumn.value) 1 else 2
 
         renderRow(cols = "1", lgCols = lgCols.toString(), gap = 3) {
             mt0()
@@ -225,6 +225,11 @@ class SpaceListingComponent : Component<Unit>(), KoinComponent {
                 getMoreSpaces()
             }
         }
+    }
+
+    class Config {
+
+        val singleColumn = atomic(false)
     }
 
     private companion object {

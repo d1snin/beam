@@ -16,7 +16,10 @@
 
 package dev.d1s.beam.commons.event
 
-import dev.d1s.beam.commons.*
+import dev.d1s.beam.commons.BlockId
+import dev.d1s.beam.commons.RowQualifier
+import dev.d1s.beam.commons.SpaceId
+import dev.d1s.beam.commons.TranslationQualifier
 import dev.d1s.ktor.events.commons.EventReference
 import dev.d1s.ktor.events.commons.ref
 

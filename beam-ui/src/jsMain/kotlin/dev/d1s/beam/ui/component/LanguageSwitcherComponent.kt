@@ -24,8 +24,7 @@ import dev.d1s.beam.ui.theme.setOutline
 import dev.d1s.beam.ui.theme.setOverlay
 import dev.d1s.beam.ui.theme.setTextColor
 import dev.d1s.beam.ui.util.*
-import dev.d1s.exkt.kvision.bootstrap.bootstrapIconWithMargin
-import dev.d1s.exkt.kvision.bootstrap.shadow
+import dev.d1s.exkt.kvision.bootstrap.*
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
 import io.kvision.core.onClick

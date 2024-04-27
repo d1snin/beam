@@ -46,6 +46,8 @@ class RootComponent : Component.Root(), KoinComponent {
 
     private val footerComponent by inject<Component<Unit>>(Qualifier.FooterComponent)
 
+    private val exploreOffCanvasComponent by inject<Component<Unit>>(Qualifier.ExploreOffCanvasComponent)
+
     override fun SimplePanel.render(): Effect {
         bind(currentTranslationObservable) {
             renderRoot()
@@ -130,6 +132,7 @@ class RootComponent : Component.Root(), KoinComponent {
         render(headingComponent)
         render(spaceContentComponent)
         render(footerComponent)
+        render(exploreOffCanvasComponent)
     }
 
     private fun bodyStyle(block: CSSStyleDeclaration.() -> Unit) {

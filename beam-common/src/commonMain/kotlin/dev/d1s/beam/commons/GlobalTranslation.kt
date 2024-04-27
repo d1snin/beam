@@ -23,8 +23,6 @@ public object GlobalTranslation {
     public const val LOCATION_DEFAULT_TITLE: TextLocation = "ui.default-title"
     public const val LOCATION_DEFAULT_REMARK: TextLocation = "ui.default-remark"
 
-    public const val LOCATION_EXPLORE_DROPDOWN_CALLOUT: TextLocation = "ui.explore-dropdown.callout"
-
     public const val LOCATION_DAEMON_STATUS_CONNECTED: TextLocation = "ui.daemon-status.connected"
     public const val LOCATION_DAEMON_STATUS_DISCONNECTED: TextLocation = "ui.daemon-status.disconnected"
     public const val LOCATION_DAEMON_STATUS_MS_UNIT: TextLocation = "ui.daemon-status.ms-unit"
@@ -56,7 +54,6 @@ public object GlobalTranslation {
         LOCATION_ICON_ALT,
         LOCATION_DEFAULT_TITLE,
         LOCATION_DEFAULT_REMARK,
-        LOCATION_EXPLORE_DROPDOWN_CALLOUT,
         LOCATION_DAEMON_STATUS_CONNECTED,
         LOCATION_DAEMON_STATUS_DISCONNECTED,
         LOCATION_DAEMON_STATUS_MS_UNIT,
@@ -81,7 +78,6 @@ public object GlobalTranslation {
             LOCATION_ICON_ALT to "Beam space icon",
             LOCATION_DEFAULT_TITLE to "Beam",
             LOCATION_DEFAULT_REMARK to "Running [Beam][https://github.com/d1snin/beam] v$VERSION",
-            LOCATION_EXPLORE_DROPDOWN_CALLOUT to "Explore",
             LOCATION_DAEMON_STATUS_CONNECTED to "Connected to daemon.",
             LOCATION_DAEMON_STATUS_DISCONNECTED to "Couldn't connect to daemon.",
             LOCATION_DAEMON_STATUS_MS_UNIT to "ms",

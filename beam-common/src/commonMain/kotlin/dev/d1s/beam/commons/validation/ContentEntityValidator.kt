@@ -35,7 +35,10 @@ internal abstract class ContentEntityValidator<in D : ContentEntityTypeDefinitio
 
     abstract fun ValidationBuilder<AbstractContentEntity>.validate()
 
-    fun ValidationBuilder<AbstractContentEntity>.addTypedConstraint(errorMessage: String, test: (AbstractContentEntity) -> Boolean) {
+    fun ValidationBuilder<AbstractContentEntity>.addTypedConstraint(
+        errorMessage: String,
+        test: (AbstractContentEntity) -> Boolean
+    ) {
         addConstraint(errorMessage) { entity ->
             val entityType = entity.type
 

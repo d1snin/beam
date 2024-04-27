@@ -18,6 +18,7 @@ package dev.d1s.beam.ui.component
 
 import dev.d1s.beam.commons.spaceShowStatus
 import dev.d1s.beam.ui.Qualifier
+import dev.d1s.beam.ui.component.ExploreOffCanvasComponent.Companion.renderExploreButton
 import dev.d1s.beam.ui.util.currentSpace
 import dev.d1s.beam.ui.util.renderFluidContainer
 import dev.d1s.exkt.kvision.bootstrap.*
@@ -32,8 +33,6 @@ import org.koin.core.component.get
 import org.koin.core.component.inject
 
 class HeadingComponent : Component<Unit>(), KoinComponent {
-
-    private val exploreDropdownComponent by inject<Component<Unit>>(Qualifier.ExploreDropdownComponent)
 
     private val daemonStatusComponent by inject<Component<Unit>>(Qualifier.DaemonStatusComponent)
 
@@ -56,33 +55,26 @@ class HeadingComponent : Component<Unit>(), KoinComponent {
 
     private fun SimplePanel.renderSpaceHeading() {
         div {
+            w25()
             dFlex()
             alignItemsCenter()
             justifyContentBetween()
             justifyContentStart(breakpoint = Breakpoint.MD)
 
+            renderExploreButton()
             renderSpaceCard()
-            renderExploreDropdown()
         }
     }
 
     private fun SimplePanel.renderSpaceCard() {
         val spaceCard = get<Component<SpaceCardComponent.Config>>(Qualifier.SpaceCardComponent)
 
-        div {
-            w75()
-
-            render(spaceCard) {
-                bare.value = true
-                cardPaddingLevel.value = 4
-                iconWidth.value = 45.px
-                enableHeading.value = true
-            }
+        render(spaceCard) {
+            bare.value = true
+            cardPaddingLevel.value = 4
+            iconWidth.value = 45.px
+            enableHeading.value = true
         }
-    }
-
-    private fun SimplePanel.renderExploreDropdown() {
-        render(exploreDropdownComponent)
     }
 
     private fun SimplePanel.renderDaemonStatus() {
