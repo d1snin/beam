@@ -58,6 +58,8 @@ class HeadingComponent : Component<Unit>(), KoinComponent {
         div {
             dFlex()
             alignItemsCenter()
+            justifyContentBetween()
+            justifyContentStart(breakpoint = Breakpoint.MD)
 
             renderSpaceCard()
             renderExploreDropdown()
@@ -68,7 +70,7 @@ class HeadingComponent : Component<Unit>(), KoinComponent {
         val spaceCard = get<Component<SpaceCardComponent.Config>>(Qualifier.SpaceCardComponent)
 
         div {
-            me2()
+            w75()
 
             render(spaceCard) {
                 bare.value = true
