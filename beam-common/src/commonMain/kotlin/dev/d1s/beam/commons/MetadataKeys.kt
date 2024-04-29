@@ -20,7 +20,6 @@ public object MetadataKeys {
 
     public const val BUNDLE_SPACE_KEYWORDS: MetadataKey = "bundle.space.keywords"
 
-    public const val UI_SPACE_SHOW_STATUS: MetadataKey = "ui.space.show-status"
     public const val UI_SPACE_BACKGROUND: MetadataKey = "ui.space.background"
     public const val UI_SPACE_BACKGROUND_FIXED: MetadataKey = "ui.space.background.fixed"
     public const val UI_SPACE_STRETCH_LAST_BLOCKS: MetadataKey = "ui.space.stretch-last-blocks"
@@ -39,9 +38,6 @@ public object MetadataKeys {
 
 public val Metadata.spaceKeywords: MetadataValue?
     get() = get(MetadataKeys.BUNDLE_SPACE_KEYWORDS)
-
-public val Metadata?.spaceShowStatus: Boolean
-    get() = getBooleanOrTrue(MetadataKeys.UI_SPACE_SHOW_STATUS)
 
 public val Metadata.spaceBackground: MetadataValue?
     get() = get(MetadataKeys.UI_SPACE_BACKGROUND)

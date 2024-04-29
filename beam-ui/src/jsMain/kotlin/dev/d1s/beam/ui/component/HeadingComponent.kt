@@ -16,10 +16,8 @@
 
 package dev.d1s.beam.ui.component
 
-import dev.d1s.beam.commons.spaceShowStatus
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.component.ExploreOffCanvasComponent.Companion.renderExploreButton
-import dev.d1s.beam.ui.util.currentSpace
 import dev.d1s.beam.ui.util.renderFluidContainer
 import dev.d1s.exkt.kvision.bootstrap.*
 import dev.d1s.exkt.kvision.component.Component
@@ -30,11 +28,8 @@ import io.kvision.panel.SimplePanel
 import io.kvision.utils.px
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
-import org.koin.core.component.inject
 
 class HeadingComponent : Component<Unit>(), KoinComponent {
-
-    private val daemonStatusComponent by inject<Component<Unit>>(Qualifier.DaemonStatusComponent)
 
     override fun SimplePanel.render(): Effect {
         renderFluidContainer {
@@ -83,13 +78,6 @@ class HeadingComponent : Component<Unit>(), KoinComponent {
             mt0(breakpoint = Breakpoint.LG)
 
             visible = false
-
-            val showStatus = currentSpace?.metadata.spaceShowStatus
-
-            if (showStatus) {
-                render(daemonStatusComponent)
-                visible = true
-            }
         }
     }
 }

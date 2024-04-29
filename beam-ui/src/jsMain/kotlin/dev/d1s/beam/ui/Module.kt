@@ -48,7 +48,6 @@ object Qualifier {
     val SpaceCardComponent = named("space-card-component")
     val SpaceListingComponent = named("space-listing-component")
     val ExploreOffCanvasComponent = named("explore-dropdown-component")
-    val DaemonStatusComponent = named("daemon-status-component")
     val SpaceContentComponent = named("space-content-component")
     val BlockContainerComponent = named("block-container-component")
     val BlockComponent = named("block-component")
@@ -149,10 +148,6 @@ private fun Module.components() {
 
     singleOf<Component<Unit>>(::ExploreOffCanvasComponent) {
         qualifier = Qualifier.ExploreOffCanvasComponent
-    }
-
-    singleOf<Component<Unit>>(::DaemonStatusComponent) {
-        qualifier = Qualifier.DaemonStatusComponent
     }
 
     singleOf<Component<Unit>>(::SpaceContentComponent) {

@@ -38,10 +38,6 @@ public fun MetadataBuilder.setSpaceKeywords(keywords: String) {
     metadata(MetadataKeys.BUNDLE_SPACE_KEYWORDS, keywords)
 }
 
-public fun MetadataBuilder.setSpaceShowStatus(show: Boolean = true) {
-    metadata(MetadataKeys.UI_SPACE_SHOW_STATUS, show.toString())
-}
-
 public fun MetadataBuilder.setSpaceBackground(background: String) {
     metadata(MetadataKeys.UI_SPACE_BACKGROUND, background)
 }
