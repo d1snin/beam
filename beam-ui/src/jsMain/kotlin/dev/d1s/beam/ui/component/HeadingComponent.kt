@@ -33,9 +33,13 @@ class HeadingComponent : Component<Unit>(), KoinComponent {
 
     override fun SimplePanel.render(): Effect {
         renderFluidContainer {
+            addCssClass("sticky-top")
+
+            setBlur()
+
             px3()
-            mt3()
-            mb5()
+            py2()
+            mb4()
             dFlex()
             flexColumn()
             flexRow(breakpoint = Breakpoint.LG)
@@ -79,5 +83,15 @@ class HeadingComponent : Component<Unit>(), KoinComponent {
 
             visible = false
         }
+    }
+
+    private fun SimplePanel.setBlur() {
+        setStyle("-webkit-backdrop-filter", "blur($BLUR_RADIUS)")
+        setStyle("backdrop-filter", "blur($BLUR_RADIUS)")
+    }
+
+    private companion object {
+
+        private const val BLUR_RADIUS = "40px"
     }
 }
