@@ -78,11 +78,6 @@ interface TranslationService {
     suspend fun verifyLocationsExist(space: SpaceEntity, explicitId: SpaceId? = null): Result<Unit>
 
     suspend fun verifyLocationsNotUsed(space: SpaceEntity): Result<Unit>
-
-    companion object {
-
-        const val GLOBAL_TRANSLATION_PERMITTED_SPACE = ROOT_SPACE_SLUG
-    }
 }
 
 class DefaultTranslationService : TranslationService, KoinComponent {
