@@ -17,10 +17,7 @@
 package dev.d1s.beam.ui.util
 
 import dev.d1s.beam.client.BeamClient
-import dev.d1s.beam.commons.GlobalTranslation
-import dev.d1s.beam.commons.TextLocation
-import dev.d1s.beam.commons.TranslatedText
-import dev.d1s.beam.commons.Translation
+import dev.d1s.beam.commons.*
 import dev.d1s.beam.ui.Qualifier
 import dev.d1s.beam.ui.state.CurrentSpaceContentChangeObservable
 import dev.d1s.beam.ui.state.Observable
@@ -84,9 +81,6 @@ fun setCurrentTranslation(translation: Translation) {
 val Translation.iconAlt: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_ICON_ALT)
 val Translation.defaultTitle: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_DEFAULT_TITLE)
 val Translation.defaultRemark: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_DEFAULT_REMARK)
-val Translation.daemonStatusConnected: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_DAEMON_STATUS_CONNECTED)
-val Translation.daemonStatusDisconnected: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_DAEMON_STATUS_DISCONNECTED)
-val Translation.daemonStatusMsUnit: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_DAEMON_STATUS_MS_UNIT)
 val Translation.failureCardNotFoundIconAlt: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_FAILURE_CARD_NOT_FOUND_ICON_ALT)
 val Translation.failureCardNotFoundMessage: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_FAILURE_CARD_NOT_FOUND_MESSAGE)
 val Translation.failureCardEmptySpaceIconAlt: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_FAILURE_CARD_EMPTY_SPACE_ICON_ALT)
@@ -99,7 +93,7 @@ val Translation.spaceListingFetchMoreButton: TranslatedText get() = requiredTran
 val Translation.blockCollapsedContentEntityButtonMessage: TranslatedText get() = requiredTranslation(GlobalTranslation.LOCATION_BLOCK_COLLAPSED_CONTENT_ENTITY_BUTTON_MESSAGE)
 
 private fun Translation.requiredTranslation(location: TextLocation) =
-    translations[location] ?: error("No translation for given location '$location'")
+    translations.getWithTextVarProcessing(location) ?: error("No translation for given location '$location'")
 
 private fun actualizeCurrentTranslation() {
     currentTranslationObservable.value = internalCurrentTranslation

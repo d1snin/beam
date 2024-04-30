@@ -46,7 +46,6 @@ class HeadingComponent : Component<Unit>(), KoinComponent {
             justifyContentBetween(breakpoint = Breakpoint.LG)
 
             renderSpaceHeading()
-            renderDaemonStatus()
         }
 
         return Effect.Success
@@ -72,16 +71,6 @@ class HeadingComponent : Component<Unit>(), KoinComponent {
             cardPaddingLevel.value = 4
             iconWidth.value = 45.px
             enableHeading.value = true
-        }
-    }
-
-    private fun SimplePanel.renderDaemonStatus() {
-        div {
-            alignSelfCenter()
-            mt5()
-            mt0(breakpoint = Breakpoint.LG)
-
-            visible = false
         }
     }
 

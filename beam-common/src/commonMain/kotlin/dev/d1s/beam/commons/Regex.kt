@@ -24,6 +24,8 @@ public object Regex {
 
     public val Metadata: Regex = Regex("([a-z0-9]{1,20})([-.][a-z0-9]{0,20}){0,10}")
 
+    public val TextVariable: Regex = Regex("(?<!\\\\)<([a-z0-9]{1,20})([-.][a-z0-9]{0,20}){0,10}>")
+
     public val Template: Regex = Regex("(?<!\\\\)\\\$\\{([a-z0-9]{1,20})([-.][a-z0-9]{0,20}){0,10}\\}")
     public val EscapedTemplate: Regex = Regex("\\\\\\\$\\{([a-z0-9]{1,20})([-.][a-z0-9]{0,20}){0,10}\\}")
     public val TemplateEscape: Regex = Regex("\\\\(?=\\\$\\{([a-z0-9]{1,20})([-.][a-z0-9]{0,20}){0,10}\\})")

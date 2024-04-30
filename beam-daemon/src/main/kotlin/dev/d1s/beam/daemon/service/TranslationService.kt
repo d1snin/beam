@@ -26,6 +26,7 @@ import dev.d1s.beam.daemon.entity.*
 import dev.d1s.beam.daemon.exception.UnprocessableEntityException
 import dev.d1s.beam.daemon.util.CommonLanguageCodes
 import dev.d1s.beam.daemon.util.byCode
+import dev.d1s.beam.commons.getWithTextVarProcessing
 import dev.d1s.exkt.dto.*
 import dev.d1s.exkt.ktor.server.statuspages.HttpStatusException
 import dev.d1s.ktor.events.server.WebSocketEventChannel
@@ -443,7 +444,7 @@ class DefaultTranslationService : TranslationService, KoinComponent {
     private fun String.translateValue(translation: TranslationEntity) =
         foldTemplates { initial, template ->
             val location = template.extractTextLocation()
-            val translatedText = translation.translations[location]
+            val translatedText = translation.translations.getWithTextVarProcessing(location)
                 ?: error("Unable to find location '$location' in translation")
 
             initial.replace(template, translatedText)

@@ -156,7 +156,7 @@ Content-Type: application/json
 }
 
 ### POST Translation
-POST http://localhost:8573/api/translations?space=test-1
+POST http://localhost:8573/api/translations?space=root
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -167,7 +167,7 @@ Content-Type: application/json
     "translations": {
         "ui.icon-alt": "Иконка пространства",
         "ui.default-title": "Beam",
-        "ui.default-remark": "Running [Beam][https://github.com/d1snin/beam]",
+        "ui.default-remark": "Running [Beam][https://github.com/d1snin/beam] VERSION <version>",
         "ui.explore-dropdown.callout": "Обзор",
         "ui.daemon-status.connected": "Подключен к сервису.",
         "ui.daemon-status.disconnected": "Не удалось подключиться к сервису.",
