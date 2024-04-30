@@ -50,7 +50,6 @@ class PutTranslationRoute : Route, KoinComponent {
         authenticate {
             put(Paths.PUT_TRANSLATION) {
                 val spaceId = call.spaceIdQueryParameter
-                val languageCode = call.requiredLanguageCodeParameter
 
                 val body = call.receive<TranslationModification>()
                 validateTranslation(body)
@@ -58,7 +57,7 @@ class PutTranslationRoute : Route, KoinComponent {
                 val translation = translationModificationDtoConverter.convertToEntity(body)
 
                 val updatedTranslation =
-                    translationService.updateTranslation(spaceId, languageCode, translation).getOrThrow()
+                    translationService.updateTranslation(spaceId, translation).getOrThrow()
 
                 call.respond(updatedTranslation.requiredDto)
             }

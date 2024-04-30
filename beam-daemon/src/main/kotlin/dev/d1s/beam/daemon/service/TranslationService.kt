@@ -64,7 +64,6 @@ interface TranslationService {
 
     suspend fun updateTranslation(
         spaceIdentifier: SpaceIdentifier?,
-        languageCode: LanguageCode,
         modification: TranslationEntity
     ): ResultingEntityWithOptionalDto<TranslationEntity, Translation>
 
@@ -224,17 +223,16 @@ class DefaultTranslationService : TranslationService, KoinComponent {
 
     override suspend fun updateTranslation(
         spaceIdentifier: SpaceIdentifier?,
-        languageCode: LanguageCode,
         modification: TranslationEntity
     ): ResultingEntityWithOptionalDto<TranslationEntity, Translation> =
         translationRepository.withTransactionCatching {
             logger.d {
-                "Updating translation for space '$spaceIdentifier' in language '$languageCode'..."
+                "Updating translation for space '$spaceIdentifier' in language '${modification.languageCode}'..."
             }
 
             val (originalTranslation, originalTranslationDto) = getTranslation(
                 spaceIdentifier,
-                languageCode,
+                modification.languageCode,
                 requireDto = true
             ).getOrThrow()
             requireNotNull(originalTranslationDto)
