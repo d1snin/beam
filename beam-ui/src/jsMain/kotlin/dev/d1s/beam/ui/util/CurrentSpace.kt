@@ -33,9 +33,6 @@ private val resolver by lazy {
     client.resolver
 }
 
-val currentSpaceIdentifier
-    get() = resolver.resolveIdentifier(window.location.href)
-
 private var lateInitCurrentSpace: Space? = null
 val currentSpace get() = lateInitCurrentSpace
 

@@ -323,7 +323,7 @@ public class DefaultBeamClient(
         )
 
     override suspend fun postTranslation(
-        spaceId: SpaceIdentifier?,
+        languageCode: LanguageCode,
         translation: TranslationModification
     ): Result<Translation> =
         runCatching {
@@ -332,45 +332,38 @@ public class DefaultBeamClient(
             httpClient.post(Paths.POST_TRANSLATION) {
                 contentType(ContentType.Application.Json)
                 setBody(translation)
-                setSpaceId(spaceId)
             }.body()
         }
 
     override suspend fun postTranslation(
-        spaceId: SpaceIdentifier?,
+        languageCode: LanguageCode,
         configure: suspend TranslationModificationBuilder.() -> Unit
     ): Result<Translation> =
-        postTranslation(spaceId, TranslationModificationBuilder().apply { configure() }.buildTranslationModification())
+        postTranslation(
+            languageCode,
+            TranslationModificationBuilder().apply { configure() }.buildTranslationModification()
+        )
 
-    override suspend fun getTranslation(spaceId: SpaceIdentifier?, languageCode: LanguageCode): Result<Translation> =
+    override suspend fun getTranslation(languageCode: LanguageCode): Result<Translation> =
         runCatching {
             val path = Paths.GET_TRANSLATION.replaceLanguageCodePlaceholder(languageCode)
 
-            httpClient.get(path) {
-                setSpaceId(spaceId)
-            }.body()
+            httpClient.get(path).body()
         }
 
-    public override suspend fun getResolvedTranslation(
-        spaceId: SpaceIdentifier?,
-        languageCode: LanguageCode
-    ): Result<Translation> =
+    public override suspend fun getResolvedTranslation(languageCode: LanguageCode): Result<Translation> =
         runCatching {
             httpClient.get(Paths.GET_RESOLVED_TRANSLATION) {
-                setSpaceId(spaceId)
                 setLanguageCode(languageCode)
             }.body()
         }
 
-    override suspend fun getTranslations(spaceId: SpaceIdentifier?): Result<Translations> =
+    override suspend fun getTranslations(): Result<Translations> =
         runCatching {
-            httpClient.get(Paths.GET_TRANSLATIONS) {
-                setSpaceId(spaceId)
-            }.body()
+            httpClient.get(Paths.GET_TRANSLATIONS).body()
         }
 
     override suspend fun putTranslation(
-        spaceId: SpaceIdentifier?,
         languageCode: LanguageCode,
         translation: TranslationModification
     ): Result<Translation> =
@@ -382,30 +375,25 @@ public class DefaultBeamClient(
             httpClient.put(path) {
                 contentType(ContentType.Application.Json)
                 setBody(translation)
-                setSpaceId(spaceId)
             }.body()
         }
 
     override suspend fun putTranslation(
-        spaceId: SpaceIdentifier?,
         languageCode: LanguageCode,
         configure: suspend TranslationModificationBuilder.() -> Unit
     ): Result<Translation> =
         putTranslation(
-            spaceId,
             languageCode,
             TranslationModificationBuilder().apply { configure() }.buildTranslationModification()
         )
 
-    override suspend fun deleteTranslation(spaceId: SpaceIdentifier?, languageCode: LanguageCode): Result<Unit> =
+    override suspend fun deleteTranslation(languageCode: LanguageCode): Result<Unit> =
         runCatching {
             requireToken()
 
             val path = Paths.DELETE_TRANSLATION.replaceLanguageCodePlaceholder(languageCode)
 
-            httpClient.delete(path) {
-                setSpaceId(spaceId)
-            }
+            httpClient.delete(path)
         }
 
     override suspend fun onSpaceCreated(block: suspend (ClientWebSocketEvent<Space>) -> Unit): Result<Job> =

@@ -6,17 +6,17 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "slug": "test-1",
-    "metadata": {},
-    "view": {
-        "theme": "catppuccin-mocha",
-        "icon": null,
-        "favicon": null,
-        "preview": null,
-        "title": "test",
-        "description": "test",
-        "remark": null
-    }
+  "slug": "test-1",
+  "metadata": {},
+  "view": {
+    "theme": "catppuccin-mocha",
+    "icon": null,
+    "favicon": null,
+    "preview": null,
+    "title": "test",
+    "description": "test",
+    "remark": null
+  }
 }
 
 ### POST Root Space
@@ -24,16 +24,16 @@ POST http://localhost:8573/api/spaces/root
 Content-Type: application/json
 
 {
-    "metadata": {},
-    "view": {
-        "theme": "accent-dark",
-        "icon": null,
-        "favicon": null,
-        "preview": null,
-        "title": "Test space",
-        "description": "Test space instance.",
-        "remark": null
-    }
+  "metadata": {},
+  "view": {
+    "theme": "accent-dark",
+    "icon": null,
+    "favicon": null,
+    "preview": null,
+    "title": "Test space",
+    "description": "Test space instance.",
+    "remark": null
+  }
 }
 
 ### GET Space
@@ -48,18 +48,18 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "slug": "test-1",
-    "metadata": {
-    },
-    "view": {
-        "theme": "catppuccin-mocha",
-        "icon": null,
-        "favicon": null,
-        "preview": null,
-        "title": "${test-1.title}",
-        "description": "${test-1.description}",
-        "remark": null
-    }
+  "slug": "test-1",
+  "metadata": {
+  },
+  "view": {
+    "theme": "catppuccin-mocha",
+    "icon": null,
+    "favicon": null,
+    "preview": null,
+    "title": "${test-1.title}",
+    "description": "${test-1.description}",
+    "remark": null
+  }
 }
 
 ### PUT Root Space
@@ -68,17 +68,17 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "metadata": {
-    },
-    "view": {
-        "theme": "accent-dark",
-        "icon": null,
-        "favicon": null,
-        "preview": null,
-        "title": "Test space",
-        "description": "Test space instance.",
-        "remark": null
-    }
+  "metadata": {
+  },
+  "view": {
+    "theme": "accent-dark",
+    "icon": null,
+    "favicon": null,
+    "preview": null,
+    "title": "Test space",
+    "description": "Test space instance.",
+    "remark": null
+  }
 }
 
 ### DELETE Space
@@ -91,20 +91,20 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "row": 0,
-    "index": null,
-    "size": "EXTRA_LARGE",
-    "entities": [
-        {
-            "type": "space",
-            "parameters": {
-                "identifier": "root"
-            }
-        }
-    ],
-    "metadata": {
-    },
-    "spaceId": "root"
+  "row": 0,
+  "index": null,
+  "size": "EXTRA_LARGE",
+  "entities": [
+    {
+      "type": "space",
+      "parameters": {
+        "identifier": "root"
+      }
+    }
+  ],
+  "metadata": {
+  },
+  "spaceId": "root"
 }
 
 ### GET Blocks
@@ -116,19 +116,19 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "row": 0,
-    "index": null,
-    "size": "MEDIUM",
-    "entities": [
-        {
-            "type": "void",
-            "parameters": {
-            }
-        }
-    ],
-    "metadata": {
-    },
-    "spaceId": "root"
+  "row": 0,
+  "index": null,
+  "size": "MEDIUM",
+  "entities": [
+    {
+      "type": "void",
+      "parameters": {
+      }
+    }
+  ],
+  "metadata": {
+  },
+  "spaceId": "root"
 }
 
 ### DELETE Block
@@ -144,178 +144,78 @@ GET http://localhost:8573/api/rows/0?space=root
 
 ### GET Rows
 GET http://localhost:8573/api/rows?space=root
-
+ru
 ### PUT Row
 PUT http://localhost:8573/api/rows/0?space=root
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "align": "CENTER",
-    "metadata": {}
+  "align": "CENTER",
+  "metadata": {}
 }
 
 ### POST Translation
-POST http://localhost:8573/api/translations?space=root
+POST http://localhost:8573/api/translations/en
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "languageCode": "en",
-    "languageName": null,
-    "default": false,
-    "translations": {
-        "ui.icon-alt": "Иконка пространства",
-        "ui.default-title": "Beam",
-        "ui.default-remark": "Running [Beam][https://github.com/d1snin/beam] VERSION <version>",
-        "ui.explore-dropdown.callout": "Обзор",
-        "ui.daemon-status.connected": "Подключен к сервису.",
-        "ui.daemon-status.disconnected": "Не удалось подключиться к сервису.",
-        "ui.daemon-status.ms-unit": "мс",
-        "ui.failure-card.not-found.icon-alt": "Иконка 404",
-        "ui.failure-card.not-found.message": "Мы ничего не нашли.",
-        "ui.failure-card.empty-space.icon-alt": "Иконка пустого пространства",
-        "ui.failure-card.empty-space.message": "Эта страница выглядит пустой.",
-        "ui.failure-card.lost-connection.icon-alt": "Иконка потерянного соединения",
-        "ui.failure-card.lost-connection.message": "Соединение с сервером прервано...",
-        "ui.footer.language-switcher.message": "Поменять язык...",
-        "ui.space-listing.message": "Другие страницы:",
-        "ui.space-listing.fetch-more-button": "Загрузить больше",
-        "ui.block.collapsed-content-entity.button.message": "Подробнее",
-        "test-1.title": "en title",
-        "test-1.description": "en description"
-    }
+  "languageName": "English",
+  "default": false,
+  "translations": {
+    "ui.icon-alt": "Space icon",
+    "ui.default-title": "Beam",
+    "ui.default-remark": "Running [Beam][https://github.com/d1snin/beam] VERSION <version>",
+    "ui.failure-card.not-found.icon-alt": "404 icon",
+    "ui.failure-card.not-found.message": "We ended up with nothing.",
+    "ui.failure-card.empty-space.icon-alt": "Empty space icon",
+    "ui.failure-card.empty-space.message": "Seems like this space has no content blocks.",
+    "ui.failure-card.lost-connection.icon-alt": "Lost connection icon",
+    "ui.failure-card.lost-connection.message": "Server stopped responding...",
+    "ui.footer.language-switcher.message": "Language...",
+    "ui.space-listing.message": "Explore other spaces:",
+    "ui.space-listing.fetch-more-button": "Fetch more",
+    "ui.block.collapsed-content-entity.button.message": "More",
+    "test-1.title": "en title",
+    "test-1.description": "en description",
+    "random.text": "random text emmm eeee"
+  }
 }
 
 ### GET Translation
-GET https://titov.digital/api/translations/ru?space=root
+GET http://localhost:8573/api/translations/en
 
 ### GET Resolved Translation
-GET http://localhost:8573/api/translation?language=al&space=root
+GET http://localhost:8573/api/translation/en
 
 ### GET Translations
-GET http://localhost:8573/api/translations?space=test-1
+GET http://localhost:8573/api/translations
 
 ### PUT Translation
-PUT https://titov.digital/api/translations/?space=news
+PUT http://localhost:8573/api/translations/en
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "languageCode": "ru",
-  "languageName": "Russian",
-  "default": true,
+  "languageName": "English",
+  "default": false,
   "translations": {
-    "ui.icon-alt": "Иконка пространства Beam",
+    "ui.icon-alt": "Space icon",
     "ui.default-title": "Beam",
-    "ui.default-remark": "Работает на движке [Beam][https://github.com/d1snin/beam] v<version>",
-    "ui.explore-dropdown.callout": "Обзор",
-    "ui.daemon-status.connected": "Подключен к сервису.",
-    "ui.daemon-status.disconnected": "Не удалось подключиться к сервису.",
-    "ui.daemon-status.ms-unit": "мс",
-    "ui.failure-card.not-found.icon-alt": "Иконка 404",
-    "ui.failure-card.not-found.message": "Мы ничего не нашли.",
-    "ui.failure-card.empty-space.icon-alt": "Иконка пустого пространства",
-    "ui.failure-card.empty-space.message": "Эта страница выглядит пустой.",
-    "ui.failure-card.lost-connection.icon-alt": "Иконка потери соединения.",
-    "ui.failure-card.lost-connection.message": "Соединение с сервером было прервано.",
-    "ui.footer.language-switcher.message": "Поменять язык...",
-    "ui.space-listing.message": "Посетите другие страницы:",
-    "ui.space-listing.fetch-more-button": "Загрузить больше",
-    "ui.block.collapsed-content-entity.button.message": "Подробнее",
-    "main.title": "@titov.digital",
-    "main.description": "Студия веб-разработки Михаила Титова",
-    "main.about.heading": "(:rocket-takeoff:)(red) Я — (Ваш Веб-разработчик)(red)",
-    "main.about.paragraph": "Занимаюсь созданием веб-сайтов, серверных, сетевых и других приложений разного плана и масштаба на протяжении нескольких лет. Имею большой опыт разработки. Работаю для бизнеса из самых разных областей — от цветочных бутиков до государственных учреждений. Верю, что хороший веб-сайт это основной ключ к процветанию бизнеса в условиях нынешних реалий.",
-    "main.cases.heading": "(:question-circle:)(red) Что именно я (делаю)(red)?",
-    "main.cases.first-paragraph": "Я работаю над созданием веб-сайтов любого вида. Это может быть простой одностраничник, а может быть крупный высоконагруженный интернет-форум. Я сохраняю принцип индивидуальности для каждого клиента. Roadmap продукта составляется конкретно под ваши предпочтения и поставленные цели.",
-    "main.cases.second-paragraph": "Но это не единственное, что я умею. С полным перечнем услуг можно ознакомиться на странице:",
-    "main.reasons.heading": "(:patch-check:)(red) (Почему)(red) я?",
-    "main.reasons.paragraph": "Я — опытный разработчик с большим бэкграундом. Ежедневно учусь новому и не останавливаюсь в профессиональном развитии. В прошлом учился у ведущих разработчиков Яндекс, Тинькофф, и других крупных компаний. Читайте отзывы о моей работе на странице:",
-    "main.pipeline.heading": "(:list-check:)(red) (Как)(red) мы будем работать?",
-    "main.pipeline.first-paragraph": "Для начала, мы познакомимся и обсудим то, чем Вы занимаетесь, мне нужно иметь достаточное представление о том, что Вы продаете. Затем, поговорим о том, как Вы хотите видеть конечный продукт. После этого, я начну разработку прототипа согласно оформленному ТЗ. После одобрения прототипа, буду работать над минимально-жизнеспособной версией нашего продукта. И только после последующего одобрения и финальных доработок, Ваш продукт будет готов к рынку и приносу прибыли Вашему бизнесу.",
-    "main.pipeline.second-paragraph": "Важно отметить, что я не требую внесения предоплаты. При этом, управление конечным продуктом предоставляется Вам после полноценной оплаты.",
-    "main.contact.heading": "(:telephone:)(red) Как со мной (связаться)(red)?",
-    "main.contact.paragraph": "Обсудить Ваш проект со мной можно в Telegram. В среднем, отвечаю в течение десяти минут.",
-    "main.contact.telegram.text": "Перейти в Telegram",
-    "main.contact.telegram.url": "https://t.me/d1snin",
-    "main.news.heading": "(:megaphone:)(red) Будьте в курсе (событий)(red)",
-    "main.news.paragraph": "Читайте мой Telegram-канал. Я публикую не часто, но интересно!",
-    "main.news.telegram.text": "Перейти в Telegram-канал",
-    "main.news.telegram.url": "https://t.me/titov_digital",
-    "news.title": "Новости",
-    "news.description": "Самые актуальные новости",
-    "news.telegram-link.paragraph": "(Не забывайте)(red) подписываться на мой Telegram-канал, чтобы всегда быть в курсе происходящего!",
-    "news.newspaper.image-alt": "Изображение новости",
-    "news.newspaper.gk-pfs-ru-launch.title": "(:rocket-takeoff:)(yellow) Первый проект позади!",
-    "news.newspaper.gk-pfs-ru-launch.date-and-author": "%30.07.2023 — Mikhail Titov%",
-    "news.newspaper.gk-pfs-ru-launch.image-url": "https://s3.d1s.dev/titov-digital/news/gk-pfs-ru-review.jpg",
-    "news.newspaper.gk-pfs-ru-launch.first-paragraph": "Успешно завершил первый проект. Он уже запущен и работает на бизнес. Получилось креативно и интересно. Сейчас расскажу подробнее!",
-    "news.newspaper.gk-pfs-ru-launch.second-paragraph": "Была поставлена сложная задача — объединить три основных вида деятельности компании в один: психология, недвижимость и банкротство. Необходимо было подобрать такой дизайн и макет, который будет отвечать сразу всем нишам. Созданы такие условия, чтобы на сайте могли быть представлены сразу все виды деятельности с сохранением возможности расширения и добавления новых.",
-    "news.newspaper.gk-pfs-ru-launch.third-paragraph": "Был выбран и настроен домен с бесплатным SSL/TLS и хостингом за счет студии. Реализована система отзывов с модерацией, система обратной связи — отклики приходят менеджеру на почту.",
-    "news.newspaper.gk-pfs-ru-launch.fourth-paragraph": "Благодаря веб-сайту, компания успешно привлекает новых клиентов со всего региона. Был выполнен отличный старт по её развитию в Интернет-среде.",
-    "news.newspaper.gk-pfs-ru-launch.fifth-paragraph": "В целом, получилось очень круто. Я всегда рад работать с бизнесом любой сложности. Ведь чем сложнее, тем интересней.",
-    "news.newspaper.gk-pfs-ru-launch.sixth-paragraph": "Сайт доступен по адресу [gk-pfs.ru][https://gk-pfs.ru]",
-    "news.newspaper.gk-pfs-ru-traffic-review.title": "(:stars:)(yellow) Веб-сайт [gk-pfs.ru][https://gk-pfs.ru] уже работает на бизнес!",
-    "news.newspaper.gk-pfs-ru-traffic-review.date-and-author": "%19.09.2023 — Mikhail Titov%",
-    "news.newspaper.gk-pfs-ru-traffic-review.image-url": "https://s3.d1s.dev/titov-digital/news/gk-pfs-ru-web-traffic.jpg",
-    "news.newspaper.gk-pfs-ru-traffic-review.first-paragraph": "Хороший веб-сайт всегда показывает реальные результаты для бизнеса. Об этом говорит статистика посещений сайта [gk-pfs.ru][https://gk-pfs.ru], предоставленная компанией Cloudflare.",
-    "news.newspaper.gk-pfs-ru-traffic-review.second-paragraph": "Только за последний месяц веб-сайт обработал 44 000 запросов из России, среди которых — около 1000 живых уникальных посетителей.",
-    "news.newspaper.gk-pfs-ru-traffic-review.third-paragraph": "В среднем, сайт [gk-pfs.ru][https://gk-pfs.ru] посещают около 20 уникальных пользователей в день.",
-    "news.newspaper.beam-launch.title": "(:lightning-charge-fill:)(yellow) Создание полноценного веб-сайта за **3 дня**.",
-    "news.newspaper.beam-launch.date-and-author": "%09.10.2023 — Mikhail Titov%",
-    "news.newspaper.beam-launch.image-url": "https://s3.d1s.dev/titov-digital/news/beam-launch.jpg",
-    "news.newspaper.beam-launch.first-paragraph": "Недавно закончил тестировать продукт, который помогает выполнить и запустить веб-сайт за считанные дни.",
-    "news.newspaper.beam-launch.second-paragraph": "**Beam** *(англ. \"луч\", \"пучок света\")* — собственный, высокоскоростной веб-движок, автоматизирующий все базовые действия веб-разработчика, которому остается лишь определить контент, который бизнес хочет иметь на веб-сайте. Веб-сайты, построенные на движке Beam отлично индексируются поисковыми машинами, имеют высокую скорость отклика и приятный для пользователя UI.",
-    "news.newspaper.beam-launch.third-paragraph": "Кстати, веб-движок Beam обеспечивает работу этого веб-сайта.",
-    "news.newspaper.alexey-cleaning-ru-review.title": "(:rocket-takeoff:)(yellow) Запустил веб-сайт для владельца клининговой компании.",
-    "news.newspaper.alexey-cleaning-ru-review.date-and-author": "%26.10.2023 — Mikhail Titov%",
-    "news.newspaper.alexey-cleaning-ru-review.image-url": "https://s3.d1s.dev/titov-digital/news/alexey-cleaning-ru-review.jpg",
-    "news.newspaper.alexey-cleaning-ru-review.first-paragraph": "С заказчиком поставили задачу создать веб-сайт с информацией о бизнесе и Telegram-бот для удобного онлайн заказа услуг компании.",
-    "news.newspaper.alexey-cleaning-ru-review.second-paragraph": "Выбрали и купили домен для сайта. Бесплатно настроил SSL/TLS. Реализовал интересный и приятный для глаза макет веб-сайта со сдержанной цветовой палитрой. Добавил страницы с услугами компании и контактами. На странице услуг пользователь может легко перейти в Telegram-бот для дальнейшего формирования заказа выбранной услуги.",
-    "news.newspaper.alexey-cleaning-ru-review.third-paragraph": "Был создан удобный Telegram-бот, позволяющий пользователям быстро создать заявку на перезвон. Заявки приходят моему заказчику в приватном сообщении мгновенно.",
-    "news.newspaper.alexey-cleaning-ru-review.fourth-paragraph": "Благодаря веб-сайту, компания будет привлекать больше клиентов из сети и наращивать обороты в бизнесе.",
-    "news.newspaper.alexey-cleaning-ru-review.fifth-paragraph": "Сайт доступен в Интернете по адресу [alexey-cleaning.ru][https://alexey-cleaning.ru]",
-    "pricing.title": "Услуги",
-    "pricing.description": "Листинг услуг разработки",
-    "pricing.service.image-alt": "Иконка услуги",
-    "pricing.service.contact.text": "Обсудить в Telegram",
-    "pricing.service.website-development.image-url": "https://s3.d1s.dev/titov-digital/pricing/website-development.jpg",
-    "pricing.service.website-development.name": "Разработка веб-сайта",
-    "pricing.service.website-development.price": "(**от 4 900 RUB**)(green)",
-    "pricing.service.website-development.description": "Разработка базового веб-сайта. Без дополнительных работ — одностраничный веб-сайт.",
-    "pricing.service.server-development.image-url": "https://s3.d1s.dev/titov-digital/pricing/server-development.jpg",
-    "pricing.service.server-development.name": "Разработка сервера",
-    "pricing.service.server-development.price": "(**от 5 500 RUB**)(green)",
-    "pricing.service.server-development.description": "Разработка быстродействующего веб-сервера для вашего сайта. Способствует созданию систем блоггинга, e-Commerce и т.п.",
-    "pricing.service.domain-configuration.image-url": "https://s3.d1s.dev/titov-digital/pricing/domain-configuration.jpg",
-    "pricing.service.domain-configuration.name": "Настройка домена веб-сайта",
-    "pricing.service.domain-configuration.price": "(**от 1 000 RUB**)(green)",
-    "pricing.service.domain-configuration.description": "Выбор и настройка красивого имени для вашего веб-сайта.",
-    "pricing.service.seo-optimization.image-url": "https://s3.d1s.dev/titov-digital/pricing/seo-optimization.jpg",
-    "pricing.service.seo-optimization.name": "SEO-оптимизация",
-    "pricing.service.seo-optimization.price": "(**от 1 000 RUB**)(green)",
-    "pricing.service.seo-optimization.description": "Поднятие веб-сайта в ранжировании популярных поисковых систем. Увеличение количества посещений веб-сайта.",
-    "pricing.service.logotype-development.image-url": "https://s3.d1s.dev/titov-digital/pricing/logotype-development.jpg",
-    "pricing.service.logotype-development.name": "Разработка логотипа",
-    "pricing.service.logotype-development.price": "(**от 1 000 RUB**)(green)",
-    "pricing.service.logotype-development.description": "Разработка логотипа для вашего бизнеса и последующая интеграция в веб-сайт.",
-    "pricing.service.chat-bot-development.image-url": "https://s3.d1s.dev/titov-digital/pricing/chat-bot-development.jpg",
-    "pricing.service.chat-bot-development.name": "Разработка чат-бота",
-    "pricing.service.chat-bot-development.price": "(**от 3 200 RUB**)(green)",
-    "pricing.service.chat-bot-development.description": "Разработка быстродействующего чат-бота на любой платформе: Discord, Telegram, VK.",
-    "pricing.fallback.heading": "(Не нашли)(red) того, что хотели?",
-    "pricing.fallback.paragraph": "Давайте обсудим! Скорее всего, я смогу предложить вам индивидуальное решение по выгодной цене.",
-    "reviews.title": "Отзывы",
-    "reviews.description": "Отзывы довольных клиентов",
-    "reviews.form.heading": "Оставьте (отзыв)(red) о моей работе.",
-    "reviews.form.paragraph": "Вы можете оставить отзыв об оказанных мною услугах через специальную форму. Я обязательно получу его и опубликую после модерации.",
-    "reviews.form.link.text": "Оставить отзыв",
-    "reviews.form.link.url": "https://forms.yandex.ru/u/6510cedfd046881301cc2713/",
-    "reviews.review.image-alt": "Скан отзыва",
-    "reviews.review.gk-pfs-ru.title": "Отзыв об услуге (разработки веб-сайта)(red) компании",
-    "reviews.review.gk-pfs-ru.date-and-reviewer": "%20.06.2023 — Роман Михайлецкий%",
-    "reviews.review.gk-pfs-ru.image-url": "https://s3.d1s.dev/titov-digital/reviews/gk-pfs-ru-letter.jpg"
+    "ui.default-remark": "Running [Beam][https://github.com/d1snin/beam] VERSION <version>",
+    "ui.failure-card.not-found.icon-alt": "404 icon",
+    "ui.failure-card.not-found.message": "We ended up with nothing.",
+    "ui.failure-card.empty-space.icon-alt": "Empty space icon",
+    "ui.failure-card.empty-space.message": "Seems like this space has no content blocks.",
+    "ui.failure-card.lost-connection.icon-alt": "Lost connection icon",
+    "ui.failure-card.lost-connection.message": "Server stopped responding...",
+    "ui.footer.language-switcher.message": "Language...",
+    "ui.space-listing.message": "Explore other spaces:",
+    "ui.space-listing.fetch-more-button": "Fetch more",
+    "ui.block.collapsed-content-entity.button.message": "More",
+    "test-1.title": "en title",
+    "test-1.description": "en description"
   }
 }
 

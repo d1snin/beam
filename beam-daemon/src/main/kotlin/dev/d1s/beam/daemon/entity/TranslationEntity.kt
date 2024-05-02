@@ -26,8 +26,6 @@ typealias TranslationEntities = List<TranslationEntity>
 
 interface TranslationEntity : UuidIdentified<TranslationEntity> {
 
-    var space: SpaceEntity?
-
     var languageCode: LanguageCode
 
     var languageName: LanguageName?

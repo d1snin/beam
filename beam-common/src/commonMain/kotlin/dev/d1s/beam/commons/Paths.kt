@@ -55,10 +55,10 @@ public object Paths {
     public const val GET_ROWS: String = "/api/rows"
     public const val PUT_ROW: String = "/api/rows/{${ID_PARAMETER}}"
 
-    public const val POST_TRANSLATION: String = "/api/translations"
+    public const val POST_TRANSLATION: String = "/api/translations/{$LANGUAGE_CODE_PARAMETER}"
     public const val GET_TRANSLATION: String = "/api/translations/{$LANGUAGE_CODE_PARAMETER}"
-    public const val GET_RESOLVED_TRANSLATION: String = "/api/translation"
+    public const val GET_RESOLVED_TRANSLATION: String = "/api/translation/{$LANGUAGE_CODE_PARAMETER}"
     public const val GET_TRANSLATIONS: String = "/api/translations"
-    public const val PUT_TRANSLATION: String = "/api/translations"
+    public const val PUT_TRANSLATION: String = "/api/translations/{$LANGUAGE_CODE_PARAMETER}"
     public const val DELETE_TRANSLATION: String = "/api/translations/{$LANGUAGE_CODE_PARAMETER}"
 }

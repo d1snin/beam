@@ -23,7 +23,10 @@ import dev.d1s.beam.bundle.html.RenderParameters
 import dev.d1s.beam.bundle.html.UrlPreviewMetaTags
 import dev.d1s.beam.bundle.response.Defaults
 import dev.d1s.beam.client.BeamClient
-import dev.d1s.beam.commons.*
+import dev.d1s.beam.commons.LanguageCode
+import dev.d1s.beam.commons.Space
+import dev.d1s.beam.commons.SpaceFavicon
+import dev.d1s.beam.commons.SpaceUrlPreview
 import io.ktor.client.plugins.*
 import io.ktor.http.*
 import org.koin.core.component.KoinComponent
@@ -59,7 +62,7 @@ class DefaultIndexService : IndexService, KoinComponent {
 
         spaceId ?: return resolveNotAvailableSpace()
 
-        val languageCode = resolveLanguageCode(spaceId)
+        val languageCode = resolveLanguageCode()
         val spaceResult = client.getSpace(spaceId, languageCode)
 
         spaceResult.onFailure {
@@ -162,6 +165,6 @@ class DefaultIndexService : IndexService, KoinComponent {
         return ResolvedSpace(space, html)
     }
 
-    private suspend fun resolveLanguageCode(spaceId: SpaceIdentifier) =
-        client.getResolvedTranslation(spaceId, Defaults.LANGUAGE_CODE).getOrNull()?.languageCode
+    private suspend fun resolveLanguageCode() =
+        client.getResolvedTranslation(Defaults.LANGUAGE_CODE).getOrNull()?.languageCode
 }

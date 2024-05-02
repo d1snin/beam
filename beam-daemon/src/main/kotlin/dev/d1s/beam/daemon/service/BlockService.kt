@@ -110,8 +110,6 @@ class DefaultBlockService : BlockService, KoinComponent {
                 "Creating block ${block.asString}..."
             }
 
-            translationService.verifyLocationsExist(block).getOrThrow()
-
             processBlockRow(block)
             processBlockIndexOnCreation(block)
 
@@ -196,8 +194,6 @@ class DefaultBlockService : BlockService, KoinComponent {
 
             val (originalBlock, originalBlockDto) = getBlock(id, requireDto = true).getOrThrow()
             requireNotNull(originalBlockDto)
-
-            translationService.verifyLocationsExist(modification).getOrThrow()
 
             processBlockRow(modification)
             processBlockIndexOnUpdate(modification, originalBlock)

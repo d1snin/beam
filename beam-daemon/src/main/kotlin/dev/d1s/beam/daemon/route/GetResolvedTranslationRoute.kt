@@ -18,8 +18,7 @@ package dev.d1s.beam.daemon.route
 
 import dev.d1s.beam.commons.Paths
 import dev.d1s.beam.daemon.service.TranslationService
-import dev.d1s.beam.daemon.util.requiredLanguageCodeQueryParameter
-import dev.d1s.beam.daemon.util.spaceIdQueryParameter
+import dev.d1s.beam.daemon.util.requiredLanguageCodeParameter
 import dev.d1s.exkt.dto.requiredDto
 import dev.d1s.exkt.ktor.server.koin.configuration.Route
 import io.ktor.server.application.*
@@ -37,11 +36,10 @@ class GetResolvedTranslationRoute : Route, KoinComponent {
 
     override fun Routing.apply() {
         get(Paths.GET_RESOLVED_TRANSLATION) {
-            val spaceId = call.spaceIdQueryParameter
-            val languageCode = call.requiredLanguageCodeQueryParameter
+            val languageCode = call.requiredLanguageCodeParameter
 
             val resolvedTranslation =
-                translationService.resolveTranslation(spaceId, languageCode, requireDto = true).getOrThrow()
+                translationService.resolveTranslation(languageCode, requireDto = true).getOrThrow()
 
             call.respond(resolvedTranslation.requiredDto)
         }

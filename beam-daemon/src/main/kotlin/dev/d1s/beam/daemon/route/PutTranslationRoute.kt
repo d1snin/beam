@@ -23,7 +23,6 @@ import dev.d1s.beam.daemon.configuration.DtoConverters
 import dev.d1s.beam.daemon.entity.TranslationEntity
 import dev.d1s.beam.daemon.service.TranslationService
 import dev.d1s.beam.daemon.util.requiredLanguageCodeParameter
-import dev.d1s.beam.daemon.util.spaceIdQueryParameter
 import dev.d1s.exkt.dto.DtoConverter
 import dev.d1s.exkt.dto.requiredDto
 import dev.d1s.exkt.ktor.server.koin.configuration.Route
@@ -49,7 +48,7 @@ class PutTranslationRoute : Route, KoinComponent {
     override fun Routing.apply() {
         authenticate {
             put(Paths.PUT_TRANSLATION) {
-                val spaceId = call.spaceIdQueryParameter
+                val languageCode = call.requiredLanguageCodeParameter
 
                 val body = call.receive<TranslationModification>()
                 validateTranslation(body)
@@ -57,7 +56,7 @@ class PutTranslationRoute : Route, KoinComponent {
                 val translation = translationModificationDtoConverter.convertToEntity(body)
 
                 val updatedTranslation =
-                    translationService.updateTranslation(spaceId, translation).getOrThrow()
+                    translationService.updateTranslation(languageCode, translation).getOrThrow()
 
                 call.respond(updatedTranslation.requiredDto)
             }

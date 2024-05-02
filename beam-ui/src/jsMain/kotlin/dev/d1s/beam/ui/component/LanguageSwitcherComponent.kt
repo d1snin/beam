@@ -24,7 +24,8 @@ import dev.d1s.beam.ui.theme.setOutline
 import dev.d1s.beam.ui.theme.setOverlay
 import dev.d1s.beam.ui.theme.setTextColor
 import dev.d1s.beam.ui.util.*
-import dev.d1s.exkt.kvision.bootstrap.*
+import dev.d1s.exkt.kvision.bootstrap.bootstrapIconWithMargin
+import dev.d1s.exkt.kvision.bootstrap.shadow
 import dev.d1s.exkt.kvision.component.Component
 import dev.d1s.exkt.kvision.component.Effect
 import io.kvision.core.onClick
@@ -46,7 +47,7 @@ class LanguageSwitcherComponent : Component<Unit>(), KoinComponent {
         val (effectState, effect) = Effect.lazy()
 
         launchDiv {
-            val translations = client.getTranslations(currentSpace?.id).getOrNull()
+            val translations = client.getTranslations().getOrNull()
             if (translations == null || translations.size <= 1) {
                 effectState.value = false
                 return@launchDiv

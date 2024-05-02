@@ -26,7 +26,6 @@ import dev.d1s.beam.daemon.entity.*
 import dev.d1s.beam.daemon.exception.UnprocessableEntityException
 import dev.d1s.beam.daemon.util.CommonLanguageCodes
 import dev.d1s.beam.daemon.util.byCode
-import dev.d1s.beam.commons.getWithTextVarProcessing
 import dev.d1s.exkt.dto.*
 import dev.d1s.exkt.ktor.server.statuspages.HttpStatusException
 import dev.d1s.ktor.events.server.WebSocketEventChannel
@@ -41,43 +40,34 @@ import java.util.*
 interface TranslationService {
 
     suspend fun createTranslation(
-        spaceIdentifier: SpaceIdentifier?,
+        languageCode: LanguageCode,
         translation: TranslationEntity
     ): ResultingEntityWithOptionalDto<TranslationEntity, Translation>
 
     suspend fun getTranslation(
-        spaceIdentifier: SpaceIdentifier?,
         languageCode: LanguageCode,
         requireDto: Boolean = false
     ): ResultingEntityWithOptionalDto<TranslationEntity, Translation>
 
     suspend fun resolveTranslation(
-        spaceIdentifier: SpaceIdentifier?,
         languageCode: LanguageCode,
         requireDto: Boolean = false
     ): ResultingEntityWithOptionalDto<TranslationEntity, Translation>
 
     suspend fun getTranslations(
-        spaceIdentifier: SpaceIdentifier?,
         requireDto: Boolean = false
     ): ResultingEntityWithOptionalDtoList<TranslationEntity, Translation>
 
     suspend fun updateTranslation(
-        spaceIdentifier: SpaceIdentifier?,
+        languageCode: LanguageCode,
         modification: TranslationEntity
     ): ResultingEntityWithOptionalDto<TranslationEntity, Translation>
 
-    suspend fun removeTranslation(spaceIdentifier: SpaceIdentifier?, languageCode: LanguageCode): Result<Unit>
+    suspend fun removeTranslation(languageCode: LanguageCode): Result<Unit>
 
     suspend fun translateBlock(block: BlockEntity, languageCode: LanguageCode): Result<Unit>
 
     suspend fun translateSpace(space: SpaceEntity, languageCode: LanguageCode): Result<Unit>
-
-    suspend fun verifyLocationsExist(block: BlockEntity): Result<Unit>
-
-    suspend fun verifyLocationsExist(space: SpaceEntity, explicitId: SpaceId? = null): Result<Unit>
-
-    suspend fun verifyLocationsNotUsed(space: SpaceEntity): Result<Unit>
 }
 
 class DefaultTranslationService : TranslationService, KoinComponent {
@@ -88,14 +78,10 @@ class DefaultTranslationService : TranslationService, KoinComponent {
 
     private val eventChannel by inject<WebSocketEventChannel>()
 
-    private val blockService by inject<BlockService>()
-
-    private val spaceService by inject<SpaceService>()
-
     private val logger = logging()
 
     override suspend fun createTranslation(
-        spaceIdentifier: SpaceIdentifier?,
+        languageCode: LanguageCode,
         translation: TranslationEntity
     ): ResultingEntityWithOptionalDto<TranslationEntity, Translation> =
         translationRepository.withTransactionCatching {
@@ -103,15 +89,11 @@ class DefaultTranslationService : TranslationService, KoinComponent {
                 "Creating translation ${translation.asString}..."
             }
 
-            verifyTranslationDoesntExist(spaceIdentifier, translation)
-            verifyLocationsSatisfied(spaceIdentifier, translation)
-            verifyLanguageName(translation)
-            verifyDefaultTranslation(translation, spaceIdentifier)
+            translation.languageCode = languageCode
 
-            spaceIdentifier?.let {
-                val (space, _) = spaceService.getSpace(it).getOrThrow()
-                translation.space = space
-            }
+            verifyTranslationDoesntExist(translation)
+            verifyLanguageName(translation)
+            verifyDefaultTranslation(translation)
 
             val addedTranslation = translationRepository.addTranslation(translation)
                 .getOrThrow()
@@ -124,26 +106,17 @@ class DefaultTranslationService : TranslationService, KoinComponent {
         }
 
     override suspend fun getTranslation(
-        spaceIdentifier: SpaceIdentifier?,
         languageCode: LanguageCode,
         requireDto: Boolean
     ): ResultingEntityWithOptionalDto<TranslationEntity, Translation> =
         runCatching {
             logger.d {
-                "Obtaining translation for space '$spaceIdentifier' in language '$languageCode'..."
+                "Obtaining translation in language '$languageCode'..."
             }
 
-            val space = spaceIdentifier?.let {
-                spaceService.getSpace(it).getOrThrow()
-            }?.entity
-
-            val translation = translationRepository.findTranslationBySpaceAndLanguageCode(space, languageCode)
+            val translation = translationRepository.findTranslationByLanguageCode(languageCode)
                 .getOrElse {
-                    val message = spaceIdentifier?.let {
-                        "Translation not found by space '${space?.id}' and language code '$languageCode'"
-                    } ?: "Global translation not found for language '$languageCode'"
-
-                    throw NotFoundException(message)
+                    throw NotFoundException("Translation not found in language '$languageCode'")
                 }
 
             val modifiedTranslation = translation.inferLanguageName()
@@ -154,19 +127,18 @@ class DefaultTranslationService : TranslationService, KoinComponent {
         }
 
     override suspend fun resolveTranslation(
-        spaceIdentifier: SpaceIdentifier?,
         languageCode: LanguageCode,
         requireDto: Boolean
     ): ResultingEntityWithOptionalDto<TranslationEntity, Translation> =
         runCatching {
             logger.d {
-                "Resolving translation for space '$spaceIdentifier'..."
+                "Resolving translation for language '$languageCode'..."
             }
 
             suspend fun convert(translation: TranslationEntity): EntityWithOptionalDto<TranslationEntity, Translation> =
                 translation to translationDtoConverter.convertToDto(translation)
 
-            val existingTranslation = getTranslation(spaceIdentifier, languageCode).getOrNull()?.entity
+            val existingTranslation = getTranslation(languageCode).getOrNull()?.entity
 
             logger.v {
                 "Existing translation: $existingTranslation"
@@ -176,7 +148,7 @@ class DefaultTranslationService : TranslationService, KoinComponent {
                 return@runCatching convert(it)
             }
 
-            val defaultTranslation = getDefaultTranslation(spaceIdentifier).getOrNull()
+            val defaultTranslation = getDefaultTranslation().getOrNull()
 
             logger.v {
                 "Default translation: $defaultTranslation"
@@ -186,7 +158,7 @@ class DefaultTranslationService : TranslationService, KoinComponent {
                 return@runCatching convert(it)
             }
 
-            val firstAvailableTranslation = getTranslations(spaceIdentifier).getOrNull()?.entities?.firstOrNull()
+            val firstAvailableTranslation = getTranslations().getOrNull()?.entities?.firstOrNull()
 
             logger.v {
                 "First available translation: $firstAvailableTranslation"
@@ -199,20 +171,13 @@ class DefaultTranslationService : TranslationService, KoinComponent {
             throw UnprocessableEntityException("Couldn't resolve translation")
         }
 
-    override suspend fun getTranslations(
-        spaceIdentifier: SpaceIdentifier?,
-        requireDto: Boolean
-    ): ResultingEntityWithOptionalDtoList<TranslationEntity, Translation> =
+    override suspend fun getTranslations(requireDto: Boolean): ResultingEntityWithOptionalDtoList<TranslationEntity, Translation> =
         runCatching {
             logger.d {
-                "Obtaining translations for space '$spaceIdentifier'..."
+                "Obtaining translations..."
             }
 
-            val space = spaceIdentifier?.let {
-                spaceService.getSpace(spaceIdentifier).getOrThrow()
-            }?.entity
-
-            val translations = translationRepository.findTranslationsBySpace(space).getOrThrow()
+            val translations = translationRepository.findTranslations().getOrThrow()
 
             val modifiedTranslations = translations.inferLanguageNames()
 
@@ -222,27 +187,24 @@ class DefaultTranslationService : TranslationService, KoinComponent {
         }
 
     override suspend fun updateTranslation(
-        spaceIdentifier: SpaceIdentifier?,
+        languageCode: LanguageCode,
         modification: TranslationEntity
     ): ResultingEntityWithOptionalDto<TranslationEntity, Translation> =
         translationRepository.withTransactionCatching {
             logger.d {
-                "Updating translation for space '$spaceIdentifier' in language '${modification.languageCode}'..."
+                "Updating translation in language '$languageCode'..."
             }
 
             val (originalTranslation, originalTranslationDto) = getTranslation(
-                spaceIdentifier,
-                modification.languageCode,
+                languageCode,
                 requireDto = true
             ).getOrThrow()
             requireNotNull(originalTranslationDto)
 
-            verifyLocationsSatisfied(spaceIdentifier, modification)
             verifyLanguageName(modification)
-            verifyDefaultTranslation(modification, spaceIdentifier, originalTranslation.id)
+            verifyDefaultTranslation(modification, originalTranslation.id)
 
             originalTranslation.apply {
-                this.languageCode = modification.languageCode
                 this.languageName = modification.languageName
                 this.default = modification.default
                 this.translations = modification.translations
@@ -260,22 +222,18 @@ class DefaultTranslationService : TranslationService, KoinComponent {
         }
 
     override suspend fun removeTranslation(
-        spaceIdentifier: SpaceIdentifier?,
         languageCode: LanguageCode
     ): Result<Unit> =
         translationRepository.withTransactionCatching {
             logger.d {
-                "Removing translation for space '$spaceIdentifier' in language '$languageCode'..."
+                "Removing translation in language '$languageCode'..."
             }
 
             val (translation, translationDto) = getTranslation(
-                spaceIdentifier,
                 languageCode,
                 requireDto = true
             ).getOrThrow()
             requireNotNull(translationDto)
-
-            verifyLocationsSatisfied(spaceIdentifier, translation, removing = true)
 
             translationRepository.removeTranslation(translation).getOrThrow()
 
@@ -288,7 +246,7 @@ class DefaultTranslationService : TranslationService, KoinComponent {
                 "Translating entities for block '${block.id}' in language '$languageCode'..."
             }
 
-            val (translation, _) = resolveTranslation(block.space.id.toString(), languageCode).getOrThrow()
+            val (translation, _) = resolveTranslation(languageCode).getOrThrow()
 
             val modifiedEntities = block.translateEntities(translation)
             block.entities = modifiedEntities
@@ -300,90 +258,14 @@ class DefaultTranslationService : TranslationService, KoinComponent {
                 "Translating information of space '${space.id}' in language '$languageCode'..."
             }
 
-            val (translation, _) = resolveTranslation(space.id.toString(), languageCode).getOrThrow()
+            val (translation, _) = resolveTranslation(languageCode).getOrThrow()
 
             val modifiedView = space.translateView(translation)
             space.view = modifiedView
         }
 
-    override suspend fun verifyLocationsExist(block: BlockEntity): Result<Unit> =
-        runCatching {
-            logger.v {
-                "Verifying locations exist on block"
-            }
-
-            val usedLocations = block.extractLocations()
-
-            logger.v {
-                "Used locations: $usedLocations"
-            }
-
-            verifyUsedLocationsExist(usedLocations, block.space)
-        }
-
-    override suspend fun verifyLocationsExist(space: SpaceEntity, explicitId: SpaceId?): Result<Unit> =
-        runCatching {
-            logger.v {
-                "Verifying locations exist on space view configuration"
-            }
-
-            val usedLocations = space.extractLocations()
-
-            logger.v {
-                "Used locations: $usedLocations"
-            }
-
-            verifyUsedLocationsExist(usedLocations, space, explicitId)
-        }
-
-    override suspend fun verifyLocationsNotUsed(space: SpaceEntity): Result<Unit> =
-        runCatching {
-            logger.v {
-                "Verifying locations not used on space view configuration"
-            }
-
-            val usedLocations = space.extractLocations()
-
-            logger.v {
-                "Used locations: $usedLocations"
-            }
-
-            if (usedLocations.isNotEmpty()) {
-                throw BadRequestException("Unable to process locations on newly creating space")
-            }
-        }
-
-    private suspend fun getDefaultTranslation(spaceIdentifier: SpaceIdentifier?): Result<TranslationEntity> {
-        val space = spaceIdentifier?.let {
-            spaceService.getSpace(spaceIdentifier).getOrNull()
-        }?.entity
-
-        return translationRepository.findDefaultTranslation(space)
-    }
-
-    private suspend fun verifyUsedLocationsExist(
-        usedLocations: List<TextLocation>,
-        space: SpaceEntity,
-        explicitId: SpaceId? = null
-    ) {
-        val availableLocations = getAvailableSpaceLocations(explicitId ?: space.id.toString())
-
-        logger.v {
-            "Available locations: $availableLocations"
-        }
-
-        val unavailableLocations = mutableListOf<TextLocation>()
-
-        usedLocations.forEach { usedLocation ->
-            if (usedLocation !in availableLocations) {
-                unavailableLocations += usedLocation
-            }
-        }
-
-        if (unavailableLocations.isNotEmpty()) {
-            throw BadRequestException("The following locations are not available: $unavailableLocations")
-        }
-    }
+    private suspend fun getDefaultTranslation(): Result<TranslationEntity> =
+        translationRepository.findDefaultTranslation()
 
     private fun BlockEntity.translateEntities(translation: TranslationEntity): List<ContentEntity> {
         val modifiedEntities = mutableListOf<ContentEntity>()
@@ -443,57 +325,18 @@ class DefaultTranslationService : TranslationService, KoinComponent {
         foldTemplates { initial, template ->
             val location = template.extractTextLocation()
             val translatedText = translation.translations.getWithTextVarProcessing(location)
-                ?: error("Unable to find location '$location' in translation")
 
-            initial.replace(template, translatedText)
+            initial.replace(template, translatedText ?: template)
         }
 
     private suspend fun verifyTranslationDoesntExist(
-        spaceIdentifier: SpaceIdentifier?,
         translation: TranslationEntity
     ) {
-        getTranslation(spaceIdentifier, translation.languageCode).onSuccess {
-            val message = spaceIdentifier?.let {
-                "Translation for language '${translation.languageCode}' associated with space '$it' already exists"
-            } ?: "Global translation for language '${translation.languageCode}' already exists"
-
-            throw HttpStatusException(HttpStatusCode.Conflict, message)
-        }
-    }
-
-    private suspend fun verifyLocationsSatisfied(
-        spaceIdentifier: SpaceIdentifier?,
-        translation: TranslationEntity,
-        removing: Boolean = false
-    ) {
-        if (removing) {
-            verifyAtLeastOneTranslationExistsAfterRemoval(spaceIdentifier, translation)
-        } else {
-            val locations = getUsedSpaceLocations(spaceIdentifier)
-            val unsatisfiedLocations = locations.toMutableList()
-
-            locations.forEach { location ->
-                if (location in translation.translations.keys) {
-                    unsatisfiedLocations.remove(location)
-                }
-            }
-
-            if (unsatisfiedLocations.isNotEmpty()) {
-                throw BadRequestException("The following locations aren't satisfied: $locations")
-            }
-        }
-    }
-
-    private suspend fun verifyAtLeastOneTranslationExistsAfterRemoval(
-        spaceIdentifier: SpaceIdentifier?,
-        translation: TranslationEntity
-    ) {
-        val locations = getUsedSpaceLocations(spaceIdentifier, excludeGlobals = true)
-        val (translations, _) = getTranslations(spaceIdentifier).getOrThrow()
-        val filteredTranslations = translations - translation
-
-        if (locations.isNotEmpty() && filteredTranslations.isEmpty()) {
-            throw UnprocessableEntityException("Unable to remove translation since it's the last remaining one and is used by at least one location")
+        getTranslation(translation.languageCode).onSuccess {
+            throw HttpStatusException(
+                HttpStatusCode.Conflict,
+                "Translation for language '${translation.languageCode}' already exists"
+            )
         }
     }
 
@@ -507,126 +350,16 @@ class DefaultTranslationService : TranslationService, KoinComponent {
 
     private suspend fun verifyDefaultTranslation(
         translation: TranslationEntity,
-        spaceIdentifier: SpaceIdentifier?,
         translationId: UUID? = null
     ) {
         if (translation.default) {
-            getDefaultTranslation(spaceIdentifier).onSuccess {
+            getDefaultTranslation().onSuccess {
                 if (it.id != translationId) {
                     throw UnprocessableEntityException("Default translation already exists")
                 }
             }
         }
     }
-
-    private suspend fun getAvailableSpaceLocations(spaceIdentifier: SpaceIdentifier): List<TextLocation> {
-        val locations = mutableSetOf<TextLocation>()
-        locations += GlobalTranslation.Locations
-
-        val (translations, _) = getTranslations(spaceIdentifier).getOrThrow()
-
-        translations.forEach { translation ->
-            translation.translations.forEach { (location, _) ->
-                locations += location
-            }
-        }
-
-        return locations.toList()
-    }
-
-    private suspend fun getUsedSpaceLocations(
-        spaceIdentifier: SpaceIdentifier?,
-        excludeGlobals: Boolean = false
-    ): List<TextLocation> {
-        val locations = mutableSetOf<TextLocation>()
-        locations += GlobalTranslation.Locations
-
-        spaceIdentifier?.let {
-            val blocks = blockService.getAllBlocks(it).getOrThrow()
-
-            blocks.forEach { block ->
-                locations += block.extractLocations()
-            }
-        }
-
-        if (excludeGlobals) {
-            locations -= GlobalTranslation.Locations.toSet()
-        }
-
-        return locations.toList()
-    }
-
-    private fun BlockEntity.extractLocations(): List<TextLocation> {
-        logger.v {
-            "Extracting used locations from block"
-        }
-
-        val locations = mutableSetOf<TextLocation>()
-
-        entities.forEach { entity ->
-            val parameters = entity.parameters.filterTranslatableContentEntityParameters(entity)
-
-            logger.v {
-                "Translatable parameters for entity ${entity.type}: $parameters"
-            }
-
-            parameters.forEach { (_, value) ->
-                locations += value.extractLocations()
-            }
-        }
-
-        logger.v {
-            "Extracted locations: $locations"
-        }
-
-        return locations.toList()
-    }
-
-    private fun SpaceEntity.extractLocations(): List<TextLocation> {
-        logger.v {
-            "Extracting used locations from space"
-        }
-
-        val locations = mutableSetOf<TextLocation>()
-
-        fun String?.extractAndAddLocations() {
-            this?.let {
-                locations += it.extractLocations()
-            }
-        }
-
-        with(view) {
-            icon.extractAndAddLocations()
-
-            favicon?.run {
-                appleTouch.extractAndAddLocations()
-                favicon16.extractAndAddLocations()
-                favicon32.extractAndAddLocations()
-                faviconIco.extractAndAddLocations()
-            }
-
-            title.extractAndAddLocations()
-            description.extractAndAddLocations()
-        }
-
-        return locations.toList()
-    }
-
-    private fun String.extractLocations(): List<TextLocation> =
-        buildList {
-            foldTemplates { initial, template ->
-                val location = template.extractTextLocation()
-
-                add(location)
-
-                initial
-            }
-        }
-
-    private fun ContentEntityParameters.filterTranslatableContentEntityParameters(contentEntity: ContentEntity): ContentEntityParameters =
-        filter { parameter ->
-            parameter.isTranslatable(contentEntity)
-        }
 
     private fun ContentEntityParameter.isTranslatable(contentEntity: ContentEntity): Boolean {
         logger.v {
@@ -689,8 +422,7 @@ class DefaultTranslationService : TranslationService, KoinComponent {
     }
 
     private suspend fun sendTranslationUpdatedEvent(oldTranslationDto: Translation, newTranslationDto: Translation) {
-        val qualifier = newTranslationDto.qualifier()
-        val eventRef = EventReferences.translationUpdated(qualifier)
+        val eventRef = EventReferences.translationUpdated(newTranslationDto.languageCode)
         val update = EntityUpdate(oldTranslationDto, newTranslationDto)
         val event = event(eventRef) {
             update
@@ -699,14 +431,10 @@ class DefaultTranslationService : TranslationService, KoinComponent {
     }
 
     private suspend fun sendTranslationRemovedEvent(translationDto: Translation) {
-        val qualifier = translationDto.qualifier()
-        val eventRef = EventReferences.translationRemoved(qualifier)
+        val eventRef = EventReferences.translationRemoved(translationDto.languageCode)
         val event = event(eventRef) {
             translationDto
         }
         eventChannel.send(event)
     }
-
-    private fun Translation.qualifier() =
-        TranslationQualifier(space, languageCode)
 }

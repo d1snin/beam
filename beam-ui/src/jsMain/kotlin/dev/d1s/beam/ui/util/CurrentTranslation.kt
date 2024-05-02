@@ -53,7 +53,7 @@ private val browserLanguage
 
 suspend fun initCurrentTranslation() {
     val resolvedTranslation =
-        client.getResolvedTranslation(spaceId = currentSpaceIdentifier, languageCode = browserLanguage).getOrNull()
+        client.getResolvedTranslation(languageCode = browserLanguage).getOrNull()
 
     resolvedTranslation?.let {
         internalCurrentTranslation = resolvedTranslation

@@ -21,8 +21,6 @@ import dev.d1s.beam.commons.*
 @BuilderDsl
 public class TranslationModificationBuilder {
 
-    public var languageCode: LanguageCode? = null
-
     public var languageName: LanguageName? = null
 
     public var default: Boolean? = null
@@ -35,7 +33,6 @@ public class TranslationModificationBuilder {
 
     public fun buildTranslationModification(): TranslationModification =
         TranslationModification(
-            languageCode ?: error("Translation language code is undefined"),
             languageName,
             default ?: error("Translation default status is undefined"),
             translations

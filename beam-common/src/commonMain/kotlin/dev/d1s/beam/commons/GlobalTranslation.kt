@@ -70,10 +70,9 @@ public object GlobalTranslation {
     )
 
     public val Default: Translation = Translation(
-        space = null,
         languageCode = "en",
         languageName = "English",
-        default = false,
+        default = true,
         translations = mapOf(
             LOCATION_ICON_ALT to "Beam space icon",
             LOCATION_DEFAULT_TITLE to "Beam",

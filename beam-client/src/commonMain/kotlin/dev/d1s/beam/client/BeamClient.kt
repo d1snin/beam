@@ -138,37 +138,32 @@ public interface BeamClient {
     ): Result<Row>
 
     public suspend fun postTranslation(
-        spaceId: SpaceIdentifier? = null,
+            languageCode: LanguageCode,
         translation: TranslationModification
     ): Result<Translation>
 
     public suspend fun postTranslation(
-        spaceId: SpaceIdentifier? = null,
+        languageCode: LanguageCode,
         configure: suspend TranslationModificationBuilder.() -> Unit
     ): Result<Translation>
 
-    public suspend fun getTranslation(spaceId: SpaceIdentifier? = null, languageCode: LanguageCode): Result<Translation>
+    public suspend fun getTranslation(languageCode: LanguageCode): Result<Translation>
 
-    public suspend fun getResolvedTranslation(
-        spaceId: SpaceIdentifier? = null,
-        languageCode: LanguageCode
-    ): Result<Translation>
+    public suspend fun getResolvedTranslation(languageCode: LanguageCode): Result<Translation>
 
-    public suspend fun getTranslations(spaceId: SpaceIdentifier? = null): Result<Translations>
+    public suspend fun getTranslations(): Result<Translations>
 
     public suspend fun putTranslation(
-        spaceId: SpaceIdentifier? = null,
         languageCode: LanguageCode,
         translation: TranslationModification
     ): Result<Translation>
 
     public suspend fun putTranslation(
-        spaceId: SpaceIdentifier? = null,
         languageCode: LanguageCode,
         configure: suspend TranslationModificationBuilder.() -> Unit
     ): Result<Translation>
 
-    public suspend fun deleteTranslation(spaceId: SpaceIdentifier? = null, languageCode: LanguageCode): Result<Unit>
+    public suspend fun deleteTranslation(languageCode: LanguageCode): Result<Unit>
 
     public suspend fun onSpaceCreated(block: suspend (ClientWebSocketEvent<Space>) -> Unit): Result<Job>
 

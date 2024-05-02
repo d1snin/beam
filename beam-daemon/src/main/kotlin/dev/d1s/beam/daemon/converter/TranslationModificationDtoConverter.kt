@@ -24,7 +24,6 @@ class TranslationModificationDtoConverter : DtoConverter<TranslationEntity, Tran
 
     override suspend fun convertToEntity(dto: TranslationModification) =
         TranslationEntity {
-            languageCode = dto.languageCode
             languageName = dto.languageName
             default = dto.default
             translations = dto.translations

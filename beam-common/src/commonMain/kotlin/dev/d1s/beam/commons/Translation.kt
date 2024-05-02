@@ -35,12 +35,7 @@ public typealias Translations = List<Translation>
 
 public val TextLocation.asTemplate: Template get() = "\${$this}"
 
-public fun TranslationQualifier(spaceId: SpaceId?, languageCode: LanguageCode): TranslationQualifier =
-    (spaceId?.let { "$it-" } ?: "") + languageCode
-
 public sealed interface AbstractTranslation {
-
-    public val languageCode: LanguageCode
 
     public val languageName: LanguageName?
 
@@ -51,8 +46,7 @@ public sealed interface AbstractTranslation {
 
 @Serializable
 public data class Translation(
-    val space: SpaceId?,
-    override val languageCode: LanguageCode,
+    val languageCode: LanguageCode,
     override val languageName: LanguageName,
     override val default: Boolean,
     override val translations: TranslationMap
@@ -60,7 +54,6 @@ public data class Translation(
 
 @Serializable
 public data class TranslationModification(
-    override val languageCode: LanguageCode,
     override val languageName: LanguageName?,
     override val default: Boolean,
     override val translations: TranslationMap

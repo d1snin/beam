@@ -17,26 +17,29 @@
 package dev.d1s.beam.client.app.state
 
 import dev.d1s.beam.client.TranslationModificationBuilder
+import dev.d1s.beam.client.app.ApplicationContext
+import dev.d1s.beam.commons.LanguageCode
 import io.ktor.client.plugins.*
 import io.ktor.http.*
 import org.lighthousegames.logging.logging
 
 private val log = logging()
 
-public suspend fun SpaceContext.translation(configure: suspend TranslationModificationBuilder.() -> Unit) {
-    val space = space.id
-
+public suspend fun ApplicationContext.translation(
+    languageCode: LanguageCode,
+    configure: suspend TranslationModificationBuilder.() -> Unit
+) {
     val modification = TranslationModificationBuilder().apply { configure() }.buildTranslationModification()
 
     log.i {
-        "Creating translation for space '$space' in language '${modification.languageCode}'..."
+        "Creating translation in language '$languageCode'..."
     }
 
-    client.postTranslation(space, modification).getOrElse {
+    client.postTranslation(languageCode, modification).getOrElse {
         val isConflict = it is ClientRequestException && it.response.status == HttpStatusCode.Conflict
 
         if (isConflict) {
-            client.putTranslation(space, modification.languageCode, modification).getOrThrow()
+            client.putTranslation(languageCode, modification).getOrThrow()
         } else {
             throw it
         }

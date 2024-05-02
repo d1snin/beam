@@ -173,50 +173,45 @@ class BridgedBeamClient : BeamClient, KoinComponent {
         readOnlyError()
 
     override suspend fun postTranslation(
-        spaceId: SpaceIdentifier?,
+        languageCode: LanguageCode,
         translation: TranslationModification
     ): Result<Translation> =
         readOnlyError()
 
     override suspend fun postTranslation(
-        spaceId: SpaceIdentifier?,
+        languageCode: LanguageCode,
         configure: suspend TranslationModificationBuilder.() -> Unit
     ): Result<Translation> =
         readOnlyError()
 
-    override suspend fun getTranslation(spaceId: SpaceIdentifier?, languageCode: LanguageCode): Result<Translation> =
+    override suspend fun getTranslation(languageCode: LanguageCode): Result<Translation> =
         notYetImplementedError()
 
-    override suspend fun getResolvedTranslation(
-        spaceId: SpaceIdentifier?,
-        languageCode: LanguageCode
-    ): Result<Translation> =
+    override suspend fun getResolvedTranslation(languageCode: LanguageCode): Result<Translation> =
         runCatching {
-            val translation = translationService.resolveTranslation(spaceId, languageCode, requireDto = true)
+            val translation = translationService.resolveTranslation(languageCode, requireDto = true)
                 .getOrThrow()
                 .dto
 
             requireNotNull(translation)
         }
 
-    override suspend fun getTranslations(spaceId: SpaceIdentifier?): Result<Translations> =
+    override suspend fun getTranslations(): Result<Translations> =
         notYetImplementedError()
 
     override suspend fun putTranslation(
-        spaceId: SpaceIdentifier?,
         languageCode: LanguageCode,
         translation: TranslationModification
     ): Result<Translation> =
         notYetImplementedError()
 
     override suspend fun putTranslation(
-        spaceId: SpaceIdentifier?,
         languageCode: LanguageCode,
         configure: suspend TranslationModificationBuilder.() -> Unit
     ): Result<Translation> =
         notYetImplementedError()
 
-    override suspend fun deleteTranslation(spaceId: SpaceIdentifier?, languageCode: LanguageCode): Result<Unit> =
+    override suspend fun deleteTranslation(languageCode: LanguageCode): Result<Unit> =
         readOnlyError()
 
     override suspend fun onSpaceCreated(block: suspend (ClientWebSocketEvent<Space>) -> Unit): Result<Job> =

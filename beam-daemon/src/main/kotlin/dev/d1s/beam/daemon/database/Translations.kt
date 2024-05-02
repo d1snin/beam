@@ -22,14 +22,9 @@ import dev.d1s.exkt.ktorm.UuidIdentifiedEntities
 import org.ktorm.jackson.json
 import org.ktorm.schema.boolean
 import org.ktorm.schema.text
-import org.ktorm.schema.uuid
 
 @Suppress("unused")
 object Translations : UuidIdentifiedEntities<TranslationEntity>(tableName = "translation") {
-
-    val spaceId = uuid("space_id").references(Spaces) {
-        it.space
-    }
 
     val languageCode = text("language_code").bindTo {
         it.languageCode

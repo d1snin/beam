@@ -105,8 +105,6 @@ class DefaultSpaceService : SpaceService, KoinComponent {
             checkRootCreation(space, allowRootCreation)
             checkRootSpaceCreated(space)
 
-            translationService.verifyLocationsNotUsed(space).getOrThrow()
-
             if (!space.isRoot) {
                 space.role = Role.DEFAULT
             }
@@ -203,8 +201,6 @@ class DefaultSpaceService : SpaceService, KoinComponent {
 
             checkRootSpaceModification(originalSpace)
 
-            translationService.verifyLocationsExist(modification, explicitId = originalSpace.id.toString()).getOrThrow()
-
             originalSpace.apply {
                 this.slug = modification.slug
                 this.metadata = modification.metadata
@@ -238,8 +234,6 @@ class DefaultSpaceService : SpaceService, KoinComponent {
                 requireDto = true
             ).getOrThrow()
             requireNotNull(originalSpaceDto)
-
-            translationService.verifyLocationsExist(modification, explicitId = originalSpace.id.toString()).getOrThrow()
 
             originalSpace.apply {
                 this.metadata = modification.metadata

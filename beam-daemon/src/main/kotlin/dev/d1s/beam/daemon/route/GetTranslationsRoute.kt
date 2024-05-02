@@ -18,7 +18,6 @@ package dev.d1s.beam.daemon.route
 
 import dev.d1s.beam.commons.Paths
 import dev.d1s.beam.daemon.service.TranslationService
-import dev.d1s.beam.daemon.util.spaceIdQueryParameter
 import dev.d1s.exkt.dto.requiredDtoList
 import dev.d1s.exkt.ktor.server.koin.configuration.Route
 import io.ktor.server.application.*
@@ -36,9 +35,7 @@ class GetTranslationsRoute : Route, KoinComponent {
 
     override fun Routing.apply() {
         get(Paths.GET_TRANSLATIONS) {
-            val spaceId = call.spaceIdQueryParameter
-
-            val foundTranslations = translationService.getTranslations(spaceId, requireDto = true).getOrThrow()
+            val foundTranslations = translationService.getTranslations(requireDto = true).getOrThrow()
 
             call.respond(foundTranslations.requiredDtoList)
         }
