@@ -81,7 +81,7 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
     }
 
     private suspend fun getSpace() =
-        config.spaceIdentifier.value?.let {
+        config.space.value ?: config.spaceIdentifier.value?.let {
             spaceCache.getOrPut(it) {
                 client.getSpace(it, currentLanguageCode).getOrNull()
             }
@@ -149,7 +149,8 @@ class SpaceCardComponent : Component<SpaceCardComponent.Config>(::Config), KoinC
 
     class Config {
 
-        val spaceIdentifier = atomic<String?>(null)
+        val space = atomic<Space?>(null)
+        val spaceIdentifier = atomic<SpaceIdentifier?>(null)
 
         val bare = atomic<Boolean?>(null)
 

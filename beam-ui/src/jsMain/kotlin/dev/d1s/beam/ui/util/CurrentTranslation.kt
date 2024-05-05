@@ -19,6 +19,7 @@ package dev.d1s.beam.ui.util
 import dev.d1s.beam.client.BeamClient
 import dev.d1s.beam.commons.*
 import dev.d1s.beam.ui.Qualifier
+import dev.d1s.beam.ui.component.SpaceListingComponent
 import dev.d1s.beam.ui.state.CurrentSpaceContentChangeObservable
 import dev.d1s.beam.ui.state.Observable
 import dev.d1s.beam.ui.state.SpaceContentChange
@@ -69,6 +70,8 @@ fun setCurrentTranslation(translation: Translation) {
         initCurrentSpaceAndBlocks()
 
         actualizeCurrentTranslation()
+
+        SpaceListingComponent.reset()
 
         (currentSpaceContentChangeObservable as? CurrentSpaceContentChangeObservable)?.let { observable ->
             currentSpace?.id?.let {

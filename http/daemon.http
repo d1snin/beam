@@ -6,15 +6,15 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "slug": "test-1",
+  "slug": "test-2",
   "metadata": {},
   "view": {
     "theme": "catppuccin-mocha",
     "icon": null,
     "favicon": null,
     "preview": null,
-    "title": "test",
-    "description": "test",
+    "title": "${test-1.title}",
+    "description": "${test-1.description}",
     "remark": null
   }
 }
@@ -37,7 +37,7 @@ Content-Type: application/json
 }
 
 ### GET Space
-GET http://localhost:8573/api/spaces/917824b0-3b07-42f3-951a-dc81e30fde18?language=en
+GET http://localhost:8573/api/spaces/test-1?language=en
 
 ### GET Spaces
 GET http://localhost:8573/api/spaces?limit=10&offset=0
@@ -96,15 +96,15 @@ Content-Type: application/json
   "size": "EXTRA_LARGE",
   "entities": [
     {
-      "type": "space",
+      "type": "text",
       "parameters": {
-        "identifier": "root"
+        "value": "${test-1.title}"
       }
     }
   ],
   "metadata": {
   },
-  "spaceId": "root"
+  "spaceId": "test-1"
 }
 
 ### GET Blocks
@@ -156,17 +156,17 @@ Content-Type: application/json
 }
 
 ### POST Translation
-POST http://localhost:8573/api/translations/en
+POST http://localhost:8573/api/translations/ru
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "languageName": "English",
+  "languageName": null,
   "default": false,
   "translations": {
     "ui.icon-alt": "Space icon",
     "ui.default-title": "Beam",
-    "ui.default-remark": "Running [Beam][https://github.com/d1snin/beam] VERSION <version>",
+    "ui.default-remark": "Running [Beam][https://github.com/d1snin/beam] v<version>",
     "ui.failure-card.not-found.icon-alt": "404 icon",
     "ui.failure-card.not-found.message": "We ended up with nothing.",
     "ui.failure-card.empty-space.icon-alt": "Empty space icon",
@@ -177,9 +177,8 @@ Content-Type: application/json
     "ui.space-listing.message": "Explore other spaces:",
     "ui.space-listing.fetch-more-button": "Fetch more",
     "ui.block.collapsed-content-entity.button.message": "More",
-    "test-1.title": "en title",
-    "test-1.description": "en description",
-    "random.text": "random text emmm eeee"
+    "test-1.title": "ru title",
+    "test-1.description": "ru description"
   }
 }
 
@@ -203,7 +202,7 @@ Content-Type: application/json
   "translations": {
     "ui.icon-alt": "Space icon",
     "ui.default-title": "Beam",
-    "ui.default-remark": "Running [Beam][https://github.com/d1snin/beam] VERSION <version>",
+    "ui.default-remark": "Running [Beam][https://github.com/d1snin/beam] v<version>",
     "ui.failure-card.not-found.icon-alt": "404 icon",
     "ui.failure-card.not-found.message": "We ended up with nothing.",
     "ui.failure-card.empty-space.icon-alt": "Empty space icon",
@@ -213,9 +212,7 @@ Content-Type: application/json
     "ui.footer.language-switcher.message": "Language...",
     "ui.space-listing.message": "Explore other spaces:",
     "ui.space-listing.fetch-more-button": "Fetch more",
-    "ui.block.collapsed-content-entity.button.message": "More",
-    "test-1.title": "en title",
-    "test-1.description": "en description"
+    "ui.block.collapsed-content-entity.button.message": "More"
   }
 }
 

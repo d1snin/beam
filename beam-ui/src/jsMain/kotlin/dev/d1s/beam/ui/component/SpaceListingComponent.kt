@@ -43,6 +43,8 @@ import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
@@ -54,40 +56,26 @@ class SpaceListingComponent : Component<SpaceListingComponent.Config>(::Config),
 
     private val beamClient by inject<BeamClient>()
 
-    private val spaces = ObservableValue(emptyList)
-
-    private val paginator by lazy {
-        val limit = if (currentSpace != null) PAGE_LIMIT + 1 else PAGE_LIMIT
-
-        Paginator(limit, currentPage = 0)
-    }
-
     private val renderingScope = CoroutineScope(Dispatchers.Main)
 
-    private val initialized = atomic(false)
+    private var mainPanel: SimplePanel? = null
 
     override fun SimplePanel.render(): Effect {
         val (state, effect) = Effect.lazy()
 
-        fun render() {
-            renderingScope.launch {
+        renderingScope.launch {
+            renderMutex.withLock {
                 initialize()
                 renderSpaceContainer(state)
             }
         }
-
-        currentTranslationObservable.subscribeSkipping {
-            reset()
-            render()
-        }
-
-        render()
 
         return effect
     }
 
     private suspend fun initialize() {
         if (!initialized.getAndSet(true)) {
+            mainPanel?.dispose()
             getMoreSpaces()
         }
     }
@@ -104,13 +92,6 @@ class SpaceListingComponent : Component<SpaceListingComponent.Config>(::Config),
                 renderFetchMoreButton()
             }
         }
-    }
-
-    private fun SimplePanel.reset() {
-        getChildren().forEach { it.dispose() }
-        spaces.value = emptyList
-        paginator.currentPage = 0
-        initialized.value = false
     }
 
     private fun SimplePanel.renderBoundContainer(
@@ -146,7 +127,7 @@ class SpaceListingComponent : Component<SpaceListingComponent.Config>(::Config),
                 val spaceCard = get<Component<SpaceCardComponent.Config>>(Qualifier.SpaceCardComponent)
 
                 render(spaceCard) {
-                    this.spaceIdentifier.value = space.id
+                    this.space.value = space
                     this.fullHeight.value = true
                 }
             }
@@ -170,8 +151,8 @@ class SpaceListingComponent : Component<SpaceListingComponent.Config>(::Config),
         }
     }
 
-    private suspend fun getSpaces(offset: Int = paginator.offset): FetchedSpaces? =
-        beamClient.getSpaces(paginator.limit, offset, currentLanguageCode).getOrNull()?.let { page ->
+    private suspend fun getSpaces(): FetchedSpaces? =
+        beamClient.getSpaces(paginator.limit, paginator.offset, currentLanguageCode).getOrNull()?.let { page ->
             val spaces = page.elements
             val filteredSpaces = spaces.filterSpaces()
             val totalCount = page.count()
@@ -232,10 +213,23 @@ class SpaceListingComponent : Component<SpaceListingComponent.Config>(::Config),
         val singleColumn = atomic(false)
     }
 
-    private companion object {
+    companion object {
 
         private const val PAGE_LIMIT = 4
 
-        private val emptyList: FetchedSpaces = listOf<Space>() to 0
+        private val spaces = ObservableValue(listOf<Space>() to 0)
+        private val initialized = atomic(false)
+
+        private val renderMutex = Mutex()
+
+        private val paginator by lazy {
+            Paginator(PAGE_LIMIT, currentPage = 0)
+        }
+
+        fun reset() {
+            spaces.value = listOf<Space>() to 0
+            paginator.currentPage = 0
+            initialized.value = false
+        }
     }
 }

@@ -353,9 +353,9 @@ public class DefaultBeamClient(
 
     public override suspend fun getResolvedTranslation(languageCode: LanguageCode): Result<Translation> =
         runCatching {
-            httpClient.get(Paths.GET_RESOLVED_TRANSLATION) {
-                setLanguageCode(languageCode)
-            }.body()
+            val path = Paths.GET_RESOLVED_TRANSLATION.replaceLanguageCodePlaceholder(languageCode)
+
+            httpClient.get(path).body()
         }
 
     override suspend fun getTranslations(): Result<Translations> =

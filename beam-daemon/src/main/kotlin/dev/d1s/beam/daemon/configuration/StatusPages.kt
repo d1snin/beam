@@ -22,6 +22,7 @@ import dev.d1s.beam.bundle.util.respondHtml
 import dev.d1s.beam.commons.Paths
 import dev.d1s.exkt.ktor.server.koin.configuration.ApplicationConfigurer
 import dev.d1s.exkt.ktor.server.statuspages.HttpStatusException
+import dev.d1s.exkt.ktor.server.statuspages.httpStatusException
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.config.*
@@ -47,6 +48,12 @@ object StatusPages : ApplicationConfigurer, KoinComponent {
             handleExceptions()
             handleStatuses()
             handleNotFoundStatus()
+
+            httpStatusException { call, exception ->
+                val status = exception.status
+                val message = exception.toMessage(status)
+                call.respond(status, message)
+            }
         }
     }
 

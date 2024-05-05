@@ -112,6 +112,7 @@ class DefaultSpaceService : SpaceService, KoinComponent {
             val addedSpace = handleUniqueSlugViolation {
                 spaceRepository.addSpace(space).getOrThrow()
             }
+
             val translatedSpace = translateOptionally(addedSpace, languageCode)
             val translatedSpaceDto = spaceDtoConverter.convertToDto(translatedSpace)
 
