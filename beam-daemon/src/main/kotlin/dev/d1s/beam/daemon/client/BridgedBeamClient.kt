@@ -140,6 +140,13 @@ class BridgedBeamClient : BeamClient, KoinComponent {
     ): Result<Blocks> =
         notYetImplementedError()
 
+    override suspend fun iterateBlocks(
+        spaceId: SpaceIdentifier,
+        languageCode: LanguageCode?,
+        onEach: suspend (Block) -> Unit
+        ): Result<Unit> =
+        notYetImplementedError()
+
     override suspend fun putBlock(id: BlockId, block: BlockModification, languageCode: LanguageCode?): Result<Block> =
         readOnlyError()
 

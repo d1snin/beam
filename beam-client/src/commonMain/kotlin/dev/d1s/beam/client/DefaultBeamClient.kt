@@ -22,6 +22,7 @@ import dev.d1s.beam.commons.*
 import dev.d1s.beam.commons.event.EntityUpdate
 import dev.d1s.beam.commons.event.EventReferences
 import dev.d1s.exkt.common.pagination.LimitAndOffset
+import dev.d1s.exkt.common.pagination.Paginator
 import dev.d1s.exkt.common.replaceIdPlaceholder
 import dev.d1s.exkt.common.replacePlaceholders
 import dev.d1s.ktor.events.client.ClientWebSocketEvent
@@ -237,6 +238,25 @@ public class DefaultBeamClient(
         languageCode: LanguageCode?
     ): Result<Blocks> =
         getBlocks(spaceId, LimitAndOffset(limit, offset), languageCode)
+
+    override suspend fun iterateBlocks(
+        spaceId: SpaceIdentifier,
+        languageCode: LanguageCode?,
+        onEach: suspend (Block) -> Unit
+    ): Result<Unit> =
+        runCatching {
+            val paginator = Paginator(ITERATOR_BATCH_SIZE, 1)
+
+            do {
+                val blocks = getBlocks(spaceId, paginator.limitAndOffset, languageCode).getOrThrow()
+
+                blocks.elements.forEach { block ->
+                    onEach(block)
+                }
+
+                paginator.currentPage++
+            } while (blocks.limit < blocks.totalCount)
+        }
 
     override suspend fun putBlock(id: BlockId, block: BlockModification, languageCode: LanguageCode?): Result<Block> =
         runCatching {
@@ -528,4 +548,9 @@ public class DefaultBeamClient(
         requireNotNull(token) {
             "Space token is required for this interaction."
         }
+
+    private companion object {
+
+        private const val ITERATOR_BATCH_SIZE = 50
+    }
 }

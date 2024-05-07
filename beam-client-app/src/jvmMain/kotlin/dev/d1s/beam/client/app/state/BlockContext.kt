@@ -19,6 +19,7 @@ package dev.d1s.beam.client.app.state
 import dev.d1s.beam.client.BeamClient
 import dev.d1s.beam.client.ContentEntitiesBuilder
 import dev.d1s.beam.client.MetadataBuilder
+import dev.d1s.beam.client.app.util.MetadataKeys
 import dev.d1s.beam.client.void
 import dev.d1s.beam.commons.*
 import dev.d1s.beam.commons.contententity.ContentEntities
@@ -79,7 +80,11 @@ public class BlockContext internal constructor(
                     index
                 }
 
-            val modification = BlockModification(row, validIndex, size, entities, metadata, block.spaceId)
+            val processedMetadata = metadata.toMutableMap().apply {
+                set(MetadataKeys.APP_BLOCK_MANAGED, "true")
+            }
+
+            val modification = BlockModification(row, validIndex, size, entities, processedMetadata, block.spaceId)
 
             log.d {
                 "Modifying block with the following data: $modification"
@@ -103,6 +108,8 @@ public suspend fun SpaceContext.block(configure: suspend BlockContext.() -> Unit
         index = null
         size = BlockSize.SMALL
         spaceId = space
+
+        metadata(MetadataKeys.APP_BLOCK_MANAGED, "true")
 
         void()
     }.getOrThrow()

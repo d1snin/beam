@@ -105,6 +105,12 @@ public interface BeamClient {
         languageCode: LanguageCode? = null
     ): Result<Blocks>
 
+    public suspend fun iterateBlocks(
+        spaceId: SpaceIdentifier,
+        languageCode: LanguageCode? = null,
+        onEach: suspend (Block) -> Unit
+    ): Result<Unit>
+
     public suspend fun putBlock(
         id: BlockId,
         block: BlockModification,
@@ -138,7 +144,7 @@ public interface BeamClient {
     ): Result<Row>
 
     public suspend fun postTranslation(
-            languageCode: LanguageCode,
+        languageCode: LanguageCode,
         translation: TranslationModification
     ): Result<Translation>
 

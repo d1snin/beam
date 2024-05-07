@@ -21,6 +21,7 @@ import dev.d1s.beam.client.MetadataBuilder
 import dev.d1s.beam.client.RowModificationBuilder
 import dev.d1s.beam.client.SpaceViewBuilder
 import dev.d1s.beam.client.app.ApplicationContext
+import dev.d1s.beam.client.app.util.MetadataKeys
 import dev.d1s.beam.commons.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -32,7 +33,6 @@ private val log = logging()
 
 public open class SpaceContext internal constructor(
     initialSpace: Space,
-    internal val processBlocks: Boolean,
     internal val client: BeamClient
 ) {
     private var internalSpace = initialSpace
@@ -98,7 +98,6 @@ public open class SpaceContext internal constructor(
 
 public suspend fun ApplicationContext.space(
     spaceIdentifier: SpaceIdentifier = ROOT_SPACE_SLUG,
-    processBlocks: Boolean = true,
     configure: suspend SpaceContext.() -> Unit
 ): Space {
     var space = client.getSpace(spaceIdentifier).getOrNull()
@@ -131,15 +130,13 @@ public suspend fun ApplicationContext.space(
         "Accessed space `${space.slug}` ($spaceId). Cleaning it up..."
     }
 
-    if (processBlocks) {
-        deleteBlocks(space.id).getOrThrow()
-    }
+    clearBlocks(spaceId)
 
     log.i {
         "Space initialized."
     }
 
-    val context = SpaceContext(space, processBlocks, client)
+    val context = SpaceContext(space, client)
 
     context.configure()
 
@@ -152,7 +149,7 @@ public suspend fun SpaceContext.row(
     metadata: Metadata? = null,
     configure: suspend SpaceContext.() -> Unit
 ) {
-    val context = SpaceContext(space, processBlocks, client).apply {
+    val context = SpaceContext(space, client).apply {
         currentRow = index
     }
 
@@ -169,4 +166,12 @@ public suspend fun SpaceContext.row(
     }
 
     context.configure()
+}
+
+private suspend fun ApplicationContext.clearBlocks(spaceId: SpaceId) {
+    client.iterateBlocks(spaceId) { block ->
+        if (block.metadata[MetadataKeys.APP_BLOCK_MANAGED] == "true") {
+            client.deleteBlock(block.id).getOrThrow()
+        }
+    }
 }
