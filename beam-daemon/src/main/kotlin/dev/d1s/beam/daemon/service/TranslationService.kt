@@ -195,6 +195,8 @@ class DefaultTranslationService : TranslationService, KoinComponent {
                 "Updating translation in language '$languageCode'..."
             }
 
+            modification.languageCode = languageCode
+
             val (originalTranslation, originalTranslationDto) = getTranslation(
                 languageCode,
                 requireDto = true
