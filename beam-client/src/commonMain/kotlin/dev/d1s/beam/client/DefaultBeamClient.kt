@@ -349,7 +349,9 @@ public class DefaultBeamClient(
         runCatching {
             requireToken()
 
-            httpClient.post(Paths.POST_TRANSLATION) {
+            val path = Paths.POST_TRANSLATION.replaceLanguageCodePlaceholder(languageCode)
+
+            httpClient.post(path) {
                 contentType(ContentType.Application.Json)
                 setBody(translation)
             }.body()
