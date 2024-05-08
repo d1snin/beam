@@ -35,6 +35,7 @@ private val log = logging()
 
 public class BlockContext internal constructor(
     initialBlock: Block,
+    private val manage: Boolean,
     internal val client: BeamClient
 ) {
     private var internalBlock = initialBlock
@@ -81,7 +82,9 @@ public class BlockContext internal constructor(
                 }
 
             val processedMetadata = metadata.toMutableMap().apply {
-                set(MetadataKeys.APP_BLOCK_MANAGED, "true")
+                if (manage) {
+                    set(MetadataKeys.APP_BLOCK_MANAGED, "true")
+                }
             }
 
             val modification = BlockModification(row, validIndex, size, entities, processedMetadata, block.spaceId)
@@ -96,7 +99,7 @@ public class BlockContext internal constructor(
     }
 }
 
-public suspend fun SpaceContext.block(configure: suspend BlockContext.() -> Unit): Block {
+public suspend fun SpaceContext.block(manage: Boolean = true, configure: suspend BlockContext.() -> Unit): Block {
     val space = space.id
 
     log.i {
@@ -109,13 +112,16 @@ public suspend fun SpaceContext.block(configure: suspend BlockContext.() -> Unit
         size = BlockSize.SMALL
         spaceId = space
 
-        metadata(MetadataKeys.APP_BLOCK_MANAGED, "true")
+        if (manage) {
+            metadata(MetadataKeys.APP_BLOCK_MANAGED, "true")
+        }
 
         void()
     }.getOrThrow()
 
     val context = BlockContext(
         createdBlock,
+        manage,
         client
     )
 
