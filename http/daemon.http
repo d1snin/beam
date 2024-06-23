@@ -144,7 +144,7 @@ GET http://localhost:8573/api/rows/0?space=root
 
 ### GET Rows
 GET http://localhost:8573/api/rows?space=root
-ru
+
 ### PUT Row
 PUT http://localhost:8573/api/rows/0?space=root
 Authorization: Bearer {{token}}

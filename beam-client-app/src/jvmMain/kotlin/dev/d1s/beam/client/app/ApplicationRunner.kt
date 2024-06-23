@@ -67,7 +67,7 @@ internal class DefaultApplicationRunner : ApplicationRunner {
             "Creating application context..."
         }
 
-        return ApplicationContext(client)
+        return ApplicationContext(client, application.config)
     }
 }
 

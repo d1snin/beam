@@ -20,6 +20,7 @@ import dev.d1s.beam.client.BeamClient
 import dev.d1s.beam.client.MetadataBuilder
 import dev.d1s.beam.client.RowModificationBuilder
 import dev.d1s.beam.client.SpaceViewBuilder
+import dev.d1s.beam.client.app.ApplicationConfig
 import dev.d1s.beam.client.app.ApplicationContext
 import dev.d1s.beam.client.app.util.MetadataKeys
 import dev.d1s.beam.commons.*
@@ -33,7 +34,8 @@ private val log = logging()
 
 public open class SpaceContext internal constructor(
     initialSpace: Space,
-    internal val client: BeamClient
+    internal val client: BeamClient,
+    internal val config: ApplicationConfig
 ) {
     private var internalSpace = initialSpace
 
@@ -130,13 +132,13 @@ public suspend fun ApplicationContext.space(
         "Accessed space `${space.slug}` ($spaceId). Cleaning it up..."
     }
 
-    clearBlocks(spaceId)
+    clearBlocks(spaceId, config.name)
 
     log.i {
         "Space initialized."
     }
 
-    val context = SpaceContext(space, client)
+    val context = SpaceContext(space, client, config)
 
     context.configure()
 
@@ -149,7 +151,7 @@ public suspend fun SpaceContext.row(
     metadata: Metadata? = null,
     configure: suspend SpaceContext.() -> Unit
 ) {
-    val context = SpaceContext(space, client).apply {
+    val context = SpaceContext(space, client, config).apply {
         currentRow = index
     }
 
@@ -168,9 +170,11 @@ public suspend fun SpaceContext.row(
     context.configure()
 }
 
-private suspend fun ApplicationContext.clearBlocks(spaceId: SpaceId) {
+private suspend fun ApplicationContext.clearBlocks(spaceId: SpaceId, applicationName: String) {
     client.iterateBlocks(spaceId) { block ->
-        if (block.metadata[MetadataKeys.APP_BLOCK_MANAGED] == "true") {
+        val metadataKey = MetadataKeys.APP_BLOCK_MANAGED.format(applicationName)
+
+        if (block.metadata[metadataKey] == "true") {
             client.deleteBlock(block.id).getOrThrow()
         }
     }

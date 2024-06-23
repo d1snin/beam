@@ -18,5 +18,5 @@ package dev.d1s.beam.client.app.util
 
 internal object MetadataKeys {
 
-    const val APP_BLOCK_MANAGED = "app.block.managed"
+    const val APP_BLOCK_MANAGED = "%s.block.managed"
 }

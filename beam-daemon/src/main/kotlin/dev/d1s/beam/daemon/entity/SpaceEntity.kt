@@ -21,7 +21,7 @@ import dev.d1s.exkt.ktorm.UuidIdentifiedAndModificationTimestampAware
 import org.koin.core.component.KoinComponent
 import org.ktorm.entity.Entity
 
-interface SpaceEntity : UuidIdentifiedAndModificationTimestampAware<SpaceEntity>, KoinComponent {
+interface SpaceEntity : UuidIdentifiedAndModificationTimestampAware<SpaceEntity> {
 
     var slug: SpaceSlug
 

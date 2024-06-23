@@ -53,8 +53,6 @@ kotlin {
             dependencies {
                 val kotlinxSerializationVersion: String by project
 
-                val kotlinxDatetimeVersion: String by project
-
                 val ktorWsEventsVersion: String by project
 
                 val exktVersion: String by project

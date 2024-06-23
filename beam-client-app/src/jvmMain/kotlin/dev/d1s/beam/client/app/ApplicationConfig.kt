@@ -19,14 +19,22 @@ package dev.d1s.beam.client.app
 import com.sksamuel.hoplite.ConfigLoaderBuilder
 import com.sksamuel.hoplite.sources.EnvironmentVariablesPropertySource
 import dev.d1s.beam.client.BeamDaemonBaseUrl
+import dev.d1s.beam.commons.Regex
 import dev.d1s.beam.commons.SpaceToken
 
 private const val ENV_VAR_PREFIX = "BEAM_APP__"
 
 public data class ApplicationConfig(
+    val name: String,
     val httpBaseUrl: BeamDaemonBaseUrl,
     val token: SpaceToken
-)
+) {
+    init {
+        if (!name.matches(Regex.Metadata)) {
+            error("Application name doesn't match metadata key")
+        }
+    }
+}
 
 internal fun defaultApplicationConfig(): ApplicationConfig {
     val propertySource = EnvironmentVariablesPropertySource(

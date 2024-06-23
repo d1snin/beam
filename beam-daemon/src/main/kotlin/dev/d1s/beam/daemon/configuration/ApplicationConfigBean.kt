@@ -24,7 +24,7 @@ import org.koin.core.qualifier.named
 
 object ApplicationConfigBean : ApplicationConfigurer {
 
-    val Qualifier = named("daemon-config")
+    private val Qualifier = named("daemon-config")
 
     override fun Application.configure(module: Module, config: ApplicationConfig) {
         module.single(qualifier = Qualifier) {

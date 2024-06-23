@@ -19,6 +19,7 @@ package dev.d1s.beam.client.app.state
 import dev.d1s.beam.client.BeamClient
 import dev.d1s.beam.client.ContentEntitiesBuilder
 import dev.d1s.beam.client.MetadataBuilder
+import dev.d1s.beam.client.app.ApplicationConfig
 import dev.d1s.beam.client.app.util.MetadataKeys
 import dev.d1s.beam.client.void
 import dev.d1s.beam.commons.*
@@ -36,7 +37,8 @@ private val log = logging()
 public class BlockContext internal constructor(
     initialBlock: Block,
     private val manage: Boolean,
-    internal val client: BeamClient
+    internal val client: BeamClient,
+    internal val config: ApplicationConfig
 ) {
     private var internalBlock = initialBlock
 
@@ -83,7 +85,8 @@ public class BlockContext internal constructor(
 
             val processedMetadata = metadata.toMutableMap().apply {
                 if (manage) {
-                    set(MetadataKeys.APP_BLOCK_MANAGED, "true")
+                    val metadataKey = MetadataKeys.APP_BLOCK_MANAGED.format(config.name)
+                    set(metadataKey, "true")
                 }
             }
 
@@ -113,7 +116,8 @@ public suspend fun SpaceContext.block(manage: Boolean = true, configure: suspend
         spaceId = space
 
         if (manage) {
-            metadata(MetadataKeys.APP_BLOCK_MANAGED, "true")
+            val metadataKey = MetadataKeys.APP_BLOCK_MANAGED.format(config.name)
+            metadata(metadataKey, "true")
         }
 
         void()
@@ -122,7 +126,8 @@ public suspend fun SpaceContext.block(manage: Boolean = true, configure: suspend
     val context = BlockContext(
         createdBlock,
         manage,
-        client
+        client,
+        config
     )
 
     context.configure()
