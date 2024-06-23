@@ -35,7 +35,7 @@ private val log = logging()
 public open class SpaceContext internal constructor(
     initialSpace: Space,
     internal val client: BeamClient,
-    internal val config: ApplicationConfig
+    public val config: ApplicationConfig
 ) {
     private var internalSpace = initialSpace
 

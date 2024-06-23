@@ -20,5 +20,5 @@ import dev.d1s.beam.client.BeamClient
 
 public class ApplicationContext internal constructor(
     internal val client: BeamClient,
-    internal val config: ApplicationConfig
+    public val config: ApplicationConfig
 ) : BeamClient by client

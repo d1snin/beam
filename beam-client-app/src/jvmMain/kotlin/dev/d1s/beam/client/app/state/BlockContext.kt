@@ -38,7 +38,7 @@ public class BlockContext internal constructor(
     initialBlock: Block,
     private val manage: Boolean,
     internal val client: BeamClient,
-    internal val config: ApplicationConfig
+    public val config: ApplicationConfig
 ) {
     private var internalBlock = initialBlock
 
